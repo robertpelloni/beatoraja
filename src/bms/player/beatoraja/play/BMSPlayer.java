@@ -189,7 +189,7 @@ public class BMSPlayer extends MainState {
 				model = resource.loadBMSModel(playinfo.rand);
 				// 暫定処置
 				BMSModelUtils.setStartNoteTime(model, 1000);
-				BMSPlayerRule.validate(model);
+				BMSPlayerRule.validate(model, config);
 			}
 			playinfo.rand = model.getRandom();
 			Logger.getGlobal().info("譜面分岐 : " + Arrays.toString(playinfo.rand));
@@ -358,7 +358,31 @@ public class BMSPlayer extends MainState {
 		if(replay != null && main.getInputProcessor().getKeyState(5)) {
 		}
 		// プレイゲージ、初期値設定
-		gauge = GrooveGauge.create(model, replay != null ? replay.gauge : config.getGauge(), resource);
+		int gaugeType = replay != null ? replay.gauge : config.getGauge();
+		// Apply LR2 Gauge if enabled and not playing a course (where gauge is fixed)
+		if (config.isLr2Gauge() && resource.getCourseBMSModels() == null) {
+			// Map standard gauge types to LR2 gauge properties if needed
+			// Currently GrooveGauge.create handles mapping based on CourseDataConstraint,
+			// but for standard play we need to force it or ensure the correct property is used.
+			// However, GrooveGauge.create(model, type, resource) uses resource.getConstraint().
+			// We might need to inject the constraint or handle it here.
+			// Actually, GrooveGauge.create(BMSModel model, int type, PlayerResource resource)
+			// calls create(model, type, coursetype, gauges).
+			// If we want to force LR2 gauge properties for standard play, we should probably
+			// pass the specific LR2 GaugeProperty.
+
+			// Simple mapping:
+			// If config.isLr2Gauge() is true, we want to use GaugeProperty.LR2 properties
+			// matching the selected gauge type (EASY, NORMAL, HARD, etc.)
+			// The GaugeProperty enum has an LR2 constant which contains the LR2 specific properties.
+
+			// We can bypass GrooveGauge.create(model, type, resource) and call the lower level one
+			// if we want to force the property.
+
+			gauge = GrooveGauge.create(model, gaugeType, 0, GaugeProperty.LR2);
+		} else {
+			gauge = GrooveGauge.create(model, gaugeType, resource);
+		}
 		// ゲージログ初期化
 		gaugelog = new FloatArray[gauge.getGaugeTypeLength()];
 		for(int i = 0; i < gaugelog.length; i++) {
