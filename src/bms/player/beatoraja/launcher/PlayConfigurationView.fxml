@@ -177,6 +177,10 @@
                                                 <Tooltip text="%HISPEED_AUTO_ADJUST_TOOLTIP" textAlignment="CENTER" />
                                             </tooltip>
                                          </CheckBox>
+                                         <CheckBox fx:id="lr2Gauge" mnemonicParsing="false" text="LR2 GAUGE" GridPane.columnIndex="4" GridPane.rowIndex="0" />
+                                         <CheckBox fx:id="lr2Judge" mnemonicParsing="false" text="LR2 JUDGE" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                                         <CheckBox fx:id="lr2LN" mnemonicParsing="false" text="LR2 LN" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+                                         <CheckBox fx:id="lr2Total" mnemonicParsing="false" text="LR2 TOTAL" GridPane.columnIndex="4" GridPane.rowIndex="3" />
                                          <Label text="%NOTE_MODIFIER" GridPane.rowIndex="6" />
                                          <ComboBox fx:id="scoreop" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
                                          <Label layoutX="10.0" layoutY="84.0" text="%NOTE_MODIFIER2" GridPane.columnIndex="2" GridPane.rowIndex="6" />

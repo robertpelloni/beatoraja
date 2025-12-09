@@ -2,6 +2,7 @@ package bms.player.beatoraja.play;
 
 import bms.model.BMSModel;
 import bms.model.Mode;
+import bms.player.beatoraja.PlayerConfig;
 
 /**
  * プレイヤールール
@@ -54,7 +55,7 @@ public enum BMSPlayerRule {
         return Default;
     }
     
-    public static void validate(BMSModel model) {
+    public static void validate(BMSModel model, PlayerConfig config) {
     	BMSPlayerRule rule = getBMSPlayerRule(model.getMode());
     	final int judgerank = model.getJudgerank();
     	switch(model.getJudgerankType()) {
@@ -74,18 +75,30 @@ public enum BMSPlayerRule {
     	case BMS:
 			// TOTAL未定義の場合
 			if (model.getTotal() <= 0.0) {
-				model.setTotal(calculateDefaultTotal(model.getMode(), model.getTotalNotes()));
+				model.setTotal(calculateDefaultTotal(model.getMode(), model.getTotalNotes(), config));
 			}			
     		break;
     	case BMSON:
-    		final double total = calculateDefaultTotal(model.getMode(), model.getTotalNotes());
+		final double total = calculateDefaultTotal(model.getMode(), model.getTotalNotes(), config);
 			model.setTotal(model.getTotal() > 0 ? model.getTotal() / 100.0 * total : total);
     		break;
     	}
     	model.setTotalType(BMSModel.TotalType.BMS);
     }
     
-	private static double calculateDefaultTotal(Mode mode, int totalnotes) {
+    // For backward compatibility if needed, though updated references to pass config
+    public static void validate(BMSModel model) {
+        validate(model, new PlayerConfig());
+    }
+
+	private static double calculateDefaultTotal(Mode mode, int totalnotes, PlayerConfig config) {
+		if (config != null && config.isLr2Total()) {
+			// LR2 Calculation: 160 + (N + clamp(N-400, 0, 200))*0.16
+			int N = totalnotes;
+			int clamp = Math.min(Math.max(N - 400, 0), 200);
+			return 160 + (N + clamp) * 0.16;
+		}
+
 		switch (mode) {
 		case BEAT_7K:
 		case BEAT_5K:

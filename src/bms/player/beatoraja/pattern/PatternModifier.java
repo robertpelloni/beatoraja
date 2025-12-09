@@ -112,6 +112,10 @@ public abstract class PatternModifier {
 			case ROTATE_EX -> new LaneRotateShuffleModifier(player, true);
 			case RANDOM -> new LaneRandomShuffleModifier(player, false);
 			case RANDOM_EX -> new LaneRandomShuffleModifier(player, true);
+			// Note: M-RAN needs external base pattern, handled in BMSPlayer manually or needs a way to pass it here.
+			// Ideally BMSPlayer should call specific constructor if M-RAN is detected.
+			// But for now, if created via this factory without context, we return Identity or handle it upstream.
+			case M_RAN -> new LaneMRanModifier(player, null, false); // Fallback if called directly
 			case CROSS -> new LaneCrossShuffleModifier(player, false);
 			case RANDOM_PLAYABLE -> new LanePlayableRandomShuffleModifier(player, false);
 

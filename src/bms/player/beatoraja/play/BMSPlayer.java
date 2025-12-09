@@ -189,7 +189,7 @@ public class BMSPlayer extends MainState {
 				model = resource.loadBMSModel(playinfo.rand);
 				// 暫定処置
 				BMSModelUtils.setStartNoteTime(model, 1000);
-				BMSPlayerRule.validate(model);
+				BMSPlayerRule.validate(model, config);
 			}
 			playinfo.rand = model.getRandom();
 			Logger.getGlobal().info("譜面分岐 : " + Arrays.toString(playinfo.rand));
@@ -305,7 +305,7 @@ public class BMSPlayer extends MainState {
 				Logger.getGlobal().info("譜面オプション(2P) :  " + playinfo.randomoption2 + ", Seed : " + playinfo.randomoption2seed);
 			}
 
-			// SP譜面オプション
+			// SP譜面オプション (1P)
 			PatternModifier pm = PatternModifier.create(playinfo.randomoption, 0, model.getMode(), config);
 			if(playinfo.randomoptionseed != -1) {
 				pm.setSeed(playinfo.randomoptionseed);
@@ -314,6 +314,62 @@ public class BMSPlayer extends MainState {
 			}
 			mods.add(pm);
 			Logger.getGlobal().info("譜面オプション(1P) :  " + playinfo.randomoption + ", Seed : " + playinfo.randomoptionseed);
+
+			// Post-processing for M-RAN (Cross-reference)
+			if (model.getMode().player == 2) {
+				// Identify 1P and 2P modifiers in `mods`
+				LaneShuffleModifier p1Mod = null;
+				LaneShuffleModifier p2Mod = null;
+				int p1Index = -1;
+				int p2Index = -1;
+
+				for(int i=0; i<mods.size; i++) {
+					PatternModifier m = mods.get(i);
+					if (m.player == 0 && m instanceof LaneShuffleModifier) {
+						p1Mod = (LaneShuffleModifier) m;
+						p1Index = i;
+					} else if (m.player == 1 && m instanceof LaneShuffleModifier) {
+						p2Mod = (LaneShuffleModifier) m;
+						p2Index = i;
+					}
+				}
+
+				// Handle 2P M-RAN
+				if (playinfo.randomoption2 == bms.player.beatoraja.pattern.Random.M_RAN.ordinal() && p1Mod != null && p2Index != -1) {
+					PatternModifier temp1P = PatternModifier.create(playinfo.randomoption, 0, model.getMode(), config);
+					temp1P.setSeed(playinfo.randomoptionseed);
+					if (temp1P instanceof LaneShuffleModifier) {
+						BMSModel dummy = new BMSModel();
+						dummy.setMode(model.getMode());
+						((LaneShuffleModifier)temp1P).modify(dummy); // This populates `random` array in temp1P
+						int[] p1Pattern = ((LaneShuffleModifier)temp1P).getRandomPattern(model.getMode());
+
+						mods.set(p2Index, new LaneShuffleModifier.LaneMRanModifier(1, p1Pattern, ((LaneShuffleModifier)temp1P).isScratchLaneModify));
+						Logger.getGlobal().info("譜面オプション(2P) : M-RAN (Based on 1P)");
+					}
+				}
+
+				// Handle 1P M-RAN (referencing 2P) - Symmetric logic if needed, though less common.
+				// If 1P is M-RAN, we need 2P's pattern.
+				if (playinfo.randomoption == bms.player.beatoraja.pattern.Random.M_RAN.ordinal() && p2Mod != null) {
+					PatternModifier temp2P = PatternModifier.create(playinfo.randomoption2, 1, model.getMode(), config);
+					temp2P.setSeed(playinfo.randomoption2seed);
+					if (temp2P instanceof LaneShuffleModifier) {
+						BMSModel dummy = new BMSModel();
+						dummy.setMode(model.getMode());
+						((LaneShuffleModifier)temp2P).modify(dummy);
+						int[] p2Pattern = ((LaneShuffleModifier)temp2P).getRandomPattern(model.getMode());
+
+						int[] normalized = new int[p2Pattern.length];
+						int min = Integer.MAX_VALUE;
+						for(int v : p2Pattern) min = Math.min(min, v);
+						for(int i=0; i<p2Pattern.length; i++) normalized[i] = p2Pattern[i] - min;
+
+						mods.set(p1Index, new LaneShuffleModifier.LaneMRanModifier(0, normalized, ((LaneShuffleModifier)temp2P).isScratchLaneModify));
+						Logger.getGlobal().info("譜面オプション(1P) : M-RAN (Based on 2P)");
+					}
+				}
+			}
 
 			if (config.getSevenToNinePattern() >= 1 && model.getMode() == Mode.BEAT_7K) {
 				//7to9
@@ -358,7 +414,31 @@ public class BMSPlayer extends MainState {
 		if(replay != null && main.getInputProcessor().getKeyState(5)) {
 		}
 		// プレイゲージ、初期値設定
-		gauge = GrooveGauge.create(model, replay != null ? replay.gauge : config.getGauge(), resource);
+		int gaugeType = replay != null ? replay.gauge : config.getGauge();
+		// Apply LR2 Gauge if enabled and not playing a course (where gauge is fixed)
+		if (config.isLr2Gauge() && resource.getCourseBMSModels() == null) {
+			// Map standard gauge types to LR2 gauge properties if needed
+			// Currently GrooveGauge.create handles mapping based on CourseDataConstraint,
+			// but for standard play we need to force it or ensure the correct property is used.
+			// However, GrooveGauge.create(model, type, resource) uses resource.getConstraint().
+			// We might need to inject the constraint or handle it here.
+			// Actually, GrooveGauge.create(BMSModel model, int type, PlayerResource resource)
+			// calls create(model, type, coursetype, gauges).
+			// If we want to force LR2 gauge properties for standard play, we should probably
+			// pass the specific LR2 GaugeProperty.
+
+			// Simple mapping:
+			// If config.isLr2Gauge() is true, we want to use GaugeProperty.LR2 properties
+			// matching the selected gauge type (EASY, NORMAL, HARD, etc.)
+			// The GaugeProperty enum has an LR2 constant which contains the LR2 specific properties.
+
+			// We can bypass GrooveGauge.create(model, type, resource) and call the lower level one
+			// if we want to force the property.
+
+			gauge = GrooveGauge.create(model, gaugeType, 0, GaugeProperty.LR2);
+		} else {
+			gauge = GrooveGauge.create(model, gaugeType, resource);
+		}
 		// ゲージログ初期化
 		gaugelog = new FloatArray[gauge.getGaugeTypeLength()];
 		for(int i = 0; i < gaugelog.length; i++) {

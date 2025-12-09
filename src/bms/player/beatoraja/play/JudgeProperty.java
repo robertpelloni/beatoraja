@@ -51,6 +51,17 @@ public enum JudgeProperty {
             new boolean[]{true, true, true, true, true, false },
             JudgeWindowRule.NORMAL
 			),
+    LR2(new long[][]{ {-21000, 21000}, {-60000, 60000}, {-100000, 100000}, {-200000, 200000}, {-150000, 500000} }, // LR2 NORMAL Ranks
+            new long[][]{ {-30000, 30000}, {-60000, 60000}, {-100000, 100000}, {-200000, 200000}, {-160000, 500000}},
+            new long[][]{ {-120000, 120000}, {-160000, 160000}, {-200000, 200000}, {-280000, 220000}},
+            0,
+            new long[][]{ {-130000, 130000}, {-170000, 170000}, {-210000, 210000}, {-290000, 230000}},
+            0,
+            new boolean[]{true, true, true, false, false, true },
+            MissCondition.ALWAYS,
+            new boolean[]{true, true, true, true, true, false },
+            JudgeWindowRule.LR2
+            ),
 	;
 
     /**
@@ -154,7 +165,8 @@ public enum JudgeProperty {
     
     public enum JudgeWindowRule {
     	NORMAL (new int[]{25, 50, 75, 100, 125}, new boolean[]{false, false, false, false, true}),
-    	PMS (new int[]{33, 50, 70, 100, 133}, new boolean[]{true, false, false, true, true});
+	PMS (new int[]{33, 50, 70, 100, 133}, new boolean[]{true, false, false, true, true}),
+        LR2 (new int[]{50, 75, 100, 120}, new boolean[]{false, false, false, false, true}); // LR2 interpolation ranks
     	
     	/**
     	 * JUDGERANKの倍率(VERYHARD, HARD, NORMAL, EASY, VERYEASY)
@@ -166,6 +178,59 @@ public enum JudgeProperty {
     	public final boolean[] fixjudge;
 
         public long[][] create(long[][] org, int judgerank, int[] judgeWindowRate) {
+            // LR2 Logic: Interpolate between ranks if this is LR2 rule and judgerank is custom (not 25/50/75/100)
+            if (this == LR2) {
+                // Determine base ranks for interpolation
+                int lowerRank = 0;
+                int upperRank = 0;
+                int lowerVal = 0;
+                int upperVal = 0;
+
+                // Very Hard: 25 (Rank 0) -> Hard: 50 (Rank 1) -> Normal: 75 (Rank 2) -> Easy: 100 (Rank 3)
+                // Note: LR2 Very Easy is same as Normal (75) usually, or 120?
+                // Using standard LR2 ranks: VH=25, H=50, N=75, E=100.
+
+                if (judgerank <= 25) {
+                    lowerRank = 25; upperRank = 25; lowerVal = 0; upperVal = 0;
+                } else if (judgerank < 50) {
+                    lowerRank = 25; upperRank = 50; lowerVal = 0; upperVal = 1;
+                } else if (judgerank < 75) {
+                    lowerRank = 50; upperRank = 75; lowerVal = 1; upperVal = 2;
+                } else {
+                    lowerRank = 75; upperRank = 100; lowerVal = 2; upperVal = 3;
+                }
+
+                final long[][] judge = new long[org.length][2];
+                for (int i = 0; i < judge.length; i++) {
+                    for(int j = 0; j < 2; j++) {
+                        if (fixjudge[i]) {
+                            judge[i][j] = org[i][j];
+                        } else {
+                            long valLower = org[i][j] * lowerRank / 100;
+                            long valUpper = org[i][j] * upperRank / 100;
+
+                            if (lowerRank == upperRank) {
+                                judge[i][j] = valLower;
+                            } else {
+                                // Interpolate
+                                double ratio = (double)(judgerank - lowerRank) / (double)(upperRank - lowerRank);
+                                judge[i][j] = (long)(valLower + (valUpper - valLower) * ratio);
+                            }
+                        }
+                    }
+                }
+                // Apply custom judge window rate (practice mode sliders) - LR2 handles this differently usually,
+                // but if custom judge is on top of LR2 mode, we apply it.
+                // However, LR2oraja seems to imply "Custom Judge" slider IS the interpolation factor in practice mode.
+                // If judgeWindowRate is not 100, we scale.
+                for (int i = 0; i < Math.min(org.length, 3); i++) {
+                    for(int j = 0;j < 2;j++) {
+                        judge[i][j] = judge[i][j]*judgeWindowRate[i] / 100;
+                    }
+                }
+                return judge;
+            }
+
     		final long[][] judge = new long[org.length][2];
     		for (int i = 0; i < judge.length; i++) {
     			for(int j = 0;j < 2;j++) {
