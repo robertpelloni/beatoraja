@@ -1,0 +1,91 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.1.0'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+    flatDir {
+        dirs 'lib'
+    }
+}
+
+javafx {
+    version = "21"
+    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.graphics', 'javafx.swing', 'javafx.base', 'javafx.media' ]
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src']
+        }
+        resources {
+            srcDirs = ['src']
+            exclude '**/*.java'
+        }
+    }
+}
+
+configurations {
+    natives
+}
+
+dependencies {
+    // LibGDX
+    def gdxVersion = '1.12.1'
+    implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+    implementation "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
+    implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+    implementation "com.badlogicgames.gdx-controllers:gdx-controllers-core:2.2.3"
+    implementation "com.badlogicgames.gdx-controllers:gdx-controllers-desktop:2.2.3"
+
+    // Natives
+    runtimeOnly "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+    runtimeOnly "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+
+    // Apache Commons
+    implementation 'org.apache.commons:commons-compress:1.26.0'
+    implementation 'commons-dbutils:commons-dbutils:1.8.1'
+
+    // Database
+    implementation 'org.xerial:sqlite-jdbc:3.45.1.0'
+
+    // Social
+    implementation 'org.twitter4j:twitter4j-core:4.1.2'
+    // implementation 'club.minnced:java-discord-rpc:2.0.2' // Failed to resolve transitive dependency
+    implementation name: 'java-discord-rpc-2.0.1-all'
+
+    // Multimedia (JavaCV/FFMPEG)
+    implementation 'org.bytedeco:javacv:1.5.10'
+    implementation 'org.bytedeco:javacpp:1.5.10'
+    implementation 'org.bytedeco:ffmpeg:6.1.1-1.5.10'
+    runtimeOnly 'org.bytedeco:ffmpeg:6.1.1-1.5.10:windows-x86_64'
+    runtimeOnly 'org.bytedeco:ffmpeg:6.1.1-1.5.10:linux-x86_64'
+    runtimeOnly 'org.bytedeco:ffmpeg:6.1.1-1.5.10:macosx-x86_64'
+
+    // Local Libs
+    implementation name: 'jbms-parser'
+    implementation name: 'jbmstable-parser'
+    implementation name: 'luaj-jse-3.0.2-custom'
+    implementation name: 'jportaudio'
+    implementation name: 'jflac-codec-1.5.3'
+}
+
+mainClassName = 'bms.player.beatoraja.MainLoader'
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+run {
+    workingDir = project.projectDir
+}
