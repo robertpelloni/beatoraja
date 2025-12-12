@@ -33,9 +33,10 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
-import twitter4j.AccessToken;
-import twitter4j.RequestToken;
-import twitter4j.OAuthAuthorization;
+import twitter4j.auth.AccessToken;
+import twitter4j.auth.RequestToken;
+import twitter4j.auth.OAuthAuthorization;
+import twitter4j.conf.ConfigurationBuilder;
 
 /**
  * Beatorajaの設定ダイアログ
@@ -764,7 +765,10 @@ public class PlayConfigurationView implements Initializable {
 
 	@FXML
 	public void startTwitterAuth() {
-		OAuthAuthorization oauth = OAuthAuthorization.getInstance(txtTwitterConsumerKey.getText(), txtTwitterConsumerSecret.getText());
+		ConfigurationBuilder cb = new ConfigurationBuilder();
+		cb.setOAuthConsumerKey(txtTwitterConsumerKey.getText());
+		cb.setOAuthConsumerSecret(txtTwitterConsumerSecret.getText());
+		OAuthAuthorization oauth = new OAuthAuthorization(cb.build());
 		try {
 			requestToken = oauth.getOAuthRequestToken();
 			Desktop desktop = Desktop.getDesktop();
@@ -784,7 +788,10 @@ public class PlayConfigurationView implements Initializable {
 
 	@FXML
 	public void startPINAuth() {
-		OAuthAuthorization oauth = OAuthAuthorization.getInstance(player.getTwitterConsumerKey(), player.getTwitterConsumerSecret());
+		ConfigurationBuilder cb = new ConfigurationBuilder();
+		cb.setOAuthConsumerKey(player.getTwitterConsumerKey());
+		cb.setOAuthConsumerSecret(player.getTwitterConsumerSecret());
+		OAuthAuthorization oauth = new OAuthAuthorization(cb.build());
 		try {
 			AccessToken accessToken = oauth.getOAuthAccessToken(requestToken, txtTwitterPIN.getText());
 			player.setTwitterAccessToken(accessToken.getToken());
