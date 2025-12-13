@@ -60,7 +60,7 @@ dependencies {
     implementation 'org.xerial:sqlite-jdbc:3.45.1.0'
 
     // Social
-    implementation 'org.twitter4j:twitter4j-core:4.0.4'
+    implementation 'org.twitter4j:twitter4j-core:4.1.2'
     // implementation 'club.minnced:java-discord-rpc:2.0.2' // Failed to resolve transitive dependency
     implementation name: 'java-discord-rpc-2.0.1-all'
 
