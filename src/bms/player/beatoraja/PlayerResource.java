@@ -199,7 +199,7 @@ public final class PlayerResource {
 		}
 
 		marginTime = BMSModelUtils.setStartNoteTime(model, 1000);
-		BMSPlayerRule.validate(model);
+		BMSPlayerRule.validate(model, pconfig);
 
 		// 地雷ノートに爆発音が定義されていない場合、デフォルト爆発音をセットする
 		final int lanes = model.getMode().key;

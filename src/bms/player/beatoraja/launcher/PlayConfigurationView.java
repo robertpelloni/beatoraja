@@ -33,9 +33,9 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
+import twitter4j.auth.OAuthAuthorization;
 import twitter4j.conf.ConfigurationBuilder;
 
 /**
@@ -109,6 +109,15 @@ public class PlayConfigurationView implements Initializable {
 	private Spinner<Double> hispeedmargin;
 	@FXML
 	private CheckBox hispeedautoadjust;
+
+	@FXML
+	private CheckBox lr2Gauge;
+	@FXML
+	private CheckBox lr2Judge;
+	@FXML
+	private CheckBox lr2LN;
+	@FXML
+	private CheckBox lr2Total;
 
 	@FXML
 	private ComboBox<Integer> scoreop;
@@ -289,7 +298,7 @@ public class PlayConfigurationView implements Initializable {
 
 
 		String[] scoreOptions = new String[] { "OFF", "MIRROR", "RANDOM", "R-RANDOM", "S-RANDOM", "SPIRAL", "H-RANDOM",
-				"ALL-SCR", "RANDOM-EX", "S-RANDOM-EX" };
+				"ALL-SCR", "RANDOM-EX", "S-RANDOM-EX", "M-RAN" };
 		initComboBox(scoreop, scoreOptions);
 		initComboBox(scoreop2, scoreOptions);
 		initComboBox(doubleop, new String[] { "OFF", "FLIP", "BATTLE", "BATTLE AS" });
@@ -439,6 +448,11 @@ public class PlayConfigurationView implements Initializable {
 		gaugeop.getSelectionModel().select(player.getGauge());
 		lntype.getSelectionModel().select(player.getLnmode());
 
+		lr2Gauge.setSelected(player.isLr2Gauge());
+		lr2Judge.setSelected(player.isLr2Judge());
+		lr2LN.setSelected(player.isLr2LN());
+		lr2Total.setSelected(player.isLr2Total());
+
 		notesdisplaytiming.getValueFactory().setValue(player.getJudgetiming());
 		notesdisplaytimingautoadjust.setSelected(player.isNotesDisplayTimingAutoAdjust());
 
@@ -545,6 +559,10 @@ public class PlayConfigurationView implements Initializable {
 		player.setWindowHold(windowhold.isSelected());
 		player.setGauge(gaugeop.getValue());
 		player.setLnmode(lntype.getValue());
+		player.setLr2Gauge(lr2Gauge.isSelected());
+		player.setLr2Judge(lr2Judge.isSelected());
+		player.setLr2LN(lr2LN.isSelected());
+		player.setLr2Total(lr2Total.isSelected());
 		player.setJudgetiming(getValue(notesdisplaytiming));
 		player.setNotesDisplayTimingAutoAdjust(notesdisplaytimingautoadjust.isSelected());
 
@@ -750,12 +768,9 @@ public class PlayConfigurationView implements Initializable {
 		ConfigurationBuilder cb = new ConfigurationBuilder();
 		cb.setOAuthConsumerKey(txtTwitterConsumerKey.getText());
 		cb.setOAuthConsumerSecret(txtTwitterConsumerSecret.getText());
-		cb.setOAuthAccessToken(null);
-		cb.setOAuthAccessTokenSecret(null);
-		TwitterFactory twitterfactory = new TwitterFactory(cb.build());
-		Twitter twitter = twitterfactory.getInstance();
+		OAuthAuthorization oauth = new OAuthAuthorization(cb.build());
 		try {
-			requestToken = twitter.getOAuthRequestToken();
+			requestToken = oauth.getOAuthRequestToken();
 			Desktop desktop = Desktop.getDesktop();
 			URI uri = new URI(requestToken.getAuthorizationURL());
 			desktop.browse(uri);
@@ -776,12 +791,9 @@ public class PlayConfigurationView implements Initializable {
 		ConfigurationBuilder cb = new ConfigurationBuilder();
 		cb.setOAuthConsumerKey(player.getTwitterConsumerKey());
 		cb.setOAuthConsumerSecret(player.getTwitterConsumerSecret());
-		cb.setOAuthAccessToken(null);
-		cb.setOAuthAccessTokenSecret(null);
-		TwitterFactory twitterfactory = new TwitterFactory(cb.build());
-		Twitter twitter = twitterfactory.getInstance();
+		OAuthAuthorization oauth = new OAuthAuthorization(cb.build());
 		try {
-			AccessToken accessToken = twitter.getOAuthAccessToken(requestToken, txtTwitterPIN.getText());
+			AccessToken accessToken = oauth.getOAuthAccessToken(requestToken, txtTwitterPIN.getText());
 			player.setTwitterAccessToken(accessToken.getToken());
 			player.setTwitterAccessTokenSecret(accessToken.getTokenSecret());
 			commit();
