@@ -121,6 +121,8 @@ public class SongData implements Validatable, IpfsInformation {
 	private String charthash;
 	private List<String> org_md5;
 
+	private NotesRadar radar;
+
 	public SongData() {
 		
 	}
@@ -211,6 +213,13 @@ public class SongData implements Validatable, IpfsInformation {
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
+
+		this.radar = new NotesRadar(model);
+		// Logger.getGlobal().info("Calculated Notes Radar for " + model.getTitle() + ": " + this.radar.toString());
+	}
+
+	public NotesRadar getNotesRadar() {
+		return radar;
 	}
 
 	public BMSModel getBMSModel() {

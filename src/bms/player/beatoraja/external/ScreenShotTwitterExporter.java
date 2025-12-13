@@ -89,10 +89,14 @@ public class ScreenShotTwitterExporter implements ScreenShotExporter {
 		String text = builder.toString();
 		text = text.replace("\\", "￥").replace("/", "／").replace(":", "：").replace("*", "＊").replace("?", "？").replace("\"", "”").replace("<", "＜").replace(">", "＞").replace("|", "｜").replace("\t", " ");
 
-		Twitter twitter = Twitter.newBuilder()
-				.oAuthConsumer(consumerKey, consumerSecret)
-				.oAuthAccessToken(accessToken, accessTokenSecret)
-				.build();
+		ConfigurationBuilder cb = new ConfigurationBuilder();
+		cb.setDebugEnabled(true)
+		  .setOAuthConsumerKey(consumerKey)
+		  .setOAuthConsumerSecret(consumerSecret)
+		  .setOAuthAccessToken(accessToken)
+		  .setOAuthAccessTokenSecret(accessTokenSecret);
+		TwitterFactory tf = new TwitterFactory(cb.build());
+		Twitter twitter = tf.getInstance();
 
 		Pixmap pixmap = new Pixmap(Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight(),
 				Pixmap.Format.RGBA8888);

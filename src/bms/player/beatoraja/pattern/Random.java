@@ -25,13 +25,14 @@ public enum Random {
 
     FLIP(RandomUnit.PLAYER, true),
     BATTLE(RandomUnit.PLAYER, true),
+    M_RAN(RandomUnit.LANE, false),
     ;
 
 	public final RandomUnit unit;
-	
-	public static final Random[] OPTION_GENERAL = 
-		{IDENTITY, MIRROR, RANDOM, ROTATE, S_RANDOM, SPIRAL, H_RANDOM, ALL_SCR, RANDOM_EX, S_RANDOM_EX};
-	public static final Random[] OPTION_PMS = 
+
+	public static final Random[] OPTION_GENERAL =
+		{IDENTITY, MIRROR, RANDOM, ROTATE, S_RANDOM, SPIRAL, H_RANDOM, ALL_SCR, RANDOM_EX, S_RANDOM_EX, M_RAN};
+	public static final Random[] OPTION_PMS =
 		{IDENTITY, MIRROR, RANDOM, ROTATE, S_RANDOM_NO_THRESHOLD, SPIRAL, H_RANDOM, CONVERGE, RANDOM_PLAYABLE, S_RANDOM_PLAYABLE};
 
 	public static final Random[] OPTION_DOUBLE = {IDENTITY, FLIP};
@@ -53,7 +54,7 @@ public enum Random {
 			default -> OPTION_GENERAL;
 		};
 		return id >= 0 && id < randoms.length ? randoms[id] : IDENTITY;
-	}	
+	}
 }
 
 enum RandomUnit {

@@ -714,7 +714,9 @@ public class JudgeManager {
 			return;
 		}
 		n.setMicroPlayTime(mfast);
-		score.addJudgeCount(judge, mfast >= 0, 1);
+		boolean isScratch = (state.sckey >= 0); // Logic: if lane is assigned to scratch
+		// Note: state.sckey is -1 if not scratch.
+		score.addJudgeCount(judge, mfast >= 0, isScratch, 1);
 
 		if (judge < 4) {
 			recentJudgesIndex = (recentJudgesIndex + 1) % recentJudges.length;
