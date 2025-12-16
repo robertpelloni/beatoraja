@@ -20,6 +20,7 @@ import bms.player.beatoraja.pattern.LaneShuffleModifier.*;
 import bms.player.beatoraja.play.PracticeConfiguration.PracticeProperty;
 import bms.player.beatoraja.play.bga.BGAProcessor;
 import bms.player.beatoraja.skin.SkinType;
+import bms.player.beatoraja.arena.ArenaManager;
 
 /**
  * BMSプレイヤー本体
@@ -29,6 +30,8 @@ import bms.player.beatoraja.skin.SkinType;
 public class BMSPlayer extends MainState {
 
 	private BMSModel model;
+
+	private ArenaManager arenaManager;
 
 	private LaneRenderer lanerender;
 	private LaneProperty laneProperty;
@@ -439,6 +442,16 @@ public class BMSPlayer extends MainState {
 		} else {
 			gauge = GrooveGauge.create(model, gaugeType, resource);
 		}
+
+		// Initialize Arena Mode if playing Battle/DP and configured
+		// For now, we activate Arena Logic if we are in Battle mode (doubleoption >= 2)
+		if (playinfo.doubleoption >= 2) {
+			arenaManager = new ArenaManager();
+			arenaManager.addPlayer("1P");
+			arenaManager.addPlayer("2P");
+			Logger.getGlobal().info("Arena Mode Initialized");
+		}
+
 		// ゲージログ初期化
 		gaugelog = new FloatArray[gauge.getGaugeTypeLength()];
 		for(int i = 0; i < gaugelog.length; i++) {
@@ -1044,6 +1057,14 @@ public class BMSPlayer extends MainState {
 		timer.switchTimer(TIMER_SCORE_AAA, getScoreDataProperty().qualifyRank(24));
 		timer.switchTimer(TIMER_SCORE_BEST, this.judge.getScoreData().getExscore() >= getScoreDataProperty().getBestScore());
 		timer.switchTimer(TIMER_SCORE_TARGET, this.judge.getScoreData().getExscore() >= getScoreDataProperty().getRivalScore());
+
+		// Arena Score Update
+		if (arenaManager != null) {
+			arenaManager.updateScore("1P", this.judge.getScoreData().getExscore());
+			if (this.judge.getScoreData2() != null) {
+				arenaManager.updateScore("2P", this.judge.getScoreData2().getExscore());
+			}
+		}
 
 		((PlaySkin)getSkin()).pomyu.PMcharaJudge = judge + 1;
 	}

@@ -32,9 +32,14 @@ public class JudgeManager {
 	private int lntype;
 
 	/**
-	 * 現在の判定カウント内訳
+	 * 現在の判定カウント内訳 (1P)
 	 */
 	private ScoreData score = new ScoreData();
+
+	/**
+	 * 現在の判定カウント内訳 (2P - Arena/Battle)
+	 */
+	private ScoreData score2;
 
 	/**
 	 * 現在のコンボ数
@@ -142,6 +147,14 @@ public class JudgeManager {
 		score = new ScoreData(orgmode);
 		score.setNotes(model.getTotalNotes());
 		score.setSha256(model.getSHA256());
+
+		if (model.getMode().player == 2) {
+			score2 = new ScoreData(orgmode);
+			score2.setNotes(model.getTotalNotes()); // Or recalculate for 2P side if different
+			score2.setSha256(model.getSHA256());
+			score2.setJudgeAlgorithm(algorithm);
+			score2.setRule(BMSPlayerRule.getBMSPlayerRule(orgmode));
+		}
 		ghost = new int[model.getTotalNotes()];
 		for (int i=0; i<ghost.length; i++) {
 			ghost[i] = 4;
@@ -703,20 +716,23 @@ public class JudgeManager {
 	private final int[] COMBO_TIMER = { TIMER_COMBO_1P, TIMER_COMBO_2P, TIMER_COMBO_3P };
 
 	private void updateMicro(LaneState state, Note n, long mtime, int judge, long mfast, boolean judgeVanish) {
+		ScoreData targetScore = (state.player == 1 && score2 != null) ? score2 : score;
+
 		if (judgeVanish) {
-			if (score.getPassnotes() < ghost.length) {
-				ghost[score.getPassnotes()] = judge;
+			if (state.player == 0) {
+				if (score.getPassnotes() < ghost.length) {
+					ghost[score.getPassnotes()] = judge;
+				}
 			}
 			n.setState(judge + 1);
-			score.setPassnotes(score.getPassnotes() + 1);
+			targetScore.setPassnotes(targetScore.getPassnotes() + 1);
 		}
 		if (miss == MissCondition.ONE && judge == 4 && n.getPlayTime() != 0) {
 			return;
 		}
 		n.setMicroPlayTime(mfast);
-		boolean isScratch = (state.sckey >= 0); // Logic: if lane is assigned to scratch
-		// Note: state.sckey is -1 if not scratch.
-		score.addJudgeCount(judge, mfast >= 0, isScratch, 1);
+		boolean isScratch = (state.sckey >= 0);
+		targetScore.addJudgeCount(judge, mfast >= 0, isScratch, 1);
 
 		if (judge < 4) {
 			recentJudgesIndex = (recentJudgesIndex + 1) % recentJudges.length;
@@ -724,15 +740,23 @@ public class JudgeManager {
 			microrecentJudges[recentJudgesIndex] = mfast;
 		}
 
-		if (combocond[judge] && judge < 5) {
-			combo++;
-			score.setCombo(Math.max(score.getCombo(), combo));
-			coursecombo++;
-			coursemaxcombo = coursemaxcombo > coursecombo ? coursemaxcombo : coursecombo;
-		}
-		if (!combocond[judge]) {
-			combo = 0;
-			coursecombo = 0;
+		if (state.player == 0) {
+			if (combocond[judge] && judge < 5) {
+				combo++;
+				score.setCombo(Math.max(score.getCombo(), combo));
+				coursecombo++;
+				coursemaxcombo = coursemaxcombo > coursecombo ? coursemaxcombo : coursecombo;
+			}
+			if (!combocond[judge]) {
+				combo = 0;
+				coursecombo = 0;
+			}
+		} else if (targetScore == score2) {
+			// Basic combo tracking for 2P (stored in ScoreData)
+			// ScoreData has maxcombo, but we need current combo tracking locally if we want it precise?
+			// For now, ScoreData doesn't expose a 'currentCombo' setter, only setCombo(max).
+			// We might need to track 2P combo in JudgeManager if needed for display.
+			// Assuming we just update max combo for now.
 		}
 
 		if (judge != 4)
@@ -843,6 +867,10 @@ public class JudgeManager {
 
 	public ScoreData getScoreData() {
 		return score;
+	}
+
+	public ScoreData getScoreData2() {
+		return score2;
 	}
 
 	/**

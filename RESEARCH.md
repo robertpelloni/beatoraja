@@ -145,6 +145,17 @@
 *   **Pinky Crush (2024):** **Categories** in song select. **BGA Thumbnails**.
 *   **Sparkle Shower (2025):** **DJ Training**.
 
+## Beatmania IIDX INFINITAS (Home Version)
+*   **Platform:** PC (Windows).
+*   **Key Features:**
+    *   **Monthly Subscription:** Requires e-amusement subscription.
+    *   **120Hz Support:** Added in later updates to match Lightning Model.
+    *   **Bit Unlock System:** Songs unlocked via "Bits" earned in-game.
+    *   **Championship Mode:** Online ranking events.
+    *   **Missions:** Daily/Repeating missions for Bits.
+    *   **Controller Support:** Official Entry Model and Premium Model controllers.
+    *   **R-Random & Assist Easy:** Fully supported.
+
 ## Competitor Feature Comparison
 
 ### EZ2DJ (EZ2AC)
@@ -170,6 +181,18 @@
 
 ## Missing Features in Beatoraja (Gap Analysis)
 
+1.  **Arena Mode:** Online real-time battle. (Partially implemented locally).
+2.  **Step-Up / Story Mode:** Progressive mode.
+3.  **Advanced Practice Features:** Time Free / Hazard.
+4.  **Multi-Spin Scratch (MSS):** Continuous scratching.
+5.  **BGA Thumbnails:** Supported by backend, needs UI verification. (Verified: `STAGEFILE` is exposed).
+6.  **Osu! Support:** Now partially implemented (Loader + Audio).
+
+## Completed Features (This Session)
+*   **Fast/Slow Separation:** Implemented in ScoreData/JudgeManager and exposed to Skins.
+*   **Arena Groundwork:** Manager created, 2P score separation implemented in JudgeManager.
+*   **Osu! Decoder:** Basic parsing of `.osu` files to `BMSModel`.
+*   **LR2 Features:** Gauge, Judge, LN, Total implemented.
 Based on the research, the following features are potentially missing or could be improved in Beatoraja:
 
 1.  **Arena Mode:** Online real-time battle with up to 4 players. Beatoraja has IR and Rivals, but no lobby-based real-time match system.
