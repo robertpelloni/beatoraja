@@ -26,10 +26,12 @@ import bms.player.beatoraja.result.MusicResult;
 import bms.player.beatoraja.select.MusicSelector;
 import bms.player.beatoraja.skin.property.IntegerPropertyFactory;
 import bms.player.beatoraja.skin.property.StringPropertyFactory;
-import twitter4j.v1.Status;
-import twitter4j.v1.StatusUpdate;
+import twitter4j.Status;
+import twitter4j.StatusUpdate;
 import twitter4j.Twitter;
-import twitter4j.v1.UploadedMedia;
+import twitter4j.TwitterFactory;
+import twitter4j.UploadedMedia;
+import twitter4j.conf.ConfigurationBuilder;
 
 public class ScreenShotTwitterExporter implements ScreenShotExporter {
 
@@ -110,11 +112,11 @@ public class ScreenShotTwitterExporter implements ScreenShotExporter {
 			ByteArrayInputStream byteArrayInputStream=new ByteArrayInputStream(imageBytes);
 
 			// Upload Media and Post
-			UploadedMedia mediastatus = twitter.v1().tweets().uploadMedia("from beatoraja", byteArrayInputStream);
+			UploadedMedia mediastatus = twitter.uploadMedia("from beatoraja", byteArrayInputStream);
 			Logger.getGlobal().info("Twitter Media Upload:" + mediastatus.toString());
-			StatusUpdate update = StatusUpdate.of(text);
-			update.mediaIds(mediastatus.getMediaId());
-			Status status = twitter.v1().tweets().updateStatus(update);
+			StatusUpdate update = new StatusUpdate(text);
+			update.setMediaIds(new long[]{mediastatus.getMediaId()});
+			Status status = twitter.updateStatus(update);
 			Logger.getGlobal().info("Twitter Post:" + status.toString());
 			pixmap.dispose();
 			currentState.main.getMessageRenderer().addMessage( "Twitter Upload : " + text, 2000, Color.YELLOW, 0);

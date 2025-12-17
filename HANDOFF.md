@@ -22,6 +22,7 @@ This session focused on modernizing `beatoraja`, integrating features from the `
     *   **Audio:** Assigns audio filename to WAV index `01`.
     *   **Mapping:** Basic 7K mapping (X-coordinate to Lane 1-7).
     *   **Timing:** Basic BPM setting.
+    *   **Structure:** Uses `TimeLine` construction for proper note placement.
 *   **Integration:** Hooked into `PlayerResource.loadBMSModel`.
 
 ### 5. LR2 Features (lr2oraja)
@@ -29,6 +30,6 @@ This session focused on modernizing `beatoraja`, integrating features from the `
 
 ## Next Steps for Future Sessions
 1.  **Arena Mode Networking:** Implement `ArenaClient` / `ArenaServer` to sync `ArenaData` across the network.
-2.  **Osu! Refinement:** Improve `OsuDecoder` to handle sliders (convert to LNs) and spinners (convert to Scratch LNs) more robustly. Handle multiple timing points (BPM changes).
-3.  **Endless Dream Features:** Port the "In-game Downloader" and "Mod Menu".
+2.  **Mod Menu:** Implement the in-game overlay (F5 key) to adjust settings on the fly (Endless Dream feature).
+3.  **In-Game Downloader:** Implement the song downloader using `Crawlable` interface (Endless Dream feature).
 4.  **UI Polish:** Ensure the default skin or a new skin displays the new Fast/Slow and Arena metrics.
