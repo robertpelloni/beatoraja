@@ -15,7 +15,7 @@ This session focused on modernizing `beatoraja`, integrating features from the `
 ### 3. Feature: Arena Mode
 *   **ArenaManager:** Created to manage players and calculate ranks/points.
 *   **Score Separation:** Modified `JudgeManager` to include `score2` for 2P/Battle modes. Updated `BMSPlayer` to feed both scores to `ArenaManager`.
-*   **Current State:** Local logic exists. Network logic is not yet implemented.
+*   **Networking:** Implemented `ArenaClient` and `ArenaServer` (TCP/JSON) to sync scores between players.
 
 ### 4. Feature: Osu! File Support
 *   **OsuDecoder.java:** Implemented a parser for `.osu` files that maps HitObjects to a `BMSModel`.
@@ -37,7 +37,11 @@ This session focused on modernizing `beatoraja`, integrating features from the `
 *   **Integration:** Hooked into `MusicSelector` to trigger downloads for songs with valid URLs (e.g. from BMS Search) when the local file is missing.
 *   **SongData:** Updated to implement `Crawlable` interface.
 
+### 8. Feature: Arena Mode Networking
+*   **ArenaClient/Server:** Implemented TCP-based networking in `src/bms/player/beatoraja/arena/net`.
+*   **Protocol:** JSON-based message passing for score updates and player joining.
+*   **Integration:** Updated `ArenaManager` to handle remote player scores and rank calculation.
+
 ## Next Steps for Future Sessions
-1.  **Arena Mode Networking:** Implement `ArenaClient` / `ArenaServer` to sync `ArenaData` across the network.
-2.  **UI Polish:** Ensure the default skin or a new skin displays the new Fast/Slow and Arena metrics.
-3.  **Research:** Continue compiling features from IIDX releases in `RESEARCH.md`.
+1.  **UI Polish:** Ensure the default skin or a new skin displays the new Fast/Slow and Arena metrics.
+2.  **Research:** Continue compiling features from IIDX releases in `RESEARCH.md`.

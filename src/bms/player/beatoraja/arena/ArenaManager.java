@@ -4,27 +4,63 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.io.IOException;
+import bms.player.beatoraja.arena.net.ArenaClient;
+import bms.player.beatoraja.arena.net.ArenaServer;
 
 public class ArenaManager {
 
     private final List<ArenaData> players;
+    private ArenaServer server;
+    private ArenaClient client;
 
     public ArenaManager() {
         this.players = new ArrayList<>();
     }
 
+    public void startServer(int port) throws IOException {
+        server = new ArenaServer(port);
+    }
+
+    public void connect(String host, int port, String playerName) throws IOException {
+        client = new ArenaClient(this, host, port, playerName);
+        // Ensure local player exists (usually handled by BMSPlayer adding "1P")
+        if (getPlayer("1P") == null) {
+            addPlayer("1P");
+        }
+    }
+
+    public void dispose() {
+        if (client != null) client.close();
+        if (server != null) server.stop();
+    }
+
     public void addPlayer(String name) {
-        players.add(new ArenaData(name));
+        if (getPlayer(name) == null) {
+            players.add(new ArenaData(name));
+        }
     }
 
     public void updateScore(String name, int score) {
+        boolean found = false;
         for (ArenaData player : players) {
             if (player.getPlayerName().equals(name)) {
                 player.setScore(score);
+                found = true;
                 break;
             }
         }
+        if (!found) {
+            addPlayer(name);
+            getPlayer(name).setScore(score);
+        }
+
         calculateRanks();
+
+        // If this update is for the local player ("1P"), broadcast it via client
+        if (client != null && name.equals("1P")) {
+            client.sendScore(score);
+        }
     }
 
     public void calculateRanks() {
