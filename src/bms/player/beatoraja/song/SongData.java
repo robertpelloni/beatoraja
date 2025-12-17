@@ -11,13 +11,14 @@ import bms.model.*;
 import bms.player.beatoraja.Validatable;
 import bms.player.beatoraja.play.BMSPlayerRule;
 import bms.tool.mdprocessor.IpfsInformation;
+import bms.tool.crawler.Crawlable;
 
 /**
  * 楽曲データ
  * 
  * @author exch
  */
-public class SongData implements Validatable, IpfsInformation {
+public class SongData implements Validatable, IpfsInformation, Crawlable {
 
 	public static final SongData[] EMPTY = new SongData[0];
 	

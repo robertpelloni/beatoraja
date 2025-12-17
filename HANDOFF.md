@@ -32,8 +32,12 @@ This session focused on modernizing `beatoraja`, integrating features from the `
 *   **ModMenu.java:** Implemented an in-game overlay (F5 key) using LibGDX Scene2D to adjust Hi-Speed and Lane Cover on the fly.
 *   **Integration:** Hooked into `BMSPlayer` to handle input (via Multiplexer) and rendering.
 
+### 7. Feature: In-Game Downloader (Endless Dream)
+*   **Crawler.java:** Implemented a background download manager in `src/bms/tool/crawler`. Supports Zip and Tar/Gz extraction.
+*   **Integration:** Hooked into `MusicSelector` to trigger downloads for songs with valid URLs (e.g. from BMS Search) when the local file is missing.
+*   **SongData:** Updated to implement `Crawlable` interface.
+
 ## Next Steps for Future Sessions
 1.  **Arena Mode Networking:** Implement `ArenaClient` / `ArenaServer` to sync `ArenaData` across the network.
-2.  **In-Game Downloader:** Implement the song downloader using `Crawlable` interface (Endless Dream feature).
-3.  **UI Polish:** Ensure the default skin or a new skin displays the new Fast/Slow and Arena metrics.
-4.  **Research:** Continue compiling features from IIDX releases in `RESEARCH.md`.
+2.  **UI Polish:** Ensure the default skin or a new skin displays the new Fast/Slow and Arena metrics.
+3.  **Research:** Continue compiling features from IIDX releases in `RESEARCH.md`.
