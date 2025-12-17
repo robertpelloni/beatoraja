@@ -28,8 +28,12 @@ This session focused on modernizing `beatoraja`, integrating features from the `
 ### 5. LR2 Features (lr2oraja)
 *   **Gauge/Judge:** Added LR2-specific constants to `GaugeProperty` and logic for "Bad on Early Release" for Long Notes in `JudgeManager`.
 
+### 6. Feature: Mod Menu (Endless Dream)
+*   **ModMenu.java:** Implemented an in-game overlay (F5 key) using LibGDX Scene2D to adjust Hi-Speed and Lane Cover on the fly.
+*   **Integration:** Hooked into `BMSPlayer` to handle input (via Multiplexer) and rendering.
+
 ## Next Steps for Future Sessions
 1.  **Arena Mode Networking:** Implement `ArenaClient` / `ArenaServer` to sync `ArenaData` across the network.
-2.  **Mod Menu:** Implement the in-game overlay (F5 key) to adjust settings on the fly (Endless Dream feature).
-3.  **In-Game Downloader:** Implement the song downloader using `Crawlable` interface (Endless Dream feature).
-4.  **UI Polish:** Ensure the default skin or a new skin displays the new Fast/Slow and Arena metrics.
+2.  **In-Game Downloader:** Implement the song downloader using `Crawlable` interface (Endless Dream feature).
+3.  **UI Polish:** Ensure the default skin or a new skin displays the new Fast/Slow and Arena metrics.
+4.  **Research:** Continue compiling features from IIDX releases in `RESEARCH.md`.

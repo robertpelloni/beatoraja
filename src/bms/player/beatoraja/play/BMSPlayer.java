@@ -21,6 +21,7 @@ import bms.player.beatoraja.play.PracticeConfiguration.PracticeProperty;
 import bms.player.beatoraja.play.bga.BGAProcessor;
 import bms.player.beatoraja.skin.SkinType;
 import bms.player.beatoraja.arena.ArenaManager;
+import bms.player.beatoraja.play.ui.ModMenu;
 
 /**
  * BMSプレイヤー本体
@@ -32,6 +33,8 @@ public class BMSPlayer extends MainState {
 	private BMSModel model;
 
 	private ArenaManager arenaManager;
+
+	private ModMenu modMenu;
 
 	private LaneRenderer lanerender;
 	private LaneProperty laneProperty;
@@ -542,6 +545,8 @@ public class BMSPlayer extends MainState {
 			}
 			getScoreDataProperty().setTargetScore(score.getExscore(), score.decodeGhost(), resource.getTargetScoreData() != null ? resource.getTargetScoreData().getExscore() : 0 , null, model.getTotalNotes());
 		}
+
+		modMenu = new ModMenu(this);
 	}
 
 	@Override
@@ -847,6 +852,17 @@ public class BMSPlayer extends MainState {
 		}
 
 		prevtime = micronow;
+
+		if (modMenu != null) {
+			modMenu.update();
+		}
+	}
+
+	@Override
+	public void resize(int width, int height) {
+		if (modMenu != null) {
+			modMenu.resize(width, height);
+		}
 	}
 
 	public void setPlaySpeed(int playspeed) {
@@ -1020,6 +1036,9 @@ public class BMSPlayer extends MainState {
 		super.dispose();
 		lanerender.dispose();
 		practice.dispose();
+		if (modMenu != null) {
+			modMenu.dispose();
+		}
 		Logger.getGlobal().info("システム描画のリソース解放");
 	}
 
