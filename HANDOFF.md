@@ -42,7 +42,16 @@ This session focused on modernizing `beatoraja`, integrating features from the `
 *   **UI:** Added Arena Mode window to `ModMenu` for connection/server management and status display.
 *   **Integration:** Updated `ArenaManager` to handle remote player scores and rank calculation.
 
+### 10. Feature: Step-Up Mode (Foundation)
+*   **StepUpManager:** Logic to manage player level and course generation.
+*   **StepUpData:** Persistence for step-up progress.
+
+### 11. Security Fixes
+*   **Zip Slip:** Fixed a vulnerability in `Crawler.java` that allowed malicious archives to write outside the target directory.
+*   **Thread Safety:** Added `volatile` to shared state in `Crawler.java`.
+*   **Cleanup:** Removed debug flags from `ScreenShotTwitterExporter.java`.
+
 ## Next Steps for Future Sessions
 1.  **Skin Polish:** Update default skins to use new `SkinProperty` values (Fast/Slow, Arena Rank).
-2.  **Step-Up Mode:** Implement a progressive difficulty mode.
+2.  **Step-Up Mode UI:** Implement UI for Step-Up mode selection.
 3.  **Research:** Continue compiling features from IIDX releases in `RESEARCH.md`.

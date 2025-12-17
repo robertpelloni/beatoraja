@@ -92,8 +92,7 @@ public class ScreenShotTwitterExporter implements ScreenShotExporter {
 		text = text.replace("\\", "￥").replace("/", "／").replace(":", "：").replace("*", "＊").replace("?", "？").replace("\"", "”").replace("<", "＜").replace(">", "＞").replace("|", "｜").replace("\t", " ");
 
 		ConfigurationBuilder cb = new ConfigurationBuilder();
-		cb.setDebugEnabled(true)
-		  .setOAuthConsumerKey(consumerKey)
+		cb.setOAuthConsumerKey(consumerKey)
 		  .setOAuthConsumerSecret(consumerSecret)
 		  .setOAuthAccessToken(accessToken)
 		  .setOAuthAccessTokenSecret(accessTokenSecret);

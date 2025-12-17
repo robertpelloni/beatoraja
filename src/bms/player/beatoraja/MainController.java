@@ -41,6 +41,7 @@ import bms.player.beatoraja.stream.StreamController;
 import bms.tool.mdprocessor.MusicDownloadProcessor;
 import bms.tool.crawler.Crawler;
 import bms.player.beatoraja.arena.ArenaManager;
+import bms.player.beatoraja.stepup.StepUpManager;
 
 /**
  * アプリケーションのルートクラス
@@ -118,6 +119,8 @@ public class MainController {
 	private Crawler crawler;
 
 	private ArenaManager arenaManager;
+
+	private StepUpManager stepUpManager;
 
 	private StreamController streamController;
 
@@ -409,6 +412,8 @@ public class MainController {
 
 		arenaManager = new ArenaManager();
 		arenaManager.addPlayer("1P");
+
+		stepUpManager = new StepUpManager(this);
 
 		if(ir.length > 0) {
 			messageRenderer.addMessage(ir.length + " IR Connection Succeed" ,5000, Color.GREEN, 1);
@@ -708,6 +713,10 @@ public class MainController {
 
 	public ArenaManager getArenaManager() {
 		return arenaManager;
+	}
+
+	public StepUpManager getStepUpManager() {
+		return stepUpManager;
 	}
 
 	public MessageRenderer getMessageRenderer() {

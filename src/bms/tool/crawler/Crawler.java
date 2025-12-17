@@ -18,9 +18,9 @@ public class Crawler {
 
     private Deque<Crawlable> commands = new ConcurrentLinkedDeque<>();
     private CrawlerDaemonThread daemon;
-    private String message = "";
-    private String downloadPathResult;
-    private boolean isDownloading = false;
+    private volatile String message = "";
+    private volatile String downloadPathResult;
+    private volatile boolean isDownloading = false;
 
     public void start(Crawlable item) {
         if (daemon == null || !daemon.isAlive()) {
@@ -191,6 +191,9 @@ public class Crawler {
                                 continue;
                             }
                             File curfile = new File(outputDir.toFile(), entry.getName());
+                            if (!curfile.getCanonicalPath().startsWith(outputDir.toAbsolutePath().toFile().getCanonicalPath())) {
+                                throw new IOException("Zip Slip vulnerability detected: " + entry.getName());
+                            }
                             File parent = curfile.getParentFile();
                             if (!parent.exists()) {
                                 parent.mkdirs();
@@ -217,6 +220,9 @@ public class Crawler {
                     continue;
                 }
                 File f = new File(outputDir.toFile(), entry.getName());
+                if (!f.getCanonicalPath().startsWith(outputDir.toAbsolutePath().toFile().getCanonicalPath())) {
+                    throw new IOException("Zip Slip vulnerability detected: " + entry.getName());
+                }
                 if (entry.isDirectory()) {
                     if (!f.isDirectory() && !f.mkdirs()) {
                         throw new IOException("Failed to create directory " + f);
