@@ -40,6 +40,7 @@ import bms.player.beatoraja.song.*;
 import bms.player.beatoraja.stream.StreamController;
 import bms.tool.mdprocessor.MusicDownloadProcessor;
 import bms.tool.crawler.Crawler;
+import bms.player.beatoraja.arena.ArenaManager;
 
 /**
  * アプリケーションのルートクラス
@@ -115,6 +116,8 @@ public class MainController {
 	private MusicDownloadProcessor download;
 	
 	private Crawler crawler;
+
+	private ArenaManager arenaManager;
 
 	private StreamController streamController;
 
@@ -404,6 +407,9 @@ public class MainController {
 
 		crawler = new Crawler();
 
+		arenaManager = new ArenaManager();
+		arenaManager.addPlayer("1P");
+
 		if(ir.length > 0) {
 			messageRenderer.addMessage(ir.length + " IR Connection Succeed" ,5000, Color.GREEN, 1);
 		}
@@ -647,6 +653,9 @@ public class MainController {
 		if (crawler != null) {
 			crawler.dispose();
 		}
+		if (arenaManager != null) {
+			arenaManager.dispose();
+		}
 
 		Logger.getGlobal().info("全リソース破棄完了");
 	}
@@ -695,6 +704,10 @@ public class MainController {
 
 	public Crawler getCrawler() {
 		return crawler;
+	}
+
+	public ArenaManager getArenaManager() {
+		return arenaManager;
 	}
 
 	public MessageRenderer getMessageRenderer() {

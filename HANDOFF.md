@@ -13,7 +13,7 @@ This session focused on modernizing `beatoraja`, integrating features from the `
 *   **Skin Integration:** Added `NUMBER_FAST_NOTES`, `NUMBER_SLOW_NOTES`, etc., to `SkinProperty` and mapped them in `IntegerPropertyFactory`.
 
 ### 3. Feature: Arena Mode
-*   **ArenaManager:** Created to manage players and calculate ranks/points.
+*   **ArenaManager:** Created to manage players and calculate ranks/points. Moved to `MainController` for persistence.
 *   **Score Separation:** Modified `JudgeManager` to include `score2` for 2P/Battle modes. Updated `BMSPlayer` to feed both scores to `ArenaManager`.
 *   **Networking:** Implemented `ArenaClient` and `ArenaServer` (TCP/JSON) to sync scores between players.
 
@@ -37,11 +37,12 @@ This session focused on modernizing `beatoraja`, integrating features from the `
 *   **Integration:** Hooked into `MusicSelector` to trigger downloads for songs with valid URLs (e.g. from BMS Search) when the local file is missing.
 *   **SongData:** Updated to implement `Crawlable` interface.
 
-### 8. Feature: Arena Mode Networking
+### 8. Feature: Arena Mode Networking & UI
 *   **ArenaClient/Server:** Implemented TCP-based networking in `src/bms/player/beatoraja/arena/net`.
-*   **Protocol:** JSON-based message passing for score updates and player joining.
+*   **UI:** Added Arena Mode window to `ModMenu` for connection/server management and status display.
 *   **Integration:** Updated `ArenaManager` to handle remote player scores and rank calculation.
 
 ## Next Steps for Future Sessions
-1.  **UI Polish:** Ensure the default skin or a new skin displays the new Fast/Slow and Arena metrics.
-2.  **Research:** Continue compiling features from IIDX releases in `RESEARCH.md`.
+1.  **Skin Polish:** Update default skins to use new `SkinProperty` values (Fast/Slow, Arena Rank).
+2.  **Step-Up Mode:** Implement a progressive difficulty mode.
+3.  **Research:** Continue compiling features from IIDX releases in `RESEARCH.md`.

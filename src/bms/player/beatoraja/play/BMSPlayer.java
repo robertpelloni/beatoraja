@@ -32,8 +32,6 @@ public class BMSPlayer extends MainState {
 
 	private BMSModel model;
 
-	private ArenaManager arenaManager;
-
 	private ModMenu modMenu;
 
 	private LaneRenderer lanerender;
@@ -449,10 +447,8 @@ public class BMSPlayer extends MainState {
 		// Initialize Arena Mode if playing Battle/DP and configured
 		// For now, we activate Arena Logic if we are in Battle mode (doubleoption >= 2)
 		if (playinfo.doubleoption >= 2) {
-			arenaManager = new ArenaManager();
-			arenaManager.addPlayer("1P");
-			arenaManager.addPlayer("2P");
-			Logger.getGlobal().info("Arena Mode Initialized");
+			main.getArenaManager().addPlayer("2P");
+			Logger.getGlobal().info("Arena Mode Initialized (2P added)");
 		}
 
 		// ゲージログ初期化
@@ -536,6 +532,7 @@ public class BMSPlayer extends MainState {
 			practice.create(model, main.getConfig());
 			state = STATE_PRACTICE;
 		} else {
+			main.getArenaManager().resetScores();
 			
 			if(resource.getRivalScoreData() == null || resource.getCourseBMSModels() != null) {
 				ScoreData targetScore = TargetProperty.getTargetProperty(config.getTargetid()).getTarget(main);
@@ -1078,10 +1075,10 @@ public class BMSPlayer extends MainState {
 		timer.switchTimer(TIMER_SCORE_TARGET, this.judge.getScoreData().getExscore() >= getScoreDataProperty().getRivalScore());
 
 		// Arena Score Update
-		if (arenaManager != null) {
-			arenaManager.updateScore("1P", this.judge.getScoreData().getExscore());
+		if (main.getArenaManager() != null) {
+			main.getArenaManager().updateScore("1P", this.judge.getScoreData().getExscore());
 			if (this.judge.getScoreData2() != null) {
-				arenaManager.updateScore("2P", this.judge.getScoreData2().getExscore());
+				main.getArenaManager().updateScore("2P", this.judge.getScoreData2().getExscore());
 			}
 		}
 

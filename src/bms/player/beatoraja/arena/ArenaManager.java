@@ -63,6 +63,14 @@ public class ArenaManager {
         }
     }
 
+    public void resetScores() {
+        for (ArenaData player : players) {
+            player.setScore(0);
+            player.setRank(0);
+            player.setArenaPoints(0);
+        }
+    }
+
     public void calculateRanks() {
         if (players.isEmpty()) return;
 
