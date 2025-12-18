@@ -19,8 +19,10 @@ This session focused on modernizing `beatoraja`, integrating features from the `
 
 ### 4. Feature: Osu! File Support
 *   **OsuDecoder.java:** Implemented a parser for `.osu` files that maps HitObjects to a `BMSModel`.
+    *   **Dynamic Key Count:** Decodes `CircleSize` to determine key mode (4K, 5K, 6K, 7K, 8K, 9K).
+    *   **Spinners:** Maps spinners to Scratch Long Notes (Lane 0).
     *   **Audio:** Assigns audio filename to WAV index `01`.
-    *   **Mapping:** Basic 7K mapping (X-coordinate to Lane 1-7).
+    *   **Mapping:** Dynamic column-to-lane mapping based on key count.
     *   **Timing:** Basic BPM setting.
     *   **Structure:** Uses `TimeLine` construction for proper note placement.
 *   **Integration:** Hooked into `PlayerResource.loadBMSModel`.
@@ -55,4 +57,5 @@ This session focused on modernizing `beatoraja`, integrating features from the `
 
 ## Next Steps for Future Sessions
 1.  **Skin Polish:** Update default skins to use new `SkinProperty` values (Fast/Slow, Arena Rank).
-2.  **Research:** Continue compiling features from IIDX releases in `RESEARCH.md`.
+2.  **Arena Lobby:** Implement song synchronization so all players load the same chart.
+3.  **Research:** Continue compiling features from IIDX releases in `RESEARCH.md`.
