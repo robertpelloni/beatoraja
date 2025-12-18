@@ -77,6 +77,9 @@ This session focused on modernizing `beatoraja`, integrating features from the `
 ### 16. Polish: Arena Safety
 *   **Validation:** Clients verify the selected song hash against the Host's selection before starting the game, preventing accidental desync.
 
+### 17. Polish: Skin Update
+*   **Result Skin:** Updated `skin/default/result.json` to display Fast/Slow notes/scratch counts and Arena Rank.
+*   **Skin Property:** Added `NUMBER_ARENA_RANK` (440) to `SkinProperty` and `IntegerPropertyFactory`.
+
 ## Next Steps for Future Sessions
-1.  **Skin Polish:** Update default skins to use new `SkinProperty` values (Fast/Slow, Arena Rank).
-2.  **Research:** Continue compiling features from IIDX releases in `RESEARCH.md`.
+1.  **Research:** Continue compiling features from IIDX releases in `RESEARCH.md`.
