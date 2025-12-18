@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.*;
@@ -660,7 +661,6 @@ public final class MusicSelector extends MainState implements ArenaManager.Arena
 		}
 
 		if (main.getArenaManager() != null && main.getArenaManager().isHost()) {
-            Bar current = manager.getSelected();
             if (current instanceof SongBar && ((SongBar) current).existsSong()) {
                 main.getArenaManager().sendSongSelect(((SongBar) current).getSongData().getSha256());
             }
