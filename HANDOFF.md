@@ -43,10 +43,10 @@ This session focused on modernizing `beatoraja`, integrating features from the `
 *   **Integration:** Updated `ArenaManager` to handle remote player scores and rank calculation.
 
 ### 10. Feature: Step-Up Mode
-*   **StepUpManager:** Logic to manage player level and course generation.
-*   **StepUpData:** Persistence for step-up progress.
+*   **StepUpManager:** Logic to manage player level and course generation (Levels 1-12).
+*   **StepUpData:** Persistence for step-up progress (saved to `stepup.json`).
 *   **Integration:** Added "Step-Up Level X" course to the music selection screen via `BarManager`.
-*   **Progression:** Clearing the course increments the level (saved to `stepup.json`).
+*   **Progression:** Clearing the course increments the level; failing decrements it.
 
 ### 11. Security Fixes
 *   **Zip Slip:** Fixed a vulnerability in `Crawler.java` that allowed malicious archives to write outside the target directory.
@@ -55,5 +55,4 @@ This session focused on modernizing `beatoraja`, integrating features from the `
 
 ## Next Steps for Future Sessions
 1.  **Skin Polish:** Update default skins to use new `SkinProperty` values (Fast/Slow, Arena Rank).
-2.  **Advanced Practice:** Implement specific Time Free / Hazard features if not fully covered by existing options.
-3.  **Research:** Continue compiling features from IIDX releases in `RESEARCH.md`.
+2.  **Research:** Continue compiling features from IIDX releases in `RESEARCH.md`.
