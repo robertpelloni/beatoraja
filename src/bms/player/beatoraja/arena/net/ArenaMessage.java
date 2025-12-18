@@ -1,0 +1,20 @@
+package bms.player.beatoraja.arena.net;
+
+public class ArenaMessage {
+    public static final int TYPE_LOGIN = 0;
+    public static final int TYPE_SCORE_UPDATE = 1;
+    public static final int TYPE_PLAYER_JOINED = 2;
+    public static final int TYPE_PLAYER_LEFT = 3;
+
+    public int type;
+    public String playerName;
+    public int score;
+
+    public ArenaMessage() {}
+
+    public ArenaMessage(int type, String playerName, int score) {
+        this.type = type;
+        this.playerName = playerName;
+        this.score = score;
+    }
+}

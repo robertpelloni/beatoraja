@@ -272,6 +272,12 @@ public class CourseResult extends AbstractResult {
 		main.getPlayDataAccessor().writeScoreData(newscore, models, config.getLnmode(),
 				random, resource.getConstraint(), resource.isUpdateCourseScore());
 
+		if (main.getStepUpManager() != null && resource.getCourseData().getName() != null && resource.getCourseData().getName().startsWith("Step-Up Level")) {
+            boolean clear = newscore.getClear() > ClearType.Failed.id;
+            main.getStepUpManager().onResult(clear);
+            Logger.getGlobal().info("Step-Up Result processed: " + (clear ? "Cleared" : "Failed"));
+        }
+
 
 		Logger.getGlobal().info("スコアデータベース更新完了 ");
 	}

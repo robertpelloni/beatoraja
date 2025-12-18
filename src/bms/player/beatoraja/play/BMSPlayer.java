@@ -21,6 +21,7 @@ import bms.player.beatoraja.play.PracticeConfiguration.PracticeProperty;
 import bms.player.beatoraja.play.bga.BGAProcessor;
 import bms.player.beatoraja.skin.SkinType;
 import bms.player.beatoraja.arena.ArenaManager;
+import bms.player.beatoraja.play.ui.ModMenu;
 
 /**
  * BMSプレイヤー本体
@@ -31,7 +32,7 @@ public class BMSPlayer extends MainState {
 
 	private BMSModel model;
 
-	private ArenaManager arenaManager;
+	private ModMenu modMenu;
 
 	private LaneRenderer lanerender;
 	private LaneProperty laneProperty;
@@ -446,10 +447,8 @@ public class BMSPlayer extends MainState {
 		// Initialize Arena Mode if playing Battle/DP and configured
 		// For now, we activate Arena Logic if we are in Battle mode (doubleoption >= 2)
 		if (playinfo.doubleoption >= 2) {
-			arenaManager = new ArenaManager();
-			arenaManager.addPlayer("1P");
-			arenaManager.addPlayer("2P");
-			Logger.getGlobal().info("Arena Mode Initialized");
+			main.getArenaManager().addPlayer("2P");
+			Logger.getGlobal().info("Arena Mode Initialized (2P added)");
 		}
 
 		// ゲージログ初期化
@@ -533,6 +532,7 @@ public class BMSPlayer extends MainState {
 			practice.create(model, main.getConfig());
 			state = STATE_PRACTICE;
 		} else {
+			main.getArenaManager().resetScores();
 			
 			if(resource.getRivalScoreData() == null || resource.getCourseBMSModels() != null) {
 				ScoreData targetScore = TargetProperty.getTargetProperty(config.getTargetid()).getTarget(main);
@@ -542,6 +542,8 @@ public class BMSPlayer extends MainState {
 			}
 			getScoreDataProperty().setTargetScore(score.getExscore(), score.decodeGhost(), resource.getTargetScoreData() != null ? resource.getTargetScoreData().getExscore() : 0 , null, model.getTotalNotes());
 		}
+
+		modMenu = new ModMenu(this);
 	}
 
 	@Override
@@ -847,6 +849,17 @@ public class BMSPlayer extends MainState {
 		}
 
 		prevtime = micronow;
+
+		if (modMenu != null) {
+			modMenu.update();
+		}
+	}
+
+	@Override
+	public void resize(int width, int height) {
+		if (modMenu != null) {
+			modMenu.resize(width, height);
+		}
 	}
 
 	public void setPlaySpeed(int playspeed) {
@@ -1020,6 +1033,9 @@ public class BMSPlayer extends MainState {
 		super.dispose();
 		lanerender.dispose();
 		practice.dispose();
+		if (modMenu != null) {
+			modMenu.dispose();
+		}
 		Logger.getGlobal().info("システム描画のリソース解放");
 	}
 
@@ -1059,10 +1075,10 @@ public class BMSPlayer extends MainState {
 		timer.switchTimer(TIMER_SCORE_TARGET, this.judge.getScoreData().getExscore() >= getScoreDataProperty().getRivalScore());
 
 		// Arena Score Update
-		if (arenaManager != null) {
-			arenaManager.updateScore("1P", this.judge.getScoreData().getExscore());
+		if (main.getArenaManager() != null) {
+			main.getArenaManager().updateScore("1P", this.judge.getScoreData().getExscore());
 			if (this.judge.getScoreData2() != null) {
-				arenaManager.updateScore("2P", this.judge.getScoreData2().getExscore());
+				main.getArenaManager().updateScore("2P", this.judge.getScoreData2().getExscore());
 			}
 		}
 

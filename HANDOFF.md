@@ -13,22 +13,49 @@ This session focused on modernizing `beatoraja`, integrating features from the `
 *   **Skin Integration:** Added `NUMBER_FAST_NOTES`, `NUMBER_SLOW_NOTES`, etc., to `SkinProperty` and mapped them in `IntegerPropertyFactory`.
 
 ### 3. Feature: Arena Mode
-*   **ArenaManager:** Created to manage players and calculate ranks/points.
+*   **ArenaManager:** Created to manage players and calculate ranks/points. Moved to `MainController` for persistence.
 *   **Score Separation:** Modified `JudgeManager` to include `score2` for 2P/Battle modes. Updated `BMSPlayer` to feed both scores to `ArenaManager`.
-*   **Current State:** Local logic exists. Network logic is not yet implemented.
+*   **Networking:** Implemented `ArenaClient` and `ArenaServer` (TCP/JSON) to sync scores between players.
 
 ### 4. Feature: Osu! File Support
 *   **OsuDecoder.java:** Implemented a parser for `.osu` files that maps HitObjects to a `BMSModel`.
+    *   **Dynamic Key Count:** Decodes `CircleSize` to determine key mode (4K, 5K, 6K, 7K, 8K, 9K).
+    *   **Spinners:** Maps spinners to Scratch Long Notes (Lane 0).
     *   **Audio:** Assigns audio filename to WAV index `01`.
-    *   **Mapping:** Basic 7K mapping (X-coordinate to Lane 1-7).
+    *   **Mapping:** Dynamic column-to-lane mapping based on key count.
     *   **Timing:** Basic BPM setting.
+    *   **Structure:** Uses `TimeLine` construction for proper note placement.
 *   **Integration:** Hooked into `PlayerResource.loadBMSModel`.
 
 ### 5. LR2 Features (lr2oraja)
 *   **Gauge/Judge:** Added LR2-specific constants to `GaugeProperty` and logic for "Bad on Early Release" for Long Notes in `JudgeManager`.
 
+### 6. Feature: Mod Menu (Endless Dream)
+*   **ModMenu.java:** Implemented an in-game overlay (F5 key) using LibGDX Scene2D to adjust Hi-Speed and Lane Cover on the fly.
+*   **Integration:** Hooked into `BMSPlayer` to handle input (via Multiplexer) and rendering.
+
+### 7. Feature: In-Game Downloader (Endless Dream)
+*   **Crawler.java:** Implemented a background download manager in `src/bms/tool/crawler`. Supports Zip and Tar/Gz extraction.
+*   **Integration:** Hooked into `MusicSelector` to trigger downloads for songs with valid URLs (e.g. from BMS Search) when the local file is missing.
+*   **SongData:** Updated to implement `Crawlable` interface.
+
+### 8. Feature: Arena Mode Networking & UI
+*   **ArenaClient/Server:** Implemented TCP-based networking in `src/bms/player/beatoraja/arena/net`.
+*   **UI:** Added Arena Mode window to `ModMenu` for connection/server management and status display.
+*   **Integration:** Updated `ArenaManager` to handle remote player scores and rank calculation.
+
+### 10. Feature: Step-Up Mode
+*   **StepUpManager:** Logic to manage player level and course generation (Levels 1-12).
+*   **StepUpData:** Persistence for step-up progress (saved to `stepup.json`).
+*   **Integration:** Added "Step-Up Level X" course to the music selection screen via `BarManager`.
+*   **Progression:** Clearing the course increments the level; failing decrements it.
+
+### 11. Security Fixes
+*   **Zip Slip:** Fixed a vulnerability in `Crawler.java` that allowed malicious archives to write outside the target directory.
+*   **Thread Safety:** Added `volatile` to shared state in `Crawler.java`.
+*   **Cleanup:** Removed debug flags from `ScreenShotTwitterExporter.java`.
+
 ## Next Steps for Future Sessions
-1.  **Arena Mode Networking:** Implement `ArenaClient` / `ArenaServer` to sync `ArenaData` across the network.
-2.  **Osu! Refinement:** Improve `OsuDecoder` to handle sliders (convert to LNs) and spinners (convert to Scratch LNs) more robustly. Handle multiple timing points (BPM changes).
-3.  **Endless Dream Features:** Port the "In-game Downloader" and "Mod Menu".
-4.  **UI Polish:** Ensure the default skin or a new skin displays the new Fast/Slow and Arena metrics.
+1.  **Skin Polish:** Update default skins to use new `SkinProperty` values (Fast/Slow, Arena Rank).
+2.  **Arena Lobby:** Implement song synchronization so all players load the same chart.
+3.  **Research:** Continue compiling features from IIDX releases in `RESEARCH.md`.

@@ -26,8 +26,7 @@ public class OsuDecoder {
 
     public BMSModel decode(File file) {
         BMSModel model = new BMSModel();
-        model.setLnmode(lntype); // Use setLnmode as per library inspection
-        model.setMode(Mode.BEAT_7K); // Default to 7K for now
+        model.setLnmode(lntype);
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8))) {
             String line;
@@ -35,12 +34,8 @@ public class OsuDecoder {
             List<HitObject> hitObjects = new ArrayList<>();
             List<TimingPoint> timingPoints = new ArrayList<>();
 
-            // WAV list map (id -> filename)
-            // Osu usually has one audio file. We'll map it to WAV 01.
-            String[] wavList = new String[1295]; // Standard BMS WAV limit is large (ZZ or 1295)
-            // Initialize with empty strings to be safe? Or null? BMSModel usually expects array.
-
-            double sliderMultiplier = 1.4;
+            String[] wavList = new String[1295];
+            int keys = 4; // Default to 4K if undefined
 
             while ((line = reader.readLine()) != null) {
                 line = line.trim();
@@ -53,10 +48,12 @@ public class OsuDecoder {
 
                 if (section.equals("General")) {
                     if (line.startsWith("AudioFilename:")) {
-                        String audio = line.split(":", 2)[1].trim();
-                        // Assign to index 1 (WAV01)
-                        if (audio.length() > 0) {
-                            wavList[1] = audio;
+                        String[] parts = line.split(":", 2);
+                        if (parts.length > 1) {
+                            String audio = parts[1].trim();
+                            if (audio.length() > 0) {
+                                wavList[1] = audio;
+                            }
                         }
                     }
                 } else if (section.equals("Metadata")) {
@@ -64,9 +61,9 @@ public class OsuDecoder {
                     if (line.startsWith("Artist:")) model.setArtist(line.split(":", 2)[1].trim());
                     if (line.startsWith("Version:")) model.setSubTitle(line.split(":", 2)[1].trim());
                 } else if (section.equals("Difficulty")) {
-                    if (line.startsWith("SliderMultiplier:")) {
+                    if (line.startsWith("CircleSize:")) {
                         try {
-                            sliderMultiplier = Double.parseDouble(line.split(":", 2)[1].trim());
+                            keys = (int) Double.parseDouble(line.split(":", 2)[1].trim());
                         } catch (Exception e) {}
                     }
                 } else if (section.equals("TimingPoints")) {
@@ -83,26 +80,49 @@ public class OsuDecoder {
                     if (parts.length >= 3) {
                         try {
                             int x = Integer.parseInt(parts[0]);
-                            int y = Integer.parseInt(parts[1]);
+                            // int y = Integer.parseInt(parts[1]); // Unused
                             long time = Long.parseLong(parts[2]);
                             int type = Integer.parseInt(parts[3]);
 
-                            int column = (int)(x * 7.0 / 512.0);
-                            column = Math.max(0, Math.min(6, column));
-                            int lane = column + 1;
-
-                            if ((type & 128) > 0) {
-                                String[] subparts = parts[5].split(":");
-                                long endTime = Long.parseLong(subparts[0]);
-                                hitObjects.add(new HitObject(lane, time, endTime));
+                            // Spinner (Type 8) -> Scratch LN (Lane 0)
+                            if ((type & 8) > 0) {
+                                long endTime = Long.parseLong(parts[5]); // Spinners have end time in 6th field
+                                hitObjects.add(new HitObject(0, time, endTime)); // Lane 0 = Scratch
                             } else {
-                                hitObjects.add(new HitObject(lane, time, 0));
+                                int column = (int)(x * keys / 512.0);
+                                column = Math.max(0, Math.min(keys - 1, column));
+
+                                int lane;
+                                if (keys == 8) {
+                                    // 8K Mode: 0=Scratch, 1-7=Keys
+                                    // Map Column 0 to Scratch (0), 1-7 to Keys 1-7
+                                    if (column == 0) lane = 0;
+                                    else lane = column; // 1-7 stays 1-7
+                                } else {
+                                    // Standard: Column 0 -> Key 1
+                                    lane = column + 1;
+                                }
+
+                                if ((type & 128) > 0) { // Hold Note
+                                    String[] subparts = parts[5].split(":");
+                                    long endTime = Long.parseLong(subparts[0]);
+                                    hitObjects.add(new HitObject(lane, time, endTime));
+                                } else {
+                                    hitObjects.add(new HitObject(lane, time, 0));
+                                }
                             }
 
                         } catch (Exception e) {}
                     }
                 }
             }
+
+            // Set Mode based on Key Count
+            if (keys <= 5) model.setMode(Mode.BEAT_5K);
+            else if (keys <= 7) model.setMode(Mode.BEAT_7K);
+            else if (keys == 8) model.setMode(Mode.BEAT_7K);
+            else if (keys == 9) model.setMode(Mode.POPN_9K);
+            else model.setMode(Mode.BEAT_14K);
 
             model.setWavList(wavList);
             convert(model, hitObjects, timingPoints);

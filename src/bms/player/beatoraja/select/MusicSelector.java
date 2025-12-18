@@ -271,6 +271,8 @@ public final class MusicSelector extends MainState {
 				} else if (song.getIpfs() != null && main.getMusicDownloadProcessor() != null
 						&& main.getMusicDownloadProcessor().isAlive()) {
 					execute(MusicSelectCommand.DOWNLOAD_IPFS);
+				} else if (main.getCrawler() != null && song.getUrl() != null && (song.getUrl().toLowerCase().endsWith(".zip") || song.getUrl().toLowerCase().endsWith(".rar") || song.getUrl().toLowerCase().endsWith(".7z") || song.getUrl().toLowerCase().endsWith(".tar") || song.getUrl().toLowerCase().endsWith(".tar.gz"))) {
+					main.getCrawler().start(song);
 				} else {
 	                executeEvent(EventType.open_download_site);
 				}
