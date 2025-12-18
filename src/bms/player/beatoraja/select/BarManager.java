@@ -30,6 +30,8 @@ import bms.player.beatoraja.select.bar.*;
 import bms.player.beatoraja.skin.property.EventFactory.EventType;
 import bms.player.beatoraja.song.SongData;
 import bms.player.beatoraja.song.SongInformationAccessor;
+import bms.player.beatoraja.RandomCourseData;
+import bms.player.beatoraja.select.bar.RandomCourseBar;
 
 /**
  * 楽曲バー管理用クラス
@@ -242,6 +244,15 @@ public final class BarManager {
 			e.printStackTrace();
 		}
 		
+		if (select.main.getStepUpManager() != null) {
+			try {
+				RandomCourseData stepUpCourse = select.main.getStepUpManager().createCourse();
+				l.add(new RandomCourseBar(stepUpCourse));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
 		try {
 			ObjectMapper objectMapper = new ObjectMapper();
 			randomFolderList = objectMapper.readValue(
