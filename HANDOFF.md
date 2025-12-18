@@ -65,12 +65,11 @@ This session focused on modernizing `beatoraja`, integrating features from the `
 *   **UI:** Added "Ready" (Client) and "Start" (Host) buttons to ModMenu Arena window.
 *   **Logic:** Host can trigger game start for all connected clients.
 
-### 14. Feature: Mission System (Foundation)
-*   **MissionManager:** Basic framework for tracking missions.
-*   **MissionData:** Persistence for mission progress.
-*   **Defaults:** Example missions (First Play, Clear Master).
+### 14. Feature: Mission System
+*   **MissionManager:** Framework for tracking missions (Normal and Daily).
+*   **Daily Missions:** Logic to generate a daily clear target.
+*   **Integration:** Hooks into `MusicResult` and `CourseResult` to update mission progress based on play data.
 
 ## Next Steps for Future Sessions
 1.  **Skin Polish:** Update default skins to use new `SkinProperty` values (Fast/Slow, Arena Rank).
-2.  **Mission Content:** Populate missions with real game events/triggers.
-3.  **Research:** Continue compiling features from IIDX releases in `RESEARCH.md`.
+2.  **Research:** Continue compiling features from IIDX releases in `RESEARCH.md`.

@@ -443,6 +443,10 @@ public class MusicResult extends AbstractResult {
 		if (resource.getPlayMode().mode == BMSPlayerMode.Mode.PLAY) {
 			main.getPlayDataAccessor().writeScoreData(resource.getScoreData(), resource.getBMSModel(),
 					resource.getPlayerConfig().getLnmode(), resource.isUpdateScore());
+
+            if (main.getMissionManager() != null) {
+                main.getMissionManager().checkResult(resource.getScoreData());
+            }
 		} else {
 			Logger.getGlobal().info("プレイモードが" + resource.getPlayMode().mode.name() + "のため、スコア登録はされません");
 		}
