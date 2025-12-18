@@ -22,6 +22,7 @@ public class ArenaManager {
     private ArenaClient client;
     private boolean isHost = false;
     private String currentSongHash;
+    private int ruleGauge = -1;
 
     public ArenaManager() {
         this.players = new ArrayList<>();
@@ -29,6 +30,14 @@ public class ArenaManager {
 
     public String getCurrentSongHash() {
         return currentSongHash;
+    }
+
+    public int getRuleGauge() {
+        return ruleGauge;
+    }
+
+    public void onRemoteRules(int gauge) {
+        this.ruleGauge = gauge;
     }
 
     public void addListener(ArenaListener listener) {
@@ -92,6 +101,13 @@ public class ArenaManager {
     public void sendStartGame() {
         if (client != null) {
             client.sendStartGame();
+        }
+    }
+
+    public void sendRules(int gauge) {
+        this.ruleGauge = gauge;
+        if (client != null) {
+            client.sendRules(gauge);
         }
     }
 

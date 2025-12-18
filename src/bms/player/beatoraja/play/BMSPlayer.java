@@ -419,6 +419,13 @@ public class BMSPlayer extends MainState {
 		}
 		// プレイゲージ、初期値設定
 		int gaugeType = replay != null ? replay.gauge : config.getGauge();
+
+		// Arena Rule Override
+		if (main.getArenaManager() != null && main.getArenaManager().getRuleGauge() != -1) {
+			gaugeType = main.getArenaManager().getRuleGauge();
+			Logger.getGlobal().info("Arena Rule Applied: Gauge " + gaugeType);
+		}
+
 		// Apply LR2 Gauge if enabled and not playing a course (where gauge is fixed)
 		if (config.isLr2Gauge() && resource.getCourseBMSModels() == null) {
 			// Map standard gauge types to LR2 gauge properties if needed

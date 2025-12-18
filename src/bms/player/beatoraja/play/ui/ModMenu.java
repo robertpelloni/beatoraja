@@ -264,12 +264,40 @@ public class ModMenu {
             }
         });
 
+        TextButton gaugeRuleButton = new TextButton("Rule: Default", skin);
+        gaugeRuleButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (player.main.getArenaManager().isHost()) {
+                    int current = player.main.getArenaManager().getRuleGauge();
+                    current++;
+                    if (current > 5) current = -1; // -1, 0, 1, 2, 3, 4, 5
+
+                    player.main.getArenaManager().sendRules(current);
+
+                    String text = "Rule: ";
+                    switch(current) {
+                        case -1: text += "Default"; break;
+                        case 0: text += "A-Easy"; break;
+                        case 1: text += "Easy"; break;
+                        case 2: text += "Normal"; break;
+                        case 3: text += "Hard"; break;
+                        case 4: text += "ExHard"; break;
+                        case 5: text += "Hazard"; break;
+                    }
+                    gaugeRuleButton.setText(text);
+                }
+            }
+        });
+
         Table buttons = new Table();
         buttons.add(connectButton).pad(5);
         buttons.add(serverButton).pad(5);
         buttons.row();
         buttons.add(readyButton).pad(5);
         buttons.add(startGameButton).pad(5);
+        buttons.row();
+        buttons.add(gaugeRuleButton).colspan(2).pad(5);
 
         content.row();
         content.add(buttons).colspan(2).pad(10);

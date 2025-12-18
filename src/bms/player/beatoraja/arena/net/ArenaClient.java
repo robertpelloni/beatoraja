@@ -89,6 +89,12 @@ public class ArenaClient {
         sendMessage(new ArenaMessage(ArenaMessage.TYPE_START_GAME, playerName, 0));
     }
 
+    public void sendRules(int gauge) {
+        ArenaMessage msg = new ArenaMessage(ArenaMessage.TYPE_RULES, playerName, 0);
+        msg.ruleGauge = gauge;
+        sendMessage(msg);
+    }
+
     private void sendMessage(ArenaMessage msg) {
         if (out != null) {
             String jsonStr = json.toJson(msg);

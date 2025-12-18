@@ -81,5 +81,10 @@ This session focused on modernizing `beatoraja`, integrating features from the `
 *   **Result Skin:** Updated `skin/default/result.json` to display Fast/Slow notes/scratch counts and Arena Rank.
 *   **Skin Property:** Added `NUMBER_ARENA_RANK` (440) to `SkinProperty` and `IntegerPropertyFactory`.
 
+### 18. Feature: Arena Rules
+*   **Protocol:** Added `TYPE_RULES` to sync game rules (e.g. Gauge type) from Host to Clients.
+*   **UI:** Added "Rule" button to ModMenu Arena window for Host to cycle gauge rules.
+*   **Integration:** `BMSPlayer` respects Arena rules for Gauge selection, overriding local config.
+
 ## Next Steps for Future Sessions
 1.  **Research:** Continue compiling features from IIDX releases in `RESEARCH.md`.

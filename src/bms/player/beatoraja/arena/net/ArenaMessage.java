@@ -9,12 +9,14 @@ public class ArenaMessage {
 
     public static final int TYPE_READY = 5;
     public static final int TYPE_START_GAME = 6;
+    public static final int TYPE_RULES = 7;
 
     public int type;
     public String playerName;
     public int score;
     public String songHash;
     public boolean isReady;
+    public int ruleGauge; // -1 = default, 0..8 = specific
 
     public ArenaMessage() {}
 
