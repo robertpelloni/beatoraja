@@ -369,6 +369,10 @@ public class SkinProperty {
 	public static final int NUMBER_COMBOBREAK = 425;
 	public static final int NUMBER_POOR_PLUS_MISS = 426;
 	public static final int NUMBER_BAD_PLUS_POOR_PLUS_MISS = 427;
+	public static final int NUMBER_FAST_NOTES = 428;
+	public static final int NUMBER_SLOW_NOTES = 429;
+	public static final int NUMBER_FAST_SCRATCH = 430;
+	public static final int NUMBER_SLOW_SCRATCH = 431;
 	public static final int NUMBER_TOTAL_RATE = 115;
 	public static final int NUMBER_TOTAL_RATE_AFTERDOT = 116;
 	public static final int NUMBER_TARGET_SCORE = 121;

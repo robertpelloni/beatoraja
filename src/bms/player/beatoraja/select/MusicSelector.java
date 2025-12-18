@@ -25,13 +25,14 @@ import bms.player.beatoraja.skin.SkinType;
 import bms.player.beatoraja.skin.property.EventFactory.EventType;
 import bms.player.beatoraja.song.SongData;
 import bms.player.beatoraja.song.SongDatabaseAccessor;
+import bms.player.beatoraja.arena.ArenaManager;
 
 /**
  * 選曲部分。 楽曲一覧とカーソルが指す楽曲のステータスを表示し、選択した楽曲を 曲決定部分に渡す。
  *
  * @author exch
  */
-public final class MusicSelector extends MainState {
+public final class MusicSelector extends MainState implements ArenaManager.ArenaListener {
 
 	// TODO　ミラーランダム段位のスコア表示
 
@@ -186,6 +187,10 @@ public final class MusicSelector extends MainState {
 
 		loadSkin(SkinType.MUSIC_SELECT);
 
+		if (main.getArenaManager() != null) {
+			main.getArenaManager().addListener(this);
+		}
+
 		// search text field
 		Rectangle searchRegion = ((MusicSelectSkin) getSkin()).getSearchTextRegion();
 		if (searchRegion != null && (getStage() == null ||
@@ -271,6 +276,8 @@ public final class MusicSelector extends MainState {
 				} else if (song.getIpfs() != null && main.getMusicDownloadProcessor() != null
 						&& main.getMusicDownloadProcessor().isAlive()) {
 					execute(MusicSelectCommand.DOWNLOAD_IPFS);
+				} else if (main.getCrawler() != null && song.getUrl() != null && (song.getUrl().toLowerCase().endsWith(".zip") || song.getUrl().toLowerCase().endsWith(".rar") || song.getUrl().toLowerCase().endsWith(".7z") || song.getUrl().toLowerCase().endsWith(".tar") || song.getUrl().toLowerCase().endsWith(".tar.gz"))) {
+					main.getCrawler().start(song);
 				} else {
 	                executeEvent(EventType.open_download_site);
 				}
@@ -317,6 +324,9 @@ public final class MusicSelector extends MainState {
 	}
 
 	public void shutdown() {
+		if (main.getArenaManager() != null) {
+			main.getArenaManager().removeListener(this);
+		}
 		preview.stop();
 		if (search != null) {
 			search.unfocus(this);
@@ -648,6 +658,32 @@ public final class MusicSelector extends MainState {
 			currentir = null;
 			currentRankingDuration = -1;			
 		}
+
+		if (main.getArenaManager() != null && main.getArenaManager().isHost()) {
+            Bar current = manager.getSelected();
+            if (current instanceof SongBar && ((SongBar) current).existsSong()) {
+                main.getArenaManager().sendSongSelect(((SongBar) current).getSongData().getSha256());
+            }
+        }
+	}
+
+	@Override
+	public void onSongSelected(String songHash) {
+		Gdx.app.postRunnable(() -> {
+            Bar[] bars = manager.currentsongs;
+            if (bars != null) {
+                for (Bar bar : bars) {
+                    if (bar instanceof SongBar && ((SongBar) bar).getSongData() != null) {
+                        String h = ((SongBar) bar).getSongData().getSha256();
+                        if (h != null && h.equals(songHash)) {
+                            manager.setSelected(bar);
+                            return;
+                        }
+                    }
+                }
+            }
+            main.getMessageRenderer().addMessage("Host selected a song not in current list", 3000, Color.YELLOW, 0);
+        });
 	}
 
 	public void loadSelectedSongImages() {

@@ -96,8 +96,8 @@ public class ScreenShotTwitterExporter implements ScreenShotExporter {
 		  .setOAuthConsumerSecret(consumerSecret)
 		  .setOAuthAccessToken(accessToken)
 		  .setOAuthAccessTokenSecret(accessTokenSecret);
-		TwitterFactory twitterFactory = new TwitterFactory(cb.build());
-		Twitter twitter = twitterFactory.getInstance();
+		TwitterFactory tf = new TwitterFactory(cb.build());
+		Twitter twitter = tf.getInstance();
 
 		Pixmap pixmap = new Pixmap(Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight(),
 				Pixmap.Format.RGBA8888);

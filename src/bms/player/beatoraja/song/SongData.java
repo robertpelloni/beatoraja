@@ -11,13 +11,14 @@ import bms.model.*;
 import bms.player.beatoraja.Validatable;
 import bms.player.beatoraja.play.BMSPlayerRule;
 import bms.tool.mdprocessor.IpfsInformation;
+import bms.tool.crawler.Crawlable;
 
 /**
  * 楽曲データ
  * 
  * @author exch
  */
-public class SongData implements Validatable, IpfsInformation {
+public class SongData implements Validatable, IpfsInformation, Crawlable {
 
 	public static final SongData[] EMPTY = new SongData[0];
 	
@@ -121,6 +122,8 @@ public class SongData implements Validatable, IpfsInformation {
 	private String charthash;
 	private List<String> org_md5;
 
+	private NotesRadar radar;
+
 	public SongData() {
 		
 	}
@@ -211,6 +214,13 @@ public class SongData implements Validatable, IpfsInformation {
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
+
+		this.radar = new NotesRadar(model);
+		// Logger.getGlobal().info("Calculated Notes Radar for " + model.getTitle() + ": " + this.radar.toString());
+	}
+
+	public NotesRadar getNotesRadar() {
+		return radar;
 	}
 
 	public BMSModel getBMSModel() {
