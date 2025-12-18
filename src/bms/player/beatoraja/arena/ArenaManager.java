@@ -21,9 +21,14 @@ public class ArenaManager {
     private ArenaServer server;
     private ArenaClient client;
     private boolean isHost = false;
+    private String currentSongHash;
 
     public ArenaManager() {
         this.players = new ArrayList<>();
+    }
+
+    public String getCurrentSongHash() {
+        return currentSongHash;
     }
 
     public void addListener(ArenaListener listener) {
@@ -52,6 +57,7 @@ public class ArenaManager {
     }
 
     public void onRemoteSongSelected(String hash) {
+        this.currentSongHash = hash;
         for (ArenaListener listener : listeners) {
             listener.onSongSelected(hash);
         }
@@ -71,6 +77,7 @@ public class ArenaManager {
     }
 
     public void sendSongSelect(String hash) {
+        this.currentSongHash = hash;
         if (client != null) {
             client.sendSongSelect(hash);
         }

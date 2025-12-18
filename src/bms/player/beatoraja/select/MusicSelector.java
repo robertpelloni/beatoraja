@@ -691,6 +691,13 @@ public final class MusicSelector extends MainState implements ArenaManager.Arena
 		Gdx.app.postRunnable(() -> {
 			Bar current = manager.getSelected();
 			if (current instanceof SongBar && ((SongBar) current).existsSong()) {
+                String currentHash = ((SongBar) current).getSongData().getSha256();
+                String targetHash = main.getArenaManager().getCurrentSongHash();
+
+                if (targetHash != null && !targetHash.equals(currentHash)) {
+                    main.getMessageRenderer().addMessage("Cannot start: Song mismatch with Host!", 3000, Color.RED, 0);
+                    return;
+                }
 				main.getMessageRenderer().addMessage("Host started game!", 3000, Color.GREEN, 0);
 				selectSong(BMSPlayerMode.PLAY);
 			}

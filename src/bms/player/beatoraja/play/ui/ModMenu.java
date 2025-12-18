@@ -26,6 +26,8 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import bms.player.beatoraja.play.BMSPlayer;
 import bms.player.beatoraja.arena.ArenaManager;
 import bms.player.beatoraja.arena.ArenaData;
+import bms.player.beatoraja.mission.MissionManager;
+import bms.player.beatoraja.mission.MissionData;
 
 public class ModMenu {
 
@@ -47,6 +49,10 @@ public class ModMenu {
     private TextField nameField;
     private Label arenaStatusLabel;
     private Label arenaPlayersLabel;
+
+    // Missions UI
+    private Window missionsWindow;
+    private Label missionsListLabel;
 
     public ModMenu(BMSPlayer player) {
         this.player = player;
@@ -163,6 +169,17 @@ public class ModMenu {
         });
         window.add(arenaButton).pad(10);
 
+        TextButton missionsButton = new TextButton("Missions...", skin);
+        missionsButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (missionsWindow == null) createMissionsWindow();
+                missionsWindow.setVisible(!missionsWindow.isVisible());
+                if (missionsWindow.isVisible()) missionsWindow.toFront();
+            }
+        });
+        window.add(missionsButton).pad(10);
+
         window.pack();
         // Center window
         window.setPosition((Gdx.graphics.getWidth() - window.getWidth()) / 2, (Gdx.graphics.getHeight() - window.getHeight()) / 2);
@@ -271,6 +288,32 @@ public class ModMenu {
         stage.addActor(arenaWindow);
     }
 
+    private void createMissionsWindow() {
+        missionsWindow = new Window("Missions", skin);
+        missionsWindow.getTitleLabel().setAlignment(1);
+
+        Table content = new Table();
+        missionsWindow.add(content).pad(10);
+
+        missionsListLabel = new Label("", skin);
+        content.add(missionsListLabel).width(400);
+
+        TextButton closeButton = new TextButton("Close", skin);
+        closeButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                missionsWindow.setVisible(false);
+            }
+        });
+
+        content.row();
+        content.add(closeButton).padTop(10);
+
+        missionsWindow.pack();
+        missionsWindow.setPosition((Gdx.graphics.getWidth() - missionsWindow.getWidth()) / 2 - 50, (Gdx.graphics.getHeight() - missionsWindow.getHeight()) / 2 - 50);
+        stage.addActor(missionsWindow);
+    }
+
     private float getHiSpeed() {
         return player.getLanerender() != null ? player.getLanerender().getHispeed() : 1.0f;
     }
@@ -300,8 +343,26 @@ public class ModMenu {
             if (arenaWindow != null && arenaWindow.isVisible()) {
                 updateArenaStatus();
             }
+            if (missionsWindow != null && missionsWindow.isVisible()) {
+                updateMissions();
+            }
             stage.act(Gdx.graphics.getDeltaTime());
             stage.draw();
+        }
+    }
+
+    private void updateMissions() {
+        if (player.main.getMissionManager() != null) {
+            StringBuilder sb = new StringBuilder();
+            for (MissionData m : player.main.getMissionManager().getMissions()) {
+                sb.append(m.completed ? "[X] " : "[ ] ");
+                sb.append(m.title).append(": ").append(m.description);
+                if (!m.completed && m.target > 0) {
+                    sb.append(" (").append(m.progress).append("/").append(m.target).append(")");
+                }
+                sb.append("\n");
+            }
+            missionsListLabel.setText(sb.toString());
         }
     }
 
