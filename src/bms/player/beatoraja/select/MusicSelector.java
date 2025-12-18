@@ -686,6 +686,17 @@ public final class MusicSelector extends MainState implements ArenaManager.Arena
         });
 	}
 
+	@Override
+	public void onStartGame() {
+		Gdx.app.postRunnable(() -> {
+			Bar current = manager.getSelected();
+			if (current instanceof SongBar && ((SongBar) current).existsSong()) {
+				main.getMessageRenderer().addMessage("Host started game!", 3000, Color.GREEN, 0);
+				selectSong(BMSPlayerMode.PLAY);
+			}
+		});
+	}
+
 	public void loadSelectedSongImages() {
 		// banner
 		// stagefile

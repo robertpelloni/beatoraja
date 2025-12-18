@@ -225,9 +225,34 @@ public class ModMenu {
             }
         });
 
+        TextButton readyButton = new TextButton("Ready", skin);
+        readyButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                player.main.getArenaManager().sendReady(true);
+                arenaStatusLabel.setText("Status: Ready sent");
+            }
+        });
+
+        TextButton startGameButton = new TextButton("Start (Host)", skin);
+        startGameButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (player.main.getArenaManager().isHost()) {
+                    player.main.getArenaManager().sendStartGame();
+                    arenaStatusLabel.setText("Status: Starting...");
+                } else {
+                    arenaStatusLabel.setText("Error: Only Host can start.");
+                }
+            }
+        });
+
         Table buttons = new Table();
         buttons.add(connectButton).pad(5);
         buttons.add(serverButton).pad(5);
+        buttons.row();
+        buttons.add(readyButton).pad(5);
+        buttons.add(startGameButton).pad(5);
 
         content.row();
         content.add(buttons).colspan(2).pad(10);
@@ -285,7 +310,9 @@ public class ModMenu {
         if (am != null) {
             StringBuilder sb = new StringBuilder("Players: ");
             for (ArenaData p : am.getPlayers()) {
-                sb.append(p.getPlayerName()).append(" (").append(p.getScore()).append(") ");
+                sb.append(p.getPlayerName())
+                  .append(p.isReady() ? " [R]" : "")
+                  .append(" (").append(p.getScore()).append(") ");
             }
             arenaPlayersLabel.setText(sb.toString());
         }

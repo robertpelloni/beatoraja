@@ -60,7 +60,17 @@ This session focused on modernizing `beatoraja`, integrating features from the `
 *   **Integration:** `MusicSelector` listens for song select messages and attempts to select the matching song (by hash).
 *   **Host Logic:** Host broadcasts selected song hash when navigating music list.
 
+### 13. Feature: Arena Game Flow
+*   **Protocol:** Added `TYPE_READY` and `TYPE_START_GAME`.
+*   **UI:** Added "Ready" (Client) and "Start" (Host) buttons to ModMenu Arena window.
+*   **Logic:** Host can trigger game start for all connected clients.
+
+### 14. Feature: Mission System (Foundation)
+*   **MissionManager:** Basic framework for tracking missions.
+*   **MissionData:** Persistence for mission progress.
+*   **Defaults:** Example missions (First Play, Clear Master).
+
 ## Next Steps for Future Sessions
 1.  **Skin Polish:** Update default skins to use new `SkinProperty` values (Fast/Slow, Arena Rank).
-2.  **Mission System:** Implement daily/achievement missions similar to INFINITAS.
+2.  **Mission Content:** Populate missions with real game events/triggers.
 3.  **Research:** Continue compiling features from IIDX releases in `RESEARCH.md`.

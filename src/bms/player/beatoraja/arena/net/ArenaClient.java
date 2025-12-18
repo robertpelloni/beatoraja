@@ -81,6 +81,14 @@ public class ArenaClient {
         sendMessage(new ArenaMessage(ArenaMessage.TYPE_SONG_SELECT, playerName, hash));
     }
 
+    public void sendReady(boolean ready) {
+        sendMessage(new ArenaMessage(ArenaMessage.TYPE_READY, playerName, ready));
+    }
+
+    public void sendStartGame() {
+        sendMessage(new ArenaMessage(ArenaMessage.TYPE_START_GAME, playerName, 0));
+    }
+
     private void sendMessage(ArenaMessage msg) {
         if (out != null) {
             String jsonStr = json.toJson(msg);

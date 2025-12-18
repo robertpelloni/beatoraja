@@ -13,6 +13,7 @@ public class ArenaManager {
 
     public interface ArenaListener {
         void onSongSelected(String songHash);
+        void onStartGame();
     }
 
     private final List<ArenaData> players;
@@ -56,9 +57,34 @@ public class ArenaManager {
         }
     }
 
+    public void onRemoteReady(String name, boolean ready) {
+        ArenaData player = getPlayer(name);
+        if (player != null) {
+            player.setReady(ready);
+        }
+    }
+
+    public void onStartGame() {
+        for (ArenaListener listener : listeners) {
+            listener.onStartGame();
+        }
+    }
+
     public void sendSongSelect(String hash) {
         if (client != null) {
             client.sendSongSelect(hash);
+        }
+    }
+
+    public void sendReady(boolean ready) {
+        if (client != null) {
+            client.sendReady(ready);
+        }
+    }
+
+    public void sendStartGame() {
+        if (client != null) {
+            client.sendStartGame();
         }
     }
 
