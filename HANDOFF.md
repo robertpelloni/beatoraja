@@ -62,4 +62,5 @@ This session focused on modernizing `beatoraja`, integrating features from the `
 
 ## Next Steps for Future Sessions
 1.  **Skin Polish:** Update default skins to use new `SkinProperty` values (Fast/Slow, Arena Rank).
-2.  **Research:** Continue compiling features from IIDX releases in `RESEARCH.md`.
+2.  **Mission System:** Implement daily/achievement missions similar to INFINITAS.
+3.  **Research:** Continue compiling features from IIDX releases in `RESEARCH.md`.
