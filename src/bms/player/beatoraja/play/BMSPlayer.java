@@ -541,13 +541,37 @@ public class BMSPlayer extends MainState {
 		} else {
 			main.getArenaManager().resetScores();
 			
-			if(resource.getRivalScoreData() == null || resource.getCourseBMSModels() != null) {
-				ScoreData targetScore = TargetProperty.getTargetProperty(config.getTargetid()).getTarget(main);
-				resource.setTargetScoreData(targetScore);
+			int pacemakerType = config.getPlayConfig(model.getMode()).getPlayconfig().getPacemakerType();
+			int targetExScore = 0;
+			int[] targetGhost = null;
+
+			if (pacemakerType == PlayConfig.PACEMAKER_RIVAL) {
+				if(resource.getRivalScoreData() == null || resource.getCourseBMSModels() != null) {
+					ScoreData targetScore = TargetProperty.getTargetProperty(config.getTargetid()).getTarget(main);
+					resource.setTargetScoreData(targetScore);
+				} else {
+					resource.setTargetScoreData(resource.getRivalScoreData());
+				}
+				if (resource.getTargetScoreData() != null) {
+					targetExScore = resource.getTargetScoreData().getExscore();
+					targetGhost = resource.getTargetScoreData().decodeGhost(); // Decode ghost if available (not actually stored in ScoreData usually, but logic exists)
+				}
+			} else if (pacemakerType == PlayConfig.PACEMAKER_BEST) {
+				targetExScore = score.getExscore();
+				targetGhost = score.decodeGhost();
 			} else {
-				resource.setTargetScoreData(resource.getRivalScoreData());
+				// Artificial
+				int maxScore = model.getTotalNotes() * 2;
+				if (pacemakerType == PlayConfig.PACEMAKER_AAA) {
+					targetExScore = (int)Math.ceil(maxScore * 8.0 / 9.0);
+				} else if (pacemakerType == PlayConfig.PACEMAKER_AA) {
+					targetExScore = (int)Math.ceil(maxScore * 7.0 / 9.0);
+				} else if (pacemakerType == PlayConfig.PACEMAKER_A) {
+					targetExScore = (int)Math.ceil(maxScore * 6.0 / 9.0);
+				}
 			}
-			getScoreDataProperty().setTargetScore(score.getExscore(), score.decodeGhost(), resource.getTargetScoreData() != null ? resource.getTargetScoreData().getExscore() : 0 , null, model.getTotalNotes());
+
+			getScoreDataProperty().setTargetScore(score.getExscore(), score.decodeGhost(), targetExScore, targetGhost, model.getTotalNotes());
 		}
 
 		modMenu = new ModMenu(this);

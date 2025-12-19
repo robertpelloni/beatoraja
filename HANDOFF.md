@@ -86,5 +86,16 @@ This session focused on modernizing `beatoraja`, integrating features from the `
 *   **UI:** Added "Rule" button to ModMenu Arena window for Host to cycle gauge rules.
 *   **Integration:** `BMSPlayer` respects Arena rules for Gauge selection, overriding local config.
 
+### 19. Feature: Notes Radar
+*   **NotesRadar.java:** Logic to calculate chart metrics: Notes (density), Chord (complexity), Peak (burst), Scratch (amount), Soflan (BPM variance), and Charge (Long Notes).
+*   **Skin Property:** Exposed radar values to skins via new properties (IDs 410-415).
+*   **SongData:** Integrated radar calculation on song load.
+
+### 20. Feature: Pacemaker Graph
+*   **PlayConfig.java:** Added `pacemakerType` (Rival, Best, AAA, AA, A).
+*   **ModMenu:** Added UI button to cycle through Pacemaker targets.
+*   **BMSPlayer:** Implemented logic to set artificial target scores (AAA/AA/A) or Personal Best in `setTargetScore`. This enables the "Pacemaker Graph" behavior (tracking real-time difference against the target).
+
 ## Next Steps for Future Sessions
-1.  **Research:** Continue compiling features from IIDX releases in `RESEARCH.md`.
+1.  **Skinning:** Update default skins to utilize the new Radar values and Pacemaker functionality visually.
+2.  **Sound Voltex Features:** Investigate implementing "Megamix Battle" style continuous play.

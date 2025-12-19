@@ -3,6 +3,7 @@ package bms.player.beatoraja.stepup;
 import bms.player.beatoraja.MainController;
 import bms.player.beatoraja.RandomCourseData;
 import bms.player.beatoraja.RandomStageData;
+import bms.player.beatoraja.song.SongData;
 import com.badlogic.gdx.utils.Json;
 import java.io.File;
 import java.nio.file.Files;
@@ -50,15 +51,30 @@ public class StepUpManager {
 
         for(int i=0; i<3; i++) {
             stages[i] = new RandomStageData();
-            // Basic query: level matches.
-            // Note: Actual SQL might need "level == X".
-            // Beatoraja SongDatabase SQL usually is SQLite WHERE clause.
-            // "level" column exists.
-            stages[i].setSql("level = " + data.currentLevel);
+            int targetLevel = data.currentLevel;
+            if (i == 0) targetLevel = Math.max(1, data.currentLevel - 1);
+            stages[i].setSql("level = " + targetLevel);
         }
 
         course.setStage(stages);
         course.lotterySongDatas(main);
+
+        // Validation and Fallback
+        boolean valid = true;
+        for (SongData s : course.getSongDatas()) {
+            if (s == null) {
+                valid = false;
+                break;
+            }
+        }
+
+        if (!valid) {
+            // Fallback: Try a broader query
+            for(int i=0; i<3; i++) {
+                course.getStage()[i].setSql("level >= " + Math.max(1, data.currentLevel - 2) + " AND level <= " + (data.currentLevel + 2));
+            }
+            course.lotterySongDatas(main);
+        }
 
         return course;
     }

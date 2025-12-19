@@ -42,6 +42,8 @@ public class ModMenu {
     private Slider laneCoverSlider;
     private Label laneCoverLabel;
 
+    private TextButton pacemakerButton;
+
     // Arena UI
     private Window arenaWindow;
     private TextField hostField;
@@ -156,6 +158,19 @@ public class ModMenu {
         window.add(laneCoverLabel).pad(5);
         window.row();
         window.add(laneCoverSlider).width(300).pad(5);
+
+        window.row();
+        pacemakerButton = new TextButton("Pacemaker: Rival", skin);
+        pacemakerButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                int current = getPacemakerType();
+                current = (current + 1) % 5;
+                setPacemakerType(current);
+                updatePacemakerButton();
+            }
+        });
+        window.add(pacemakerButton).pad(5);
 
         window.row();
         TextButton arenaButton = new TextButton("Arena Mode...", skin);
@@ -362,6 +377,32 @@ public class ModMenu {
         }
     }
 
+    private int getPacemakerType() {
+        if (player.getLanerender() != null) {
+            return player.getLanerender().getPlayConfig().getPacemakerType();
+        }
+        return 0;
+    }
+
+    private void setPacemakerType(int type) {
+        if (player.getLanerender() != null) {
+            player.getLanerender().getPlayConfig().setPacemakerType(type);
+        }
+    }
+
+    private void updatePacemakerButton() {
+        int type = getPacemakerType();
+        String text = "Pacemaker: ";
+        switch (type) {
+            case 0: text += "Rival"; break;
+            case 1: text += "Best"; break;
+            case 2: text += "AAA"; break;
+            case 3: text += "AA"; break;
+            case 4: text += "A"; break;
+        }
+        pacemakerButton.setText(text);
+    }
+
     public void update() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.F5)) {
             toggle();
@@ -424,6 +465,8 @@ public class ModMenu {
 
             laneCoverSlider.setValue(getLaneCover() * 1000);
             laneCoverLabel.setText("Lane Cover: " + (int)laneCoverSlider.getValue());
+
+            updatePacemakerButton();
 
         } else {
             // Return control to game
