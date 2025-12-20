@@ -88,14 +88,16 @@ This session focused on modernizing `beatoraja`, integrating features from the `
 
 ### 19. Feature: Notes Radar
 *   **NotesRadar.java:** Logic to calculate chart metrics: Notes (density), Chord (complexity), Peak (burst), Scratch (amount), Soflan (BPM variance), and Charge (Long Notes).
-*   **Skin Property:** Exposed radar values to skins via new properties (IDs 410-415).
+*   **Skin Property:** Exposed radar values to skins via new properties `NUMBER_RADAR_*` (IDs 470-475).
+*   **Skin Visuals:** Updated `skin/default/select.json` to display the 6 radar values numerically in the song info area.
 *   **SongData:** Integrated radar calculation on song load.
 
 ### 20. Feature: Pacemaker Graph
 *   **PlayConfig.java:** Added `pacemakerType` (Rival, Best, AAA, AA, A).
 *   **ModMenu:** Added UI button to cycle through Pacemaker targets.
 *   **BMSPlayer:** Implemented logic to set artificial target scores (AAA/AA/A) or Personal Best in `setTargetScore`. This enables the "Pacemaker Graph" behavior (tracking real-time difference against the target).
+*   **Skin Visuals:** Updated `skin/default/play7.json` to display the Target Difference (`NUMBER_DIFF_TARGETSCORE`) numerically near the score.
 
 ## Next Steps for Future Sessions
-1.  **Skinning:** Update default skins to utilize the new Radar values and Pacemaker functionality visually.
+1.  **Refine Skinning:** Create graphical assets (radar chart polygon, target graph line) for a more authentic IIDX experience.
 2.  **Sound Voltex Features:** Investigate implementing "Megamix Battle" style continuous play.

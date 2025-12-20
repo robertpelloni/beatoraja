@@ -826,12 +826,12 @@ public class IntegerPropertyFactory {
 			? (state.resource.getSongdata().getLength() / 1000) % 60
 					: Integer.MIN_VALUE)),
 
-		radar_notes(410, (state) -> (state.resource.getSongdata() != null && state.resource.getSongdata().getNotesRadar() != null ? state.resource.getSongdata().getNotesRadar().notes : 0)),
-		radar_chord(411, (state) -> (state.resource.getSongdata() != null && state.resource.getSongdata().getNotesRadar() != null ? state.resource.getSongdata().getNotesRadar().chord : 0)),
-		radar_peak(412, (state) -> (state.resource.getSongdata() != null && state.resource.getSongdata().getNotesRadar() != null ? state.resource.getSongdata().getNotesRadar().peak : 0)),
-		radar_scratch(413, (state) -> (state.resource.getSongdata() != null && state.resource.getSongdata().getNotesRadar() != null ? state.resource.getSongdata().getNotesRadar().scratch : 0)),
-		radar_soflan(414, (state) -> (state.resource.getSongdata() != null && state.resource.getSongdata().getNotesRadar() != null ? state.resource.getSongdata().getNotesRadar().soflan : 0)),
-		radar_charge(415, (state) -> (state.resource.getSongdata() != null && state.resource.getSongdata().getNotesRadar() != null ? state.resource.getSongdata().getNotesRadar().charge : 0)),
+		radar_notes(470, (state) -> (state.resource.getSongdata() != null && state.resource.getSongdata().getNotesRadar() != null ? state.resource.getSongdata().getNotesRadar().notes : 0)),
+		radar_chord(471, (state) -> (state.resource.getSongdata() != null && state.resource.getSongdata().getNotesRadar() != null ? state.resource.getSongdata().getNotesRadar().chord : 0)),
+		radar_peak(472, (state) -> (state.resource.getSongdata() != null && state.resource.getSongdata().getNotesRadar() != null ? state.resource.getSongdata().getNotesRadar().peak : 0)),
+		radar_scratch(473, (state) -> (state.resource.getSongdata() != null && state.resource.getSongdata().getNotesRadar() != null ? state.resource.getSongdata().getNotesRadar().scratch : 0)),
+		radar_soflan(474, (state) -> (state.resource.getSongdata() != null && state.resource.getSongdata().getNotesRadar() != null ? state.resource.getSongdata().getNotesRadar().soflan : 0)),
+		radar_charge(475, (state) -> (state.resource.getSongdata() != null && state.resource.getSongdata().getNotesRadar() != null ? state.resource.getSongdata().getNotesRadar().charge : 0)),
 
 		;
 		
