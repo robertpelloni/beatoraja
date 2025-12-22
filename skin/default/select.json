@@ -223,6 +223,9 @@
 		{"id":"graph-rank", "type":-2},
 
 	],
+	"radargraph":[
+		{"id":"radar-graph", "color":"00ff00"}
+	],
 	"songlist":{
 		"id":"songlist",
 		"center":10,
@@ -880,6 +883,8 @@
 		{"id":603, "dst":[{"x":600, "y":360, "w":18, "h":18}]},
 		{"id":604, "dst":[{"x":600, "y":340, "w":18, "h":18}]},
 		{"id":605, "dst":[{"x":600, "y":320, "w":18, "h":18}]},
+
+		{"id":"radar-graph", "dst":[{"x":620, "y":320, "w":150, "h":150}]},
 
 		{"id":"time_year", "dst":[{"x":1028, "y":2, "w":12, "h":12}]},
 		{"id":"time_month", "dst":[{"x":1088, "y":2, "w":12, "h":12}]},

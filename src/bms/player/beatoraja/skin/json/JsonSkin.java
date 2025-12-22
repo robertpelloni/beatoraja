@@ -34,6 +34,7 @@ public class JsonSkin {
 		public Slider[] slider = new Slider[0];
 		public Graph[] graph = new Graph[0];
 		public GaugeGraph[] gaugegraph = new GaugeGraph[0];
+		public RadarGraph[] radargraph = new RadarGraph[0];
 		public JudgeGraph[] judgegraph = new JudgeGraph[0];
 		public BPMGraph[] bpmgraph = new BPMGraph[0];
 		public HitErrorVisualizer[] hiterrorvisualizer = new HitErrorVisualizer[0];
@@ -229,6 +230,11 @@ public class JsonSkin {
 		public boolean isRefNum = false;
 		public int min = 0;
 		public int max = 0;
+	}
+
+	public static class RadarGraph {
+		public String id;
+		public String color = "ff0000";
 	}
 
 	public static class GaugeGraph {

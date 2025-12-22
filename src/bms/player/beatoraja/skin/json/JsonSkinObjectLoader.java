@@ -463,6 +463,13 @@ public abstract class JsonSkinObjectLoader<S extends Skin> {
 			}
 		}
 
+		for (JsonSkin.RadarGraph rgraph : sk.radargraph) {
+			if (dst.id.equals(rgraph.id)) {
+				SkinRadarGraph st = new SkinRadarGraph(rgraph.color);
+				return st;
+			}
+		}
+
 		for (JsonSkin.GaugeGraph ggraph : sk.gaugegraph) {
 			if (dst.id.equals(ggraph.id)) {
 				SkinGaugeGraphObject st = null;
