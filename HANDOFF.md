@@ -99,6 +99,12 @@ This session focused on modernizing `beatoraja`, integrating features from the `
 *   **BMSPlayer:** Implemented logic to set artificial target scores (AAA/AA/A) or Personal Best in `setTargetScore`. This enables the "Pacemaker Graph" behavior (tracking real-time difference against the target).
 *   **Skin Visuals:** Updated `skin/default/play7.json` to display the Target Difference (`NUMBER_DIFF_TARGETSCORE`) numerically near the score.
 
+### 21. Feature: Same-Random Retry
+*   **MusicResult.java:** Implemented `retry(boolean sameRandom)` logic which restarts the song with the preserved Random Seed from `ReplayData`.
+*   **EventFactory.java:** Added `retry` event (ID 390) to trigger this action from skin events.
+*   **Skin Property:** Added `BUTTON_RETRY` (ID 390).
+*   **Skin Visuals:** Updated `skin/default/result.json` to add a new button (ID 204) triggering the retry event.
+
 ## Next Steps for Future Sessions
 1.  **Sound Voltex Features:** Investigate implementing "Megamix Battle" style continuous play.
-2.  **MSS / Same-Random Retry:** Implement these polishes.
+2.  **MSS (Multi-Spin Scratch):** Requires new chart analysis logic or format extension.

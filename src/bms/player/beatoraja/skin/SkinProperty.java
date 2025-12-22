@@ -977,6 +977,7 @@ public class SkinProperty {
 	public static final int BUTTON_REPLAY2 = 316;
 	public static final int BUTTON_REPLAY3 = 317;
 	public static final int BUTTON_REPLAY4 = 318;
+	public static final int BUTTON_RETRY = 390;
 	public static final int BUTTON_GAUGE_1P = 40;
 	public static final int BUTTON_GAUGE_2P = 41;
 	public static final int BUTTON_RANDOM_1P = 42;

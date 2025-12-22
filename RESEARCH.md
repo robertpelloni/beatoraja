@@ -92,3 +92,6 @@
 *   **Arena Groundwork:** Manager created, 2P score separation implemented in JudgeManager.
 *   **Osu! Decoder:** Basic parsing of `.osu` files to `BMSModel`.
 *   **LR2 Features:** Gauge, Judge, LN, Total implemented.
+*   **Notes Radar:** Implemented (Logic + Visuals).
+*   **Pacemaker Graph:** Implemented (Logic + Visuals).
+*   **Same-Random Retry:** Implemented (Logic + UI Event).
