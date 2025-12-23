@@ -105,6 +105,13 @@ This session focused on modernizing `beatoraja`, integrating features from the `
 *   **Skin Property:** Added `BUTTON_RETRY` (ID 390).
 *   **Skin Visuals:** Updated `skin/default/result.json` to add a new button (ID 204) triggering the retry event.
 
+### 22. Feature: Time Hell Gauge
+*   **GrooveGauge.java:** Added `TIMEHELL` (ID 9).
+*   **GaugeProperty.java:** Defined `TIMEHELL` properties with 0 recovery and standard Hard/ExHard damage values for all key modes.
+
+### 23. Feature: BGA Thumbnails
+*   **Skin Integration:** Updated `skin/default/select.json` to display the stagefile (ID -100) as a thumbnail in the song selection screen.
+
 ## Next Steps for Future Sessions
 1.  **Sound Voltex Features:** Investigate implementing "Megamix Battle" style continuous play.
 2.  **MSS (Multi-Spin Scratch):** Requires new chart analysis logic or format extension.

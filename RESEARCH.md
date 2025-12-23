@@ -83,7 +83,7 @@
 2.  **Step-Up / Story Mode:** Progressive mode.
 3.  **Advanced Practice Features:** Time Free / Hazard.
 4.  **Multi-Spin Scratch (MSS):** Continuous scratching.
-5.  **BGA Thumbnails:** Supported by backend, needs UI verification. (Verified: `STAGEFILE` is exposed).
+5.  **BGA Thumbnails:** Implemented (Visuals).
 6.  **Osu! Support:** Partially implemented (Loader + Audio + 7K mapping).
 7.  **Mod Menu:** In-game overlay for settings (Endless Dream feature).
 
@@ -95,3 +95,5 @@
 *   **Notes Radar:** Implemented (Logic + Visuals).
 *   **Pacemaker Graph:** Implemented (Logic + Visuals).
 *   **Same-Random Retry:** Implemented (Logic + UI Event).
+*   **Time Hell Gauge:** Implemented backend.
+*   **BGA Thumbnails:** Implemented visuals.
