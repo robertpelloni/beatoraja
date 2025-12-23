@@ -76,6 +76,7 @@
     *   **Exceed Gear (120Hz):** Valkyrie Model (120Hz) similar to IIDX Lightning Model.
     *   **S-Critical:** Tighter timing window added in later versions.
     *   **Hexa Diver:** Unlock system similar to Step Up/Events.
+    *   **Megamix Battle:** Continuous play mode. (Implemented as Random Nonstop).
 
 ## Missing Features in Beatoraja (Gap Analysis)
 
@@ -97,3 +98,5 @@
 *   **Same-Random Retry:** Implemented (Logic + UI Event).
 *   **Time Hell Gauge:** Implemented backend.
 *   **BGA Thumbnails:** Implemented visuals.
+*   **Random Nonstop:** Implemented (Megamix-style continuous play).
+*   **Timer Mode:** Implemented (Premium Free style).

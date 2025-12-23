@@ -112,6 +112,16 @@ This session focused on modernizing `beatoraja`, integrating features from the `
 ### 23. Feature: BGA Thumbnails
 *   **Skin Integration:** Updated `skin/default/select.json` to display the stagefile (ID -100) as a thumbnail in the song selection screen.
 
+### 24. Feature: Random Nonstop
+*   **PlayerResource.java:** Added `nonstop` state.
+*   **MusicResult.java:** Implemented logic to pick a random song and restart play loop if `nonstop` is enabled.
+*   **ModMenu.java:** Added "Nonstop" toggle button.
+
+### 25. Feature: Timer Mode (Premium Free)
+*   **PlayerResource.java:** Added `sessionEndTime`.
+*   **MusicResult.java:** Added logic to check session timer and exit to Music Select if expired.
+*   **ModMenu.java:** Added "Timer" button to set 10 minute session.
+
 ## Next Steps for Future Sessions
-1.  **Sound Voltex Features:** Investigate implementing "Megamix Battle" style continuous play.
+1.  **Refine Skinning:** Create graphical assets for new features.
 2.  **MSS (Multi-Spin Scratch):** Requires new chart analysis logic or format extension.

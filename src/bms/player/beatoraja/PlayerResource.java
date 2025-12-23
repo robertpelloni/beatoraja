@@ -125,6 +125,9 @@ public final class PlayerResource {
 	private String tablelevel = "";
 	private String tablefull;
 
+	private boolean nonstop = false;
+	private long sessionEndTime = 0;
+
 	public PlayerResource(AudioDriver audio, Config config, PlayerConfig pconfig) {
 		this.config = config;
 		this.pconfig = pconfig;
@@ -565,5 +568,21 @@ public final class PlayerResource {
 
 	public void setOriginalMode(bms.model.Mode orgmode) {
 		this.orgmode = orgmode;
+	}
+
+	public boolean isNonstop() {
+		return nonstop;
+	}
+
+	public void setNonstop(boolean nonstop) {
+		this.nonstop = nonstop;
+	}
+
+	public long getSessionEndTime() {
+		return sessionEndTime;
+	}
+
+	public void setSessionEndTime(long sessionEndTime) {
+		this.sessionEndTime = sessionEndTime;
 	}
 }

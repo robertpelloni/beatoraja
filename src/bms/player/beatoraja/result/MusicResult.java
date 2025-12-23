@@ -210,6 +210,27 @@ public class MusicResult extends AbstractResult {
 						main.changeState(MainStateType.COURSERESULT);
 					}
 				} else {
+					if (resource.getSessionEndTime() > 0 && System.currentTimeMillis() > resource.getSessionEndTime()) {
+						resource.setNonstop(false);
+						resource.setSessionEndTime(0);
+						main.changeState(MainStateType.MUSICSELECT);
+						return;
+					}
+
+					if (resource.isNonstop()) {
+						try {
+							SongData[] songs = main.getSongDatabase().getSongDatas("1=1 ORDER BY RANDOM() LIMIT 1",
+									main.getConfig().getScorepath(), main.getConfig().getScorelogpath(), main.getConfig().getSonginfopath());
+							if (songs.length > 0 && songs[0].getPath() != null) {
+								resource.setBMSFile(java.nio.file.Paths.get(songs[0].getPath()), BMSPlayerMode.PLAY);
+								main.changeState(MainStateType.PLAY);
+								return;
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+
 					resource.getPlayerConfig().setGauge(resource.getOrgGaugeOption());
 					ResultKeyProperty.ResultKey key = null;
 					for (int i = 0; i < property.getAssignLength(); i++) {

@@ -43,6 +43,8 @@ public class ModMenu {
     private Label laneCoverLabel;
 
     private TextButton pacemakerButton;
+    private TextButton nonstopButton;
+    private TextButton timerButton;
 
     // Arena UI
     private Window arenaWindow;
@@ -171,6 +173,35 @@ public class ModMenu {
             }
         });
         window.add(pacemakerButton).pad(5);
+
+        window.row();
+        nonstopButton = new TextButton("Nonstop: Off", skin);
+        nonstopButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                boolean current = player.resource.isNonstop();
+                player.resource.setNonstop(!current);
+                nonstopButton.setText("Nonstop: " + (!current ? "On" : "Off"));
+            }
+        });
+        window.add(nonstopButton).pad(5);
+
+        timerButton = new TextButton("Timer: Off", skin);
+        timerButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                long current = player.resource.getSessionEndTime();
+                if (current == 0) {
+                    // Set 10 mins
+                    player.resource.setSessionEndTime(System.currentTimeMillis() + 10 * 60 * 1000);
+                    timerButton.setText("Timer: 10m");
+                } else {
+                    player.resource.setSessionEndTime(0);
+                    timerButton.setText("Timer: Off");
+                }
+            }
+        });
+        window.add(timerButton).pad(5);
 
         window.row();
         TextButton arenaButton = new TextButton("Arena Mode...", skin);
@@ -467,6 +498,14 @@ public class ModMenu {
             laneCoverLabel.setText("Lane Cover: " + (int)laneCoverSlider.getValue());
 
             updatePacemakerButton();
+            nonstopButton.setText("Nonstop: " + (player.resource.isNonstop() ? "On" : "Off"));
+            long endTime = player.resource.getSessionEndTime();
+            if (endTime == 0) {
+                timerButton.setText("Timer: Off");
+            } else {
+                long remaining = (endTime - System.currentTimeMillis()) / 60000;
+                timerButton.setText("Timer: " + Math.max(0, remaining) + "m");
+            }
 
         } else {
             // Return control to game
