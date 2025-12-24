@@ -219,8 +219,9 @@ public class MusicResult extends AbstractResult {
 
 					if (resource.isNonstop()) {
 						try {
+							String playerDir = main.getConfig().getPlayerpath() + "/" + main.getPlayerConfig().getId() + "/";
 							SongData[] songs = main.getSongDatabase().getSongDatas("1=1 ORDER BY RANDOM() LIMIT 1",
-									main.getConfig().getScorepath(), main.getConfig().getScorelogpath(), main.getConfig().getSonginfopath());
+									playerDir + "score.db", playerDir + "scorelog.db", main.getConfig().getSonginfopath());
 							if (songs.length > 0 && songs[0].getPath() != null) {
 								resource.setBMSFile(java.nio.file.Paths.get(songs[0].getPath()), BMSPlayerMode.PLAY);
 								main.changeState(MainStateType.PLAY);
