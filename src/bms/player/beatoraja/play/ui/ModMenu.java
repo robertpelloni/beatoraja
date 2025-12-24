@@ -26,6 +26,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import bms.player.beatoraja.Config;
 import bms.player.beatoraja.PlayConfig;
 import bms.player.beatoraja.play.BMSPlayer;
+import bms.player.beatoraja.pattern.Random;
 import bms.player.beatoraja.arena.ArenaManager;
 import bms.player.beatoraja.arena.ArenaData;
 import bms.player.beatoraja.mission.MissionManager;
@@ -54,6 +55,8 @@ public class ModMenu {
     private TextButton chartPreviewButton;
     private TextButton bgaButton;
     private TextButton fixGnButton;
+    private TextButton randomButton;
+    private TextButton autoAdjustButton;
 
     // Arena UI
     private Window arenaWindow;
@@ -289,8 +292,37 @@ public class ModMenu {
         window.row();
         window.add(buttons3);
 
-        window.row();
+        // Buttons Row 4
         Table buttons4 = new Table();
+        randomButton = new TextButton("Random: Off", skin);
+        randomButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                int current = player.resource.getPlayerConfig().getRandom();
+                current = (current + 1) % 5; // 0..4
+                player.resource.getPlayerConfig().setRandom(current);
+                updateRandomButton();
+            }
+        });
+        buttons4.add(randomButton).width(145).pad(2);
+
+        autoAdjustButton = new TextButton("Auto Adjust", skin);
+        autoAdjustButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                double avg = player.getJudgeManager().getAverageTimingError();
+                int current = getJudgeTiming();
+                setJudgeTiming(current - (int)avg);
+                judgeTimingSlider.setValue(getJudgeTiming());
+                judgeTimingLabel.setText("Judge Timing: " + getJudgeTiming() + "ms");
+            }
+        });
+        buttons4.add(autoAdjustButton).width(145).pad(2);
+        window.row();
+        window.add(buttons4);
+
+        window.row();
+        Table buttons5 = new Table();
         TextButton arenaButton = new TextButton("Arena Mode...", skin);
         arenaButton.addListener(new ClickListener() {
             @Override
@@ -300,7 +332,7 @@ public class ModMenu {
                 if (arenaWindow.isVisible()) arenaWindow.toFront();
             }
         });
-        buttons4.add(arenaButton).width(145).pad(2);
+        buttons5.add(arenaButton).width(145).pad(2);
 
         TextButton missionsButton = new TextButton("Missions...", skin);
         missionsButton.addListener(new ClickListener() {
@@ -311,9 +343,9 @@ public class ModMenu {
                 if (missionsWindow.isVisible()) missionsWindow.toFront();
             }
         });
-        buttons4.add(missionsButton).width(145).pad(2);
+        buttons5.add(missionsButton).width(145).pad(2);
         window.row();
-        window.add(buttons4);
+        window.add(buttons5);
 
         window.pack();
         // Center window
@@ -322,6 +354,7 @@ public class ModMenu {
         root.add(window);
     }
 
+    // ... Arena and Missions methods (unchanged) ...
     private void createArenaWindow() {
         arenaWindow = new Window("Arena Mode", skin);
         arenaWindow.getTitleLabel().setAlignment(1);
@@ -571,6 +604,21 @@ public class ModMenu {
         }
     }
 
+    private void updateRandomButton() {
+        int val = player.resource.getPlayerConfig().getRandom();
+        String text = "Random: ";
+        // Random.OPTION_GENERAL: IDENTITY, MIRROR, RANDOM, ROTATE, S_RANDOM
+        switch(val) {
+            case 0: text += "Off"; break;
+            case 1: text += "Mirror"; break;
+            case 2: text += "Random"; break;
+            case 3: text += "R-Rand"; break;
+            case 4: text += "S-Rand"; break;
+            default: text += "Other"; break;
+        }
+        randomButton.setText(text);
+    }
+
     public void update() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.F5)) {
             toggle();
@@ -579,6 +627,9 @@ public class ModMenu {
         if (visible) {
             // Update live labels
             hispeedLabel.setText(String.format("Hi-Speed: %.2f (GN: %d)", getHiSpeed(), getGreenNumber()));
+            if(autoAdjustButton != null) {
+                autoAdjustButton.setText(String.format("Auto Adjust (Avg: %.1fms)", player.getJudgeManager().getAverageTimingError()));
+            }
 
             if (arenaWindow != null && arenaWindow.isVisible()) {
                 updateArenaStatus();
@@ -591,6 +642,7 @@ public class ModMenu {
         }
     }
 
+    // ... Arena/Mission methods ...
     private void updateMissions() {
         if (player.main.getMissionManager() != null) {
             StringBuilder sb = new StringBuilder();
@@ -654,6 +706,7 @@ public class ModMenu {
             chartPreviewButton.setText("Chart Preview: " + (player.resource.getPlayerConfig().isChartPreview() ? "On" : "Off"));
             updateBgaButton();
             updateFixGnButton();
+            updateRandomButton();
 
         } else {
             // Return control to game

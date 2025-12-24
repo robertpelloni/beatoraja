@@ -815,6 +815,19 @@ public class JudgeManager {
 		return player >= 0 && player < mjudgefast.length ? mjudgefast[player] : 0;
 	}
 
+	public double getAverageTimingError() {
+		long sum = 0;
+		int count = 0;
+		for(long val : microrecentJudges) {
+			if(val != Long.MIN_VALUE) {
+				sum += val;
+				count++;
+			}
+		}
+		if(count == 0) return 0;
+		return (double)sum / count / 1000.0;
+	}
+
 	public LongNote getProcessingLongNote(int lane) {
 		return states[lane].processing;
 	}

@@ -81,11 +81,11 @@
 ## Missing Features in Beatoraja (Gap Analysis)
 
 1.  **Multi-Spin Scratch (MSS):** Continuous scratching. (Not applicable to standard BMS).
-2.  **Advanced Practice Features:** Time Free / Hazard. (Partial via Time Hell / Timer Mode).
 
 ## Completed Features (This Session)
 *   **Arena Mode:** Fully implemented with TCP networking, Lobby, Rule enforcement, and Score synchronization.
-*   **Mod Menu:** In-game overlay (F5) with Hi-Speed/Green Number, Lane Cover, Lift, Judge Timing, BGA Toggle, Fix GN (Floating HS), Pacemaker, Arena, Mission, and Chart Preview controls.
+*   **Mod Menu:** In-game overlay (F5) with Hi-Speed/Green Number, Lane Cover, Lift, Judge Timing (with Auto-Adjust), BGA Toggle, Fix GN (Floating HS), Random Option, Pacemaker, Arena, Mission, and Chart Preview controls.
+*   **Auto-Adjust Offset:** Implemented in Mod Menu using real-time average timing error analysis.
 *   **Step-Up / Mission System:** Implemented with progressive difficulty and daily tasks.
 *   **Osu! Support:** Implemented `.osu` file parsing, audio loading, and 7K mapping.
 *   **Fast/Slow Separation:** Implemented in ScoreData/JudgeManager and exposed to Skins.
