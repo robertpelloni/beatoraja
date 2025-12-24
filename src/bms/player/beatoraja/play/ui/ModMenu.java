@@ -52,6 +52,10 @@ public class ModMenu {
     private Label liftLabel;
     private TextButton liftToggle;
 
+    private Slider hiddenSlider;
+    private Label hiddenLabel;
+    private TextButton hiddenToggle;
+
     private Slider judgeTimingSlider;
     private Label judgeTimingLabel;
 
@@ -211,6 +215,29 @@ public class ModMenu {
             }
         });
 
+        // Hidden
+        hiddenLabel = new Label("Hidden: 0", skin);
+        hiddenSlider = new Slider(0, 1000, 1, false, skin);
+        hiddenSlider.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                setHidden(hiddenSlider.getValue() / 1000f);
+                hiddenLabel.setText("Hidden: " + (int)hiddenSlider.getValue());
+            }
+        });
+
+        hiddenToggle = new TextButton("On", skin);
+        hiddenToggle.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if(player.getLanerender() != null) {
+                    boolean b = !player.getLanerender().getPlayConfig().isEnablehidden();
+                    player.getLanerender().getPlayConfig().setEnablehidden(b);
+                    updateHiddenToggle();
+                }
+            }
+        });
+
         // Judge Timing
         judgeTimingLabel = new Label("Judge Timing: 0ms", skin);
         judgeTimingSlider = new Slider(-500, 500, 1, false, skin);
@@ -254,6 +281,14 @@ public class ModMenu {
         window.add(liftTable).pad(2);
         window.row();
         window.add(liftSlider).width(300).pad(2);
+        window.row();
+
+        Table hiddenTable = new Table();
+        hiddenTable.add(hiddenLabel).padRight(10);
+        hiddenTable.add(hiddenToggle).width(50).height(20);
+        window.add(hiddenTable).pad(2);
+        window.row();
+        window.add(hiddenSlider).width(300).pad(2);
         window.row();
 
         window.add(judgeTimingLabel).pad(2);
@@ -379,7 +414,10 @@ public class ModMenu {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 int current = player.resource.getPlayerConfig().getRandom();
-                current = (current + 1) % 5; // 0..4
+                if (player.getMode().player == 2 && current == 4) current = 10; // Jump to M-RAN
+                else if (current == 10) current = 0;
+                else current = (current + 1) % 5;
+
                 player.resource.getPlayerConfig().setRandom(current);
                 updateRandomButton();
             }
@@ -392,7 +430,10 @@ public class ModMenu {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     int current = player.resource.getPlayerConfig().getRandom2();
-                    current = (current + 1) % 5; // 0..4
+                    if (current == 4) current = 10; // Jump to M-RAN
+                    else if (current == 10) current = 0;
+                    else current = (current + 1) % 5;
+
                     player.resource.getPlayerConfig().setRandom2(current);
                     updateRandom2Button();
                 }
@@ -634,6 +675,16 @@ public class ModMenu {
         }
     }
 
+    private float getHidden() {
+        return player.getLanerender() != null ? player.getLanerender().getHiddenCover() : 0f;
+    }
+
+    private void setHidden(float val) {
+        if (player.getLanerender() != null) {
+            player.getLanerender().setHiddenCover(val);
+        }
+    }
+
     private int getJudgeTiming() {
         return player.resource.getPlayerConfig().getJudgetiming();
     }
@@ -707,6 +758,7 @@ public class ModMenu {
             case 2: text += "Random"; break;
             case 3: text += "R-Rand"; break;
             case 4: text += "S-Rand"; break;
+            case 10: text += "M-Ran"; break;
             default: text += "Other"; break;
         }
         randomButton.setText(text);
@@ -721,6 +773,7 @@ public class ModMenu {
             case 2: text += "Random"; break;
             case 3: text += "R-Rand"; break;
             case 4: text += "S-Rand"; break;
+            case 10: text += "M-Ran"; break;
             default: text += "Other"; break;
         }
         random2Button.setText(text);
@@ -751,6 +804,12 @@ public class ModMenu {
     private void updateLiftToggle() {
         if(player.getLanerender() != null) {
             liftToggle.setText(player.getLanerender().getPlayConfig().isEnablelift() ? "On" : "Off");
+        }
+    }
+
+    private void updateHiddenToggle() {
+        if(player.getLanerender() != null) {
+            hiddenToggle.setText(player.getLanerender().getPlayConfig().isEnablehidden() ? "On" : "Off");
         }
     }
 
@@ -825,6 +884,9 @@ public class ModMenu {
             liftSlider.setValue(getLift() * 1000);
             liftLabel.setText("Lift: " + (int)liftSlider.getValue());
 
+            hiddenSlider.setValue(getHidden() * 1000);
+            hiddenLabel.setText("Hidden: " + (int)hiddenSlider.getValue());
+
             judgeTimingSlider.setValue(getJudgeTiming());
             judgeTimingLabel.setText("Judge Timing: " + getJudgeTiming() + "ms");
 
@@ -848,6 +910,7 @@ public class ModMenu {
             if (player.getMode().player == 2) updateRandom2Button();
             updateLaneCoverToggle();
             updateLiftToggle();
+            updateHiddenToggle();
 
         } else {
             // Return control to game
