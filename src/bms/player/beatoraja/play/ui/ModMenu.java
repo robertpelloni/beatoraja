@@ -79,6 +79,8 @@ public class ModMenu {
     private TextButton autoAdjustButton;
     private TextButton retryButton;
     private TextButton retrySameButton;
+    private TextButton lnModeButton;
+    private TextButton autoScratchButton;
 
     // Audio UI
     private Window audioWindow;
@@ -180,7 +182,6 @@ public class ModMenu {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 setHiSpeed(hispeedSlider.getValue());
-                // Label updated in update()
             }
         });
 
@@ -431,7 +432,6 @@ public class ModMenu {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 int current = player.resource.getPlayerConfig().getGauge();
-                // Cycle 0,1,2,3,4,5,9
                 if (current == 5) current = 9;
                 else if (current == 9) current = 0;
                 else current++;
@@ -452,7 +452,6 @@ public class ModMenu {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 int current = player.resource.getPlayerConfig().getRandom();
-                // Cycle: 0(OFF), 1(MIR), 2(RAN), 3(R-RAN), 4(S-RAN), 5(SPIRAL), 6(H-RAN), 10(M-RAN if 2P)
                 boolean mran = player.getMode().player == 2;
                 if (current == 4) current = 5;
                 else if (current == 5) current = 6;
@@ -472,7 +471,6 @@ public class ModMenu {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     int current = player.resource.getPlayerConfig().getRandom2();
-                    // Cycle: 0,1,2,3,4,5,6,10
                     if (current == 4) current = 5;
                     else if (current == 5) current = 6;
                     else if (current == 6) current = 10;
@@ -562,6 +560,33 @@ public class ModMenu {
         buttons6.add(retrySameButton).width(200).pad(2);
         window.add(buttons6);
 
+        window.row();
+        // Row 7: LN Mode and Auto Scratch
+        Table buttons7 = new Table();
+        lnModeButton = new TextButton("LN Mode: Default", skin);
+        lnModeButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                int current = player.resource.getPlayerConfig().getLongnoteMode();
+                current = (current + 1) % 6; // 0..5
+                player.resource.getPlayerConfig().setLongnoteMode(current);
+                updateLnModeButton();
+            }
+        });
+        buttons7.add(lnModeButton).width(200).pad(2);
+
+        autoScratchButton = new TextButton("A-Scratch: Off", skin);
+        autoScratchButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                boolean b = !player.resource.getPlayerConfig().isAutoScratch();
+                player.resource.getPlayerConfig().setAutoScratch(b);
+                updateAutoScratchButton();
+            }
+        });
+        buttons7.add(autoScratchButton).width(145).pad(2);
+        window.add(buttons7);
+
         window.pack();
         // Center window
         window.setPosition((Gdx.graphics.getWidth() - window.getWidth()) / 2, (Gdx.graphics.getHeight() - window.getHeight()) / 2);
@@ -569,6 +594,7 @@ public class ModMenu {
         root.add(window);
     }
 
+    // ... Audio Window, Arena Window, etc ... (keep existing)
     private void createAudioWindow() {
         audioWindow = new Window("Audio Settings", skin);
         audioWindow.getTitleLabel().setAlignment(1);
@@ -998,6 +1024,25 @@ public class ModMenu {
         }
     }
 
+    private void updateLnModeButton() {
+        int val = player.resource.getPlayerConfig().getLongnoteMode();
+        String text = "LN Mode: ";
+        switch(val) {
+            case 0: text += "Default"; break;
+            case 1: text += "LN->CN"; break;
+            case 2: text += "CN->LN"; break;
+            case 3: text += "ALL CN"; break;
+            case 4: text += "ALL LN"; break;
+            case 5: text += "OFF"; break;
+        }
+        lnModeButton.setText(text);
+    }
+
+    private void updateAutoScratchButton() {
+        boolean b = player.resource.getPlayerConfig().isAutoScratch();
+        autoScratchButton.setText("A-Scratch: " + (b ? "On" : "Off"));
+    }
+
     public void update() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.F5)) {
             toggle();
@@ -1097,6 +1142,8 @@ public class ModMenu {
             updateLiftToggle();
             updateHiddenToggle();
             updateGuideSEButton();
+            updateLnModeButton();
+            updateAutoScratchButton();
 
         } else {
             // Return control to game

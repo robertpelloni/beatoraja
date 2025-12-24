@@ -230,6 +230,12 @@ public class BMSPlayer extends MainState {
 				mods.add(new ExtraNoteModifier(config.getExtranoteType(), config.getExtranoteDepth(), config.isExtranoteScratch()));
 			}
 
+			if (config.isAutoScratch()) {
+				mods.add(new AutoplayModifier(model.getMode().scratchKey));
+				assist = Math.max(assist, 1);
+				score = false;
+			}
+
 			for(PatternModifier mod : mods) {
 				mod.modify(model);
 				if(mod.getAssistLevel() != PatternModifier.AssistLevel.NONE) {
