@@ -46,6 +46,8 @@ public class ModMenu {
 
     private Slider hispeedSlider;
     private Label hispeedLabel;
+    private TextButton gnPlusButton;
+    private TextButton gnMinusButton;
 
     private Slider laneCoverSlider;
     private Label laneCoverLabel;
@@ -75,6 +77,8 @@ public class ModMenu {
     private TextButton randomButton;
     private TextButton random2Button;
     private TextButton autoAdjustButton;
+    private TextButton retryButton;
+    private TextButton retrySameButton;
 
     // Audio UI
     private Window audioWindow;
@@ -169,7 +173,7 @@ public class ModMenu {
         Window window = new Window("Mod Menu", skin);
         window.getTitleLabel().setAlignment(1); // Center
 
-        // Hi-Speed
+        // Hi-Speed / Green Number
         hispeedLabel = new Label("Hi-Speed: " + String.format("%.2f", 0.0f), skin);
         hispeedSlider = new Slider(0.5f, 10.0f, 0.01f, false, skin);
         hispeedSlider.addListener(new ChangeListener() {
@@ -177,6 +181,24 @@ public class ModMenu {
             public void changed(ChangeEvent event, Actor actor) {
                 setHiSpeed(hispeedSlider.getValue());
                 // Label updated in update()
+            }
+        });
+
+        gnMinusButton = new TextButton("-", skin);
+        gnMinusButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                int step = Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) ? 1 : 10;
+                setGreenNumber(getGreenNumber() - step);
+            }
+        });
+
+        gnPlusButton = new TextButton("+", skin);
+        gnPlusButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                int step = Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) ? 1 : 10;
+                setGreenNumber(getGreenNumber() + step);
             }
         });
 
@@ -275,7 +297,12 @@ public class ModMenu {
 
         window.add(hispeedLabel).pad(2);
         window.row();
-        window.add(hispeedSlider).width(300).pad(2);
+
+        Table hsTable = new Table();
+        hsTable.add(hispeedSlider).width(220).padRight(5);
+        hsTable.add(gnMinusButton).width(30).height(20).padRight(2);
+        hsTable.add(gnPlusButton).width(30).height(20);
+        window.add(hsTable).pad(2);
         window.row();
 
         Table lcTable = new Table();
@@ -425,9 +452,13 @@ public class ModMenu {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 int current = player.resource.getPlayerConfig().getRandom();
-                if (player.getMode().player == 2 && current == 4) current = 10; // Jump to M-RAN
+                // Cycle: 0(OFF), 1(MIR), 2(RAN), 3(R-RAN), 4(S-RAN), 5(SPIRAL), 6(H-RAN), 10(M-RAN if 2P)
+                boolean mran = player.getMode().player == 2;
+                if (current == 4) current = 5;
+                else if (current == 5) current = 6;
+                else if (current == 6) current = mran ? 10 : 0;
                 else if (current == 10) current = 0;
-                else current = (current + 1) % 5;
+                else current++;
 
                 player.resource.getPlayerConfig().setRandom(current);
                 updateRandomButton();
@@ -441,9 +472,12 @@ public class ModMenu {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
                     int current = player.resource.getPlayerConfig().getRandom2();
-                    if (current == 4) current = 10; // Jump to M-RAN
+                    // Cycle: 0,1,2,3,4,5,6,10
+                    if (current == 4) current = 5;
+                    else if (current == 5) current = 6;
+                    else if (current == 6) current = 10;
                     else if (current == 10) current = 0;
-                    else current = (current + 1) % 5;
+                    else current++;
 
                     player.resource.getPlayerConfig().setRandom2(current);
                     updateRandom2Button();
@@ -503,6 +537,30 @@ public class ModMenu {
         buttons5.add(missionsButton).width(145).pad(2);
         window.row();
         window.add(buttons5);
+
+        window.row();
+        // Retry Buttons
+        Table buttons6 = new Table();
+        retryButton = new TextButton("Retry (New Random)", skin);
+        retryButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                player.retry(false);
+                toggle(); // Close menu
+            }
+        });
+        buttons6.add(retryButton).width(200).pad(2);
+
+        retrySameButton = new TextButton("Retry (Same Random)", skin);
+        retrySameButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                player.retry(true);
+                toggle();
+            }
+        });
+        buttons6.add(retrySameButton).width(200).pad(2);
+        window.add(buttons6);
 
         window.pack();
         // Center window
@@ -788,6 +846,12 @@ public class ModMenu {
         return player.getLanerender() != null ? player.getLanerender().getCurrentDuration() : 0;
     }
 
+    private void setGreenNumber(int val) {
+        if (player.getLanerender() != null) {
+            player.getLanerender().setDuration(val);
+        }
+    }
+
     private int getPacemakerType() {
         if (player.getLanerender() != null) {
             return player.getLanerender().getPlayConfig().getPacemakerType();
@@ -849,6 +913,8 @@ public class ModMenu {
             case 2: text += "Random"; break;
             case 3: text += "R-Rand"; break;
             case 4: text += "S-Rand"; break;
+            case 5: text += "Spiral"; break;
+            case 6: text += "H-Rand"; break;
             case 10: text += "M-Ran"; break;
             default: text += "Other"; break;
         }
@@ -864,6 +930,8 @@ public class ModMenu {
             case 2: text += "Random"; break;
             case 3: text += "R-Rand"; break;
             case 4: text += "S-Rand"; break;
+            case 5: text += "Spiral"; break;
+            case 6: text += "H-Rand"; break;
             case 10: text += "M-Ran"; break;
             default: text += "Other"; break;
         }

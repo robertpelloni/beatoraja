@@ -1140,6 +1140,17 @@ public class BMSPlayer extends MainState {
 		return rhythm != null ? rhythm.getNowQuarterNoteTime() : 0;
 	}
 
+	public void retry(boolean sameRandom) {
+		if (sameRandom) {
+			Logger.getGlobal().info("同じ譜面でリプレイ");
+		} else {
+			Logger.getGlobal().info("オプションを変更せずリプレイ");
+			resource.getReplayData().randomoptionseed = -1;
+		}
+		resource.reloadBMSFile();
+		main.changeState(MainStateType.PLAY);
+	}
+
 	public void updateTargetScore() {
 		PlayerConfig config = resource.getPlayerConfig();
 		int pacemakerType = config.getPlayConfig(model.getMode()).getPlayconfig().getPacemakerType();
