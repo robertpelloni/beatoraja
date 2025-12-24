@@ -26,6 +26,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import bms.player.beatoraja.Config;
 import bms.player.beatoraja.PlayConfig;
 import bms.player.beatoraja.play.BMSPlayer;
+import bms.player.beatoraja.play.GrooveGauge;
 import bms.player.beatoraja.pattern.Random;
 import bms.player.beatoraja.arena.ArenaManager;
 import bms.player.beatoraja.arena.ArenaData;
@@ -63,7 +64,9 @@ public class ModMenu {
     private TextButton chartPreviewButton;
     private TextButton bgaButton;
     private TextButton fixGnButton;
+    private TextButton gaugeButton;
     private TextButton randomButton;
+    private TextButton random2Button;
     private TextButton autoAdjustButton;
 
     // Arena UI
@@ -349,6 +352,23 @@ public class ModMenu {
             }
         });
         buttons3.add(fixGnButton).width(145).pad(2);
+
+        gaugeButton = new TextButton("Gauge: A-Easy", skin);
+        gaugeButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                int current = player.resource.getPlayerConfig().getGauge();
+                // Cycle 0,1,2,3,4,5,9
+                if (current == 5) current = 9;
+                else if (current == 9) current = 0;
+                else current++;
+
+                player.resource.getPlayerConfig().setGauge(current);
+                updateGaugeButton();
+            }
+        });
+        buttons3.add(gaugeButton).width(145).pad(2);
+
         window.row();
         window.add(buttons3);
 
@@ -365,6 +385,20 @@ public class ModMenu {
             }
         });
         buttons4.add(randomButton).width(145).pad(2);
+
+        if (player.getMode().player == 2) {
+            random2Button = new TextButton("R2: Off", skin);
+            random2Button.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    int current = player.resource.getPlayerConfig().getRandom2();
+                    current = (current + 1) % 5; // 0..4
+                    player.resource.getPlayerConfig().setRandom2(current);
+                    updateRandom2Button();
+                }
+            });
+            buttons4.add(random2Button).width(145).pad(2);
+        }
 
         autoAdjustButton = new TextButton("Auto Adjust", skin);
         autoAdjustButton.addListener(new ClickListener() {
@@ -678,6 +712,36 @@ public class ModMenu {
         randomButton.setText(text);
     }
 
+    private void updateRandom2Button() {
+        int val = player.resource.getPlayerConfig().getRandom2();
+        String text = "R2: ";
+        switch(val) {
+            case 0: text += "Off"; break;
+            case 1: text += "Mirror"; break;
+            case 2: text += "Random"; break;
+            case 3: text += "R-Rand"; break;
+            case 4: text += "S-Rand"; break;
+            default: text += "Other"; break;
+        }
+        random2Button.setText(text);
+    }
+
+    private void updateGaugeButton() {
+        int val = player.resource.getPlayerConfig().getGauge();
+        String text = "Gauge: ";
+        switch(val) {
+            case GrooveGauge.ASSISTEASY: text += "A-Easy"; break;
+            case GrooveGauge.EASY: text += "Easy"; break;
+            case GrooveGauge.NORMAL: text += "Normal"; break;
+            case GrooveGauge.HARD: text += "Hard"; break;
+            case GrooveGauge.EXHARD: text += "ExHard"; break;
+            case GrooveGauge.HAZARD: text += "Hazard"; break;
+            case GrooveGauge.TIMEHELL: text += "T-Hell"; break;
+            default: text += "Other"; break;
+        }
+        gaugeButton.setText(text);
+    }
+
     private void updateLaneCoverToggle() {
         if(player.getLanerender() != null) {
             laneCoverToggle.setText(player.getLanerender().isEnableLanecover() ? "On" : "Off");
@@ -779,7 +843,9 @@ public class ModMenu {
             chartPreviewButton.setText("Chart Preview: " + (player.resource.getPlayerConfig().isChartPreview() ? "On" : "Off"));
             updateBgaButton();
             updateFixGnButton();
+            updateGaugeButton();
             updateRandomButton();
+            if (player.getMode().player == 2) updateRandom2Button();
             updateLaneCoverToggle();
             updateLiftToggle();
 
