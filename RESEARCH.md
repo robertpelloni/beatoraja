@@ -84,7 +84,7 @@
 
 ## Completed Features (This Session)
 *   **Arena Mode:** Fully implemented with TCP networking, Lobby, Rule enforcement, and Score synchronization.
-*   **Mod Menu:** In-game overlay (F5) with Hi-Speed/Green Number, Lane Cover, Lift, Judge Timing (with Auto-Adjust), BGA Toggle, Fix GN (Floating HS), Random Option (1P/2P), Gauge Selector, Pacemaker, Arena, Mission, and Chart Preview controls.
+*   **Mod Menu:** In-game overlay (F5) with Hi-Speed/Green Number, Lane Cover, Lift, Hidden, Judge Timing (with Auto-Adjust), Play Speed, BGA Toggle, Fix GN (Floating HS), Random Option (1P/2P), Gauge Selector, Pacemaker, Arena, Mission, Chart Preview, and Audio controls (Volume/Guide SE).
 *   **Auto-Adjust Offset:** Implemented in Mod Menu using real-time average timing error analysis.
 *   **Step-Up / Mission System:** Implemented with progressive difficulty and daily tasks.
 *   **Osu! Support:** Implemented `.osu` file parsing, audio loading, and 7K mapping.

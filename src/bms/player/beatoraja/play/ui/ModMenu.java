@@ -23,8 +23,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import java.nio.file.Path;
+
 import bms.player.beatoraja.Config;
 import bms.player.beatoraja.PlayConfig;
+import bms.player.beatoraja.SystemSoundManager;
 import bms.player.beatoraja.play.BMSPlayer;
 import bms.player.beatoraja.play.GrooveGauge;
 import bms.player.beatoraja.pattern.Random;
@@ -72,6 +75,14 @@ public class ModMenu {
     private TextButton randomButton;
     private TextButton random2Button;
     private TextButton autoAdjustButton;
+
+    // Audio UI
+    private Window audioWindow;
+    private Slider keyVolumeSlider;
+    private Label keyVolumeLabel;
+    private Slider bgmVolumeSlider;
+    private Label bgmVolumeLabel;
+    private TextButton guideSEButton;
 
     // Arena UI
     private Window arenaWindow;
@@ -458,7 +469,18 @@ public class ModMenu {
 
         window.row();
         Table buttons5 = new Table();
-        TextButton arenaButton = new TextButton("Arena Mode...", skin);
+        TextButton audioButton = new TextButton("Audio...", skin);
+        audioButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (audioWindow == null) createAudioWindow();
+                audioWindow.setVisible(!audioWindow.isVisible());
+                if (audioWindow.isVisible()) audioWindow.toFront();
+            }
+        });
+        buttons5.add(audioButton).width(145).pad(2);
+
+        TextButton arenaButton = new TextButton("Arena...", skin);
         arenaButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -489,7 +511,76 @@ public class ModMenu {
         root.add(window);
     }
 
-    // ... Arena/Mission methods ...
+    private void createAudioWindow() {
+        audioWindow = new Window("Audio Settings", skin);
+        audioWindow.getTitleLabel().setAlignment(1);
+
+        Table content = new Table();
+        audioWindow.add(content).pad(10);
+
+        // Key Volume
+        keyVolumeLabel = new Label("Key Vol: " + (int)(player.main.getConfig().getAudioConfig().getKeyvolume() * 100) + "%", skin);
+        keyVolumeSlider = new Slider(0f, 1f, 0.05f, false, skin);
+        keyVolumeSlider.setValue(player.main.getConfig().getAudioConfig().getKeyvolume());
+        keyVolumeSlider.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                float val = keyVolumeSlider.getValue();
+                player.main.getConfig().getAudioConfig().setKeyvolume(val);
+                keyVolumeLabel.setText("Key Vol: " + (int)(val * 100) + "%");
+            }
+        });
+
+        content.add(keyVolumeLabel).pad(2);
+        content.row();
+        content.add(keyVolumeSlider).width(200).pad(2);
+        content.row();
+
+        // BGM Volume
+        bgmVolumeLabel = new Label("BGM Vol: " + (int)(player.main.getConfig().getAudioConfig().getBgvolume() * 100) + "%", skin);
+        bgmVolumeSlider = new Slider(0f, 1f, 0.05f, false, skin);
+        bgmVolumeSlider.setValue(player.main.getConfig().getAudioConfig().getBgvolume());
+        bgmVolumeSlider.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                float val = bgmVolumeSlider.getValue();
+                player.main.getConfig().getAudioConfig().setBgvolume(val);
+                bgmVolumeLabel.setText("BGM Vol: " + (int)(val * 100) + "%");
+            }
+        });
+
+        content.add(bgmVolumeLabel).pad(2);
+        content.row();
+        content.add(bgmVolumeSlider).width(200).pad(2);
+        content.row();
+
+        // Guide SE
+        guideSEButton = new TextButton("Guide SE: Off", skin);
+        guideSEButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                boolean b = !player.resource.getPlayerConfig().isGuideSE();
+                player.resource.getPlayerConfig().setGuideSE(b);
+                updateGuideSEButton();
+            }
+        });
+        content.add(guideSEButton).pad(5);
+        content.row();
+
+        TextButton closeButton = new TextButton("Close", skin);
+        closeButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                audioWindow.setVisible(false);
+            }
+        });
+        content.add(closeButton).padTop(10);
+
+        audioWindow.pack();
+        audioWindow.setPosition((Gdx.graphics.getWidth() - audioWindow.getWidth()) / 2, (Gdx.graphics.getHeight() - audioWindow.getHeight()) / 2 + 50);
+        stage.addActor(audioWindow);
+    }
+
     private void createArenaWindow() {
         arenaWindow = new Window("Arena Mode", skin);
         arenaWindow.getTitleLabel().setAlignment(1);
@@ -813,6 +904,32 @@ public class ModMenu {
         }
     }
 
+    private void updateGuideSEButton() {
+        boolean b = player.resource.getPlayerConfig().isGuideSE();
+        guideSEButton.setText("Guide SE: " + (b ? "On" : "Off"));
+
+        SystemSoundManager.SoundType[] guideses = {
+            SystemSoundManager.SoundType.GUIDESE_PG,
+            SystemSoundManager.SoundType.GUIDESE_GR,
+            SystemSoundManager.SoundType.GUIDESE_GD,
+            SystemSoundManager.SoundType.GUIDESE_BD,
+            SystemSoundManager.SoundType.GUIDESE_PR,
+            SystemSoundManager.SoundType.GUIDESE_MS
+        };
+        for(int i = 0;i < 6;i++) {
+            if(b) {
+                Path[] paths = player.main.getSoundManager().getSoundPaths(guideses[i]);
+                if(paths.length > 0) {
+                    player.main.getAudioProcessor().setAdditionalKeySound(i, true, paths[0].toString());
+                    player.main.getAudioProcessor().setAdditionalKeySound(i, false, paths[0].toString());
+                }
+            } else {
+                player.main.getAudioProcessor().setAdditionalKeySound(i, true, null);
+                player.main.getAudioProcessor().setAdditionalKeySound(i, false, null);
+            }
+        }
+    }
+
     public void update() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.F5)) {
             toggle();
@@ -911,6 +1028,7 @@ public class ModMenu {
             updateLaneCoverToggle();
             updateLiftToggle();
             updateHiddenToggle();
+            updateGuideSEButton();
 
         } else {
             // Return control to game
