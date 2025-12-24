@@ -62,7 +62,7 @@ public class BMSPlayer extends MainState {
 
 	private final FloatArray[] gaugelog;
 
-	private int playspeed = 100;
+	private float playbackRate = 1.0f;
 
 	/**
 	 * リプレイHS保存用 STATE READY時に保存
@@ -719,7 +719,7 @@ public class BMSPlayer extends MainState {
 			// プレイ
 			case STATE_PLAY -> {
 				final long deltatime = micronow - prevtime;
-				final long deltaplay = deltatime * (100 - playspeed) / 100;
+				final long deltaplay = (long)(deltatime * (playbackRate - 1.0f));
 				PracticeProperty property = practice.getPracticeProperty();
 				timer.setMicroTimer(TIMER_PLAY, timer.getMicroTimer(TIMER_PLAY) + deltaplay);
 
@@ -893,15 +893,15 @@ public class BMSPlayer extends MainState {
 		}
 	}
 
-	public void setPlaySpeed(int playspeed) {
-		this.playspeed = playspeed;
+	public void setPlaybackRate(float rate) {
+		this.playbackRate = rate;
 		if (main.getConfig().getAudioConfig().getFastForward() == FrequencyType.FREQUENCY) {
-			main.getAudioProcessor().setGlobalPitch(playspeed / 100f);
+			main.getAudioProcessor().setGlobalPitch(rate);
 		}
 	}
 
-	public int getPlaySpeed() {
-		return playspeed;
+	public float getPlaybackRate() {
+		return playbackRate;
 	}
 
 	public void input() {

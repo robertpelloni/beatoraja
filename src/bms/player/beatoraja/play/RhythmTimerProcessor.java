@@ -61,7 +61,7 @@ public class RhythmTimerProcessor {
 		final long now = player.timer.getNowTime();
 		final long micronow = player.timer.getNowMicroTime();
 
-		rhythmtimer += deltatime * (100 - nowbpm * player.getPlaySpeed() / 60) / 100;
+		rhythmtimer += (long)(deltatime * (1.0f - nowbpm * player.getPlaybackRate() / 60.0f));
 		player.timer.setMicroTimer(TIMER_RHYTHM, rhythmtimer);
 
 		if(sections < sectiontimes.length && (sectiontimes[sections] * (100 / freq)) <= player.timer.getNowMicroTime(TIMER_PLAY)) {

@@ -54,6 +54,9 @@ public class ModMenu {
     private Slider judgeTimingSlider;
     private Label judgeTimingLabel;
 
+    private Slider playSpeedSlider;
+    private Label playSpeedLabel;
+
     private TextButton pacemakerButton;
     private TextButton nonstopButton;
     private TextButton timerButton;
@@ -216,6 +219,19 @@ public class ModMenu {
             }
         });
 
+        // Play Speed
+        playSpeedLabel = new Label("Play Speed: 1.00x", skin);
+        playSpeedSlider = new Slider(0.5f, 1.5f, 0.05f, false, skin);
+        playSpeedSlider.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                float val = playSpeedSlider.getValue();
+                if (Math.abs(val - 1.0f) < 0.025f) val = 1.0f;
+                player.setPlaybackRate(val);
+                playSpeedLabel.setText(String.format("Play Speed: %.2fx", val));
+            }
+        });
+
         window.add(hispeedLabel).pad(2);
         window.row();
         window.add(hispeedSlider).width(300).pad(2);
@@ -240,6 +256,11 @@ public class ModMenu {
         window.add(judgeTimingLabel).pad(2);
         window.row();
         window.add(judgeTimingSlider).width(300).pad(2);
+        window.row();
+
+        window.add(playSpeedLabel).pad(2);
+        window.row();
+        window.add(playSpeedSlider).width(300).pad(2);
 
         // Buttons Row 1
         Table buttons1 = new Table();
@@ -742,6 +763,9 @@ public class ModMenu {
 
             judgeTimingSlider.setValue(getJudgeTiming());
             judgeTimingLabel.setText("Judge Timing: " + getJudgeTiming() + "ms");
+
+            playSpeedSlider.setValue(player.getPlaybackRate());
+            playSpeedLabel.setText(String.format("Play Speed: %.2fx", player.getPlaybackRate()));
 
             updatePacemakerButton();
             nonstopButton.setText("Nonstop: " + (player.resource.isNonstop() ? "On" : "Off"));

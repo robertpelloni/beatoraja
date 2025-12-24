@@ -208,15 +208,15 @@ public final class ControlInputProcessor {
 		// play speed change (autoplay or replay only)
 		if (autoplay.mode == BMSPlayerMode.Mode.AUTOPLAY || autoplay.mode == BMSPlayerMode.Mode.REPLAY) {
 			if (input.getControlKeyState(ControlKeys.NUM1)) {
-				player.setPlaySpeed(25);
+				player.setPlaybackRate(0.25f);
 			} else if (input.getControlKeyState(ControlKeys.NUM2)) {
-				player.setPlaySpeed(50);
+				player.setPlaybackRate(0.5f);
 			} else if (input.getControlKeyState(ControlKeys.NUM3)) {
-				player.setPlaySpeed(200);
+				player.setPlaybackRate(2.0f);
 			} else if (input.getControlKeyState(ControlKeys.NUM4)) {
-				player.setPlaySpeed(300);
+				player.setPlaybackRate(3.0f);
 			} else {
-				player.setPlaySpeed(100);
+				player.setPlaybackRate(1.0f);
 			}
 		}
 	}
