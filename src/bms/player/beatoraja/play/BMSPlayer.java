@@ -1139,4 +1139,38 @@ public class BMSPlayer extends MainState {
 	public long getNowQuarterNoteTime() {
 		return rhythm != null ? rhythm.getNowQuarterNoteTime() : 0;
 	}
+
+	public void updateTargetScore() {
+		PlayerConfig config = resource.getPlayerConfig();
+		int pacemakerType = config.getPlayConfig(model.getMode()).getPlayconfig().getPacemakerType();
+		int targetExScore = 0;
+		int[] targetGhost = null;
+
+		if (pacemakerType == PlayConfig.PACEMAKER_RIVAL) {
+			if(resource.getRivalScoreData() == null || resource.getCourseBMSModels() != null) {
+				ScoreData targetScore = TargetProperty.getTargetProperty(config.getTargetid()).getTarget(main);
+				resource.setTargetScoreData(targetScore);
+			} else {
+				resource.setTargetScoreData(resource.getRivalScoreData());
+			}
+			if (resource.getTargetScoreData() != null) {
+				targetExScore = resource.getTargetScoreData().getExscore();
+				targetGhost = resource.getTargetScoreData().decodeGhost();
+			}
+		} else if (pacemakerType == PlayConfig.PACEMAKER_BEST) {
+			targetExScore = getScoreDataProperty().getBestScore();
+			targetGhost = getScoreDataProperty().getBestGhost();
+		} else {
+			// Artificial
+			int maxScore = model.getTotalNotes() * 2;
+			if (pacemakerType == PlayConfig.PACEMAKER_AAA) {
+				targetExScore = (int)Math.ceil(maxScore * 8.0 / 9.0);
+			} else if (pacemakerType == PlayConfig.PACEMAKER_AA) {
+				targetExScore = (int)Math.ceil(maxScore * 7.0 / 9.0);
+			} else if (pacemakerType == PlayConfig.PACEMAKER_A) {
+				targetExScore = (int)Math.ceil(maxScore * 6.0 / 9.0);
+			}
+		}
+		getScoreDataProperty().updateTargetScore(targetExScore, targetGhost);
+	}
 }

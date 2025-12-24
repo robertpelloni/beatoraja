@@ -42,10 +42,15 @@ public class ModMenu {
 
     private Slider hispeedSlider;
     private Label hispeedLabel;
+
     private Slider laneCoverSlider;
     private Label laneCoverLabel;
+    private TextButton laneCoverToggle;
+
     private Slider liftSlider;
     private Label liftLabel;
+    private TextButton liftToggle;
+
     private Slider judgeTimingSlider;
     private Label judgeTimingLabel;
 
@@ -165,6 +170,18 @@ public class ModMenu {
             }
         });
 
+        laneCoverToggle = new TextButton("On", skin);
+        laneCoverToggle.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if(player.getLanerender() != null) {
+                    boolean b = !player.getLanerender().isEnableLanecover();
+                    player.getLanerender().setEnableLanecover(b);
+                    updateLaneCoverToggle();
+                }
+            }
+        });
+
         // Lift
         liftLabel = new Label("Lift: 0", skin);
         liftSlider = new Slider(0, 1000, 1, false, skin);
@@ -173,6 +190,18 @@ public class ModMenu {
             public void changed(ChangeEvent event, Actor actor) {
                 setLift(liftSlider.getValue() / 1000f);
                 liftLabel.setText("Lift: " + (int)liftSlider.getValue());
+            }
+        });
+
+        liftToggle = new TextButton("On", skin);
+        liftToggle.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if(player.getLanerender() != null) {
+                    boolean b = !player.getLanerender().getPlayConfig().isEnablelift();
+                    player.getLanerender().getPlayConfig().setEnablelift(b);
+                    updateLiftToggle();
+                }
             }
         });
 
@@ -191,14 +220,23 @@ public class ModMenu {
         window.row();
         window.add(hispeedSlider).width(300).pad(2);
         window.row();
-        window.add(laneCoverLabel).pad(2);
+
+        Table lcTable = new Table();
+        lcTable.add(laneCoverLabel).padRight(10);
+        lcTable.add(laneCoverToggle).width(50).height(20);
+        window.add(lcTable).pad(2);
         window.row();
         window.add(laneCoverSlider).width(300).pad(2);
         window.row();
-        window.add(liftLabel).pad(2);
+
+        Table liftTable = new Table();
+        liftTable.add(liftLabel).padRight(10);
+        liftTable.add(liftToggle).width(50).height(20);
+        window.add(liftTable).pad(2);
         window.row();
         window.add(liftSlider).width(300).pad(2);
         window.row();
+
         window.add(judgeTimingLabel).pad(2);
         window.row();
         window.add(judgeTimingSlider).width(300).pad(2);
@@ -213,6 +251,7 @@ public class ModMenu {
                 current = (current + 1) % 5;
                 setPacemakerType(current);
                 updatePacemakerButton();
+                player.updateTargetScore();
             }
         });
         buttons1.add(pacemakerButton).width(145).pad(2);
@@ -354,7 +393,7 @@ public class ModMenu {
         root.add(window);
     }
 
-    // ... Arena and Missions methods (unchanged) ...
+    // ... Arena/Mission methods ...
     private void createArenaWindow() {
         arenaWindow = new Window("Arena Mode", skin);
         arenaWindow.getTitleLabel().setAlignment(1);
@@ -607,7 +646,6 @@ public class ModMenu {
     private void updateRandomButton() {
         int val = player.resource.getPlayerConfig().getRandom();
         String text = "Random: ";
-        // Random.OPTION_GENERAL: IDENTITY, MIRROR, RANDOM, ROTATE, S_RANDOM
         switch(val) {
             case 0: text += "Off"; break;
             case 1: text += "Mirror"; break;
@@ -617,6 +655,18 @@ public class ModMenu {
             default: text += "Other"; break;
         }
         randomButton.setText(text);
+    }
+
+    private void updateLaneCoverToggle() {
+        if(player.getLanerender() != null) {
+            laneCoverToggle.setText(player.getLanerender().isEnableLanecover() ? "On" : "Off");
+        }
+    }
+
+    private void updateLiftToggle() {
+        if(player.getLanerender() != null) {
+            liftToggle.setText(player.getLanerender().getPlayConfig().isEnablelift() ? "On" : "Off");
+        }
     }
 
     public void update() {
@@ -642,7 +692,6 @@ public class ModMenu {
         }
     }
 
-    // ... Arena/Mission methods ...
     private void updateMissions() {
         if (player.main.getMissionManager() != null) {
             StringBuilder sb = new StringBuilder();
@@ -707,6 +756,8 @@ public class ModMenu {
             updateBgaButton();
             updateFixGnButton();
             updateRandomButton();
+            updateLaneCoverToggle();
+            updateLiftToggle();
 
         } else {
             // Return control to game

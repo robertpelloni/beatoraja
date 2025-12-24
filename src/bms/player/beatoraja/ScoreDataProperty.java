@@ -141,8 +141,11 @@ public class ScoreDataProperty {
         return 0;
     }
     
-    public void updateTargetScore(int rivalscore) {
+    public void updateTargetScore(int rivalscore, int[] rivalGhost) {
     	this.rivalscore = rivalscore;
+        this.rivalGhost = rivalGhost;
+        this.useRivalGhost = rivalGhost != null && rivalGhost.length == totalnotes;
+
         rivalscorerate = ((float)rivalscore)  / (totalnotes * 2);
         rivalrateInt = (int)(rivalscorerate * 100);
         rivalrateAfterDot = ((int)(rivalscorerate * 10000)) % 100;
@@ -275,5 +278,9 @@ public class ScoreDataProperty {
 
     public ScoreData getRivalScoreData() {
         return rival;
+    }
+
+    public int[] getBestGhost() {
+        return bestGhost;
     }
 }
