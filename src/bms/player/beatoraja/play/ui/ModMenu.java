@@ -41,10 +41,13 @@ public class ModMenu {
     private Label hispeedLabel;
     private Slider laneCoverSlider;
     private Label laneCoverLabel;
+    private Slider liftSlider;
+    private Label liftLabel;
 
     private TextButton pacemakerButton;
     private TextButton nonstopButton;
     private TextButton timerButton;
+    private TextButton chartPreviewButton;
 
     // Arena UI
     private Window arenaWindow;
@@ -138,7 +141,7 @@ public class ModMenu {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 setHiSpeed(hispeedSlider.getValue());
-                hispeedLabel.setText(String.format("Hi-Speed: %.2f", hispeedSlider.getValue()));
+                // Label updated in update()
             }
         });
 
@@ -153,6 +156,17 @@ public class ModMenu {
             }
         });
 
+        // Lift
+        liftLabel = new Label("Lift: 0", skin);
+        liftSlider = new Slider(0, 1000, 1, false, skin);
+        liftSlider.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                setLift(liftSlider.getValue() / 1000f);
+                liftLabel.setText("Lift: " + (int)liftSlider.getValue());
+            }
+        });
+
         window.add(hispeedLabel).pad(5);
         window.row();
         window.add(hispeedSlider).width(300).pad(5);
@@ -160,6 +174,10 @@ public class ModMenu {
         window.add(laneCoverLabel).pad(5);
         window.row();
         window.add(laneCoverSlider).width(300).pad(5);
+        window.row();
+        window.add(liftLabel).pad(5);
+        window.row();
+        window.add(liftSlider).width(300).pad(5);
 
         window.row();
         pacemakerButton = new TextButton("Pacemaker: Rival", skin);
@@ -202,6 +220,18 @@ public class ModMenu {
             }
         });
         window.add(timerButton).pad(5);
+
+        window.row();
+        chartPreviewButton = new TextButton("Chart Preview: On", skin);
+        chartPreviewButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                boolean current = player.resource.getPlayerConfig().isChartPreview();
+                player.resource.getPlayerConfig().setChartPreview(!current);
+                chartPreviewButton.setText("Chart Preview: " + (!current ? "On" : "Off"));
+            }
+        });
+        window.add(chartPreviewButton).pad(5);
 
         window.row();
         TextButton arenaButton = new TextButton("Arena Mode...", skin);
@@ -408,6 +438,20 @@ public class ModMenu {
         }
     }
 
+    private float getLift() {
+        return player.getLanerender() != null ? player.getLanerender().getLiftRegion() : 0f;
+    }
+
+    private void setLift(float val) {
+        if (player.getLanerender() != null) {
+            player.getLanerender().setLiftRegion(val);
+        }
+    }
+
+    private int getGreenNumber() {
+        return player.getLanerender() != null ? player.getLanerender().getCurrentDuration() : 0;
+    }
+
     private int getPacemakerType() {
         if (player.getLanerender() != null) {
             return player.getLanerender().getPlayConfig().getPacemakerType();
@@ -440,6 +484,9 @@ public class ModMenu {
         }
 
         if (visible) {
+            // Update live labels
+            hispeedLabel.setText(String.format("Hi-Speed: %.2f (GN: %d)", getHiSpeed(), getGreenNumber()));
+
             if (arenaWindow != null && arenaWindow.isVisible()) {
                 updateArenaStatus();
             }
@@ -492,10 +539,12 @@ public class ModMenu {
 
             // Refresh values
             hispeedSlider.setValue(getHiSpeed());
-            hispeedLabel.setText(String.format("Hi-Speed: %.2f", hispeedSlider.getValue()));
 
             laneCoverSlider.setValue(getLaneCover() * 1000);
             laneCoverLabel.setText("Lane Cover: " + (int)laneCoverSlider.getValue());
+
+            liftSlider.setValue(getLift() * 1000);
+            liftLabel.setText("Lift: " + (int)liftSlider.getValue());
 
             updatePacemakerButton();
             nonstopButton.setText("Nonstop: " + (player.resource.isNonstop() ? "On" : "Off"));
@@ -506,6 +555,7 @@ public class ModMenu {
                 long remaining = (endTime - System.currentTimeMillis()) / 60000;
                 timerButton.setText("Timer: " + Math.max(0, remaining) + "m");
             }
+            chartPreviewButton.setText("Chart Preview: " + (player.resource.getPlayerConfig().isChartPreview() ? "On" : "Off"));
 
         } else {
             // Return control to game

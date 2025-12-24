@@ -80,23 +80,20 @@
 
 ## Missing Features in Beatoraja (Gap Analysis)
 
-1.  **Arena Mode:** Online real-time battle. (Partially implemented locally).
-2.  **Step-Up / Story Mode:** Progressive mode.
-3.  **Advanced Practice Features:** Time Free / Hazard.
-4.  **Multi-Spin Scratch (MSS):** Continuous scratching.
-5.  **BGA Thumbnails:** Implemented (Visuals).
-6.  **Osu! Support:** Partially implemented (Loader + Audio + 7K mapping).
-7.  **Mod Menu:** In-game overlay for settings (Endless Dream feature).
+1.  **Multi-Spin Scratch (MSS):** Continuous scratching. (Not applicable to standard BMS).
+2.  **Advanced Practice Features:** Time Free / Hazard. (Partial via Time Hell / Timer Mode).
 
 ## Completed Features (This Session)
+*   **Arena Mode:** Fully implemented with TCP networking, Lobby, Rule enforcement, and Score synchronization.
+*   **Mod Menu:** In-game overlay (F5) with Hi-Speed/Green Number, Lane Cover, Lift, Pacemaker, Arena, Mission, and Chart Preview controls.
+*   **Step-Up / Mission System:** Implemented with progressive difficulty and daily tasks.
+*   **Osu! Support:** Implemented `.osu` file parsing, audio loading, and 7K mapping.
 *   **Fast/Slow Separation:** Implemented in ScoreData/JudgeManager and exposed to Skins.
-*   **Arena Groundwork:** Manager created, 2P score separation implemented in JudgeManager.
-*   **Osu! Decoder:** Basic parsing of `.osu` files to `BMSModel`.
 *   **LR2 Features:** Gauge, Judge, LN, Total implemented.
 *   **Notes Radar:** Implemented (Logic + Visuals).
 *   **Pacemaker Graph:** Implemented (Logic + Visuals).
 *   **Same-Random Retry:** Implemented (Logic + UI Event).
-*   **Time Hell Gauge:** Implemented backend.
+*   **Time Hell Gauge:** Implemented backend with safe skin mapping.
 *   **BGA Thumbnails:** Implemented visuals.
 *   **Random Nonstop:** Implemented (Megamix-style continuous play).
 *   **Timer Mode:** Implemented (Premium Free style).
