@@ -85,7 +85,7 @@
 
 ## Completed Features (This Session)
 *   **Arena Mode:** Fully implemented with TCP networking, Lobby, Rule enforcement, and Score synchronization.
-*   **Mod Menu:** In-game overlay (F5) with Hi-Speed/Green Number, Lane Cover, Lift, Pacemaker, Arena, Mission, and Chart Preview controls.
+*   **Mod Menu:** In-game overlay (F5) with Hi-Speed/Green Number, Lane Cover, Lift, Judge Timing, BGA Toggle, Fix GN (Floating HS), Pacemaker, Arena, Mission, and Chart Preview controls.
 *   **Step-Up / Mission System:** Implemented with progressive difficulty and daily tasks.
 *   **Osu! Support:** Implemented `.osu` file parsing, audio loading, and 7K mapping.
 *   **Fast/Slow Separation:** Implemented in ScoreData/JudgeManager and exposed to Skins.

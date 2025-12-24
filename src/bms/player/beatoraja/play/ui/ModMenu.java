@@ -23,6 +23,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import bms.player.beatoraja.Config;
+import bms.player.beatoraja.PlayConfig;
 import bms.player.beatoraja.play.BMSPlayer;
 import bms.player.beatoraja.arena.ArenaManager;
 import bms.player.beatoraja.arena.ArenaData;
@@ -43,11 +45,15 @@ public class ModMenu {
     private Label laneCoverLabel;
     private Slider liftSlider;
     private Label liftLabel;
+    private Slider judgeTimingSlider;
+    private Label judgeTimingLabel;
 
     private TextButton pacemakerButton;
     private TextButton nonstopButton;
     private TextButton timerButton;
     private TextButton chartPreviewButton;
+    private TextButton bgaButton;
+    private TextButton fixGnButton;
 
     // Arena UI
     private Window arenaWindow;
@@ -93,7 +99,7 @@ public class ModMenu {
         // Styles
         Window.WindowStyle ws = new Window.WindowStyle();
         ws.titleFont = skin.getFont("default-font");
-        ws.background = skin.newDrawable("white", new Color(0, 0, 0, 0.8f));
+        ws.background = skin.newDrawable("white", new Color(0, 0, 0, 0.9f));
         skin.add("default", ws);
 
         Label.LabelStyle ls = new Label.LabelStyle();
@@ -167,19 +173,35 @@ public class ModMenu {
             }
         });
 
-        window.add(hispeedLabel).pad(5);
-        window.row();
-        window.add(hispeedSlider).width(300).pad(5);
-        window.row();
-        window.add(laneCoverLabel).pad(5);
-        window.row();
-        window.add(laneCoverSlider).width(300).pad(5);
-        window.row();
-        window.add(liftLabel).pad(5);
-        window.row();
-        window.add(liftSlider).width(300).pad(5);
+        // Judge Timing
+        judgeTimingLabel = new Label("Judge Timing: 0ms", skin);
+        judgeTimingSlider = new Slider(-500, 500, 1, false, skin);
+        judgeTimingSlider.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                setJudgeTiming((int)judgeTimingSlider.getValue());
+                judgeTimingLabel.setText("Judge Timing: " + (int)judgeTimingSlider.getValue() + "ms");
+            }
+        });
 
+        window.add(hispeedLabel).pad(2);
         window.row();
+        window.add(hispeedSlider).width(300).pad(2);
+        window.row();
+        window.add(laneCoverLabel).pad(2);
+        window.row();
+        window.add(laneCoverSlider).width(300).pad(2);
+        window.row();
+        window.add(liftLabel).pad(2);
+        window.row();
+        window.add(liftSlider).width(300).pad(2);
+        window.row();
+        window.add(judgeTimingLabel).pad(2);
+        window.row();
+        window.add(judgeTimingSlider).width(300).pad(2);
+
+        // Buttons Row 1
+        Table buttons1 = new Table();
         pacemakerButton = new TextButton("Pacemaker: Rival", skin);
         pacemakerButton.addListener(new ClickListener() {
             @Override
@@ -190,9 +212,8 @@ public class ModMenu {
                 updatePacemakerButton();
             }
         });
-        window.add(pacemakerButton).pad(5);
+        buttons1.add(pacemakerButton).width(145).pad(2);
 
-        window.row();
         nonstopButton = new TextButton("Nonstop: Off", skin);
         nonstopButton.addListener(new ClickListener() {
             @Override
@@ -202,8 +223,12 @@ public class ModMenu {
                 nonstopButton.setText("Nonstop: " + (!current ? "On" : "Off"));
             }
         });
-        window.add(nonstopButton).pad(5);
+        buttons1.add(nonstopButton).width(145).pad(2);
+        window.row();
+        window.add(buttons1);
 
+        // Buttons Row 2
+        Table buttons2 = new Table();
         timerButton = new TextButton("Timer: Off", skin);
         timerButton.addListener(new ClickListener() {
             @Override
@@ -219,9 +244,8 @@ public class ModMenu {
                 }
             }
         });
-        window.add(timerButton).pad(5);
+        buttons2.add(timerButton).width(145).pad(2);
 
-        window.row();
         chartPreviewButton = new TextButton("Chart Preview: On", skin);
         chartPreviewButton.addListener(new ClickListener() {
             @Override
@@ -231,9 +255,42 @@ public class ModMenu {
                 chartPreviewButton.setText("Chart Preview: " + (!current ? "On" : "Off"));
             }
         });
-        window.add(chartPreviewButton).pad(5);
+        buttons2.add(chartPreviewButton).width(145).pad(2);
+        window.row();
+        window.add(buttons2);
+
+        // Buttons Row 3
+        Table buttons3 = new Table();
+        bgaButton = new TextButton("BGA: On", skin);
+        bgaButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                int current = player.main.getConfig().getBga();
+                current = (current + 1) % 3;
+                player.main.getConfig().setBga(current);
+                updateBgaButton();
+            }
+        });
+        buttons3.add(bgaButton).width(145).pad(2);
+
+        fixGnButton = new TextButton("Fix GN: Off", skin);
+        fixGnButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if(player.getLanerender() != null) {
+                    int current = player.getLanerender().getPlayConfig().getFixhispeed();
+                    current = (current + 1) % 5;
+                    player.getLanerender().getPlayConfig().setFixhispeed(current);
+                    updateFixGnButton();
+                }
+            }
+        });
+        buttons3.add(fixGnButton).width(145).pad(2);
+        window.row();
+        window.add(buttons3);
 
         window.row();
+        Table buttons4 = new Table();
         TextButton arenaButton = new TextButton("Arena Mode...", skin);
         arenaButton.addListener(new ClickListener() {
             @Override
@@ -243,7 +300,7 @@ public class ModMenu {
                 if (arenaWindow.isVisible()) arenaWindow.toFront();
             }
         });
-        window.add(arenaButton).pad(10);
+        buttons4.add(arenaButton).width(145).pad(2);
 
         TextButton missionsButton = new TextButton("Missions...", skin);
         missionsButton.addListener(new ClickListener() {
@@ -254,7 +311,9 @@ public class ModMenu {
                 if (missionsWindow.isVisible()) missionsWindow.toFront();
             }
         });
-        window.add(missionsButton).pad(10);
+        buttons4.add(missionsButton).width(145).pad(2);
+        window.row();
+        window.add(buttons4);
 
         window.pack();
         // Center window
@@ -448,6 +507,14 @@ public class ModMenu {
         }
     }
 
+    private int getJudgeTiming() {
+        return player.resource.getPlayerConfig().getJudgetiming();
+    }
+
+    private void setJudgeTiming(int val) {
+        player.resource.getPlayerConfig().setJudgetiming(val);
+    }
+
     private int getGreenNumber() {
         return player.getLanerender() != null ? player.getLanerender().getCurrentDuration() : 0;
     }
@@ -476,6 +543,32 @@ public class ModMenu {
             case 4: text += "A"; break;
         }
         pacemakerButton.setText(text);
+    }
+
+    private void updateBgaButton() {
+        int val = player.main.getConfig().getBga();
+        String text = "BGA: ";
+        switch(val) {
+            case Config.BGA_ON: text += "On"; break;
+            case Config.BGA_AUTO: text += "Auto"; break;
+            case Config.BGA_OFF: text += "Off"; break;
+        }
+        bgaButton.setText(text);
+    }
+
+    private void updateFixGnButton() {
+        if(player.getLanerender() != null) {
+            int val = player.getLanerender().getPlayConfig().getFixhispeed();
+            String text = "Fix GN: ";
+            switch(val) {
+                case PlayConfig.FIX_HISPEED_OFF: text += "Off"; break;
+                case PlayConfig.FIX_HISPEED_STARTBPM: text += "Start"; break;
+                case PlayConfig.FIX_HISPEED_MAXBPM: text += "Max"; break;
+                case PlayConfig.FIX_HISPEED_MAINBPM: text += "Main"; break;
+                case PlayConfig.FIX_HISPEED_MINBPM: text += "Min"; break;
+            }
+            fixGnButton.setText(text);
+        }
     }
 
     public void update() {
@@ -546,6 +639,9 @@ public class ModMenu {
             liftSlider.setValue(getLift() * 1000);
             liftLabel.setText("Lift: " + (int)liftSlider.getValue());
 
+            judgeTimingSlider.setValue(getJudgeTiming());
+            judgeTimingLabel.setText("Judge Timing: " + getJudgeTiming() + "ms");
+
             updatePacemakerButton();
             nonstopButton.setText("Nonstop: " + (player.resource.isNonstop() ? "On" : "Off"));
             long endTime = player.resource.getSessionEndTime();
@@ -556,6 +652,8 @@ public class ModMenu {
                 timerButton.setText("Timer: " + Math.max(0, remaining) + "m");
             }
             chartPreviewButton.setText("Chart Preview: " + (player.resource.getPlayerConfig().isChartPreview() ? "On" : "Off"));
+            updateBgaButton();
+            updateFixGnButton();
 
         } else {
             // Return control to game
