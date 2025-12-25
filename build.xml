@@ -110,6 +110,9 @@
 				<include name="skin/default/bg.jpg" />
 				<include name="beatoraja.l4j.ini" />
 			</fileset>
+			<fileset dir="./${build.dest}">
+				<include name="beatoraja.jar" />
+			</fileset>
 		</copy>
 		<copy todir="${dir.release.linux}">
 			<fileset dir="./">
