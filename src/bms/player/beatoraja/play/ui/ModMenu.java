@@ -64,6 +64,9 @@ public class ModMenu {
     private Slider judgeTimingSlider;
     private Label judgeTimingLabel;
 
+    private Slider judgeRankSlider;
+    private Label judgeRankLabel;
+
     private Slider playSpeedSlider;
     private Label playSpeedLabel;
 
@@ -283,6 +286,27 @@ public class ModMenu {
             }
         });
 
+        // Judge Rank (Difficulty)
+        judgeRankLabel = new Label("Judge Difficulty: Normal", skin);
+        judgeRankSlider = new Slider(20, 300, 5, false, skin);
+        judgeRankSlider.setValue(100);
+        judgeRankSlider.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                int val = (int)judgeRankSlider.getValue();
+                player.getJudgeManager().setJudgeRank(val);
+
+                String desc;
+                if(val <= 50) desc = "Very Hard";
+                else if(val <= 80) desc = "Hard";
+                else if(val <= 120) desc = "Normal";
+                else if(val <= 160) desc = "Easy";
+                else desc = "Very Easy";
+
+                judgeRankLabel.setText("Judge Difficulty: " + val + " (" + desc + ")");
+            }
+        });
+
         // Play Speed
         playSpeedLabel = new Label("Play Speed: 1.00x", skin);
         playSpeedSlider = new Slider(0.5f, 1.5f, 0.05f, false, skin);
@@ -335,6 +359,11 @@ public class ModMenu {
         window.add(judgeTimingSlider).width(300).pad(2);
         window.row();
 
+        window.add(judgeRankLabel).pad(2);
+        window.row();
+        window.add(judgeRankSlider).width(300).pad(2);
+        window.row();
+
         window.add(playSpeedLabel).pad(2);
         window.row();
         window.add(playSpeedSlider).width(300).pad(2);
@@ -345,11 +374,7 @@ public class ModMenu {
         pacemakerButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                int current = getPacemakerType();
-                current = (current + 1) % 5;
-                setPacemakerType(current);
-                updatePacemakerButton();
-                player.updateTargetScore();
+                cyclePacemaker();
             }
         });
         buttons1.add(pacemakerButton).width(145).pad(2);
@@ -894,14 +919,56 @@ public class ModMenu {
     private void updatePacemakerButton() {
         int type = getPacemakerType();
         String text = "Pacemaker: ";
-        switch (type) {
-            case 0: text += "Rival"; break;
-            case 1: text += "Best"; break;
-            case 2: text += "AAA"; break;
-            case 3: text += "AA"; break;
-            case 4: text += "A"; break;
+
+        if (type == 0) {
+            String targetId = player.resource.getPlayerConfig().getTargetid();
+            if (targetId.startsWith("RIVAL")) {
+                 text += "Rival " + targetId.replace("RIVAL", "");
+            } else {
+                 text += "Rival";
+            }
+        } else {
+            switch (type) {
+                case 1: text += "Best"; break;
+                case 2: text += "AAA"; break;
+                case 3: text += "AA"; break;
+                case 4: text += "A"; break;
+            }
         }
         pacemakerButton.setText(text);
+    }
+
+    private void cyclePacemaker() {
+        int type = getPacemakerType();
+        String currentTarget = player.resource.getPlayerConfig().getTargetid();
+
+        if (type == 0) {
+            int rivalIndex = 1;
+            if (currentTarget.startsWith("RIVAL")) {
+                try {
+                    rivalIndex = Integer.parseInt(currentTarget.replace("RIVAL", ""));
+                } catch (NumberFormatException e) {}
+            }
+
+            int nextRivalIndex = rivalIndex + 1;
+            if (nextRivalIndex <= 5) {
+                player.resource.getPlayerConfig().setTargetid("RIVAL" + nextRivalIndex);
+            } else {
+                setPacemakerType(1);
+            }
+        } else if (type == 1) {
+            setPacemakerType(2); // AAA
+        } else if (type == 2) {
+            setPacemakerType(3); // AA
+        } else if (type == 3) {
+            setPacemakerType(4); // A
+        } else if (type == 4) {
+            setPacemakerType(0); // Rival
+            player.resource.getPlayerConfig().setTargetid("RIVAL1"); // Reset to Rival 1
+        }
+
+        updatePacemakerButton();
+        player.updateTargetScore();
     }
 
     private void updateBgaButton() {
@@ -1119,6 +1186,19 @@ public class ModMenu {
 
             judgeTimingSlider.setValue(getJudgeTiming());
             judgeTimingLabel.setText("Judge Timing: " + getJudgeTiming() + "ms");
+
+            if (judgeRankSlider != null && player.getModel() != null) {
+                int rank = player.getModel().getJudgerank();
+                judgeRankSlider.setValue(rank);
+
+                String desc;
+                if(rank <= 50) desc = "Very Hard";
+                else if(rank <= 80) desc = "Hard";
+                else if(rank <= 120) desc = "Normal";
+                else if(rank <= 160) desc = "Easy";
+                else desc = "Very Easy";
+                judgeRankLabel.setText("Judge Difficulty: " + rank + " (" + desc + ")");
+            }
 
             playSpeedSlider.setValue(player.getPlaybackRate());
             playSpeedLabel.setText(String.format("Play Speed: %.2fx", player.getPlaybackRate()));

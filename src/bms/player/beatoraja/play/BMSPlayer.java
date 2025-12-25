@@ -919,6 +919,10 @@ public class BMSPlayer extends MainState {
 		return keyinput;
 	}
 
+	public BMSModel getModel() {
+		return model;
+	}
+
 	public int getState() {
 		return state;
 	}
