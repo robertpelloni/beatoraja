@@ -6,7 +6,7 @@
   <errTitle>beatoraja</errTitle>
   <chdir>.</chdir>
   <classPath>
-    <mainClass>bms.player.beatoraja.MainLoader</mainClass>
+    <mainClass>bms.player.beatoraja.Launcher</mainClass>
     <cp>beatoraja.jar;ir/*</cp>
   </classPath>
   <jre>
