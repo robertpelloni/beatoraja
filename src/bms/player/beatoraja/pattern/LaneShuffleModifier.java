@@ -98,12 +98,19 @@ public abstract class LaneShuffleModifier extends PatternModifier {
 	public int[] getRandomPattern(Mode mode) {
 		int keys = mode.key / mode.player;
 		int[] repr = new int[keys];
-		if(showShufflePattern) {
-			if (mode.scratchKey.length > 0 && !isScratchLaneModify) { // BEAT-*K
-				System.arraycopy(random, keys * player, repr, 0, keys - 1);
-				repr[keys - 1] = mode.scratchKey[player];
-			} else {
-				System.arraycopy(random, keys * player, repr, 0, keys);
+		if(showShufflePattern && random != null) {
+			// Ensure random array is large enough
+			if (random.length >= keys * (player + 1)) {
+				if (mode.scratchKey.length > 0 && !isScratchLaneModify) { // BEAT-*K
+					System.arraycopy(random, keys * player, repr, 0, keys - 1);
+					// For scratch key, we generally don't shuffle it if !isScratchLaneModify
+					// But we should check if scratch key is valid
+					if (player < mode.scratchKey.length) {
+						repr[keys - 1] = mode.scratchKey[player];
+					}
+				} else {
+					System.arraycopy(random, keys * player, repr, 0, keys);
+				}
 			}
 		}
 		return repr;
