@@ -47,7 +47,29 @@ import bms.tool.mdprocessor.MusicDownloadProcessor;
  */
 public class MainController {
 
-	private static final String VERSION = "beatoraja 0.8.8";
+	private static String VERSION = "beatoraja 0.8.9";
+
+	static {
+		try {
+			java.nio.file.Path versionPath = java.nio.file.Paths.get("VERSION.md");
+			if (java.nio.file.Files.exists(versionPath)) {
+				String version = new String(java.nio.file.Files.readAllBytes(versionPath)).trim();
+				VERSION = "beatoraja " + version;
+			} else {
+				// Fallback to reading from resource if packaged in jar
+				java.io.InputStream is = MainController.class.getResourceAsStream("/VERSION.md");
+				if (is != null) {
+					java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+					String version = s.hasNext() ? s.next().trim() : "";
+					if (!version.isEmpty()) {
+						VERSION = "beatoraja " + version;
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	public static final boolean debug = false;
 	public static final int debugTextXpos = 10;

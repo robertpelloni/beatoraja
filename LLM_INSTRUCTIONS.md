@@ -1,31 +1,42 @@
 # Universal LLM Instructions
 
-This file contains universal instructions for AI models working on this project.
+This file serves as the central instruction set for all AI models working on this project.
 
-## Project Overview
-beatoraja is a cross-platform BMS (Be-Music Source) player. It is written in Java and uses LibGDX.
+## Core Principles
+1.  **Single Source of Truth**: Always refer to `VERSION.md` for the current project version. Do not hardcode version numbers in source files.
+2.  **Changelog Management**: Every significant change must be logged in `CHANGELOG.md` under the appropriate version header.
+3.  **Build System**: The project uses Apache Ant. The main build file is `build.xml`. Use `build_release.ps1` for creating releases to ensure correct JVM arguments are applied.
+4.  **Submodules**: The project relies on several submodules. Ensure they are initialized and updated (`git submodule update --init --recursive`) before building.
+5.  **Java Version**: The project targets Java 8 but must be buildable and runnable on modern Java versions (Java 25+). Use `Launcher.java` as the entry point to bypass module encapsulation issues.
 
-## Versioning
-- The current version is stored in the `VERSION` file in the root directory.
-- When updating the version:
-  1. Update the `VERSION` file.
-  2. Update `src/bms/player/beatoraja/MainController.java`.
-  3. Update `build.xml`.
-  4. Update `CHANGELOG.md`.
-  5. Commit with a message referencing the new version.
+## Project Structure
+-   `src/`: Source code.
+-   `lib/`: Dependencies (jar files).
+-   `build/`: Compiled output.
+-   `release/`: Release artifacts (zips, executables).
+-   `launch4j/`: Launch4j configuration and binaries for creating Windows executables.
+-   `docs/`: Documentation, including `DASHBOARD.md` and `ROADMAP.md`.
 
-## Changelog
-- Maintain a detailed changelog in `CHANGELOG.md`.
-- Follow the format: `## [Version] - Date`.
+## Agent Protocols
+-   **Plan**: When asked to plan, research the problem space and outline a multi-step approach.
+-   **Implement**: When implementing features, follow the existing code style and patterns.
+-   **Test**: Verify changes by running the build script and checking for errors.
 
-## Code Style
-- Follow standard Java coding conventions.
-- Use meaningful variable names.
-- Document complex logic.
+## Versioning Protocol
+1.  Update `VERSION.md` with the new version number.
+2.  Update `CHANGELOG.md` with the new version and a list of changes.
+3.  Commit changes with a message referencing the new version (e.g., "Bump version to 0.8.9").
 
-## Submodules
-- This project currently does not use git submodules in the root directory.
-- If submodules are added, list them in `docs/DASHBOARD.md`.
+## Specific Model Instructions
 
-## Agents
-- **Plan**: Researches and outlines multi-step plans.
+### Claude
+-   Focus on clear, concise explanations.
+-   Prioritize safety and correctness.
+
+### Gemini
+-   Leverage large context window for deep analysis of the codebase.
+-   Use available tools to verify assumptions.
+
+### GPT
+-   Focus on code generation and refactoring.
+-   Ensure adherence to best practices.

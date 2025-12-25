@@ -4,7 +4,11 @@
 	<property environment="env" />
 	<property name="build.src" value="src" />
 	<property name="build.dest" value="build" />
-	<property name="app.version" value="0.8.8"/>
+	<loadfile property="app.version" srcFile="VERSION.md">
+		<filterchain>
+			<striplinebreaks/>
+		</filterchain>
+	</loadfile>
 	<property name="dir.release" value="release" />
 	<property name="dir.release.windows" value="${dir.release}/windows" />
 	<property name="dir.release.linux" value="${dir.release}/linux" />
@@ -45,6 +49,7 @@
 			</manifest>
 			<fileset dir="${build.dest}" />
 			<fileset excludes="**/*.java" dir="${build.src}" />
+			<fileset file="VERSION.md" />
 			<zipfileset excludes="META-INF/*.SF" src="./lib/gdx-controllers-desktop-natives.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="./lib/gdx-controllers-desktop.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="./lib/gdx-freetype-natives.jar" />
