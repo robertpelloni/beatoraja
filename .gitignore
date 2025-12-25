@@ -19,3 +19,9 @@ b.bat
 *.cim
 .idea/
 .DS_Store
+
+/release/
+
+*_log.txt
+
+*_log.txt

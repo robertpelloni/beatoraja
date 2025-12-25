@@ -5,7 +5,6 @@
   <outfile>build/beatoraja.exe</outfile>
   <errTitle>beatoraja</errTitle>
   <chdir>.</chdir>
-  <icon>beatoraja.ico</icon>
   <classPath>
     <mainClass>bms.player.beatoraja.MainLoader</mainClass>
     <cp>beatoraja.jar;ir/*</cp>
