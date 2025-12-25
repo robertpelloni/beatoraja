@@ -47,7 +47,7 @@ import bms.tool.mdprocessor.MusicDownloadProcessor;
  */
 public class MainController {
 
-	private static final String VERSION = "beatoraja 0.8.7";
+	private static final String VERSION = "beatoraja 0.8.8";
 
 	public static final boolean debug = false;
 	public static final int debugTextXpos = 10;
