@@ -1,0 +1,79 @@
+package bms.player.beatoraja.stepup;
+
+import bms.player.beatoraja.MainController;
+import bms.player.beatoraja.RandomCourseData;
+import bms.player.beatoraja.RandomStageData;
+import com.badlogic.gdx.utils.Json;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+public class StepUpManager {
+
+    private StepUpData data;
+    private final String savePath = "stepup.json";
+    private final MainController main;
+
+    public StepUpManager(MainController main) {
+        this.main = main;
+        load();
+    }
+
+    public void load() {
+        try {
+            if (Files.exists(Paths.get(savePath))) {
+                Json json = new Json();
+                data = json.fromJson(StepUpData.class, Files.newBufferedReader(Paths.get(savePath)));
+            } else {
+                data = new StepUpData();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            data = new StepUpData();
+        }
+    }
+
+    public void save() {
+        try {
+            Json json = new Json();
+            Files.writeString(Paths.get(savePath), json.toJson(data));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public RandomCourseData createCourse() {
+        RandomCourseData course = new RandomCourseData();
+        course.setName("Step-Up Level " + data.currentLevel);
+
+        RandomStageData[] stages = new RandomStageData[3];
+
+        for(int i=0; i<3; i++) {
+            stages[i] = new RandomStageData();
+            // Basic query: level matches.
+            // Note: Actual SQL might need "level == X".
+            // Beatoraja SongDatabase SQL usually is SQLite WHERE clause.
+            // "level" column exists.
+            stages[i].setSql("level = " + data.currentLevel);
+        }
+
+        course.setStage(stages);
+        course.lotterySongDatas(main);
+
+        return course;
+    }
+
+    public void onResult(boolean clear) {
+        if (clear) {
+            data.currentLevel = Math.min(12, data.currentLevel + 1);
+        } else {
+            // Only level down if level > 1
+            data.currentLevel = Math.max(1, data.currentLevel - 1);
+        }
+        save();
+    }
+
+    public int getCurrentLevel() {
+        return data.currentLevel;
+    }
+}

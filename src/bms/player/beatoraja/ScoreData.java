@@ -78,6 +78,11 @@ public final class ScoreData implements Validatable {
 	private int lms = 0;
 	private int maxcombo = 0;
 	
+	private int fastNotes = 0;
+	private int slowNotes = 0;
+	private int fastScratch = 0;
+	private int slowScratch = 0;
+
 	private int notes = 0;
 	
 	private int passnotes = 0;
@@ -239,6 +244,38 @@ public final class ScoreData implements Validatable {
 		this.lms = lms;
 	}
 
+	public int getFastNotes() {
+		return fastNotes;
+	}
+
+	public void setFastNotes(int fastNotes) {
+		this.fastNotes = fastNotes;
+	}
+
+	public int getSlowNotes() {
+		return slowNotes;
+	}
+
+	public void setSlowNotes(int slowNotes) {
+		this.slowNotes = slowNotes;
+	}
+
+	public int getFastScratch() {
+		return fastScratch;
+	}
+
+	public void setFastScratch(int fastScratch) {
+		this.fastScratch = fastScratch;
+	}
+
+	public int getSlowScratch() {
+		return slowScratch;
+	}
+
+	public void setSlowScratch(int slowScratch) {
+		this.slowScratch = slowScratch;
+	}
+
 	public int getJudgeCount(int judge) {
 		return getJudgeCount(judge, true) + getJudgeCount(judge, false);
 	}
@@ -265,6 +302,10 @@ public final class ScoreData implements Validatable {
 	}
 
 	public void addJudgeCount(int judge, boolean fast, int count) {
+		addJudgeCount(judge, fast, false, count);
+	}
+
+	public void addJudgeCount(int judge, boolean fast, boolean isScratch, int count) {
 		switch (judge) {
 			case 0 -> {
 				if(fast) {
@@ -307,6 +348,18 @@ public final class ScoreData implements Validatable {
 				} else {
 					lms += count;
 				}
+			}
+		}
+
+		if (judge != 5) { // Do not count MISS (judge 5) or POOR (judge 4)? Usually POOR counts for F/S if hit.
+			// Logic: If it's a hit (PG, GR, GD, BD, PR)
+			// Actually POOR (4) is usually "Too Early" or "Too Late" (Empty Poor).
+			// If it's Empty Poor, it might not have a timing side?
+			// But updateMicro sets fast/slow based on mfast.
+			if (fast) {
+				if (isScratch) fastScratch += count; else fastNotes += count;
+			} else {
+				if (isScratch) slowScratch += count; else slowNotes += count;
 			}
 		}
 	}
@@ -559,6 +612,10 @@ public final class ScoreData implements Validatable {
 			setLpr(newscore.getLpr());
 			setEms(newscore.getEms());
 			setLms(newscore.getLms());
+			setFastNotes(newscore.getFastNotes());
+			setSlowNotes(newscore.getSlowNotes());
+			setFastScratch(newscore.getFastScratch());
+			setSlowScratch(newscore.getSlowScratch());
 			setOption(newscore.getOption());
 			setSeed(newscore.getSeed());
 			setGhost(newscore.getGhost());
@@ -656,6 +713,10 @@ public final class ScoreData implements Validatable {
 		sb.append("\"Lpr\": ").append(getLpr()).append(", ");
 		sb.append("\"Ems\": ").append(getEms()).append(", ");
 		sb.append("\"Lms\": ").append(getLms()).append(", ");
+		sb.append("\"FastNotes\": ").append(getFastNotes()).append(", ");
+		sb.append("\"SlowNotes\": ").append(getSlowNotes()).append(", ");
+		sb.append("\"FastScratch\": ").append(getFastScratch()).append(", ");
+		sb.append("\"SlowScratch\": ").append(getSlowScratch()).append(", ");
 		sb.append("\"Combo\": ").append(getCombo()).append(", ");
 		sb.append("\"Mode\": ").append(getMode()).append(", ");
 		sb.append("\"Notes\": ").append(getNotes()).append(", ");

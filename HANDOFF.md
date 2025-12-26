@@ -1,47 +1,81 @@
-# Session Handoff Document
-**Date**: December 25, 2025
-**Project**: beatoraja
-**Current Version**: 0.8.9
+# Session Handoff
 
-## Executive Summary
-This session focused on modernizing the build process, implementing a robust versioning system, and consolidating documentation for AI agents. The project is now buildable on Java 25 using a new `Launcher` class and updated Ant scripts.
+## Summary of Changes
+This session focused on modernizing `beatoraja`, integrating features from the `lr2oraja` fork, and laying the groundwork for Arena Mode and Osu! file support.
 
-## Key Achievements
-1.  **Build System Repair**:
-    -   Fixed `package javafx.* does not exist` errors by manually downloading JavaFX 21 jars to `lib/`.
-    -   Resolved `java.lang.reflect.InaccessibleObjectException` in Launch4j by adding `--add-opens` flags in `build_release.ps1`.
-    -   Created `src/bms/player/beatoraja/Launcher.java` to bypass Java 9+ module encapsulation checks.
-    -   Updated `build.xml` to include new dependencies and the `Launcher` class.
+### 1. Build System & Dependencies
+*   **Gradle Migration:** Converted from Ant to Gradle. Targets Java 21.
+*   **Dependencies:** Updated LibGDX (1.12.1). Reverted Twitter4J to `4.0.4` to maintain compatibility with existing `ScreenShotTwitterExporter` logic.
+*   **Backend Upgrade:** Upgraded to LWJGL 3 (via `origin/lwjgl3` merge).
 
-2.  **Versioning System**:
+### 2. Feature: Fast/Slow Separation (IIDX RESIDENT)
+*   **ScoreData.java:** Added fields `fastNotes`, `slowNotes`, `fastScratch`, `slowScratch`.
+*   **JudgeManager.java:** Updated `updateMicro` to populate these fields based on lane assignment.
+*   **Skin Integration:** Added `NUMBER_FAST_NOTES`, `NUMBER_SLOW_NOTES`, etc., to `SkinProperty` and mapped them in `IntegerPropertyFactory`.
+
+### 3. Feature: Arena Mode
+*   **ArenaManager:** Created to manage players and calculate ranks/points. Moved to `MainController` for persistence.
+*   **Score Separation:** Modified `JudgeManager` to include `score2` for 2P/Battle modes. Updated `BMSPlayer` to feed both scores to `ArenaManager`.
+*   **Networking:** Implemented `ArenaClient` and `ArenaServer` (TCP/JSON) to sync scores between players.
+
+### 4. Feature: Osu! File Support
+*   **OsuDecoder.java:** Implemented a parser for `.osu` files that maps HitObjects to a `BMSModel`.
+*   **Dynamic Key Count:** Decodes `CircleSize` to determine key mode (4K, 5K, 6K, 7K, 8K, 9K).
+*   **Spinners:** Maps spinners to Scratch Long Notes (Lane 0).
+*   **Audio:** Assigns audio filename to WAV index `01`.
+*   **Mapping:** Dynamic column-to-lane mapping based on key count.
+*   **Timing:** Basic BPM setting.
+*   **Structure:** Uses `TimeLine` construction for proper note placement.
+*   **Integration:** Hooked into `PlayerResource.loadBMSModel`.
+
+### 5. LR2 Features (lr2oraja)
+*   **Gauge/Judge:** Added LR2-specific constants to `GaugeProperty` and logic for "Bad on Early Release" for Long Notes in `JudgeManager`.
+
+### 6. Feature: Mod Menu (Endless Dream)
+*   **ModMenu.java:** Implemented an in-game overlay (F5 key) using LibGDX Scene2D to adjust Hi-Speed and Lane Cover on the fly.
+*   **Integration:** Hooked into `BMSPlayer` to handle input (via Multiplexer) and rendering.
+
+### 7. Feature: In-Game Downloader (Endless Dream)
+*   **Crawler.java:** Implemented a background download manager in `src/bms/tool/crawler`. Supports Zip and Tar/Gz extraction.
+*   **Integration:** Hooked into `MusicSelector` to trigger downloads for songs with valid URLs (e.g. from BMS Search) when the local file is missing.
+*   **SongData:** Updated to implement `Crawlable` interface.
+
+### 8. Feature: Arena Mode Networking & UI
+*   **ArenaClient/Server:** Implemented TCP-based networking in `src/bms/player/beatoraja/arena/net`.
+*   **UI:** Added Arena Mode window to `ModMenu` for connection/server management and status display.
+*   **Integration:** Updated `ArenaManager` to handle remote player scores and rank calculation.
+
+### 10. Feature: Step-Up Mode
+*   **StepUpManager:** Logic to manage player level and course generation (Levels 1-12).
+*   **StepUpData:** Persistence for step-up progress (saved to `stepup.json`).
+*   **Integration:** Added "Step-Up Level X" course to the music selection screen via `BarManager`.
+*   **Progression:** Clearing the course increments the level; failing decrements it.
+
+### 11. Security Fixes
+*   **Zip Slip:** Fixed a vulnerability in `Crawler.java` that allowed malicious archives to write outside the target directory.
+*   **Thread Safety:** Added `volatile` to shared state in `Crawler.java`.
+*   **Cleanup:** Removed debug flags from `ScreenShotTwitterExporter.java`.
+
+## Session Achievements (Local Merge)
+1.  **Versioning System**:
     -   Established `VERSION.md` as the single source of truth.
     -   Updated `MainController.java` to read the version from `VERSION.md` at runtime.
-    -   Updated `build.xml` to read the version from `VERSION.md` at build time.
 
-3.  **Documentation Overhaul**:
+2.  **Documentation Overhaul**:
     -   Created `LLM_INSTRUCTIONS.md` as a central hub for agent protocols.
     -   Updated `CLAUDE.md`, `GEMINI.md`, and `GPT.md` to reference the central instructions.
     -   Created `docs/DASHBOARD.md` to provide a high-level project overview.
 
-4.  **Feature Merge**:
+3.  **Backend Upgrade**:
     -   Merged `origin/lwjgl3` branch, upgrading the backend to LWJGL 3.
     -   Resolved conflicts in `MainLoader.java` and `PCM.java`.
-    -   Updated `build.xml` to package LWJGL 3 dependencies.
 
 ## Current State
--   **Build**: Passing. Run `.\build_release.ps1` to generate release artifacts in `release/`.
--   **Version**: 0.8.9.
+-   **Build System**: Gradle (Java 21).
 -   **Backend**: LWJGL 3.
--   **Submodules**: None (dependencies managed in `lib/`).
+-   **Version**: 0.8.9.
 
 ## Next Steps
-1.  **Testing**: Run the generated executable on a clean Windows machine to verify JavaFX runtime availability.
-2.  **CI/CD**: Integrate `build_release.ps1` into a CI pipeline (e.g., GitHub Actions).
-3.  **Feature Development**: Continue implementing features from `ROADMAP.md`.
-
-## Artifact Locations
--   **Windows Release**: `release/windows/beatoraja_0.8.9_windows.zip`
--   **Linux Release**: `release/linux/beatoraja_0.8.9_linux.zip`
-
-## Known Issues
--   **Git Push**: The final `git push` failed due to permission errors (403). The changes are committed locally on the `master` branch. You will need to authenticate or use a different remote to push the changes.
+1.  **Verify Build**: Run `./gradlew build` to ensure Gradle build works with LWJGL 3 changes.
+2.  **Skin Polish**: Update default skins to use new `SkinProperty` values (Fast/Slow, Arena Rank).
+3.  **Arena Lobby**: Implement song synchronization so all players load the same chart.

@@ -39,6 +39,9 @@ import bms.player.beatoraja.skin.SkinProperty;
 import bms.player.beatoraja.song.*;
 import bms.player.beatoraja.stream.StreamController;
 import bms.tool.mdprocessor.MusicDownloadProcessor;
+import bms.tool.crawler.Crawler;
+import bms.player.beatoraja.arena.ArenaManager;
+import bms.player.beatoraja.stepup.StepUpManager;
 
 /**
  * アプリケーションのルートクラス
@@ -135,6 +138,12 @@ public class MainController {
 
 	private MusicDownloadProcessor download;
 	
+	private Crawler crawler;
+
+	private ArenaManager arenaManager;
+
+	private StepUpManager stepUpManager;
+
 	private StreamController streamController;
 
 	public static final int offsetCount = SkinProperty.OFFSET_MAX + 1;
@@ -421,6 +430,13 @@ public class MainController {
 			download.start(null);
 		}
 
+		crawler = new Crawler();
+
+		arenaManager = new ArenaManager();
+		arenaManager.addPlayer("1P");
+
+		stepUpManager = new StepUpManager(this);
+
 		if(ir.length > 0) {
 			messageRenderer.addMessage(ir.length + " IR Connection Succeed" ,5000, Color.GREEN, 1);
 		}
@@ -524,6 +540,10 @@ public class MainController {
 			downloadIpfsMessageRenderer(download.getMessage());
 		}
 
+		if(crawler != null && crawler.isDownloading()) {
+			downloadIpfsMessageRenderer(crawler.getMessage());
+		}
+
 		final long time = System.currentTimeMillis();
 		if(time > prevtime) {
 		    prevtime = time;
@@ -612,6 +632,10 @@ public class MainController {
             	this.updateSong(download.getDownloadpath());
             	download.setDownloadpath(null);
             }
+            if (crawler != null && crawler.getDownloadPathResult() != null) {
+		this.updateSong(crawler.getDownloadPathResult());
+		crawler.clearDownloadPathResult();
+            }
 			if (updateSong != null && !updateSong.isAlive()) {
 				selector.getBarManager().updateBar();
 				updateSong = null;
@@ -652,6 +676,12 @@ public class MainController {
 		ShaderManager.dispose();
 		if (download != null) {
 			download.dispose();
+		}
+		if (crawler != null) {
+			crawler.dispose();
+		}
+		if (arenaManager != null) {
+			arenaManager.dispose();
 		}
 
 		Logger.getGlobal().info("全リソース破棄完了");
@@ -697,6 +727,18 @@ public class MainController {
 
 	public MusicDownloadProcessor getMusicDownloadProcessor(){
 		return download;
+	}
+
+	public Crawler getCrawler() {
+		return crawler;
+	}
+
+	public ArenaManager getArenaManager() {
+		return arenaManager;
+	}
+
+	public StepUpManager getStepUpManager() {
+		return stepUpManager;
 	}
 
 	public MessageRenderer getMessageRenderer() {

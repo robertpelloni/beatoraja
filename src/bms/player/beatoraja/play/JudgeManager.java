@@ -32,9 +32,14 @@ public class JudgeManager {
 	private int lntype;
 
 	/**
-	 * 現在の判定カウント内訳
+	 * 現在の判定カウント内訳 (1P)
 	 */
 	private ScoreData score = new ScoreData();
+
+	/**
+	 * 現在の判定カウント内訳 (2P - Arena/Battle)
+	 */
+	private ScoreData score2;
 
 	/**
 	 * 現在のコンボ数
@@ -142,6 +147,14 @@ public class JudgeManager {
 		score = new ScoreData(orgmode);
 		score.setNotes(model.getTotalNotes());
 		score.setSha256(model.getSHA256());
+
+		if (model.getMode().player == 2) {
+			score2 = new ScoreData(orgmode);
+			score2.setNotes(model.getTotalNotes()); // Or recalculate for 2P side if different
+			score2.setSha256(model.getSHA256());
+			score2.setJudgeAlgorithm(algorithm);
+			score2.setRule(BMSPlayerRule.getBMSPlayerRule(orgmode));
+		}
 		ghost = new int[model.getTotalNotes()];
 		for (int i=0; i<ghost.length; i++) {
 			ghost[i] = 4;
@@ -222,6 +235,7 @@ public class JudgeManager {
 		final TimerManager timer = main.timer;
 		final BMSPlayerInputProcessor input = mc.getInputProcessor();
 		final Config config = main.resource.getConfig();
+		final PlayerConfig playerConfig = main.main.getPlayerConfig();
 		final long now = timer.getNowTime();
 		// 通過系の判定
 		for (LaneState state : states) {
@@ -361,6 +375,10 @@ public class JudgeManager {
 			final LaneState state = states[lane];
 			state.lanemodel.reset();
 			final int sc = state.sckey;
+
+			// LR2 LN Logic: Bad on early release
+			boolean lr2LN = playerConfig.isLr2LN();
+
 			if (input.getKeyState(key)) {
 				// キーが押されたときの処理
 				if (state.processing != null) {
@@ -552,20 +570,59 @@ public class JudgeManager {
 						}
 						if (release) {
 							// LN離し処理
-							judge = Math.max(judge, state.lnstartJudge);
-							if (Math.abs(state.lnstartDuration) > Math.abs(dmtime)) {
-								dmtime = state.lnstartDuration;
-							}
-							if(judge >= 3 && dmtime > 0) {
-								state.releasetime = mtime;								
-								state.lnendJudge = 3;
+							if (lr2LN) {
+								// LR2 LN Logic: Strict release
+								// If released too early (outside GOOD window), trigger BAD immediately
+								// In LR2, release tolerance is roughly equal to GOOD window.
+								// Assuming judge indices: 0=PG, 1=GR, 2=GD, 3=BD, 4=PR
+
+								// Check if release is within GOOD window (judge <= 2) or acceptable late release
+								// dmtime is (End Time - Current Time).
+								// Positive means released BEFORE end time (Early).
+								// Negative means released AFTER end time (Late).
+
+								// We need to check if we are "Too Early".
+								// mjudge array has {Late Limit, Early Limit} for each rank.
+								// We are checking the release timing relative to LN End.
+								// However, `judge` here is calculated based on `dmtime`.
+								// If `judge` >= 3 (BAD or POOR) and dmtime > 0 (Early), it means we released too early.
+
+								if (judge >= 3 && dmtime > 0) {
+									// In standard mode this would be "releasetime" logic (hold until end or late enough)
+									// But for LR2, early release is BAD.
+									// We treat it as a Miss/Bad.
+									this.updateMicro(state, state.processing.getPair(), mtime, 3, dmtime, true); // 3 = BAD
+									keysound.play(state.processing, config.getAudioConfig().getKeyvolume(), 0);
+									state.processing = null;
+									state.releasetime = Long.MIN_VALUE;
+									state.lnendJudge = Integer.MIN_VALUE;
+								} else {
+									// Released within tolerance (Good/Great/PGreat) or Late (handled by other logic?)
+									// Standard logic: judge = Math.max(judge, state.lnstartJudge);
+									judge = Math.max(judge, state.lnstartJudge);
+									this.updateMicro(state, state.processing.getPair(), mtime, judge, dmtime, true);
+									keysound.play(state.processing, config.getAudioConfig().getKeyvolume(), 0);
+									state.processing = null;
+									state.releasetime = Long.MIN_VALUE;
+									state.lnendJudge = Integer.MIN_VALUE;
+								}
 							} else {
-								this.updateMicro(state, state.processing.getPair(), mtime, judge, dmtime, true);
-								keysound.play(state.processing, config.getAudioConfig().getKeyvolume(), 0);
-								state.processing = null;
-								state.releasetime = Long.MIN_VALUE;
-								state.lnendJudge = Integer.MIN_VALUE;
-//								System.out.println("LN途中離し判定 - Time : " + ptime + " Judge : " + j + " LN : " + processing[lane]);									
+								// Standard Logic
+								judge = Math.max(judge, state.lnstartJudge);
+								if (Math.abs(state.lnstartDuration) > Math.abs(dmtime)) {
+									dmtime = state.lnstartDuration;
+								}
+								if(judge >= 3 && dmtime > 0) {
+									state.releasetime = mtime;
+									state.lnendJudge = 3;
+								} else {
+									this.updateMicro(state, state.processing.getPair(), mtime, judge, dmtime, true);
+									keysound.play(state.processing, config.getAudioConfig().getKeyvolume(), 0);
+									state.processing = null;
+									state.releasetime = Long.MIN_VALUE;
+									state.lnendJudge = Integer.MIN_VALUE;
+//									System.out.println("LN途中離し判定 - Time : " + ptime + " Judge : " + j + " LN : " + processing[lane]);
+								}
 							}
 						}
 					}
@@ -659,18 +716,23 @@ public class JudgeManager {
 	private final int[] COMBO_TIMER = { TIMER_COMBO_1P, TIMER_COMBO_2P, TIMER_COMBO_3P };
 
 	private void updateMicro(LaneState state, Note n, long mtime, int judge, long mfast, boolean judgeVanish) {
+		ScoreData targetScore = (state.player == 1 && score2 != null) ? score2 : score;
+
 		if (judgeVanish) {
-			if (score.getPassnotes() < ghost.length) {
-				ghost[score.getPassnotes()] = judge;
+			if (state.player == 0) {
+				if (score.getPassnotes() < ghost.length) {
+					ghost[score.getPassnotes()] = judge;
+				}
 			}
 			n.setState(judge + 1);
-			score.setPassnotes(score.getPassnotes() + 1);
+			targetScore.setPassnotes(targetScore.getPassnotes() + 1);
 		}
 		if (miss == MissCondition.ONE && judge == 4 && n.getPlayTime() != 0) {
 			return;
 		}
 		n.setMicroPlayTime(mfast);
-		score.addJudgeCount(judge, mfast >= 0, 1);
+		boolean isScratch = (state.sckey >= 0);
+		targetScore.addJudgeCount(judge, mfast >= 0, isScratch, 1);
 
 		if (judge < 4) {
 			recentJudgesIndex = (recentJudgesIndex + 1) % recentJudges.length;
@@ -678,15 +740,23 @@ public class JudgeManager {
 			microrecentJudges[recentJudgesIndex] = mfast;
 		}
 
-		if (combocond[judge] && judge < 5) {
-			combo++;
-			score.setCombo(Math.max(score.getCombo(), combo));
-			coursecombo++;
-			coursemaxcombo = coursemaxcombo > coursecombo ? coursemaxcombo : coursecombo;
-		}
-		if (!combocond[judge]) {
-			combo = 0;
-			coursecombo = 0;
+		if (state.player == 0) {
+			if (combocond[judge] && judge < 5) {
+				combo++;
+				score.setCombo(Math.max(score.getCombo(), combo));
+				coursecombo++;
+				coursemaxcombo = coursemaxcombo > coursecombo ? coursemaxcombo : coursecombo;
+			}
+			if (!combocond[judge]) {
+				combo = 0;
+				coursecombo = 0;
+			}
+		} else if (targetScore == score2) {
+			// Basic combo tracking for 2P (stored in ScoreData)
+			// ScoreData has maxcombo, but we need current combo tracking locally if we want it precise?
+			// For now, ScoreData doesn't expose a 'currentCombo' setter, only setCombo(max).
+			// We might need to track 2P combo in JudgeManager if needed for display.
+			// Assuming we just update max combo for now.
 		}
 
 		if (judge != 4)
@@ -797,6 +867,10 @@ public class JudgeManager {
 
 	public ScoreData getScoreData() {
 		return score;
+	}
+
+	public ScoreData getScoreData2() {
+		return score2;
 	}
 
 	/**

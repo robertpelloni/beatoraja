@@ -138,6 +138,18 @@ public class IntegerPropertyFactory {
 			return (state) -> (state.getJudgeCount(5, true));
 		case NUMBER_LATE_MISS:
 			return (state) -> (state.getJudgeCount(5, false));
+		case NUMBER_FAST_NOTES:
+			return (state) -> (state.getScoreDataProperty().getScoreData() != null ?
+					state.getScoreDataProperty().getScoreData().getFastNotes() : Integer.MIN_VALUE);
+		case NUMBER_SLOW_NOTES:
+			return (state) -> (state.getScoreDataProperty().getScoreData() != null ?
+					state.getScoreDataProperty().getScoreData().getSlowNotes() : Integer.MIN_VALUE);
+		case NUMBER_FAST_SCRATCH:
+			return (state) -> (state.getScoreDataProperty().getScoreData() != null ?
+					state.getScoreDataProperty().getScoreData().getFastScratch() : Integer.MIN_VALUE);
+		case NUMBER_SLOW_SCRATCH:
+			return (state) -> (state.getScoreDataProperty().getScoreData() != null ?
+					state.getScoreDataProperty().getScoreData().getSlowScratch() : Integer.MIN_VALUE);
 		case NUMBER_POOR_PLUS_MISS:
 			return (state) -> (state.getJudgeCount(4, true) + state.getJudgeCount(4, false)
 					+ state.getJudgeCount(5, true) + state.getJudgeCount(5, false));

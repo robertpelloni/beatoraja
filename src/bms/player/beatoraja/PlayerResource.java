@@ -189,17 +189,24 @@ public final class PlayerResource {
 	}
 
 	public BMSModel loadBMSModel(ChartInformation info) {
-		ChartDecoder decoder = ChartDecoder.getDecoder(info.path);
-		if(decoder == null) {
-			return null;
+		BMSModel model = null;
+		if (info.path.endsWith(".osu")) {
+			OsuDecoder osuDecoder = new OsuDecoder(info.lntype);
+			model = osuDecoder.decode(new java.io.File(info.path.toString()));
+		} else {
+			ChartDecoder decoder = ChartDecoder.getDecoder(info.path);
+			if(decoder == null) {
+				return null;
+			}
+			model = decoder.decode(info);
 		}
-		BMSModel model = decoder.decode(info);
+
 		if (model == null) {
 			return null;
 		}
 
 		marginTime = BMSModelUtils.setStartNoteTime(model, 1000);
-		BMSPlayerRule.validate(model);
+		BMSPlayerRule.validate(model, pconfig);
 
 		// 地雷ノートに爆発音が定義されていない場合、デフォルト爆発音をセットする
 		final int lanes = model.getMode().key;

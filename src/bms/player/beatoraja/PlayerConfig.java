@@ -245,6 +245,12 @@ public final class PlayerConfig {
 	private boolean notifyRequest = false;
 	private int maxRequestCount = 30;
 
+	// LR2 features
+	private boolean lr2Gauge = false;
+	private boolean lr2Judge = false;
+	private boolean lr2LN = false;
+	private boolean lr2Total = false;
+
 	public PlayerConfig() {
 		validate();
 	}
@@ -783,6 +789,38 @@ public final class PlayerConfig {
     public void setMaxRequestCount(int maxRequestCount) {
         this.maxRequestCount = maxRequestCount;
     }
+
+	public boolean isLr2Gauge() {
+		return lr2Gauge;
+	}
+
+	public void setLr2Gauge(boolean lr2Gauge) {
+		this.lr2Gauge = lr2Gauge;
+	}
+
+	public boolean isLr2Judge() {
+		return lr2Judge;
+	}
+
+	public void setLr2Judge(boolean lr2Judge) {
+		this.lr2Judge = lr2Judge;
+	}
+
+	public boolean isLr2LN() {
+		return lr2LN;
+	}
+
+	public void setLr2LN(boolean lr2LN) {
+		this.lr2LN = lr2LN;
+	}
+
+	public boolean isLr2Total() {
+		return lr2Total;
+	}
+
+	public void setLr2Total(boolean lr2Total) {
+		this.lr2Total = lr2Total;
+	}
 
 	public void validate() {
 		if(skin == null) {
