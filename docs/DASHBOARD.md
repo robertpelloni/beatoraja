@@ -1,7 +1,7 @@
 # Project Dashboard
 
 ## Project Status
-- **Version**: 0.8.9
+- **Version**: 0.9.0
 - **Date**: 2025-12-26
 - **Build System**: Gradle (build.gradle)
 - **Java Version**: Java 21 (Target)
@@ -10,17 +10,20 @@
 ## Dependencies (Managed via Gradle)
 Dependencies are now primarily managed via Gradle, with some legacy JARs in `lib/`.
 
-| Library | Version | Description |
-| :--- | :--- | :--- |
-| **libGDX** | 1.12.1 | Game development framework (LWJGL 3 backend). |
-| **JavaFX** | 21 | UI framework for the launcher. |
-| **FFmpeg** | 6.1.1 | Video playback support (via JavaCV 1.5.10). |
-| **Commons Compress** | 1.26.0 | Compression library. |
-| **Discord RPC** | 2.0.1 | Discord Rich Presence integration (local jar). |
-| **jFLAC** | 1.5.3 | FLAC audio support (local jar). |
-| **LuaJ** | 3.0.2-custom | Lua scripting support for skins (local jar). |
-| **Twitter4J** | 4.0.4 | Twitter integration. |
-| **SQLite JDBC** | 3.45.1.0 | Database connectivity. |
+| Library | Version | Description | Location |
+| :--- | :--- | :--- | :--- |
+| **libGDX** | 1.12.1 | Game development framework (LWJGL 3 backend). | Maven Central |
+| **JavaFX** | 21 | UI framework for the launcher. | Maven Central |
+| **FFmpeg** | 6.1.1 | Video playback support (via JavaCV 1.5.10). | Maven Central |
+| **Commons Compress** | 1.26.0 | Compression library. | Maven Central |
+| **Discord RPC** | 2.0.1 | Discord Rich Presence integration. | `lib/java-discord-rpc-2.0.1-all.jar` |
+| **jFLAC** | 1.5.3 | FLAC audio support. | `lib/jflac-codec-1.5.3.jar` |
+| **LuaJ** | 3.0.2-custom | Lua scripting support for skins. | `lib/luaj-jse-3.0.2-custom.jar` |
+| **Twitter4J** | 4.0.4 | Twitter integration. | Maven Central |
+| **SQLite JDBC** | 3.45.1.0 | Database connectivity. | Maven Central |
+| **JBMS Parser** | - | BMS File Parser. | `lib/jbms-parser.jar` |
+| **JBMS Table Parser** | - | BMS Table Parser. | `lib/jbmstable-parser.jar` |
+| **JPortAudio** | - | PortAudio bindings. | `lib/jportaudio.jar` |
 
 ## Project Structure
 
@@ -51,5 +54,3 @@ Dependencies are now primarily managed via Gradle, with some legacy JARs in `lib
     - **Merged `origin/lwjgl3`**: Upgraded backend to LWJGL 3.
     - **Build System**: Migrated from Ant to Gradle.
     - **Documentation**: Created Dashboard and unified agent instructions.
-
-```

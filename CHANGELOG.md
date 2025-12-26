@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.9.0] - 2025-12-26
+### Added
+- **Arena Mode**: Implemented Song Sync protocol (`TYPE_SONG_SELECT`) and integrated with `MusicSelector`.
+- **Skin System**: Added support for Fast/Slow counts (`NUMBER_FAST_NOTES`, etc.) and Arena Rank (`NUMBER_ARENA_RANK`).
+- **Osu! Support**: Added `.osu` file parser and playback support.
+- **Mod Menu**: Added in-game overlay for Hi-Speed/Lane Cover adjustment.
+- **In-Game Downloader**: Added background download manager for songs.
+- **Step-Up Mode**: Added Step-Up mode logic and persistence.
+
+### Changed
+- **Build System**: Migrated from Ant to Gradle (Java 21 target).
+- **Backend**: Upgraded to LWJGL 3 and LibGDX 1.12.1.
+- **Default Skin**: Updated `result.json` to display Fast/Slow stats and Arena Rank.
+
 ## [0.8.9] - 2025-12-25
 ### Added
 - Added `VERSION.md` as the single source of truth for versioning.

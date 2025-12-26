@@ -7,10 +7,18 @@
 - [x] Discord RPC
 - [x] IPFS Support
 - [x] Sound Driver Support (PortAudio, OpenAL)
+- [x] **Arena Mode**: Basic networking, Song Sync, Skin integration.
+- [x] **Osu! Support**: `.osu` file parsing and playback.
+- [x] **Mod Menu**: In-game overlay for settings.
+- [x] **In-Game Downloader**: Background song downloading.
+- [x] **Step-Up Mode**: Progression system.
+- [x] **Build System**: Migration to Gradle (Java 21).
+- [x] **Backend**: Upgrade to LWJGL 3.
 
 ## In Progress
-- [ ] Documentation Improvement (Dashboard, LLM Instructions)
-- [ ] Versioning Standardization
+- [ ] **Arena Polish**: Lobby UI in `MusicSelector` for creating/joining rooms.
+- [ ] **Osu! Polish**: Improved slider curve approximation.
+- [ ] **Documentation**: Continuous improvement of Dashboard and Agent Instructions.
 
 ## Planned Features
 - [ ] Unit Testing Framework (JUnit)
