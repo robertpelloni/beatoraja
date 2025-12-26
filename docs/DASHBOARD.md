@@ -3,48 +3,49 @@
 ## Project Status
 - **Version**: 0.8.9
 - **Date**: 2025-12-26
-- **Build System**: Ant (uild.xml)
-- **Java Version**: Java 8 (Target), Java 25 (Compatible via Launcher.java)
+- **Build System**: Gradle (build.gradle)
+- **Java Version**: Java 21 (Target)
 - **Backend**: LWJGL 3 (via origin/lwjgl3 merge)
 
-## Dependencies (Managed in lib/)
-The project does not currently use Git submodules. Dependencies are managed as JAR files in the lib/ directory.
+## Dependencies (Managed via Gradle)
+Dependencies are now primarily managed via Gradle, with some legacy JARs in `lib/`.
 
 | Library | Version | Description |
 | :--- | :--- | :--- |
-| **libGDX** | (Unknown, likely 1.9.10+) | Game development framework (LWJGL 3 backend). |
-| **JavaFX** | 21.0.1 | UI framework for the launcher. |
-| **FFmpeg** | (via JavaCPP) | Video playback support. |
-| **JavaCV** | (via JavaCPP) | Computer vision/video processing. |
-| **Commons Compress** | 1.16.1 | Compression library. |
-| **Discord RPC** | 2.0.1 | Discord Rich Presence integration. |
-| **jFLAC** | 1.5.3 | FLAC audio support. |
-| **LuaJ** | 3.0.2-custom | Lua scripting support for skins. |
+| **libGDX** | 1.12.1 | Game development framework (LWJGL 3 backend). |
+| **JavaFX** | 21 | UI framework for the launcher. |
+| **FFmpeg** | 6.1.1 | Video playback support (via JavaCV 1.5.10). |
+| **Commons Compress** | 1.26.0 | Compression library. |
+| **Discord RPC** | 2.0.1 | Discord Rich Presence integration (local jar). |
+| **jFLAC** | 1.5.3 | FLAC audio support (local jar). |
+| **LuaJ** | 3.0.2-custom | Lua scripting support for skins (local jar). |
 | **Twitter4J** | 4.0.4 | Twitter integration. |
-| **SQLite JDBC** | (Unknown) | Database connectivity. |
+| **SQLite JDBC** | 3.45.1.0 | Database connectivity. |
 
 ## Project Structure
 
 - **src/**: Source code for the application.
   - **bms/player/beatoraja/**: Main package.
-    - **Launcher.java**: Entry point for modern Java versions (Java 9+).
-    - **MainLoader.java**: Legacy entry point and main application bootstrapper.
+    - **MainLoader.java**: Main application entry point (LWJGL 3).
     - **MainController.java**: Core application logic and state management.
-    - **audio/**: Audio driver implementations (OpenAL, PortAudio, etc.).
-    - **config/**: Configuration management (JSON serialization).
+    - **arena/**: Arena Mode (Networking, Client/Server).
+    - **audio/**: Audio driver implementations.
+    - **config/**: Configuration management.
     - **play/**: Gameplay logic (BMS parsing, note rendering, judging).
     - **skin/**: Skinning system (Lua-based).
     - **song/**: Song database (SQLite) and management.
-- **build.xml**: Ant build script.
-- **build_release.ps1**: PowerShell script for building releases with correct JVM arguments.
-- **launch4j/**: Configuration for creating Windows executables.
-- **lib/**: External libraries (jar files).
-- **skin/**: Default skins and resources.
+    - **stepup/**: Step-Up Mode logic.
+- **build.gradle**: Gradle build script.
+- **settings.gradle**: Gradle settings.
+- **lib/**: Local dependencies (Discord RPC, LuaJ, etc.).
 - **docs/**: Documentation files.
 - **VERSION.md**: Single source of truth for project version.
-- **CHANGELOG.md**: Record of all notable changes.
+- **HANDOFF.md**: Session summary and changelog.
 - **LLM_INSTRUCTIONS.md**: Unified instructions for AI agents.
 
 ## Recent Changes
-- **2025-12-26**: Merged origin/lwjgl3 feature branch. Upgraded backend to LWJGL 3.
-- **2025-12-25**: Modernized build system, implemented VERSION.md, and refactored documentation.
+- **2025-12-26**:
+    - **Merged `origin/master`**: Integrated Arena Mode, Osu! file support, Mod Menu, and In-Game Downloader.
+    - **Merged `origin/lwjgl3`**: Upgraded backend to LWJGL 3.
+    - **Build System**: Migrated from Ant to Gradle.
+    - **Documentation**: Created Dashboard and unified agent instructions.

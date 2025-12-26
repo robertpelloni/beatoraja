@@ -79,3 +79,10 @@ This session focused on modernizing `beatoraja`, integrating features from the `
 1.  **Verify Build**: Run `./gradlew build` to ensure Gradle build works with LWJGL 3 changes.
 2.  **Skin Polish**: Update default skins to use new `SkinProperty` values (Fast/Slow, Arena Rank).
 3.  **Arena Lobby**: Implement song synchronization so all players load the same chart.
+
+## Post-Merge Note
+The merge of `origin/master` introduced `build.gradle` but did not include the Gradle Wrapper (`gradlew`).
+To build the project, ensure you have Gradle 8.5+ installed and run:
+`gradle build`
+Or generate the wrapper yourself:
+`gradle wrapper`
