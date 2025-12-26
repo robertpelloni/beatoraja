@@ -70,8 +70,9 @@
 			<zipfileset excludes="META-INF/*.SF" src="./lib/javacv.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="./lib/javacv-platform.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="./lib/gdx-controllers.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="./lib/gdx-backend-lwjgl.jar" />
-			<zipfileset excludes="META-INF/*.SF" src="./lib/gdx-backend-lwjgl-natives.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="./lib/gdx-backend-lwjgl3.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="./lib/gdx-backend-lwjgl3-natives.jar" />
+			<zipfileset excludes="META-INF/*.SF" src="./lib/gdx-controllers-lwjgl3.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="./lib/twitter4j-core-4.0.4.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="./lib/jflac-codec-1.5.3.jar" />
 			<zipfileset excludes="META-INF/*.SF" src="./lib/luaj-jse-3.0.2-custom.jar" />

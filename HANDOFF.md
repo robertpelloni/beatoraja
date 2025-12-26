@@ -23,10 +23,16 @@ This session focused on modernizing the build process, implementing a robust ver
     -   Updated `CLAUDE.md`, `GEMINI.md`, and `GPT.md` to reference the central instructions.
     -   Created `docs/DASHBOARD.md` to provide a high-level project overview.
 
+4.  **Feature Merge**:
+    -   Merged `origin/lwjgl3` branch, upgrading the backend to LWJGL 3.
+    -   Resolved conflicts in `MainLoader.java` and `PCM.java`.
+    -   Updated `build.xml` to package LWJGL 3 dependencies.
+
 ## Current State
 -   **Build**: Passing. Run `.\build_release.ps1` to generate release artifacts in `release/`.
 -   **Version**: 0.8.9.
--   **Submodules**: Updated (though none are explicitly defined in `.gitmodules`).
+-   **Backend**: LWJGL 3.
+-   **Submodules**: None (dependencies managed in `lib/`).
 
 ## Next Steps
 1.  **Testing**: Run the generated executable on a clean Windows machine to verify JavaFX runtime availability.
