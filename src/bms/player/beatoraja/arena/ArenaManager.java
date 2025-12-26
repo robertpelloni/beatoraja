@@ -13,9 +13,18 @@ public class ArenaManager {
     private final List<ArenaData> players;
     private ArenaServer server;
     private ArenaClient client;
+    private ArenaListener listener;
+
+    public interface ArenaListener {
+        void onSongSelected(String hash);
+    }
 
     public ArenaManager() {
         this.players = new ArrayList<>();
+    }
+
+    public void setListener(ArenaListener listener) {
+        this.listener = listener;
     }
 
     public void startServer(int port) throws IOException {
@@ -60,6 +69,18 @@ public class ArenaManager {
         // If this update is for the local player ("1P"), broadcast it via client
         if (client != null && name.equals("1P")) {
             client.sendScore(score);
+        }
+    }
+
+    public void selectSong(String hash) {
+        if (client != null) {
+            client.sendSong(hash);
+        }
+    }
+
+    public void onSongSelected(String hash) {
+        if (listener != null) {
+            listener.onSongSelected(hash);
         }
     }
 

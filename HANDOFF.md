@@ -12,11 +12,14 @@ This session focused on modernizing `beatoraja`, integrating features from the `
 *   **ScoreData.java:** Added fields `fastNotes`, `slowNotes`, `fastScratch`, `slowScratch`.
 *   **JudgeManager.java:** Updated `updateMicro` to populate these fields based on lane assignment.
 *   **Skin Integration:** Added `NUMBER_FAST_NOTES`, `NUMBER_SLOW_NOTES`, etc., to `SkinProperty` and mapped them in `IntegerPropertyFactory`.
+*   **Default Skin:** Updated `skin/default/result.json` to display Fast/Slow counts.
 
 ### 3. Feature: Arena Mode
 *   **ArenaManager:** Created to manage players and calculate ranks/points. Moved to `MainController` for persistence.
 *   **Score Separation:** Modified `JudgeManager` to include `score2` for 2P/Battle modes. Updated `BMSPlayer` to feed both scores to `ArenaManager`.
 *   **Networking:** Implemented `ArenaClient` and `ArenaServer` (TCP/JSON) to sync scores between players.
+*   **Song Sync:** Implemented `TYPE_SONG_SELECT` message to synchronize song selection in the lobby. Hooked into `MusicSelector`.
+*   **Skin Integration:** Added `NUMBER_ARENA_RANK` and `NUMBER_ARENA_PLAYERS` to `SkinProperty` and mapped them. Updated `result.json` to display Arena Rank.
 
 ### 4. Feature: Osu! File Support
 *   **OsuDecoder.java:** Implemented a parser for `.osu` files that maps HitObjects to a `BMSModel`.
@@ -77,8 +80,8 @@ This session focused on modernizing `beatoraja`, integrating features from the `
 
 ## Next Steps
 1.  **Verify Build**: Run `./gradlew build` to ensure Gradle build works with LWJGL 3 changes.
-2.  **Skin Polish**: Update default skins to use new `SkinProperty` values (Fast/Slow, Arena Rank).
-3.  **Arena Lobby**: Implement song synchronization so all players load the same chart.
+2.  **Arena Polish**: Add UI for creating/joining lobbies in `MusicSelector` (currently only in `ModMenu` which is in-game).
+3.  **Osu! Polish**: Improve slider curve approximation (currently linear).
 
 ## Post-Merge Note
 The merge of `origin/master` introduced `build.gradle` but did not include the Gradle Wrapper (`gradlew`).

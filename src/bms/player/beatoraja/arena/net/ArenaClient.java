@@ -62,6 +62,9 @@ public class ArenaClient {
                 case ArenaMessage.TYPE_PLAYER_LEFT:
                     // Handle player left if needed
                     break;
+                case ArenaMessage.TYPE_SONG_SELECT:
+                    manager.onSongSelected(msg.payload);
+                    break;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -70,6 +73,10 @@ public class ArenaClient {
 
     public void sendScore(int score) {
         sendMessage(new ArenaMessage(ArenaMessage.TYPE_SCORE_UPDATE, playerName, score));
+    }
+
+    public void sendSong(String hash) {
+        sendMessage(new ArenaMessage(ArenaMessage.TYPE_SONG_SELECT, playerName, hash));
     }
 
     private void sendMessage(ArenaMessage msg) {

@@ -25,6 +25,7 @@ import bms.player.beatoraja.skin.SkinType;
 import bms.player.beatoraja.skin.property.EventFactory.EventType;
 import bms.player.beatoraja.song.SongData;
 import bms.player.beatoraja.song.SongDatabaseAccessor;
+import bms.player.beatoraja.arena.ArenaManager;
 
 /**
  * 選曲部分。 楽曲一覧とカーソルが指す楽曲のステータスを表示し、選択した楽曲を 曲決定部分に渡す。
@@ -36,6 +37,7 @@ public final class MusicSelector extends MainState {
 	// TODO　ミラーランダム段位のスコア表示
 
 	private int selectedreplay;
+	private boolean ignoreSelectionEvent = false;
 
 	/**
 	 * 楽曲DBアクセサ
@@ -196,6 +198,12 @@ public final class MusicSelector extends MainState {
 			search = new SearchTextField(this, resource.getConfig().getResolution());
 			setStage(search);
 		}
+
+		main.getArenaManager().setListener(hash -> {
+			Gdx.app.postRunnable(() -> {
+				selectSongByHash(hash);
+			});
+		});
 	}
 
 	public void prepare() {
@@ -624,7 +632,32 @@ public final class MusicSelector extends MainState {
 		return stagefiles;
 	}
 
+	public void selectSongByHash(String hash) {
+		Bar[] bars = manager.getBars();
+		for (Bar bar : bars) {
+			if (bar instanceof SongBar) {
+				SongData sd = ((SongBar) bar).getSongData();
+				if (sd != null && hash.equals(sd.getSha256())) {
+					ignoreSelectionEvent = true;
+					manager.setSelected(bar);
+					ignoreSelectionEvent = false;
+					return;
+				}
+			}
+		}
+	}
+
 	public void selectedBarMoved() {
+		if (!ignoreSelectionEvent) {
+			Bar current = manager.getSelected();
+			if (current instanceof SongBar) {
+				SongData song = ((SongBar) current).getSongData();
+				if (song != null) {
+					main.getArenaManager().selectSong(song.getSha256());
+				}
+			}
+		}
+
 		execute(MusicSelectCommand.RESET_REPLAY);
 		loadSelectedSongImages();
 

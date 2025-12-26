@@ -196,6 +196,21 @@ public class IntegerPropertyFactory {
 			return (state) -> (state.getScoreDataProperty().getBestRateInt());
 		case NUMBER_BEST_RATE_AFTERDOT:
 			return (state) -> (state.getScoreDataProperty().getBestRateAfterDot());
+		case NUMBER_ARENA_RANK:
+			return (state) -> {
+				if (state.main.getArenaManager() != null) {
+					bms.player.beatoraja.arena.ArenaData p = state.main.getArenaManager().getPlayer("1P");
+					return p != null ? p.getRank() : Integer.MIN_VALUE;
+				}
+				return Integer.MIN_VALUE;
+			};
+		case NUMBER_ARENA_PLAYERS:
+			return (state) -> {
+				if (state.main.getArenaManager() != null) {
+					return state.main.getArenaManager().getPlayers().size();
+				}
+				return Integer.MIN_VALUE;
+			};
 		case NUMBER_TARGET_SCORE:
 		case NUMBER_TARGET_SCORE2:
 		case NUMBER_RIVAL_SCORE:
