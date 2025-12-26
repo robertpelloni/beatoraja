@@ -68,6 +68,7 @@ public final class MusicSelector extends MainState {
 	private MusicSelectInputProcessor musicinput;
 
 	private SearchTextField search;
+	private ArenaLobby arenaLobby;
 
 	/**
 	 * 楽曲が選択されてからbmsを読み込むまでの時間(ms)
@@ -321,9 +322,28 @@ public final class MusicSelector extends MainState {
 			main.changeState(MainStateType.CONFIG);
 		} else if (input.isActivated(KeyCommand.OPEN_SKIN_CONFIGURATION)) {
 			main.changeState(MainStateType.SKINCONFIG);
+		} else if (input.isActivated(KeyCommand.OPEN_ARENA_LOBBY)) {
+			if (getStage() == arenaLobby) {
+				closeArenaLobby();
+			} else {
+				openArenaLobby();
+			}
 		}
 
 		musicinput.input();
+	}
+
+	public void openArenaLobby() {
+		if (arenaLobby == null) {
+			arenaLobby = new ArenaLobby(this);
+		}
+		setStage(arenaLobby);
+	}
+
+	public void closeArenaLobby() {
+		if (getStage() == arenaLobby) {
+			setStage(search);
+		}
 	}
 
 	public void shutdown() {
@@ -570,6 +590,10 @@ public final class MusicSelector extends MainState {
 		if (search != null) {
 			search.dispose();
 			search = null;
+		}
+		if (arenaLobby != null) {
+			arenaLobby.dispose();
+			arenaLobby = null;
 		}
 	}
 

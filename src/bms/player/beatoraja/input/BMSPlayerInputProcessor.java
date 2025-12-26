@@ -419,6 +419,8 @@ public class BMSPlayerInputProcessor {
 			return isControlKeyPressed(ControlKeys.F11);
 		case OPEN_SKIN_CONFIGURATION:
 			return isControlKeyPressed(ControlKeys.F12);
+		case OPEN_ARENA_LOBBY:
+			return isControlKeyPressed(ControlKeys.F5);
 		}
 		return false;
 	}
