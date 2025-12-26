@@ -79,12 +79,13 @@ This session focused on modernizing `beatoraja`, integrating features from the `
 -   **Version**: 0.8.9.
 
 ## Next Steps
-1.  **Verify Build**: Run `./gradlew build` to ensure Gradle build works with LWJGL 3 changes.
+1.  **Build Environment**: Install Gradle 8.5+ or generate the wrapper (`gradle wrapper`) to enable building.
 2.  **Arena Polish**: Add UI for creating/joining lobbies in `MusicSelector` (currently only in `ModMenu` which is in-game).
 3.  **Osu! Polish**: Improve slider curve approximation (currently linear).
 
 ## Post-Merge Note
 The merge of `origin/master` introduced `build.gradle` but did not include the Gradle Wrapper (`gradlew`).
+Manual verification of the code changes (SkinProperty, IntegerPropertyFactory, result.json) was performed and looks correct.
 To build the project, ensure you have Gradle 8.5+ installed and run:
 `gradle build`
 Or generate the wrapper yourself:

@@ -45,7 +45,11 @@ Dependencies are now primarily managed via Gradle, with some legacy JARs in `lib
 
 ## Recent Changes
 - **2025-12-26**:
+    - **Arena Mode**: Implemented Song Sync protocol and integrated with Music Selector.
+    - **Skin System**: Added support for Fast/Slow counts and Arena Rank display. Updated default skin.
     - **Merged `origin/master`**: Integrated Arena Mode, Osu! file support, Mod Menu, and In-Game Downloader.
     - **Merged `origin/lwjgl3`**: Upgraded backend to LWJGL 3.
     - **Build System**: Migrated from Ant to Gradle.
     - **Documentation**: Created Dashboard and unified agent instructions.
+
+```
