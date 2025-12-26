@@ -36,3 +36,6 @@ This session focused on modernizing the build process, implementing a robust ver
 ## Artifact Locations
 -   **Windows Release**: `release/windows/beatoraja_0.8.9_windows.zip`
 -   **Linux Release**: `release/linux/beatoraja_0.8.9_linux.zip`
+
+## Known Issues
+-   **Git Push**: The final `git push` failed due to permission errors (403). The changes are committed locally on the `master` branch. You will need to authenticate or use a different remote to push the changes.
