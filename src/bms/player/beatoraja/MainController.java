@@ -43,6 +43,7 @@ import bms.tool.crawler.Crawler;
 import bms.player.beatoraja.arena.ArenaManager;
 import bms.player.beatoraja.stepup.StepUpManager;
 import bms.player.beatoraja.manager.UpdateManager;
+import bms.player.beatoraja.manager.ScreenshotManager;
 
 /**
  * アプリケーションのルートクラス
@@ -135,8 +136,6 @@ public class MainController {
 
 	private SystemSoundManager sound;
 
-	private Thread screenshot;
-
 	private MusicDownloadProcessor download;
 	
 	private Crawler crawler;
@@ -148,6 +147,8 @@ public class MainController {
 	private StreamController streamController;
 	
 	private UpdateManager updateManager;
+	
+	private ScreenshotManager screenshotManager;
 
 	public static final int offsetCount = SkinProperty.OFFSET_MAX + 1;
 	private final SkinOffset[] offset = new SkinOffset[offsetCount];
@@ -441,6 +442,8 @@ public class MainController {
 		stepUpManager = new StepUpManager(this);
 		
 		updateManager = new UpdateManager(this);
+		
+		screenshotManager = new ScreenshotManager(this);
 
 		if(ir.length > 0) {
 			messageRenderer.addMessage(ir.length + " IR Connection Succeed" ,5000, Color.GREEN, 1);
@@ -606,31 +609,11 @@ public class MainController {
 
             // screen shot
             if (input.isActivated(KeyCommand.SAVE_SCREENSHOT)) {
-                if (screenshot == null || !screenshot.isAlive()) {
-            		final byte[] pixels = ScreenUtils.getFrameBufferPixels(0, 0, Gdx.graphics.getBackBufferWidth(),Gdx.graphics.getBackBufferHeight(), true);
-                    screenshot = new Thread(() -> {
-                		// 全ピクセルのアルファ値を255にする(=透明色を無くす)
-                		for(int i = 3;i < pixels.length;i+=4) {
-                			pixels[i] = (byte) 0xff;
-                		}
-                    	new ScreenShotFileExporter().send(current, pixels);
-                    });
-                    screenshot.start();
-                }
+                screenshotManager.saveScreenshot();
             }
 
             if (input.isActivated(KeyCommand.POST_TWITTER)) {
-                if (screenshot == null || !screenshot.isAlive()) {
-            		final byte[] pixels = ScreenUtils.getFrameBufferPixels(0, 0, Gdx.graphics.getBackBufferWidth(),Gdx.graphics.getBackBufferHeight(), false);
-                    screenshot = new Thread(() -> {
-                		// 全ピクセルのアルファ値を255にする(=透明色を無くす)
-                		for(int i = 3;i < pixels.length;i+=4) {
-                			pixels[i] = (byte) 0xff;
-                		}
-                    	new ScreenShotTwitterExporter(player).send(current, pixels);
-                    });
-                    screenshot.start();
-                }
+                screenshotManager.postTwitter();
             }
 
 			if (download != null && download.getDownloadpath() != null) {
