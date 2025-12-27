@@ -141,6 +141,20 @@ public class ArenaLobby extends Stage {
                 }
             }
         });
+
+        TextButton disconnectButton = new TextButton("Disconnect", skin);
+        disconnectButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                try {
+                    selector.main.getArenaManager().dispose();
+                    arenaStatusLabel.setText("Status: Disconnected");
+                    arenaPlayersLabel.setText("Players: ");
+                } catch (Exception e) {
+                    arenaStatusLabel.setText("Error: " + e.getMessage());
+                }
+            }
+        });
         
         TextButton closeButton = new TextButton("Close", skin);
         closeButton.addListener(new ClickListener() {
@@ -153,6 +167,7 @@ public class ArenaLobby extends Stage {
         Table buttons = new Table();
         buttons.add(connectButton).width(150).pad(10);
         buttons.add(serverButton).width(150).pad(10);
+        buttons.add(disconnectButton).width(150).pad(10);
         buttons.add(closeButton).width(150).pad(10);
 
         content.row();
@@ -169,6 +184,8 @@ public class ArenaLobby extends Stage {
         addActor(arenaWindow);
     }
 
+    private String lastStatus = "";
+
     @Override
     public void act(float delta) {
         super.act(delta);
@@ -182,7 +199,11 @@ public class ArenaLobby extends Stage {
             for (ArenaData p : am.getPlayers()) {
                 sb.append(p.getPlayerName()).append(" (").append(p.getScore()).append(") ");
             }
-            arenaPlayersLabel.setText(sb.toString());
+            String currentStatus = sb.toString();
+            if (!currentStatus.equals(lastStatus)) {
+                arenaPlayersLabel.setText(currentStatus);
+                lastStatus = currentStatus;
+            }
         }
     }
 

@@ -19,6 +19,7 @@
 - **Default Skin**: Updated `result.json` to display Fast/Slow stats and Arena Rank.
 - **Refactoring**: Extracted `UpdateManager`, `ScreenshotManager`, `InputManager`, and `DownloadManager` from `MainController`.
 - **Osu! Support**: Improved slider curve approximation (Bezier/Linear) and column mapping.
+- **Arena Mode**: Added "Disconnect" button to Arena Lobby and optimized UI updates.
 
 ## [0.8.9] - 2025-12-25
 ### Added
