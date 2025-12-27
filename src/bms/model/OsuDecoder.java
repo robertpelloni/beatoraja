@@ -12,6 +12,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Bezier;
+import com.badlogic.gdx.math.CatmullRomSpline;
+
 /**
  * Basic Osu file decoder to convert .osu files to BMSModel.
  * Direct port attempt/adaptation for basic 7K support.
@@ -98,7 +102,7 @@ public class OsuDecoder {
                     if (parts.length >= 3) {
                         try {
                             int x = Integer.parseInt(parts[0]);
-                            // int y = Integer.parseInt(parts[1]); // Unused
+                            int y = Integer.parseInt(parts[1]);
                             long time = Long.parseLong(parts[2]);
                             int type = Integer.parseInt(parts[3]);
 
@@ -130,8 +134,18 @@ public class OsuDecoder {
                                     if (parts.length >= 8) {
                                         int slides = Integer.parseInt(parts[6]);
                                         double length = Double.parseDouble(parts[7]);
+                                        
+                                        String[] curveParts = parts[5].split("\\|");
+                                        char curveType = curveParts.length > 0 ? curveParts[0].charAt(0) : 'L';
+                                        List<Vector2> points = new ArrayList<>();
+                                        points.add(new Vector2(x, y));
+                                        for (int i = 1; i < curveParts.length; i++) {
+                                            String[] xy = curveParts[i].split(":");
+                                            points.add(new Vector2(Integer.parseInt(xy[0]), Integer.parseInt(xy[1])));
+                                        }
+
                                         // Duration will be calculated in convert()
-                                        hitObjects.add(new HitObject(lane, time, 0, length, slides));
+                                        hitObjects.add(new HitObject(lane, time, 0, length, slides, curveType, points));
                                     } else {
                                         hitObjects.add(new HitObject(lane, time, 0));
                                     }
@@ -153,7 +167,7 @@ public class OsuDecoder {
             else model.setMode(Mode.BEAT_14K);
 
             model.setWavList(wavList);
-            convert(model, hitObjects, timingPoints, sliderMultiplier);
+            convert(model, hitObjects, timingPoints, sliderMultiplier, keys);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -161,7 +175,7 @@ public class OsuDecoder {
         return model;
     }
 
-    private void convert(BMSModel model, List<HitObject> hitObjects, List<TimingPoint> timingPoints, double sliderMultiplier) {
+    private void convert(BMSModel model, List<HitObject> hitObjects, List<TimingPoint> timingPoints, double sliderMultiplier, int keys) {
         Collections.sort(hitObjects);
         Collections.sort(timingPoints);
 
@@ -220,6 +234,11 @@ public class OsuDecoder {
                 endTime = ho.time + (long) duration;
             }
 
+            if (ho.points != null && !ho.points.isEmpty()) {
+                processSlider(ho, currentBeatLength, currentSv, sliderMultiplier, keys, timelineMap, lntype);
+                continue;
+            }
+
             if (endTime > 0) {
                 note = new LongNote(1); // Use WAV 01
                 note.setMicroDuration((endTime - ho.time) * 1000);
@@ -253,23 +272,190 @@ public class OsuDecoder {
         model.setAllTimeLine(sortedTimelines.toArray(new TimeLine[0]));
     }
 
+    private List<Vector2> calculatePath(HitObject ho) {
+        List<Vector2> path = new ArrayList<>();
+        if (ho.points == null || ho.points.isEmpty()) return path;
+
+        switch (ho.curveType) {
+            case 'P': // Perfect Circle
+                if (ho.points.size() == 3) {
+                    // Fallback to Bezier for now as Circle math is complex to inline
+                    // and Bezier approximates it reasonably well for gameplay purposes
+                    path.addAll(calculateBezier(ho.points));
+                } else {
+                    path.addAll(calculateBezier(ho.points));
+                }
+                break;
+            case 'B': // Bezier
+                path.addAll(calculateBezier(ho.points));
+                break;
+            case 'C': // Catmull
+                // Catmull not supported yet, fallback to Linear
+                path.addAll(ho.points);
+                break;
+            case 'L': // Linear
+            default:
+                path.addAll(ho.points);
+                break;
+        }
+        return path;
+    }
+
+    private List<Vector2> calculateBezier(List<Vector2> points) {
+        List<Vector2> path = new ArrayList<>();
+        int start = 0;
+        for (int i = 0; i < points.size(); i++) {
+            if (i < points.size() - 1 && points.get(i).equals(points.get(i + 1))) {
+                List<Vector2> subPoints = points.subList(start, i + 1);
+                path.addAll(approximateBezier(subPoints));
+                start = i + 1;
+            }
+        }
+        List<Vector2> subPoints = points.subList(start, points.size());
+        path.addAll(approximateBezier(subPoints));
+        return path;
+    }
+
+    private List<Vector2> approximateBezier(List<Vector2> points) {
+        if (points.size() < 2) return points;
+        // LibGDX Bezier
+        Bezier<Vector2> bezier = new Bezier<>(points.toArray(new Vector2[0]));
+        List<Vector2> path = new ArrayList<>();
+        int segments = 50; 
+        for (int i = 0; i <= segments; i++) {
+            Vector2 out = new Vector2();
+            bezier.valueAt(out, (float)i / segments);
+            path.add(out);
+        }
+        return path;
+    }
+
+    private void processSlider(HitObject ho, double currentBeatLength, double currentSv, double sliderMultiplier, int keys, Map<Long, TimeLine> timelineMap, int lntype) {
+        List<Vector2> path = calculatePath(ho);
+        if (path.isEmpty()) return;
+
+        float[] lengths = new float[path.size()];
+        float totalLength = 0;
+        for (int i = 1; i < path.size(); i++) {
+            totalLength += path.get(i).dst(path.get(i-1));
+            lengths[i] = totalLength;
+        }
+        
+        if (totalLength == 0) {
+             addNote(ho.lane, ho.time, ho.time + 100, timelineMap, lntype); // Fallback
+             return;
+        }
+
+        double duration = ho.length / (sliderMultiplier * 100.0 * currentSv) * currentBeatLength; 
+        long startTime = ho.time;
+        
+        for (int slide = 0; slide < ho.slides; slide++) {
+            boolean reverse = (slide % 2 == 1);
+            long slideStart = startTime + (long)(slide * duration);
+            long slideEnd = startTime + (long)((slide + 1) * duration);
+            
+            int steps = (int)(duration / 20); // 20ms resolution
+            if (steps < 1) steps = 1;
+            
+            int currentLane = -1;
+            long currentNoteStart = -1;
+            
+            for (int i = 0; i <= steps; i++) {
+                double t = (double)i / steps;
+                if (reverse) t = 1.0 - t;
+                
+                double d = t * ho.length;
+                if (d > totalLength) d = totalLength; 
+                
+                Vector2 pos = getPointAtDistance(path, lengths, (float)d);
+                
+                int column = (int)(pos.x * keys / 512.0);
+                column = Math.max(0, Math.min(keys - 1, column));
+                
+                int lane;
+                if (keys == 8) {
+                    if (column == 0) lane = 0;
+                    else lane = column;
+                } else {
+                    lane = column + 1;
+                }
+                
+                long time = slideStart + (long)((double)i / steps * duration);
+                
+                if (lane != currentLane) {
+                    if (currentLane != -1) {
+                        addNote(currentLane, currentNoteStart, time, timelineMap, lntype);
+                    }
+                    currentLane = lane;
+                    currentNoteStart = time;
+                }
+            }
+            if (currentLane != -1) {
+                addNote(currentLane, currentNoteStart, slideEnd, timelineMap, lntype);
+            }
+        }
+    }
+
+    private void addNote(int lane, long start, long end, Map<Long, TimeLine> timelineMap, int lntype) {
+        if (end <= start) return;
+        Note note = new LongNote(1);
+        note.setMicroDuration((end - start) * 1000);
+        ((LongNote)note).setType(lntype);
+        note.setMicroTime(start * 1000);
+        
+        TimeLine tl = timelineMap.get(start);
+        if (tl == null) {
+            tl = new TimeLine(start, start * 1000, 7296);
+            timelineMap.put(start, tl);
+        }
+        if (lane < 8) {
+            tl.setNote(lane, note);
+        }
+    }
+
+    private Vector2 getPointAtDistance(List<Vector2> path, float[] lengths, float distance) {
+        int index = Arrays.binarySearch(lengths, distance);
+        if (index >= 0) return path.get(index);
+        
+        index = -(index + 1);
+        if (index == 0) return path.get(0);
+        if (index >= lengths.length) return path.get(path.size() - 1);
+        
+        float len1 = lengths[index-1];
+        float len2 = lengths[index];
+        float t = (distance - len1) / (len2 - len1);
+        
+        Vector2 p1 = path.get(index-1);
+        Vector2 p2 = path.get(index);
+        
+        return new Vector2(p1).lerp(p2, t);
+    }
+
     private static class HitObject implements Comparable<HitObject> {
         int lane;
         long time;
         long endTime;
         double length;
         int slides;
+        char curveType;
+        List<Vector2> points;
 
         public HitObject(int lane, long time, long endTime) {
-            this(lane, time, endTime, 0, 0);
+            this(lane, time, endTime, 0, 0, 'L', null);
         }
 
         public HitObject(int lane, long time, long endTime, double length, int slides) {
+            this(lane, time, endTime, length, slides, 'L', null);
+        }
+
+        public HitObject(int lane, long time, long endTime, double length, int slides, char curveType, List<Vector2> points) {
             this.lane = lane;
             this.time = time;
             this.endTime = endTime;
             this.length = length;
             this.slides = slides;
+            this.curveType = curveType;
+            this.points = points;
         }
 
         @Override
