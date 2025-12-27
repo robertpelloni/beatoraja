@@ -36,6 +36,7 @@ public class OsuDecoder {
 
             String[] wavList = new String[1295];
             int keys = 4; // Default to 4K if undefined
+            double sliderMultiplier = 1.4; // Default
 
             while ((line = reader.readLine()) != null) {
                 line = line.trim();
@@ -65,14 +66,22 @@ public class OsuDecoder {
                         try {
                             keys = (int) Double.parseDouble(line.split(":", 2)[1].trim());
                         } catch (Exception e) {}
+                    } else if (line.startsWith("SliderMultiplier:")) {
+                        try {
+                            sliderMultiplier = Double.parseDouble(line.split(":", 2)[1].trim());
+                        } catch (Exception e) {}
                     }
                 } else if (section.equals("TimingPoints")) {
                     String[] parts = line.split(",");
                     if (parts.length >= 2) {
                         try {
                             double offset = Double.parseDouble(parts[0]);
-                            double mpb = Double.parseDouble(parts[1]);
-                            timingPoints.add(new TimingPoint(offset, mpb));
+                            double beatLength = Double.parseDouble(parts[1]);
+                            boolean uninherited = true;
+                            if (parts.length >= 7) {
+                                uninherited = Integer.parseInt(parts[6]) == 1;
+                            }
+                            timingPoints.add(new TimingPoint(offset, beatLength, uninherited));
                         } catch (Exception e) {}
                     }
                 } else if (section.equals("HitObjects")) {
@@ -107,6 +116,16 @@ public class OsuDecoder {
                                     String[] subparts = parts[5].split(":");
                                     long endTime = Long.parseLong(subparts[0]);
                                     hitObjects.add(new HitObject(lane, time, endTime));
+                                } else if ((type & 2) > 0) { // Slider
+                                    // x,y,time,type,hitSound,curveType|curvePoints,slides,length
+                                    if (parts.length >= 8) {
+                                        int slides = Integer.parseInt(parts[6]);
+                                        double length = Double.parseDouble(parts[7]);
+                                        // Duration will be calculated in convert()
+                                        hitObjects.add(new HitObject(lane, time, 0, length, slides));
+                                    } else {
+                                        hitObjects.add(new HitObject(lane, time, 0));
+                                    }
                                 } else {
                                     hitObjects.add(new HitObject(lane, time, 0));
                                 }
@@ -125,7 +144,7 @@ public class OsuDecoder {
             else model.setMode(Mode.BEAT_14K);
 
             model.setWavList(wavList);
-            convert(model, hitObjects, timingPoints);
+            convert(model, hitObjects, timingPoints, sliderMultiplier);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -133,14 +152,14 @@ public class OsuDecoder {
         return model;
     }
 
-    private void convert(BMSModel model, List<HitObject> hitObjects, List<TimingPoint> timingPoints) {
+    private void convert(BMSModel model, List<HitObject> hitObjects, List<TimingPoint> timingPoints, double sliderMultiplier) {
         Collections.sort(hitObjects);
         Collections.sort(timingPoints);
 
         double currentBpm = 120;
         for (TimingPoint tp : timingPoints) {
-            if (tp.mpb > 0) {
-                currentBpm = 60000.0 / tp.mpb;
+            if (tp.uninherited) {
+                currentBpm = 60000.0 / tp.beatLength;
                 model.setBpm(currentBpm);
                 break;
             }
@@ -153,11 +172,48 @@ public class OsuDecoder {
         // Map time (ms) -> TimeLine
         Map<Long, TimeLine> timelineMap = new HashMap<>();
 
+        int timingIndex = 0;
+        double currentBeatLength = 500; // Default 120 BPM
+        double currentSv = 1.0;
+
         for (HitObject ho : hitObjects) {
+            // Update Timing
+            while (timingIndex < timingPoints.size() && timingPoints.get(timingIndex).time <= ho.time) {
+                TimingPoint tp = timingPoints.get(timingIndex);
+                if (tp.uninherited) {
+                    currentBeatLength = tp.beatLength;
+                    currentSv = 1.0;
+                } else {
+                    // Inherited (Green Line)
+                    // beatLength is negative inverse SV percentage
+                    // -100 = 1.0x, -50 = 2.0x, -200 = 0.5x
+                    if (tp.beatLength < 0) {
+                        currentSv = 100.0 / -tp.beatLength;
+                    } else {
+                        currentSv = 1.0;
+                    }
+                }
+                timingIndex++;
+            }
+            // We need to find the *latest* active timing point, but the loop above might overshoot if we just iterate.
+            // Actually, we should re-scan or maintain state properly.
+            // Since hitObjects are sorted, we can just advance timingIndex.
+            // BUT, we need to handle the case where multiple timing points are before the object.
+            // The loop `while (timingIndex < ... && time <= ho.time)` does exactly that.
+            // It processes ALL timing points up to the object's time, so `currentBeatLength` and `currentSv` are correct for `ho.time`.
+
             Note note;
-            if (ho.endTime > 0) {
+            long endTime = ho.endTime;
+            
+            // Calculate Slider Duration if it's a slider (length > 0 and endTime == 0 initially)
+            if (ho.length > 0 && ho.endTime == 0) {
+                double duration = ho.length / (sliderMultiplier * 100.0 * currentSv) * currentBeatLength * ho.slides;
+                endTime = ho.time + (long) duration;
+            }
+
+            if (endTime > 0) {
                 note = new LongNote(1); // Use WAV 01
-                note.setMicroDuration((ho.endTime - ho.time) * 1000);
+                note.setMicroDuration((endTime - ho.time) * 1000);
                 ((LongNote)note).setType(lntype);
             } else {
                 note = new NormalNote(1); // Use WAV 01
@@ -192,11 +248,19 @@ public class OsuDecoder {
         int lane;
         long time;
         long endTime;
+        double length;
+        int slides;
 
         public HitObject(int lane, long time, long endTime) {
+            this(lane, time, endTime, 0, 0);
+        }
+
+        public HitObject(int lane, long time, long endTime, double length, int slides) {
             this.lane = lane;
             this.time = time;
             this.endTime = endTime;
+            this.length = length;
+            this.slides = slides;
         }
 
         @Override
@@ -207,16 +271,22 @@ public class OsuDecoder {
 
     private static class TimingPoint implements Comparable<TimingPoint> {
         double time;
-        double mpb;
+        double beatLength;
+        boolean uninherited;
 
-        public TimingPoint(double time, double mpb) {
+        public TimingPoint(double time, double beatLength, boolean uninherited) {
             this.time = time;
-            this.mpb = mpb;
+            this.beatLength = beatLength;
+            this.uninherited = uninherited;
         }
 
         @Override
         public int compareTo(TimingPoint o) {
-            return Double.compare(this.time, o.time);
+            int c = Double.compare(this.time, o.time);
+            if (c != 0) return c;
+            // If times are equal, uninherited (Red) comes first to reset SV?
+            // Actually in Osu, if they are same time, usually Red comes first.
+            return Boolean.compare(o.uninherited, this.uninherited);
         }
     }
 }
