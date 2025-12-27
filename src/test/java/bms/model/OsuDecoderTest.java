@@ -77,7 +77,7 @@ public class OsuDecoderTest {
         assertNotNull(model);
         assertEquals(Mode.BEAT_5K, model.getMode()); // 4K -> BEAT_5K (internally mapped)
 
-        TimeLine[] timelines = model.getAllTimeLine();
+        TimeLine[] timelines = model.getAllTimeLines();
         assertNotNull(timelines);
         assertTrue(timelines.length > 0);
 
@@ -88,7 +88,7 @@ public class OsuDecoderTest {
                 Note note = tl.getNote(1); // Lane 1 (Column 0)
                 assertNotNull(note);
                 assertTrue(note instanceof LongNote);
-                assertEquals(500 * 1000, ((LongNote) note).getDuration()); // 500ms in microseconds
+                assertEquals(500 * 1000, ((LongNote) note).getMicroDuration()); // 500ms in microseconds
                 found = true;
                 break;
             }

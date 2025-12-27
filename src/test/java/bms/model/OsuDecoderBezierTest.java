@@ -42,7 +42,7 @@ public class OsuDecoderBezierTest {
         assertNotNull(model);
         
         // Check if notes are generated
-        TimeLine[] timelines = model.getAllTimeLine();
+        TimeLine[] timelines = model.getAllTimeLines();
         assertTrue(timelines.length > 0);
         
         // The slider starts at x=0 (Lane 1)
@@ -87,7 +87,7 @@ public class OsuDecoderBezierTest {
 
         assertNotNull(model);
         
-        TimeLine[] timelines = model.getAllTimeLine();
+        TimeLine[] timelines = model.getAllTimeLines();
         
         boolean foundLane1 = false;
         boolean foundLane2 = false;
