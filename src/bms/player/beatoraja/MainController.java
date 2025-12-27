@@ -78,7 +78,7 @@ public class MainController {
 		}
 	}
 
-	public static final boolean debug = false;
+	public static boolean debug = false;
 	public static final int debugTextXpos = 10;
 
 	/**

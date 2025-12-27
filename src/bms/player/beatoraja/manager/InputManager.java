@@ -75,6 +75,10 @@ public class InputManager {
 		if (input.isActivated(KeyCommand.SHOW_FPS)) {
 			main.setShowFps(!main.isShowFps());
 		}
+		// Debug表示切替
+		if (input.isActivated(KeyCommand.TOGGLE_DEBUG)) {
+			MainController.debug = !MainController.debug;
+		}
 		// fullscrees - windowed
 		if (input.isActivated(KeyCommand.SWITCH_SCREEN_MODE)) {
 			boolean fullscreen = Gdx.graphics.isFullscreen();

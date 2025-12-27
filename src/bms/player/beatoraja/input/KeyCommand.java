@@ -16,4 +16,5 @@ public enum KeyCommand {
 	OPEN_IR,
 	OPEN_SKIN_CONFIGURATION,
 	OPEN_ARENA_LOBBY,
+	TOGGLE_DEBUG,
 }

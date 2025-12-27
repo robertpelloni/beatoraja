@@ -434,11 +434,14 @@ public class BMSPlayerInputProcessor implements ControllerListener {
 
 	public boolean isActivated(KeyCommand key) {
 		final int MASK_CTRL = KeyBoardInputProcesseor.MASK_CTRL;
+		final int MASK_SHIFT = KeyBoardInputProcesseor.MASK_SHIFT;
 		final int MASK_CTRL_SHIFT = KeyBoardInputProcesseor.MASK_CTRL|KeyBoardInputProcesseor.MASK_SHIFT;
 
 		switch(key) {
 		case SHOW_FPS:
 			return isControlKeyPressed(ControlKeys.F1);
+		case TOGGLE_DEBUG:
+			return isControlKeyPressed(ControlKeys.F1, MASK_SHIFT);
 		case UPDATE_FOLDER:
 			return isControlKeyPressed(ControlKeys.F2);
 		case OPEN_EXPLORER:
