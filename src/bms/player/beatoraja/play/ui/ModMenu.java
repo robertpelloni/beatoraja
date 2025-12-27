@@ -23,6 +23,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import java.util.ResourceBundle;
+
 import bms.player.beatoraja.play.BMSPlayer;
 import bms.player.beatoraja.arena.ArenaManager;
 import bms.player.beatoraja.arena.ArenaData;
@@ -48,8 +50,11 @@ public class ModMenu {
     private Label arenaStatusLabel;
     private Label arenaPlayersLabel;
 
+    private ResourceBundle bundle;
+
     public ModMenu(BMSPlayer player) {
         this.player = player;
+        this.bundle = ResourceBundle.getBundle("resources.UIResources");
         create();
     }
 
@@ -118,28 +123,28 @@ public class ModMenu {
         root.setFillParent(true);
         stage.addActor(root);
 
-        Window window = new Window("Mod Menu", skin);
+        Window window = new Window(bundle.getString("MOD_MENU_TITLE"), skin);
         window.getTitleLabel().setAlignment(1); // Center
 
         // Hi-Speed
-        hispeedLabel = new Label("Hi-Speed: " + String.format("%.2f", 0.0f), skin);
+        hispeedLabel = new Label(bundle.getString("MOD_MENU_HISPEED") + ": " + String.format("%.2f", 0.0f), skin);
         hispeedSlider = new Slider(0.5f, 10.0f, 0.01f, false, skin);
         hispeedSlider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 setHiSpeed(hispeedSlider.getValue());
-                hispeedLabel.setText(String.format("Hi-Speed: %.2f", hispeedSlider.getValue()));
+                hispeedLabel.setText(String.format(bundle.getString("MOD_MENU_HISPEED") + ": %.2f", hispeedSlider.getValue()));
             }
         });
 
         // Lane Cover
-        laneCoverLabel = new Label("Lane Cover: 0", skin);
+        laneCoverLabel = new Label(bundle.getString("MOD_MENU_LANECOVER") + ": 0", skin);
         laneCoverSlider = new Slider(0, 1000, 1, false, skin);
         laneCoverSlider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 setLaneCover(laneCoverSlider.getValue() / 1000f);
-                laneCoverLabel.setText("Lane Cover: " + (int)laneCoverSlider.getValue());
+                laneCoverLabel.setText(bundle.getString("MOD_MENU_LANECOVER") + ": " + (int)laneCoverSlider.getValue());
             }
         });
 
@@ -152,7 +157,7 @@ public class ModMenu {
         window.add(laneCoverSlider).width(300).pad(5);
 
         window.row();
-        TextButton arenaButton = new TextButton("Arena Mode...", skin);
+        TextButton arenaButton = new TextButton(bundle.getString("MOD_MENU_ARENA_MODE"), skin);
         arenaButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -171,19 +176,19 @@ public class ModMenu {
     }
 
     private void createArenaWindow() {
-        arenaWindow = new Window("Arena Mode", skin);
+        arenaWindow = new Window(bundle.getString("ARENA_TITLE"), skin);
         arenaWindow.getTitleLabel().setAlignment(1);
 
         Table content = new Table();
         arenaWindow.add(content).pad(10);
 
-        Label nameLabel = new Label("Name:", skin);
+        Label nameLabel = new Label(bundle.getString("ARENA_NAME"), skin);
         nameField = new TextField("Player", skin);
 
-        Label hostLabel = new Label("Host:", skin);
+        Label hostLabel = new Label(bundle.getString("ARENA_HOST"), skin);
         hostField = new TextField("localhost", skin);
 
-        Label portLabel = new Label("Port:", skin);
+        Label portLabel = new Label(bundle.getString("ARENA_PORT"), skin);
         portField = new TextField("5073", skin);
 
         content.add(nameLabel);
@@ -195,7 +200,7 @@ public class ModMenu {
         content.add(portLabel);
         content.add(portField).width(150);
 
-        TextButton connectButton = new TextButton("Connect", skin);
+        TextButton connectButton = new TextButton(bundle.getString("ARENA_CONNECT"), skin);
         connectButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -204,21 +209,21 @@ public class ModMenu {
                     int port = Integer.parseInt(portField.getText());
                     String name = nameField.getText();
                     player.main.getArenaManager().connect(host, port, name);
-                    arenaStatusLabel.setText("Status: Connecting...");
+                    arenaStatusLabel.setText(bundle.getString("ARENA_STATUS_CONNECTING"));
                 } catch (Exception e) {
                     arenaStatusLabel.setText("Error: " + e.getMessage());
                 }
             }
         });
 
-        TextButton serverButton = new TextButton("Start Server", skin);
+        TextButton serverButton = new TextButton(bundle.getString("ARENA_START_SERVER"), skin);
         serverButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 try {
                     int port = Integer.parseInt(portField.getText());
                     player.main.getArenaManager().startServer(port);
-                    arenaStatusLabel.setText("Status: Server Started");
+                    arenaStatusLabel.setText(bundle.getString("ARENA_STATUS_SERVER_STARTED"));
                 } catch (Exception e) {
                     arenaStatusLabel.setText("Error: " + e.getMessage());
                 }
@@ -232,11 +237,11 @@ public class ModMenu {
         content.row();
         content.add(buttons).colspan(2).pad(10);
 
-        arenaStatusLabel = new Label("Status: Idle", skin);
+        arenaStatusLabel = new Label(bundle.getString("ARENA_STATUS_IDLE"), skin);
         content.row();
         content.add(arenaStatusLabel).colspan(2);
 
-        arenaPlayersLabel = new Label("Players: ", skin);
+        arenaPlayersLabel = new Label(bundle.getString("ARENA_PLAYERS"), skin);
         content.row();
         content.add(arenaPlayersLabel).colspan(2).padTop(10);
 
@@ -283,7 +288,7 @@ public class ModMenu {
     private void updateArenaStatus() {
         ArenaManager am = player.main.getArenaManager();
         if (am != null) {
-            StringBuilder sb = new StringBuilder("Players: ");
+            StringBuilder sb = new StringBuilder(bundle.getString("ARENA_PLAYERS"));
             for (ArenaData p : am.getPlayers()) {
                 sb.append(p.getPlayerName()).append(" (").append(p.getScore()).append(") ");
             }

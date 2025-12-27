@@ -14,6 +14,8 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import bms.player.beatoraja.arena.ArenaManager;
 import bms.player.beatoraja.arena.ArenaData;
 
+import java.util.ResourceBundle;
+
 public class ArenaLobby extends Stage {
 
     private MusicSelector selector;
@@ -24,10 +26,12 @@ public class ArenaLobby extends Stage {
     private TextField nameField;
     private Label arenaStatusLabel;
     private Label arenaPlayersLabel;
+    private ResourceBundle bundle;
 
     public ArenaLobby(MusicSelector selector) {
         super(new FitViewport(selector.main.getConfig().getResolution().width, selector.main.getConfig().getResolution().height));
         this.selector = selector;
+        this.bundle = ResourceBundle.getBundle("resources.UIResources");
         create();
     }
 
@@ -84,20 +88,20 @@ public class ArenaLobby extends Stage {
     }
 
     private void createArenaWindow() {
-        arenaWindow = new Window("Arena Lobby", skin);
+        arenaWindow = new Window(bundle.getString("ARENA_LOBBY_TITLE"), skin);
         arenaWindow.getTitleLabel().setAlignment(1);
         arenaWindow.setFillParent(true);
 
         Table content = new Table();
         arenaWindow.add(content).expand().fill();
 
-        Label nameLabel = new Label("Name:", skin);
+        Label nameLabel = new Label(bundle.getString("ARENA_NAME"), skin);
         nameField = new TextField("Player", skin);
 
-        Label hostLabel = new Label("Host:", skin);
+        Label hostLabel = new Label(bundle.getString("ARENA_HOST"), skin);
         hostField = new TextField("localhost", skin);
 
-        Label portLabel = new Label("Port:", skin);
+        Label portLabel = new Label(bundle.getString("ARENA_PORT"), skin);
         portField = new TextField("5073", skin);
 
         Table form = new Table();
@@ -112,7 +116,7 @@ public class ArenaLobby extends Stage {
 
         content.add(form).top().pad(20);
 
-        TextButton connectButton = new TextButton("Connect", skin);
+        TextButton connectButton = new TextButton(bundle.getString("ARENA_CONNECT"), skin);
         connectButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -121,42 +125,42 @@ public class ArenaLobby extends Stage {
                     int port = Integer.parseInt(portField.getText());
                     String name = nameField.getText();
                     selector.main.getArenaManager().connect(host, port, name);
-                    arenaStatusLabel.setText("Status: Connecting...");
+                    arenaStatusLabel.setText(bundle.getString("ARENA_STATUS_CONNECTING"));
                 } catch (Exception e) {
                     arenaStatusLabel.setText("Error: " + e.getMessage());
                 }
             }
         });
 
-        TextButton serverButton = new TextButton("Start Server", skin);
+        TextButton serverButton = new TextButton(bundle.getString("ARENA_START_SERVER"), skin);
         serverButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 try {
                     int port = Integer.parseInt(portField.getText());
                     selector.main.getArenaManager().startServer(port);
-                    arenaStatusLabel.setText("Status: Server Started");
+                    arenaStatusLabel.setText(bundle.getString("ARENA_STATUS_SERVER_STARTED"));
                 } catch (Exception e) {
                     arenaStatusLabel.setText("Error: " + e.getMessage());
                 }
             }
         });
 
-        TextButton disconnectButton = new TextButton("Disconnect", skin);
+        TextButton disconnectButton = new TextButton(bundle.getString("ARENA_DISCONNECT"), skin);
         disconnectButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 try {
                     selector.main.getArenaManager().dispose();
-                    arenaStatusLabel.setText("Status: Disconnected");
-                    arenaPlayersLabel.setText("Players: ");
+                    arenaStatusLabel.setText(bundle.getString("ARENA_STATUS_DISCONNECTED"));
+                    arenaPlayersLabel.setText(bundle.getString("ARENA_PLAYERS"));
                 } catch (Exception e) {
                     arenaStatusLabel.setText("Error: " + e.getMessage());
                 }
             }
         });
         
-        TextButton closeButton = new TextButton("Close", skin);
+        TextButton closeButton = new TextButton(bundle.getString("ARENA_CLOSE"), skin);
         closeButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -173,11 +177,11 @@ public class ArenaLobby extends Stage {
         content.row();
         content.add(buttons).pad(20);
 
-        arenaStatusLabel = new Label("Status: Idle", skin);
+        arenaStatusLabel = new Label(bundle.getString("ARENA_STATUS_IDLE"), skin);
         content.row();
         content.add(arenaStatusLabel).pad(10);
 
-        arenaPlayersLabel = new Label("Players: ", skin);
+        arenaPlayersLabel = new Label(bundle.getString("ARENA_PLAYERS"), skin);
         content.row();
         content.add(arenaPlayersLabel).pad(10);
 
@@ -195,7 +199,7 @@ public class ArenaLobby extends Stage {
     private void updateArenaStatus() {
         ArenaManager am = selector.main.getArenaManager();
         if (am != null) {
-            StringBuilder sb = new StringBuilder("Players: ");
+            StringBuilder sb = new StringBuilder(bundle.getString("ARENA_PLAYERS"));
             for (ArenaData p : am.getPlayers()) {
                 sb.append(p.getPlayerName()).append(" (").append(p.getScore()).append(") ");
             }

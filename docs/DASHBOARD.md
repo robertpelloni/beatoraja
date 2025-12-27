@@ -30,7 +30,12 @@ Dependencies are now primarily managed via Gradle, with some legacy JARs in `lib
 - **src/**: Source code for the application.
   - **bms/player/beatoraja/**: Main package.
     - **MainLoader.java**: Main application entry point (LWJGL 3).
-    - **MainController.java**: Core application logic and state management.
+    - **MainController.java**: Core application logic (delegates to managers).
+    - **manager/**:
+        - **UpdateManager.java**: Song database and table updates.
+        - **ScreenshotManager.java**: Screenshot capture and Twitter integration.
+        - **InputManager.java**: Input polling and handling.
+        - **DownloadManager.java**: Background downloads (IPFS/Crawler).
     - **arena/**: Arena Mode (Networking, Client/Server).
     - **audio/**: Audio driver implementations.
     - **config/**: Configuration management.
@@ -47,6 +52,11 @@ Dependencies are now primarily managed via Gradle, with some legacy JARs in `lib
 - **LLM_INSTRUCTIONS.md**: Unified instructions for AI agents.
 
 ## Recent Changes
+- **2025-12-27**:
+    - **Refactoring**: Extracted `UpdateManager`, `ScreenshotManager`, `InputManager`, and `DownloadManager` from `MainController`.
+    - **Controller Support**: Added hot-plugging support.
+    - **Osu! Support**: Improved slider curve approximation (Bezier/Linear) and column mapping.
+    - **Arena Polish**: Added Disconnect button and optimized UI.
 - **2025-12-26**:
     - **Arena Mode**: Implemented Song Sync protocol and integrated with Music Selector.
     - **Skin System**: Added support for Fast/Slow counts and Arena Rank display. Updated default skin.
