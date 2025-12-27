@@ -44,6 +44,7 @@ import bms.player.beatoraja.arena.ArenaManager;
 import bms.player.beatoraja.stepup.StepUpManager;
 import bms.player.beatoraja.manager.UpdateManager;
 import bms.player.beatoraja.manager.ScreenshotManager;
+import bms.player.beatoraja.manager.InputManager;
 
 /**
  * アプリケーションのルートクラス
@@ -84,7 +85,6 @@ public class MainController {
 	 */
 	private final long boottime = System.currentTimeMillis();
 	private final Calendar cl = Calendar.getInstance();
-	private long mouseMovedTime;
 
 	private BMSPlayer bmsplayer;
 	private MusicDecide decide;
@@ -124,7 +124,6 @@ public class MainController {
 	 */
 	private Path bmsfile;
 
-	private BMSPlayerInputProcessor input;
 	/**
 	 * FPSを描画するかどうか
 	 */
@@ -149,6 +148,8 @@ public class MainController {
 	private UpdateManager updateManager;
 	
 	private ScreenshotManager screenshotManager;
+	
+	private InputManager inputManager;
 
 	public static final int offsetCount = SkinProperty.OFFSET_MAX + 1;
 	private final SkinOffset[] offset = new SkinOffset[offsetCount];
@@ -323,9 +324,9 @@ public class MainController {
 			updateMainStateListener(0);
 		}
 		if (current.getStage() != null) {
-			Gdx.input.setInputProcessor(new InputMultiplexer(current.getStage(), input.getKeyBoardInputProcesseor()));
+			Gdx.input.setInputProcessor(new InputMultiplexer(current.getStage(), inputManager.getInputProcessor().getKeyBoardInputProcesseor()));
 		} else {
-			Gdx.input.setInputProcessor(input.getKeyBoardInputProcesseor());
+			Gdx.input.setInputProcessor(inputManager.getInputProcessor().getKeyBoardInputProcesseor());
 		}
 	}
 
@@ -354,7 +355,7 @@ public class MainController {
 		}
 		messageRenderer = new MessageRenderer(config.getMessagefontpath());
 
-		input = new BMSPlayerInputProcessor(config, player);
+		inputManager = new InputManager(this);
 		switch(config.getAudioConfig().getDriver()) {
 		case OpenAL:
 			audio = new GdxSoundDriver(config);
@@ -388,23 +389,6 @@ public class MainController {
 		}
 
 		Logger.getGlobal().info("初期化時間(ms) : " + (System.currentTimeMillis() - t));
-
-		Thread polling = new Thread(() -> {
-			long time = 0;
-			for (;;) {
-				final long now = System.nanoTime() / 1000000;
-				if (time != now) {
-					time = now;
-					input.poll();
-				} else {
-					try {
-						Thread.sleep(0, 500000);
-					} catch (InterruptedException e) {
-					}
-				}
-			}
-		});
-		polling.start();
 
 		Array<String> targetlist = new Array<String>(player.getTargetlist());
 		for(int i = 0;i < rivals.getRivalCount();i++) {
@@ -555,64 +539,15 @@ public class MainController {
 		final long time = System.currentTimeMillis();
 		if(time > prevtime) {
 		    prevtime = time;
-            current.input();
-            // event - move pressed
-            if (input.isMousePressed()) {
-                input.setMousePressed();
-                current.getSkin().mousePressed(current, input.getMouseButton(), input.getMouseX(), input.getMouseY());
-            }
-            // event - move dragged
-            if (input.isMouseDragged()) {
-                input.setMouseDragged();
-                current.getSkin().mouseDragged(current, input.getMouseButton(), input.getMouseX(), input.getMouseY());
-            }
-
-            // マウスカーソル表示判定
-            if(input.isMouseMoved()) {
-            	input.setMouseMoved(false);
-            	mouseMovedTime = time;
-			}
-			Mouse.setGrabbed(current == bmsplayer && time > mouseMovedTime + 5000 && Mouse.isInsideWindow());
-
-			// FPS表示切替
-            if (input.isActivated(KeyCommand.SHOW_FPS)) {
-                showfps = !showfps;
-            }
-            // fullscrees - windowed
-            if (input.isActivated(KeyCommand.SWITCH_SCREEN_MODE)) {
-                boolean fullscreen = Gdx.graphics.isFullscreen();
-                Graphics.DisplayMode currentMode = Gdx.graphics.getDisplayMode();
-                if (fullscreen) {
-                    Gdx.graphics.setWindowedMode(currentMode.width, currentMode.height);
-                } else {
-                    Gdx.graphics.setFullscreenMode(currentMode);
-                }
-                config.setDisplaymode(fullscreen ? Config.DisplayMode.WINDOW : Config.DisplayMode.FULLSCREEN);
-            }
-
-            // if (input.getFunctionstate()[4] && input.getFunctiontime()[4] != 0) {
-            // int resolution = config.getResolution();
-            // resolution = (resolution + 1) % RESOLUTION.length;
-            // if (config.isFullscreen()) {
-            // Gdx.graphics.setWindowedMode((int) RESOLUTION[resolution].width,
-            // (int) RESOLUTION[resolution].height);
-            // Graphics.DisplayMode currentMode = Gdx.graphics.getDisplayMode();
-            // Gdx.graphics.setFullscreenMode(currentMode);
-            // }
-            // else {
-            // Gdx.graphics.setWindowedMode((int) RESOLUTION[resolution].width,
-            // (int) RESOLUTION[resolution].height);
-            // }
-            // config.setResolution(resolution);
-            // input.getFunctiontime()[4] = 0;
-            // }
+            
+			inputManager.update(time);
 
             // screen shot
-            if (input.isActivated(KeyCommand.SAVE_SCREENSHOT)) {
+            if (inputManager.getInputProcessor().isActivated(KeyCommand.SAVE_SCREENSHOT)) {
                 screenshotManager.saveScreenshot();
             }
 
-            if (input.isActivated(KeyCommand.POST_TWITTER)) {
+            if (inputManager.getInputProcessor().isActivated(KeyCommand.POST_TWITTER)) {
                 screenshotManager.postTwitter();
             }
 
@@ -628,6 +563,14 @@ public class MainController {
 				updateManager.poll();
 			}
         }
+	}
+
+	public boolean isShowFps() {
+		return showfps;
+	}
+
+	public void setShowFps(boolean showfps) {
+		this.showfps = showfps;
 	}
 
 	public void dispose() {
@@ -697,7 +640,7 @@ public class MainController {
 	}
 
 	public BMSPlayerInputProcessor getInputProcessor() {
-		return input;
+		return inputManager.getInputProcessor();
 	}
 
 	public AudioDriver getAudioProcessor() {
