@@ -1,8 +1,8 @@
 # Project Dashboard
 
 ## Project Status
-- **Version**: 0.9.0
-- **Date**: 2025-12-26
+- **Version**: 0.9.1
+- **Date**: 2025-12-27
 - **Build System**: Gradle (build.gradle)
 - **Java Version**: Java 21 (Target)
 - **Backend**: LWJGL 3 (via origin/lwjgl3 merge)
@@ -37,7 +37,7 @@ Dependencies are now primarily managed via Gradle, with some legacy JARs in `lib
         - **InputManager.java**: Input polling and handling.
         - **DownloadManager.java**: Background downloads (IPFS/Crawler).
     - **arena/**: Arena Mode (Networking, Client/Server).
-    - **audio/**: Audio driver implementations.
+    - **audio/**: Audio driver implementations (LegacyPCM, PCMLoader).
     - **config/**: Configuration management.
     - **play/**: Gameplay logic (BMS parsing, note rendering, judging).
     - **skin/**: Skinning system (Lua-based).
@@ -53,6 +53,10 @@ Dependencies are now primarily managed via Gradle, with some legacy JARs in `lib
 
 ## Recent Changes
 - **2025-12-27**:
+    - **Versioning**: Centralized versioning using `VERSION.md`.
+    - **Audio Refactoring**: Refactored `PCM` class hierarchy and re-implemented `PCMLoader`.
+    - **Runtime Fix**: Fixed `FileNotFoundException` crash by adding `table/default.json`.
+    - **Tests**: Added `AudioTest` and fixed `OsuDecoderTest`.
     - **Refactoring**: Extracted `UpdateManager`, `ScreenshotManager`, `InputManager`, and `DownloadManager` from `MainController`.
     - **Controller Support**: Added hot-plugging support.
     - **Osu! Support**: Improved slider curve approximation (Bezier/Linear) and column mapping.

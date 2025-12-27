@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.9.1] - 2025-12-27
+### Added
+- Centralized versioning using `VERSION.md`.
+- New `AudioTest` unit test for verifying WAV loading.
+- `table/default.json` configuration file to fix runtime crash.
+
+### Changed
+- Refactored `PCM` class hierarchy:
+    - Created generic `PCM<T>` base class.
+    - Renamed original `PCM` to `LegacyPCM`.
+    - Updated `AbstractAudioDriver` to use `LegacyPCM`.
+- Re-implemented `PCMLoader` to support MP3, OGG, and WAV loading using `JLayer` and `OggInputStream`.
+- Updated `OsuDecoderTest` to match `BMSModel` API changes.
+- Upgraded build environment to Gradle 8.5 and Java 21.
+- Replaced `gdx-backend-lwjgl` with `gdx-backend-lwjgl3`.
+
+### Fixed
+- `FileNotFoundException: table\default.json` runtime crash.
+- Compilation errors in `OsuDecoderTest` and `OsuDecoderBezierTest`.
+- Missing `org.lwjgl.input` package errors by migrating to LibGDX Input API.
+
 ## [0.9.0] - 2025-12-26
 ### Added
 - **Arena Mode**: Implemented Song Sync protocol (`TYPE_SONG_SELECT`) and integrated with `MusicSelector`.

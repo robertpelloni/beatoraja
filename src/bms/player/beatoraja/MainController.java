@@ -56,19 +56,21 @@ public class MainController {
 
 	static {
 		try {
-			java.nio.file.Path versionPath = java.nio.file.Paths.get("VERSION.md");
-			if (java.nio.file.Files.exists(versionPath)) {
-				String version = new String(java.nio.file.Files.readAllBytes(versionPath)).trim();
-				VERSION = "beatoraja " + version;
+			// Try reading from version.properties (Gradle expanded)
+			java.io.InputStream is = MainController.class.getResourceAsStream("/version.properties");
+			if (is != null) {
+				java.util.Properties props = new java.util.Properties();
+				props.load(is);
+				String version = props.getProperty("version");
+				if (version != null && !version.isEmpty()) {
+					VERSION = "beatoraja " + version;
+				}
 			} else {
-				// Fallback to reading from resource if packaged in jar
-				java.io.InputStream is = MainController.class.getResourceAsStream("/VERSION.md");
-				if (is != null) {
-					java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
-					String version = s.hasNext() ? s.next().trim() : "";
-					if (!version.isEmpty()) {
-						VERSION = "beatoraja " + version;
-					}
+				// Fallback to reading from VERSION.md file (Dev environment)
+				java.nio.file.Path versionPath = java.nio.file.Paths.get("VERSION.md");
+				if (java.nio.file.Files.exists(versionPath)) {
+					String version = new String(java.nio.file.Files.readAllBytes(versionPath)).trim();
+					VERSION = "beatoraja " + version;
 				}
 			}
 		} catch (Exception e) {

@@ -20,12 +20,16 @@
 - [x] **CI/CD Pipeline Setup**: GitHub Actions workflow for Gradle build.
 - [x] **Refactoring**: Extracted `UpdateManager`, `ScreenshotManager`, `InputManager`, and `DownloadManager` from `MainController`.
 - [x] **Enhanced Controller Support**: Added hot-plugging support for controllers.
+- [x] **Audio Refactoring**: Generic `PCM` class and `PCMLoader` implementation.
+- [x] **Versioning**: Centralized versioning system (`VERSION.md`).
 
 ## In Progress
 - [ ] **Documentation**: Continuous improvement of Dashboard and Agent Instructions.
 
 ## Planned Features
-- [ ] Vulkan Rendering Support (Future)
+- [ ] **Audio Engine Improvements**: Support for more audio formats or lower latency drivers.
+- [ ] **Osu! Mode Enhancements**: Support for more hit object types (Spinners) and better timing point handling.
+- [ ] **Vulkan Rendering Support** (Future)
 
 ## Backlog
 - [ ] Localization for more languages
