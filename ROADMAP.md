@@ -16,12 +16,12 @@
 - [x] **Step-Up Mode**: Progression system.
 - [x] **Build System**: Migration to Gradle (Java 21).
 - [x] **Backend**: Upgrade to LWJGL 3.
+- [x] **Unit Testing Framework**: JUnit 5 setup and initial tests.
 
 ## In Progress
 - [ ] **Documentation**: Continuous improvement of Dashboard and Agent Instructions.
 
 ## Planned Features
-- [ ] Unit Testing Framework (JUnit)
 - [ ] CI/CD Pipeline Setup (GitHub Actions)
 - [ ] Refactoring `MainController` for better modularity
 - [ ] Enhanced Controller Support
