@@ -12,6 +12,7 @@ import bms.player.beatoraja.input.BMSPlayerInputDevice.Type;
 import bms.player.beatoraja.input.KeyBoardInputProcesseor.ControlKeys;
 
 import com.badlogic.gdx.controllers.Controller;
+import com.badlogic.gdx.controllers.ControllerListener;
 import com.badlogic.gdx.controllers.Controllers;
 import com.badlogic.gdx.utils.Array;
 
@@ -20,62 +21,105 @@ import com.badlogic.gdx.utils.Array;
  *
  * @author exch
  */
-public class BMSPlayerInputProcessor {
+public class BMSPlayerInputProcessor implements ControllerListener {
 	
 	private boolean enable = true;
 
 	private KeyBoardInputProcesseor kbinput;
 
-	private BMControllerInputProcessor[] bminput;
+	private Array<BMControllerInputProcessor> bminput;
 
 	private MidiInputProcessor midiinput;
 	
 	private KeyLogger keylog = new KeyLogger();
+	
+	private PlayerConfig playerConfig;
 
 	public BMSPlayerInputProcessor(Config config, PlayerConfig player) {
+		this.playerConfig = player;
 		Resolution resolution = config.getResolution();
 		kbinput = new KeyBoardInputProcesseor(this, player.getMode14().getKeyboardConfig(), resolution);
 		// Gdx.input.setInputProcessor(kbinput);
-		Array<BMControllerInputProcessor> bminput = new Array<BMControllerInputProcessor>();
-		for (Controller controller : Controllers.getControllers()) {
-			Logger.getGlobal().info("コントローラーを検出 : " + controller.getName());
-			// FIXME:前回終了時のModeからコントローラ設定を復元
-			ControllerConfig controllerConfig = Stream.of(player.getMode7().getController())
-				.filter(m -> {
-				    try {
-					return m.getName().equals(new String(controller.getName().getBytes("EUC_JP"), "UTF-8"));
-				    } catch (UnsupportedEncodingException e) {
-					return false;
-				    }
-				}).findFirst()
-				.orElse(new ControllerConfig());
-			// デバイス名のユニーク化
-			int index = 1;
-			String name = controller.getName();
-			for(BMControllerInputProcessor bm : bminput) {
-				if(bm.getName().equals(name)) {
-					index++;
-					name = controller.getName() + "-" + index;
-				}
-			}
-			BMControllerInputProcessor bm = new BMControllerInputProcessor(this, name, controller, controllerConfig);
-			// controller.addListener(bm);
-			bminput.add(bm);
-		}
+		bminput = new Array<BMControllerInputProcessor>();
+		devices = new Array<BMSPlayerInputDevice>();
+		devices.add(kbinput);
 
-		this.bminput = bminput.toArray(BMControllerInputProcessor.class);
+		for (Controller controller : Controllers.getControllers()) {
+			addController(controller);
+		}
+		Controllers.addListener(this);
+
 		midiinput = new MidiInputProcessor(this);
 		midiinput.open();
 		midiinput.setConfig(new MidiConfig());
 
-		devices = new Array<BMSPlayerInputDevice>();
-		devices.add(kbinput);
-		for (BMControllerInputProcessor bm : bminput) {
-			devices.add(bm);
-		}
 		devices.add(midiinput);
 		
 		this.analogScroll = config.isAnalogScroll();
+	}
+
+	private void addController(Controller controller) {
+		Logger.getGlobal().info("コントローラーを検出 : " + controller.getName());
+		// FIXME:前回終了時のModeからコントローラ設定を復元
+		ControllerConfig controllerConfig = Stream.of(playerConfig.getMode7().getController())
+			.filter(m -> {
+				try {
+				return m.getName().equals(new String(controller.getName().getBytes("EUC_JP"), "UTF-8"));
+				} catch (UnsupportedEncodingException e) {
+				return false;
+				}
+			}).findFirst()
+			.orElse(new ControllerConfig());
+		// デバイス名のユニーク化
+		int index = 1;
+		String name = controller.getName();
+		for(BMControllerInputProcessor bm : bminput) {
+			if(bm.getName().equals(name)) {
+				index++;
+				name = controller.getName() + "-" + index;
+			}
+		}
+		BMControllerInputProcessor bm = new BMControllerInputProcessor(this, name, controller, controllerConfig);
+		// controller.addListener(bm);
+		bminput.add(bm);
+		devices.add(bm);
+	}
+
+	private void removeController(Controller controller) {
+		for (int i = 0; i < bminput.size; i++) {
+			BMControllerInputProcessor bm = bminput.get(i);
+			if (bm.getController() == controller) {
+				bminput.removeIndex(i);
+				devices.removeValue(bm, true);
+				Logger.getGlobal().info("コントローラーを切断 : " + controller.getName());
+				break;
+			}
+		}
+	}
+
+	@Override
+	public void connected(Controller controller) {
+		addController(controller);
+	}
+
+	@Override
+	public void disconnected(Controller controller) {
+		removeController(controller);
+	}
+
+	@Override
+	public boolean buttonDown(Controller controller, int buttonCode) {
+		return false;
+	}
+
+	@Override
+	public boolean buttonUp(Controller controller, int buttonCode) {
+		return false;
+	}
+
+	@Override
+	public boolean axisMoved(Controller controller, int axisCode, float value) {
+		return false;
 	}
 
 	public  static final int KEYSTATE_SIZE = 256;
@@ -238,7 +282,7 @@ public class BMSPlayerInputProcessor {
 	}
 
 	public int getNumberOfDevice() {
-		return bminput.length + 1;
+		return bminput.size + 1;
 	}
 
 	public void setPlayConfig(PlayModeConfig playconfig) {
@@ -438,7 +482,7 @@ public class BMSPlayerInputProcessor {
 	}
 
 	public BMControllerInputProcessor[] getBMInputProcessor() {
-		return bminput;
+		return bminput.toArray(BMControllerInputProcessor.class);
 	}
 
 	public MidiInputProcessor getMidiInputProcessor() {
