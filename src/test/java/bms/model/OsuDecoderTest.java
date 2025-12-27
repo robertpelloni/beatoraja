@@ -95,4 +95,92 @@ public class OsuDecoderTest {
         }
         assertTrue(found, "Slider note not found at 1000ms");
     }
+
+    @Test
+    public void testBackgroundParsing() {
+        String osuContent = "osu file format v14\n" +
+                "\n" +
+                "[General]\n" +
+                "AudioFilename: audio.mp3\n" +
+                "Mode: 3\n" +
+                "\n" +
+                "[Metadata]\n" +
+                "Title:Test Song\n" +
+                "Artist:Test Artist\n" +
+                "Version:Normal\n" +
+                "\n" +
+                "[Events]\n" +
+                "//Background and Video events\n" +
+                "0,0,\"bg.jpg\",0,0\n" +
+                "//Break Periods\n" +
+                "\n" +
+                "[TimingPoints]\n" +
+                "0,500,4,1,0,100,1,0\n" +
+                "\n" +
+                "[HitObjects]\n" +
+                "64,192,1000,1,0,0:0:0:0:\n";
+
+        OsuDecoder decoder = new OsuDecoder(0);
+        BMSModel model = decoder.decode(new ByteArrayInputStream(osuContent.getBytes(StandardCharsets.UTF_8)));
+
+        assertNotNull(model);
+        assertEquals("bg.jpg", model.getStagefile());
+        assertEquals("bg.jpg", model.getBackbmp());
+    }
+
+    @Test
+    public void testAudioHandling() {
+        String osuContent = "osu file format v14\n" +
+                "\n" +
+                "[General]\n" +
+                "AudioFilename: audio.mp3\n" +
+                "Mode: 3\n" +
+                "\n" +
+                "[Metadata]\n" +
+                "Title:Test Song\n" +
+                "Artist:Test Artist\n" +
+                "Version:Normal\n" +
+                "\n" +
+                "[TimingPoints]\n" +
+                "0,500,4,1,0,100,1,0\n" +
+                "\n" +
+                "[HitObjects]\n" +
+                "64,192,1000,1,0,0:0:0:0:\n";
+
+        OsuDecoder decoder = new OsuDecoder(0);
+        BMSModel model = decoder.decode(new ByteArrayInputStream(osuContent.getBytes(StandardCharsets.UTF_8)));
+
+        assertNotNull(model);
+        
+        // Check Background Audio
+        TimeLine[] timelines = model.getAllTimeLines();
+        boolean bgmFound = false;
+        for (TimeLine tl : timelines) {
+            if (tl.getTime() == 0) {
+                Note[] bgNotes = tl.getBackGroundNotes();
+                if (bgNotes != null) {
+                    for (Note n : bgNotes) {
+                        if (n.getWav() == 1) { // WAV 1 is audio.mp3
+                            bgmFound = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        assertTrue(bgmFound, "Background audio not found at time 0");
+
+        // Check Note Audio (Should be 0/Silent)
+        boolean noteFound = false;
+        for (TimeLine tl : timelines) {
+            if (tl.getTime() == 1000) {
+                Note note = tl.getNote(1);
+                assertNotNull(note);
+                assertEquals(0, note.getWav(), "Note should be silent (WAV 0)");
+                noteFound = true;
+                break;
+            }
+        }
+        assertTrue(noteFound, "Note not found at 1000ms");
+    }
 }

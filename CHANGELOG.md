@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.9.2] - 2025-12-27
+### Added
+- **Osu! Background Support**: Implemented parsing of `[Events]` section in `.osu` files to extract background images.
+- **Osu! Audio Fix**: Correctly places the audio file on the background music channel and silences individual notes to prevent song restarting on every keypress.
+- Added `testBackgroundParsing` and `testAudioHandling` to `OsuDecoderTest`.
+
 ## [0.9.1] - 2025-12-27
 ### Added
 - Centralized versioning using `VERSION.md`.

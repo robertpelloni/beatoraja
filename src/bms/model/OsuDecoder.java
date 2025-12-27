@@ -84,6 +84,19 @@ public class OsuDecoder {
                             sliderMultiplier = Double.parseDouble(line.split(":", 2)[1].trim());
                         } catch (Exception e) {}
                     }
+                } else if (section.equals("Events")) {
+                    String[] parts = line.split(",");
+                    if (parts.length >= 3) {
+                        String type = parts[0];
+                        if (type.equals("0") || type.equals("1") || type.equals("Video")) {
+                             String filename = parts[2];
+                             if (filename.startsWith("\"") && filename.endsWith("\"")) {
+                                 filename = filename.substring(1, filename.length() - 1);
+                             }
+                             model.setStagefile(filename);
+                             model.setBackbmp(filename);
+                        }
+                    }
                 } else if (section.equals("TimingPoints")) {
                     String[] parts = line.split(",");
                     if (parts.length >= 2) {
@@ -195,6 +208,12 @@ public class OsuDecoder {
         // Map time (ms) -> TimeLine
         Map<Long, TimeLine> timelineMap = new HashMap<>();
 
+        // Add BGM
+        TimeLine tl0 = new TimeLine(0, 0, 7296);
+        timelineMap.put(0L, tl0);
+        Note bgmNote = new NormalNote(1); // WAV 1
+        tl0.addBackGroundNote(bgmNote);
+
         int timingIndex = 0;
         double currentBeatLength = 500; // Default 120 BPM
         double currentSv = 1.0;
@@ -240,11 +259,11 @@ public class OsuDecoder {
             }
 
             if (endTime > 0) {
-                note = new LongNote(1); // Use WAV 01
+                note = new LongNote(0); // Use WAV 0 (Silent)
                 note.setMicroDuration((endTime - ho.time) * 1000);
                 ((LongNote)note).setType(lntype);
             } else {
-                note = new NormalNote(1); // Use WAV 01
+                note = new NormalNote(0); // Use WAV 0 (Silent)
             }
             note.setMicroTime(ho.time * 1000);
 
@@ -398,7 +417,7 @@ public class OsuDecoder {
 
     private void addNote(int lane, long start, long end, Map<Long, TimeLine> timelineMap, int lntype) {
         if (end <= start) return;
-        Note note = new LongNote(1);
+        Note note = new LongNote(0);
         note.setMicroDuration((end - start) * 1000);
         ((LongNote)note).setType(lntype);
         note.setMicroTime(start * 1000);
