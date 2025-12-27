@@ -15,16 +15,8 @@ import com.badlogic.gdx.utils.StreamUtils;
  * 
  * @author exch
  */
-public class PCM {
+public class LegacyPCM extends PCM<short[]> {
 
-	/**
-	 * チャンネル数
-	 */
-	private int channels;
-	/**
-	 * 音源のサンプリングレート(Hz)
-	 */
-	private int sampleRate;
 	/**
 	 * PCMのタイプ
 	 */
@@ -33,16 +25,13 @@ public class PCM {
 	 * 
 	 */
 	private int bitsPerSample;
-	/**
-	 * PCMデータ
-	 */
-	private short[] sample;
 
-	private PCM() {
-
+	private LegacyPCM() {
+        super();
 	}
 
-	public PCM(Path p) throws IOException {
+	public LegacyPCM(Path p) throws IOException {
+        super();
 		// final long time = System.nanoTime();
 		byte[] pcm = null;
 		if (p.toString().toLowerCase().endsWith(".mp3")) {
@@ -121,6 +110,7 @@ public class PCM {
 					pos += 4;
 				}
 			}
+            this.len = this.sample.length;
 		} else if (sample == null) {
 			throw new IOException("can't convert to PCM");
 		}
@@ -159,24 +149,12 @@ public class PCM {
 
 	}
 
-	public int getChannels() {
-		return channels;
-	}
-
-	public int getSampleRate() {
-		return sampleRate;
-	}
-
 	public int getType() {
 		return type;
 	}
 
 	public int getBitsPerSample() {
 		return bitsPerSample;
-	}
-
-	public short[] getSample() {
-		return sample;
 	}
 
 	/**
@@ -186,8 +164,9 @@ public class PCM {
 	 *            サンプリングレート
 	 * @return サンプリングレート変更後のPCM
 	 */
-	public PCM changeSampleRate(int sample) {
-		PCM pcm = new PCM();
+    @Override
+	public LegacyPCM changeSampleRate(int sample) {
+		LegacyPCM pcm = new LegacyPCM();
 		pcm.channels = channels;
 		pcm.bitsPerSample = bitsPerSample;
 		pcm.sampleRate = sample;
@@ -207,18 +186,20 @@ public class PCM {
 				}
 			}
 		}
-
+        pcm.len = pcm.sample.length;
 		return pcm;
 	}
 
-	public PCM changeFrequency(float rate) {
-		PCM pcm = changeSampleRate((int) (sampleRate / rate));
+    @Override
+	public LegacyPCM changeFrequency(float rate) {
+		LegacyPCM pcm = changeSampleRate((int) (sampleRate / rate));
 		pcm.sampleRate = sampleRate;
 		return pcm;
 	}
 
-	public PCM changeChannels(int channels) {
-		PCM pcm = new PCM();
+    @Override
+	public LegacyPCM changeChannels(int channels) {
+		LegacyPCM pcm = new LegacyPCM();
 		pcm.channels = channels;
 		pcm.bitsPerSample = bitsPerSample;
 		pcm.sampleRate = sampleRate;
@@ -230,12 +211,13 @@ public class PCM {
 				pcm.sample[(int) (i * channels + j)] = this.sample[(int) (i * this.channels)];
 			}
 		}
-
+        pcm.len = pcm.sample.length;
 		return pcm;
 	}
 
-	public PCM slice(long starttime, long duration) {
-		PCM pcm = new PCM();
+    @Override
+	public LegacyPCM slice(long starttime, long duration) {
+		LegacyPCM pcm = new LegacyPCM();
 		pcm.channels = channels;
 		pcm.bitsPerSample = bitsPerSample;
 		pcm.sampleRate = sampleRate;
@@ -247,8 +229,14 @@ public class PCM {
 		pcm.sample = new short[(int) ((duration * sampleRate / 1000) * channels)];
 		System.arraycopy(this.sample, (int) ((starttime * sampleRate / 1000) * channels), pcm.sample, 0,
 				pcm.sample.length);
+        pcm.len = pcm.sample.length;
 		return pcm;
 	}
+    
+    @Override
+    public boolean validate() {
+        return sample != null && sample.length > 0;
+    }
 
 	public InputStream getInputStream() {
 		return new WavFileInputStream(this);
@@ -333,7 +321,7 @@ class WavFileInputStream extends InputStream {
 	private final byte[] header;
 	private final short[] sample;
 
-	public WavFileInputStream(PCM pcm) {
+	public WavFileInputStream(LegacyPCM pcm) {
 		header = new byte[44];
 
 		final int sampleRate = pcm.getSampleRate();

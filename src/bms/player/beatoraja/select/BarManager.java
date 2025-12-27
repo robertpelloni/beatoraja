@@ -492,6 +492,10 @@ public final class BarManager {
 		return false;
 	}
 
+	public Bar[] getBars() {
+		return currentsongs;
+	}
+
 	public void close() {
 		if(dir.size == 0) {
 			select.executeEvent(EventType.sort);

@@ -5,8 +5,6 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.logging.Logger;
 
-import org.lwjgl.input.Mouse;
-
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
@@ -262,6 +260,10 @@ public class MainController {
 
 	public PlayerConfig getPlayerConfig() {
 		return player;
+	}
+
+	public MusicSelector getSelector() {
+		return selector;
 	}
 
 	public void changeState(MainStateType state) {

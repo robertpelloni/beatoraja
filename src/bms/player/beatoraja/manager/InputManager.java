@@ -1,7 +1,5 @@
 package bms.player.beatoraja.manager;
 
-import org.lwjgl.input.Mouse;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
 
@@ -69,7 +67,7 @@ public class InputManager {
 		}
 		
 		boolean isPlayState = main.getCurrentState() instanceof BMSPlayer;
-		Mouse.setGrabbed(isPlayState && time > mouseMovedTime + 5000 && Mouse.isInsideWindow());
+		Gdx.input.setCursorCatched(isPlayState && time > mouseMovedTime + 5000);
 
 		// FPS表示切替
 		if (input.isActivated(KeyCommand.SHOW_FPS)) {
