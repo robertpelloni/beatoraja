@@ -10,6 +10,7 @@
 - [x] **Arena Mode**: Basic networking, Song Sync, Skin integration.
 - [x] **Arena Polish**: Lobby UI in `MusicSelector` for creating/joining rooms.
 - [x] **Osu! Support**: `.osu` file parsing and playback.
+- [x] **Osu! Polish**: Improved slider curve approximation (duration calculation).
 - [x] **Mod Menu**: In-game overlay for settings.
 - [x] **In-Game Downloader**: Background song downloading.
 - [x] **Step-Up Mode**: Progression system.
@@ -17,7 +18,6 @@
 - [x] **Backend**: Upgrade to LWJGL 3.
 
 ## In Progress
-- [ ] **Osu! Polish**: Improved slider curve approximation.
 - [ ] **Documentation**: Continuous improvement of Dashboard and Agent Instructions.
 
 ## Planned Features
