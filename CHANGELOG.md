@@ -8,11 +8,17 @@
 - **Mod Menu**: Added in-game overlay for Hi-Speed/Lane Cover adjustment.
 - **In-Game Downloader**: Added background download manager for songs.
 - **Step-Up Mode**: Added Step-Up mode logic and persistence.
+- **Unit Testing**: Added JUnit 5 framework and initial tests.
+- **CI/CD**: Added GitHub Actions workflow for Gradle build.
+- **Controller Support**: Added hot-plugging support for controllers.
+- **Debug**: Added debug toggle command (Shift+F1).
 
 ### Changed
 - **Build System**: Migrated from Ant to Gradle (Java 21 target).
 - **Backend**: Upgraded to LWJGL 3 and LibGDX 1.12.1.
 - **Default Skin**: Updated `result.json` to display Fast/Slow stats and Arena Rank.
+- **Refactoring**: Extracted `UpdateManager`, `ScreenshotManager`, `InputManager`, and `DownloadManager` from `MainController`.
+- **Osu! Support**: Improved slider duration calculation logic.
 
 ## [0.8.9] - 2025-12-25
 ### Added
