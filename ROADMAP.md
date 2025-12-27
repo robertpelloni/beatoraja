@@ -10,7 +10,7 @@
 - [x] **Arena Mode**: Basic networking, Song Sync, Skin integration.
 - [x] **Arena Polish**: Lobby UI in `MusicSelector` for creating/joining rooms.
 - [x] **Osu! Support**: `.osu` file parsing and playback.
-- [x] **Osu! Polish**: Improved slider curve approximation (duration calculation).
+- [x] **Osu! Polish**: Improved slider curve approximation (Bezier/Linear) and column mapping.
 - [x] **Mod Menu**: In-game overlay for settings.
 - [x] **In-Game Downloader**: Background song downloading.
 - [x] **Step-Up Mode**: Progression system.

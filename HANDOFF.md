@@ -83,7 +83,33 @@ This session focused on modernizing `beatoraja`, integrating features from the `
 2.  **Osu! Polish**: Improve slider curve approximation (currently linear).
 3.  **Documentation**: Continue improving documentation.
 
-## Recent Changes (Session Update)
--   **Arena Polish**: Implemented `ArenaLobby` in `MusicSelector` (F5 to toggle). Allows connecting to a host or starting a server directly from the song selection screen.
--   **Versioning**: Bumped version to 0.9.0.
--   **Documentation**: Updated `ROADMAP.md` and `LLM_INSTRUCTIONS.md`.
+## Recent Changes (Refactoring & Features)
+1.  **MainController Refactoring**:
+    -   Extracted responsibilities from the monolithic `MainController` into dedicated manager classes:
+        -   `UpdateManager`: Handles song database and table updates.
+        -   `ScreenshotManager`: Handles saving screenshots and posting to Twitter.
+        -   `InputManager`: Handles input polling and general input events.
+        -   `DownloadManager`: Handles IPFS and Crawler background downloads.
+    -   This significantly reduces the complexity of `MainController` and improves maintainability.
+
+2.  **Controller Hot-plugging**:
+    -   Implemented `ControllerListener` in `BMSPlayerInputProcessor`.
+    -   Gamepads can now be connected or disconnected at runtime without restarting the game.
+
+3.  **Debug Toggle**:
+    -   Added `TOGGLE_DEBUG` command (Shift+F1) to `KeyCommand`.
+    -   Allows toggling debug mode at runtime.
+
+4.  **Osu! Polish**:
+    -   Implemented Bezier and Linear curve approximation for sliders.
+    -   Implemented column mapping based on slider path (notes follow the curve).
+    -   Updated `OsuDecoder` to use LibGDX `Bezier` and `Vector2`.
+
+## Current State
+-   **Build System**: Gradle (Java 21).
+-   **Backend**: LWJGL 3.
+-   **Version**: 0.9.0.
+
+## Next Steps
+1.  **Build Environment**: Install Gradle 8.5+ or generate the wrapper (`gradle wrapper`) to enable building.
+2.  **Vulkan Support**: Investigate Vulkan rendering support (Future).
