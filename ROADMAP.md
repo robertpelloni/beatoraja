@@ -18,12 +18,12 @@
 - [x] **Backend**: Upgrade to LWJGL 3.
 - [x] **Unit Testing Framework**: JUnit 5 setup and initial tests.
 - [x] **CI/CD Pipeline Setup**: GitHub Actions workflow for Gradle build.
+- [x] **Refactoring**: Extracted `UpdateManager`, `ScreenshotManager`, `InputManager`, and `DownloadManager` from `MainController`.
 
 ## In Progress
 - [ ] **Documentation**: Continuous improvement of Dashboard and Agent Instructions.
 
 ## Planned Features
-- [ ] Refactoring `MainController` for better modularity
 - [ ] Enhanced Controller Support
 - [ ] Vulkan Rendering Support (Future)
 
