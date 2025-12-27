@@ -78,6 +78,14 @@ dependencies {
     implementation name: 'luaj-jse-3.0.2-custom'
     implementation name: 'jportaudio'
     implementation name: 'jflac-codec-1.5.3'
+
+    // Testing
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.2'
+}
+
+test {
+    useJUnitPlatform()
 }
 
 mainClassName = 'bms.player.beatoraja.MainLoader'

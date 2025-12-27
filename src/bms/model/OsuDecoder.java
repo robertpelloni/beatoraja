@@ -25,10 +25,19 @@ public class OsuDecoder {
     }
 
     public BMSModel decode(File file) {
+        try (FileInputStream fis = new FileInputStream(file)) {
+            return decode(fis);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new BMSModel();
+        }
+    }
+
+    public BMSModel decode(java.io.InputStream inputStream) {
         BMSModel model = new BMSModel();
         model.setLnmode(lntype);
 
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
             String line;
             String section = "";
             List<HitObject> hitObjects = new ArrayList<>();

@@ -1,0 +1,98 @@
+package bms.model;
+
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
+
+public class OsuDecoderTest {
+
+    @Test
+    public void testSliderDuration() {
+        String osuContent = "osu file format v14\n" +
+                "\n" +
+                "[General]\n" +
+                "AudioFilename: audio.mp3\n" +
+                "AudioLeadIn: 0\n" +
+                "PreviewTime: -1\n" +
+                "Countdown: 0\n" +
+                "SampleSet: Normal\n" +
+                "StackLeniency: 0.7\n" +
+                "Mode: 3\n" +
+                "LetterboxInBreaks: 0\n" +
+                "WidescreenStoryboard: 0\n" +
+                "\n" +
+                "[Editor]\n" +
+                "DistanceSpacing: 0.8\n" +
+                "BeatDivisor: 4\n" +
+                "GridSize: 32\n" +
+                "TimelineZoom: 1\n" +
+                "\n" +
+                "[Metadata]\n" +
+                "Title:Test Song\n" +
+                "TitleUnicode:Test Song\n" +
+                "Artist:Test Artist\n" +
+                "ArtistUnicode:Test Artist\n" +
+                "Creator:Test Creator\n" +
+                "Version:Normal\n" +
+                "Source:\n" +
+                "Tags:\n" +
+                "BeatmapID:0\n" +
+                "BeatmapSetID:0\n" +
+                "\n" +
+                "[Difficulty]\n" +
+                "HPDrainRate:5\n" +
+                "CircleSize:4\n" +
+                "OverallDifficulty:5\n" +
+                "ApproachRate:5\n" +
+                "SliderMultiplier:1.4\n" +
+                "SliderTickRate:1\n" +
+                "\n" +
+                "[Events]\n" +
+                "//Background and Video events\n" +
+                "//Break Periods\n" +
+                "//Storyboard Layer 0 (Background)\n" +
+                "//Storyboard Layer 1 (Fail)\n" +
+                "//Storyboard Layer 2 (Pass)\n" +
+                "//Storyboard Layer 3 (Foreground)\n" +
+                "//Storyboard Layer 4 (Overlay)\n" +
+                "//Storyboard Sound Samples\n" +
+                "\n" +
+                "[TimingPoints]\n" +
+                "0,500,4,1,0,100,1,0\n" +
+                "\n" +
+                "[HitObjects]\n" +
+                "64,192,1000,2,0,L|100:100,1,140\n"; 
+                // Time 1000, Type 2 (Slider), Length 140
+                // BPM 120 (500ms/beat)
+                // SliderMultiplier 1.4
+                // SV 1.0 (Default)
+                // Duration = 140 / (1.4 * 100 * 1.0) * 500 * 1 = 1 * 500 = 500ms
+                // EndTime = 1500
+
+        OsuDecoder decoder = new OsuDecoder(0);
+        BMSModel model = decoder.decode(new ByteArrayInputStream(osuContent.getBytes(StandardCharsets.UTF_8)));
+
+        assertNotNull(model);
+        assertEquals(Mode.BEAT_5K, model.getMode()); // 4K -> BEAT_5K (internally mapped)
+
+        TimeLine[] timelines = model.getAllTimeLine();
+        assertNotNull(timelines);
+        assertTrue(timelines.length > 0);
+
+        // Find the note at 1000ms
+        boolean found = false;
+        for (TimeLine tl : timelines) {
+            if (tl.getTime() == 1000) {
+                Note note = tl.getNote(1); // Lane 1 (Column 0)
+                assertNotNull(note);
+                assertTrue(note instanceof LongNote);
+                assertEquals(500 * 1000, ((LongNote) note).getDuration()); // 500ms in microseconds
+                found = true;
+                break;
+            }
+        }
+        assertTrue(found, "Slider note not found at 1000ms");
+    }
+}
