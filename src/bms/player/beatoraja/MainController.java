@@ -45,6 +45,7 @@ import bms.player.beatoraja.stepup.StepUpManager;
 import bms.player.beatoraja.manager.UpdateManager;
 import bms.player.beatoraja.manager.ScreenshotManager;
 import bms.player.beatoraja.manager.InputManager;
+import bms.player.beatoraja.manager.DownloadManager;
 
 /**
  * アプリケーションのルートクラス
@@ -135,10 +136,6 @@ public class MainController {
 
 	private SystemSoundManager sound;
 
-	private MusicDownloadProcessor download;
-	
-	private Crawler crawler;
-
 	private ArenaManager arenaManager;
 
 	private StepUpManager stepUpManager;
@@ -150,6 +147,8 @@ public class MainController {
 	private ScreenshotManager screenshotManager;
 	
 	private InputManager inputManager;
+	
+	private DownloadManager downloadManager;
 
 	public static final int offsetCount = SkinProperty.OFFSET_MAX + 1;
 	private final SkinOffset[] offset = new SkinOffset[offsetCount];
@@ -175,16 +174,6 @@ public class MainController {
 
 		this.bmsfile = f;
 
-		if (config.isEnableIpfs()) {
-			Path ipfspath = Paths.get("ipfs").toAbsolutePath();
-			if (!ipfspath.toFile().exists())
-				ipfspath.toFile().mkdirs();
-			List<String> roots = new ArrayList<>(Arrays.asList(getConfig().getBmsroot()));
-			if (ipfspath.toFile().exists() && !roots.contains(ipfspath.toString())) {
-				roots.add(ipfspath.toString());
-				getConfig().setBmsroot(roots.toArray(new String[roots.size()]));
-			}
-		}
 		try {
 			Class.forName("org.sqlite.JDBC");
 			if(config.isUseSongInfo()) {
@@ -406,19 +395,7 @@ public class MainController {
 
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 
-		if (config.isEnableIpfs()) {
-			download = new MusicDownloadProcessor(config.getIpfsUrl(), (md5) -> {
-				SongData[] s = getSongDatabase().getSongDatas(md5);
-				String[] result = new String[s.length];
-				for(int i = 0;i < result.length;i++) {
-					result[i] = s[i].getPath();
-				}
-				return result;
-			});
-			download.start(null);
-		}
-
-		crawler = new Crawler();
+		downloadManager = new DownloadManager(this);
 
 		arenaManager = new ArenaManager();
 		arenaManager.addPlayer("1P");
@@ -527,13 +504,8 @@ public class MainController {
 		messageRenderer.render(current, sprite, 100, config.getResolution().height - 2);
 		sprite.end();
 
-		// TODO renderループに入れるのではなく、MusicDownloadProcessorのListenerとして実装したほうがいいのでは
-		if(download != null && download.isDownload()){
-			downloadIpfsMessageRenderer(download.getMessage());
-		}
-
-		if(crawler != null && crawler.isDownloading()) {
-			downloadIpfsMessageRenderer(crawler.getMessage());
+		if (downloadManager != null) {
+			downloadManager.update();
 		}
 
 		final long time = System.currentTimeMillis();
@@ -551,14 +523,6 @@ public class MainController {
                 screenshotManager.postTwitter();
             }
 
-			if (download != null && download.getDownloadpath() != null) {
-            	this.updateSong(download.getDownloadpath());
-            	download.setDownloadpath(null);
-            }
-            if (crawler != null && crawler.getDownloadPathResult() != null) {
-		this.updateSong(crawler.getDownloadPathResult());
-		crawler.clearDownloadPathResult();
-            }
 			if (updateManager != null) {
 				updateManager.poll();
 			}
@@ -604,11 +568,8 @@ public class MainController {
 //		input.dispose();
 		SkinLoader.getResource().dispose();
 		ShaderManager.dispose();
-		if (download != null) {
-			download.dispose();
-		}
-		if (crawler != null) {
-			crawler.dispose();
+		if (downloadManager != null) {
+			downloadManager.dispose();
 		}
 		if (arenaManager != null) {
 			arenaManager.dispose();
@@ -656,11 +617,11 @@ public class MainController {
 	}
 
 	public MusicDownloadProcessor getMusicDownloadProcessor(){
-		return download;
+		return downloadManager.getMusicDownloadProcessor();
 	}
 
 	public Crawler getCrawler() {
-		return crawler;
+		return downloadManager.getCrawler();
 	}
 
 	public ArenaManager getArenaManager() {
