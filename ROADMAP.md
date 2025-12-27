@@ -19,12 +19,12 @@
 - [x] **Unit Testing Framework**: JUnit 5 setup and initial tests.
 - [x] **CI/CD Pipeline Setup**: GitHub Actions workflow for Gradle build.
 - [x] **Refactoring**: Extracted `UpdateManager`, `ScreenshotManager`, `InputManager`, and `DownloadManager` from `MainController`.
+- [x] **Enhanced Controller Support**: Added hot-plugging support for controllers.
 
 ## In Progress
 - [ ] **Documentation**: Continuous improvement of Dashboard and Agent Instructions.
 
 ## Planned Features
-- [ ] Enhanced Controller Support
 - [ ] Vulkan Rendering Support (Future)
 
 ## Backlog
