@@ -8,6 +8,11 @@ import java.nio.file.Paths;
 
 import javazoom.jl.decoder.*;
 
+import org.jflac.FLACDecoder;
+import org.jflac.PCMProcessor;
+import org.jflac.metadata.StreamInfo;
+import org.jflac.util.ByteData;
+
 import com.badlogic.gdx.backends.lwjgl3.audio.OggInputStream;
 import com.badlogic.gdx.utils.StreamUtils;
 
@@ -65,6 +70,30 @@ public class PCMLoader {
                 loader.bitsPerSample = input.bitsPerSample;
             } catch (IOException e) {
                 throw new IOException("Failed to load WAV: " + path, e);
+            }
+        } else if (path.toLowerCase().endsWith(".flac")) {
+            try (InputStream is = new BufferedInputStream(Files.newInputStream(p))) {
+                FLACDecoder decoder = new FLACDecoder(is);
+                ByteArrayOutputStream output = new ByteArrayOutputStream(4096);
+                
+                decoder.addPCMProcessor(new PCMProcessor() {
+                    @Override
+                    public void processStreamInfo(StreamInfo streamInfo) {
+                        loader.channels = streamInfo.getChannels();
+                        loader.sampleRate = streamInfo.getSampleRate();
+                        loader.bitsPerSample = streamInfo.getBitsPerSample();
+                    }
+                    
+                    @Override
+                    public void processPCM(ByteData byteData) {
+                        output.write(byteData.getData(), 0, byteData.getLen());
+                    }
+                });
+                
+                decoder.decode();
+                loader.pcm = ByteBuffer.wrap(output.toByteArray());
+            } catch (Throwable ex) {
+                throw new IOException("Failed to load FLAC: " + path, ex);
             }
         } else {
              throw new IOException("Unsupported file format: " + path);

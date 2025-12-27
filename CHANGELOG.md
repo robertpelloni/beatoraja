@@ -3,6 +3,7 @@
 ## [0.9.1] - 2025-12-27
 ### Added
 - Centralized versioning using `VERSION.md`.
+- **FLAC Audio Support**: Implemented FLAC decoding in `PCMLoader` using `jflac-codec`.
 - New `AudioTest` unit test for verifying WAV loading.
 - `table/default.json` configuration file to fix runtime crash.
 

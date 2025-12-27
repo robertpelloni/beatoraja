@@ -56,17 +56,17 @@ public class MainController {
 
 	static {
 		try {
-			// Try reading from version.properties (Gradle expanded)
-			java.io.InputStream is = MainController.class.getResourceAsStream("/version.properties");
+			// Try reading from VERSION.md in classpath (packaged in jar)
+			java.io.InputStream is = MainController.class.getResourceAsStream("/VERSION.md");
 			if (is != null) {
-				java.util.Properties props = new java.util.Properties();
-				props.load(is);
-				String version = props.getProperty("version");
-				if (version != null && !version.isEmpty()) {
+				java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+				String version = s.hasNext() ? s.next().trim() : "";
+				if (!version.isEmpty()) {
 					VERSION = "beatoraja " + version;
 				}
+				is.close();
 			} else {
-				// Fallback to reading from VERSION.md file (Dev environment)
+				// Fallback to reading from VERSION.md file (Dev environment root)
 				java.nio.file.Path versionPath = java.nio.file.Paths.get("VERSION.md");
 				if (java.nio.file.Files.exists(versionPath)) {
 					String version = new String(java.nio.file.Files.readAllBytes(versionPath)).trim();

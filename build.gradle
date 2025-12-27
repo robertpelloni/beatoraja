@@ -4,9 +4,6 @@ plugins {
     id 'org.openjfx.javafxplugin' version '0.1.0'
 }
 
-def versionFile = file('VERSION.md')
-version = versionFile.exists() ? versionFile.text.trim() : '0.0.0'
-
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
@@ -103,12 +100,6 @@ mainClassName = 'bms.player.beatoraja.MainLoader'
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
-}
-
-processResources {
-    filesMatching('**/version.properties') {
-        expand(version: project.version)
-    }
 }
 
 run {
