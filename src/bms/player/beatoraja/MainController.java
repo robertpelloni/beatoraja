@@ -42,6 +42,7 @@ import bms.tool.mdprocessor.MusicDownloadProcessor;
 import bms.tool.crawler.Crawler;
 import bms.player.beatoraja.arena.ArenaManager;
 import bms.player.beatoraja.stepup.StepUpManager;
+import bms.player.beatoraja.manager.UpdateManager;
 
 /**
  * アプリケーションのルートクラス
@@ -145,6 +146,8 @@ public class MainController {
 	private StepUpManager stepUpManager;
 
 	private StreamController streamController;
+	
+	private UpdateManager updateManager;
 
 	public static final int offsetCount = SkinProperty.OFFSET_MAX + 1;
 	private final SkinOffset[] offset = new SkinOffset[offsetCount];
@@ -436,6 +439,8 @@ public class MainController {
 		arenaManager.addPlayer("1P");
 
 		stepUpManager = new StepUpManager(this);
+		
+		updateManager = new UpdateManager(this);
 
 		if(ir.length > 0) {
 			messageRenderer.addMessage(ir.length + " IR Connection Succeed" ,5000, Color.GREEN, 1);
@@ -636,9 +641,8 @@ public class MainController {
 		this.updateSong(crawler.getDownloadPathResult());
 		crawler.clearDownloadPathResult();
             }
-			if (updateSong != null && !updateSong.isAlive()) {
-				selector.getBarManager().updateBar();
-				updateSong = null;
+			if (updateManager != null) {
+				updateManager.poll();
 			}
         }
 	}
@@ -816,111 +820,20 @@ public class MainController {
 		timer.switchTimer(id, on);
 	}
 
-	private UpdateThread updateSong;
-
 	public void updateSong(String path) {
-		if (updateSong == null || !updateSong.isAlive()) {
-			updateSong = new SongUpdateThread(path);
-			updateSong.start();
-		} else {
-			Logger.getGlobal().warning("楽曲更新中のため、更新要求は取り消されました");
-		}
+		updateManager.updateSong(path);
 	}
 
 	public void updateTable(TableBar reader) {
-		if (updateSong == null || !updateSong.isAlive()) {
-			updateSong = new TableUpdateThread(reader);
-			updateSong.start();
-		} else {
-			Logger.getGlobal().warning("楽曲更新中のため、更新要求は取り消されました");
-		}
+		updateManager.updateTable(reader);
 	}
 
-	private UpdateThread downloadIpfs;
-
 	public void downloadIpfsMessageRenderer(String message) {
-		if (downloadIpfs == null || !downloadIpfs.isAlive()) {
-			downloadIpfs = new DownloadMessageThread(message);
-			downloadIpfs.start();
-		}
+		updateManager.downloadIpfsMessageRenderer(message);
 	}
 
 	public static String getVersion() {
 		return VERSION;
-	}
-
-	abstract class UpdateThread extends Thread {
-
-		protected String message;
-
-		public UpdateThread(String message) {
-			this.message = message;
-		}
-	}
-
-	/**
-	 * 楽曲データベース更新用スレッド
-	 *
-	 * @author exch
-	 */
-	class SongUpdateThread extends UpdateThread {
-
-		private final String path;
-
-		public SongUpdateThread(String path) {
-			super("updating folder : " + (path == null ? "ALL" : path));
-			this.path = path;
-		}
-
-		public void run() {
-			Message message = messageRenderer.addMessage(this.message, Color.CYAN, 1);
-			getSongDatabase().updateSongDatas(path, config.getBmsroot(), false, getInfoDatabase());
-			message.stop();
-		}
-	}
-
-	/**
-	 * 難易度表更新用スレッド
-	 *
-	 * @author exch
-	 */
-	class TableUpdateThread extends UpdateThread {
-
-		private final TableBar accessor;
-
-		public TableUpdateThread(TableBar bar) {
-			super("updating table : " + bar.getAccessor().name);
-			accessor = bar;
-		}
-
-		public void run() {
-			Message message = messageRenderer.addMessage(this.message, Color.CYAN, 1);
-			TableData td = accessor.getAccessor().read();
-			if (td != null) {
-				accessor.getAccessor().write(td);
-				accessor.setTableData(td);
-			}
-			message.stop();
-		}
-	}
-
-	class DownloadMessageThread extends UpdateThread {
-		public DownloadMessageThread(String message) {
-			super(message);
-		}
-
-		public void run() {
-			Message message = messageRenderer.addMessage(this.message, Color.LIME, 1);
-			while (download != null && download.isDownload() && download.getMessage() != null) {
-				message.setText(download.getMessage());
-				try {
-					sleep(100);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-			message.stop();
-		}
 	}
 
 	public static class IRStatus {
