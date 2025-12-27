@@ -104,6 +104,11 @@ This session focused on modernizing `beatoraja`, integrating features from the `
     -   Implemented Bezier and Linear curve approximation for sliders.
     -   Implemented column mapping based on slider path (notes follow the curve).
     -   Updated `OsuDecoder` to use LibGDX `Bezier` and `Vector2`.
+    -   Added `OsuDecoderBezierTest` to verify curve logic.
+
+5.  **Arena Polish**:
+    -   Added "Disconnect" button to `ArenaLobby`.
+    -   Optimized `ArenaLobby` UI updates to reduce garbage generation.
 
 ## Current State
 -   **Build System**: Gradle (Java 21).
