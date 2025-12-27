@@ -43,7 +43,7 @@ dependencies {
     // LibGDX
     def gdxVersion = '1.12.1'
     implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
-    implementation "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
+    implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
     implementation "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
     implementation "com.badlogicgames.gdx-controllers:gdx-controllers-core:2.2.3"
     implementation "com.badlogicgames.gdx-controllers:gdx-controllers-desktop:2.2.3"
@@ -51,6 +51,7 @@ dependencies {
     // Natives
     runtimeOnly "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
     runtimeOnly "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+    runtimeOnly "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
 
     // Apache Commons
     implementation 'org.apache.commons:commons-compress:1.26.0'

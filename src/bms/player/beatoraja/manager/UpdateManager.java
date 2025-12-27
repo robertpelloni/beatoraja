@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.Color;
 import bms.player.beatoraja.MainController;
 import bms.player.beatoraja.MessageRenderer.Message;
 import bms.player.beatoraja.select.bar.TableBar;
-import bms.player.beatoraja.song.TableData;
+import bms.player.beatoraja.TableData;
 
 public class UpdateManager {
 
