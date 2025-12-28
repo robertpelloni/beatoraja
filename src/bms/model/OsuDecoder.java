@@ -220,11 +220,11 @@ public class OsuDecoder {
         Collections.sort(timingPoints);
         Collections.sort(bgaEvents);
 
-        double currentBpm = 120;
+        double initialBpm = 120;
         for (TimingPoint tp : timingPoints) {
             if (tp.uninherited) {
-                currentBpm = 60000.0 / tp.beatLength;
-                model.setBpm(currentBpm);
+                initialBpm = 60000.0 / tp.beatLength;
+                model.setBpm(initialBpm);
                 break;
             }
         }
@@ -238,9 +238,37 @@ public class OsuDecoder {
 
         // Add BGM
         TimeLine tl0 = new TimeLine(0, 0, 7296);
+        tl0.setBPM(initialBpm);
+        tl0.setScroll(1.0);
         timelineMap.put(0L, tl0);
         Note bgmNote = new NormalNote(1); // WAV 1
         tl0.addBackGroundNote(bgmNote);
+
+        // Add timeline entries for all timing point changes (BPM and SV changes)
+        double currentBpm = initialBpm;
+        double currentSv = 1.0;
+        for (TimingPoint tp : timingPoints) {
+            long timeMs = (long) tp.time;
+            if (tp.uninherited) {
+                currentBpm = 60000.0 / tp.beatLength;
+                currentSv = 1.0; // Reset SV on uninherited points
+            } else {
+                // Inherited (Green Line) - SV multiplier
+                if (tp.beatLength < 0) {
+                    currentSv = 100.0 / -tp.beatLength;
+                } else {
+                    currentSv = 1.0;
+                }
+            }
+            
+            TimeLine tl = timelineMap.get(timeMs);
+            if (tl == null) {
+                tl = new TimeLine(timeMs, timeMs * 1000, 7296);
+                timelineMap.put(timeMs, tl);
+            }
+            tl.setBPM(currentBpm);
+            tl.setScroll(currentSv);
+        }
 
         // Add BGA Events
         for (BGAEvent be : bgaEvents) {
@@ -254,7 +282,8 @@ public class OsuDecoder {
 
         int timingIndex = 0;
         double currentBeatLength = 500; // Default 120 BPM
-        double currentSv = 1.0;
+        currentBpm = initialBpm;
+        currentSv = 1.0;
 
         for (HitObject ho : hitObjects) {
             // Update Timing
@@ -262,6 +291,7 @@ public class OsuDecoder {
                 TimingPoint tp = timingPoints.get(timingIndex);
                 if (tp.uninherited) {
                     currentBeatLength = tp.beatLength;
+                    currentBpm = 60000.0 / tp.beatLength;
                     currentSv = 1.0;
                 } else {
                     // Inherited (Green Line)
@@ -275,12 +305,6 @@ public class OsuDecoder {
                 }
                 timingIndex++;
             }
-            // We need to find the *latest* active timing point, but the loop above might overshoot if we just iterate.
-            // Actually, we should re-scan or maintain state properly.
-            // Since hitObjects are sorted, we can just advance timingIndex.
-            // BUT, we need to handle the case where multiple timing points are before the object.
-            // The loop `while (timingIndex < ... && time <= ho.time)` does exactly that.
-            // It processes ALL timing points up to the object's time, so `currentBeatLength` and `currentSv` are correct for `ho.time`.
 
             Note note;
             long endTime = ho.endTime;
@@ -309,14 +333,14 @@ public class OsuDecoder {
             long timeMs = ho.time;
             TimeLine tl = timelineMap.get(timeMs);
             if (tl == null) {
-                tl = new TimeLine(timeMs, (long)(timeMs * 1000), 7296); // 7296 = 384 * 19 (approx measure resolution) - arbitrary for now
+                tl = new TimeLine(timeMs, (long)(timeMs * 1000), 7296);
                 timelineMap.put(timeMs, tl);
             }
+            // Ensure BPM and scroll are set for this timeline
+            tl.setBPM(currentBpm);
+            tl.setScroll(currentSv);
 
             // Set note to lane
-            // Mode 7K: Key 1-7. Lane index 1-7.
-            // Osu lane 1-7 -> BMS Lane 1-7.
-            // Note: BMS 7K Mode usually has 8 lanes (0=Scratch, 1-7=Keys).
             if (ho.lane < 8) {
                 tl.setNote(ho.lane, note);
             }

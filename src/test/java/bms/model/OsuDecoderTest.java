@@ -284,4 +284,112 @@ public class OsuDecoderTest {
         }
         assertTrue(spinnerFound, "Spinner not found at 2000ms");
     }
+
+    @Test
+    public void testTimingPointChanges() {
+        // Test multiple BPM changes and inherited timing points (SV changes)
+        // TimingPoints format: time,beatLength,meter,sampleSet,sampleIndex,volume,uninherited,effects
+        // uninherited=1 means red line (BPM change), uninherited=0 means green line (SV change)
+        // For inherited points, beatLength is negative: -100 = 1.0x SV, -50 = 2.0x SV, -200 = 0.5x SV
+        String osuContent = "osu file format v14\n" +
+                "\n" +
+                "[General]\n" +
+                "AudioFilename: audio.mp3\n" +
+                "Mode: 3\n" +
+                "\n" +
+                "[Metadata]\n" +
+                "Title:Test Song\n" +
+                "Artist:Test Artist\n" +
+                "Version:Normal\n" +
+                "\n" +
+                "[Difficulty]\n" +
+                "CircleSize:7\n" +
+                "SliderMultiplier:1.4\n" +
+                "\n" +
+                "[TimingPoints]\n" +
+                "0,500,4,1,0,100,1,0\n" +       // 0ms: 120 BPM (500ms/beat), uninherited
+                "2000,400,4,1,0,100,1,0\n" +    // 2000ms: 150 BPM (400ms/beat), uninherited
+                "4000,-50,4,1,0,100,0,0\n" +    // 4000ms: 2.0x SV (inherited), BPM stays 150
+                "6000,300,4,1,0,100,1,0\n" +    // 6000ms: 200 BPM (300ms/beat), uninherited (resets SV to 1.0)
+                "\n" +
+                "[HitObjects]\n" +
+                "64,192,1000,1,0,0:0:0:0:\n" +  // Note at 1000ms (should be 120 BPM)
+                "64,192,3000,1,0,0:0:0:0:\n" +  // Note at 3000ms (should be 150 BPM)
+                "64,192,5000,1,0,0:0:0:0:\n" +  // Note at 5000ms (should be 150 BPM, 2.0x SV)
+                "64,192,7000,1,0,0:0:0:0:\n";   // Note at 7000ms (should be 200 BPM, 1.0x SV)
+
+        OsuDecoder decoder = new OsuDecoder(0);
+        BMSModel model = decoder.decode(new ByteArrayInputStream(osuContent.getBytes(StandardCharsets.UTF_8)));
+
+        assertNotNull(model);
+        
+        // Check initial BPM is set to first uninherited timing point
+        assertEquals(120.0, model.getBpm(), 0.01, "Initial BPM should be 120");
+
+        TimeLine[] timelines = model.getAllTimeLines();
+        assertNotNull(timelines);
+        assertTrue(timelines.length > 0);
+
+        // Verify BPM changes at timing points
+        boolean found0 = false, found2000 = false, found4000 = false, found6000 = false;
+        boolean found1000 = false, found3000 = false, found5000 = false, found7000 = false;
+        
+        for (TimeLine tl : timelines) {
+            long time = tl.getTime();
+            
+            // Check timing point timelines
+            if (time == 0) {
+                assertEquals(120.0, tl.getBPM(), 0.01, "BPM at 0ms should be 120");
+                assertEquals(1.0, tl.getScroll(), 0.01, "SV at 0ms should be 1.0");
+                found0 = true;
+            } else if (time == 2000) {
+                assertEquals(150.0, tl.getBPM(), 0.01, "BPM at 2000ms should be 150");
+                assertEquals(1.0, tl.getScroll(), 0.01, "SV at 2000ms should be 1.0 (uninherited resets SV)");
+                found2000 = true;
+            } else if (time == 4000) {
+                assertEquals(150.0, tl.getBPM(), 0.01, "BPM at 4000ms should still be 150");
+                assertEquals(2.0, tl.getScroll(), 0.01, "SV at 4000ms should be 2.0");
+                found4000 = true;
+            } else if (time == 6000) {
+                assertEquals(200.0, tl.getBPM(), 0.01, "BPM at 6000ms should be 200");
+                assertEquals(1.0, tl.getScroll(), 0.01, "SV at 6000ms should be 1.0 (uninherited resets SV)");
+                found6000 = true;
+            }
+            
+            // Check note timelines inherit correct BPM/SV
+            if (time == 1000) {
+                assertEquals(120.0, tl.getBPM(), 0.01, "Note at 1000ms should have 120 BPM");
+                assertEquals(1.0, tl.getScroll(), 0.01, "Note at 1000ms should have 1.0 SV");
+                assertNotNull(tl.getNote(1), "Note should exist at 1000ms");
+                found1000 = true;
+            } else if (time == 3000) {
+                assertEquals(150.0, tl.getBPM(), 0.01, "Note at 3000ms should have 150 BPM");
+                assertEquals(1.0, tl.getScroll(), 0.01, "Note at 3000ms should have 1.0 SV");
+                assertNotNull(tl.getNote(1), "Note should exist at 3000ms");
+                found3000 = true;
+            } else if (time == 5000) {
+                assertEquals(150.0, tl.getBPM(), 0.01, "Note at 5000ms should have 150 BPM");
+                assertEquals(2.0, tl.getScroll(), 0.01, "Note at 5000ms should have 2.0 SV");
+                assertNotNull(tl.getNote(1), "Note should exist at 5000ms");
+                found5000 = true;
+            } else if (time == 7000) {
+                assertEquals(200.0, tl.getBPM(), 0.01, "Note at 7000ms should have 200 BPM");
+                assertEquals(1.0, tl.getScroll(), 0.01, "Note at 7000ms should have 1.0 SV");
+                assertNotNull(tl.getNote(1), "Note should exist at 7000ms");
+                found7000 = true;
+            }
+        }
+        
+        // Verify all timing point timelines were found
+        assertTrue(found0, "Timeline at 0ms not found");
+        assertTrue(found2000, "Timeline at 2000ms not found");
+        assertTrue(found4000, "Timeline at 4000ms not found");
+        assertTrue(found6000, "Timeline at 6000ms not found");
+        
+        // Verify all note timelines were found
+        assertTrue(found1000, "Note timeline at 1000ms not found");
+        assertTrue(found3000, "Note timeline at 3000ms not found");
+        assertTrue(found5000, "Note timeline at 5000ms not found");
+        assertTrue(found7000, "Note timeline at 7000ms not found");
+    }
 }
