@@ -24,12 +24,12 @@
 - [x] **Versioning**: Centralized versioning system (`VERSION.md`).
 - [x] **Mission System**: Daily and Normal missions.
 - [x] **Arena Mode Enhancements**: Rule syncing, Song Sync, Rank display.
+- [x] **Documentation**: Comprehensive Dashboard update with dependency table and project structure (0.9.3).
 
 ## In Progress
-- [ ] **Documentation**: Continuous improvement of Dashboard and Agent Instructions.
+- [ ] **Audio Engine Improvements**: Support for more audio formats or lower latency drivers.
 
 ## Planned Features
-- [ ] **Audio Engine Improvements**: Support for more audio formats or lower latency drivers.
 - [ ] **Osu! Mode Enhancements**: Support for more hit object types (Spinners) and better timing point handling.
 - [ ] **Vulkan Rendering Support** (Future)
 

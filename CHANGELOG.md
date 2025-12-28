@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.9.3] - 2025-12-28
+### Changed
+- **Documentation**: Comprehensive update of DASHBOARD.md with full dependency table and project structure.
+- **AGENTS.md**: Updated with build commands, architecture, and code style guidelines.
+- **Version Sync**: Synchronized VERSION.md files across the project.
+
+### Maintenance
+- Verified build and tests pass on Gradle 8.5 / Java 21.
+- Updated ROADMAP.md with completed documentation milestone.
+
 ## [0.9.2] - 2025-12-27
 ### Added
 - **Osu! Background Support**: Implemented parsing of `[Events]` section in `.osu` files to extract background images.
