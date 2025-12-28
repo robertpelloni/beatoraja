@@ -48,8 +48,10 @@ public class OsuDecoder {
             List<TimingPoint> timingPoints = new ArrayList<>();
 
             String[] wavList = new String[1295];
+            String[] bgaList = new String[1295];
             int keys = 4; // Default to 4K if undefined
             double sliderMultiplier = 1.4; // Default
+            List<BGAEvent> bgaEvents = new ArrayList<>();
 
             while ((line = reader.readLine()) != null) {
                 line = line.trim();
@@ -88,13 +90,37 @@ public class OsuDecoder {
                     String[] parts = line.split(",");
                     if (parts.length >= 3) {
                         String type = parts[0];
-                        if (type.equals("0") || type.equals("1") || type.equals("Video")) {
-                             String filename = parts[2];
-                             if (filename.startsWith("\"") && filename.endsWith("\"")) {
-                                 filename = filename.substring(1, filename.length() - 1);
-                             }
+                        String filename = parts[2];
+                        if (filename.startsWith("\"") && filename.endsWith("\"")) {
+                            filename = filename.substring(1, filename.length() - 1);
+                        }
+
+                        if (type.equals("0")) {
                              model.setStagefile(filename);
                              model.setBackbmp(filename);
+                        } else if (type.equals("1") || type.equals("Video")) {
+                             // Add to BGA List
+                             int bgaIndex = -1;
+                             for(int i=0; i<bgaList.length; i++) {
+                                 if(bgaList[i] == null) {
+                                     bgaList[i] = filename;
+                                     bgaIndex = i;
+                                     break;
+                                 } else if (bgaList[i].equals(filename)) {
+                                     bgaIndex = i;
+                                     break;
+                                 }
+                             }
+                             
+                             if (bgaIndex != -1) {
+                                 long startTime = 0;
+                                 if (parts.length >= 2) {
+                                     try {
+                                         startTime = Long.parseLong(parts[1]);
+                                     } catch (Exception e) {}
+                                 }
+                                 bgaEvents.add(new BGAEvent(startTime, bgaIndex));
+                             }
                         }
                     }
                 } else if (section.equals("TimingPoints")) {
@@ -180,7 +206,8 @@ public class OsuDecoder {
             else model.setMode(Mode.BEAT_14K);
 
             model.setWavList(wavList);
-            convert(model, hitObjects, timingPoints, sliderMultiplier, keys);
+            model.setBgaList(bgaList);
+            convert(model, hitObjects, timingPoints, bgaEvents, sliderMultiplier, keys);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -188,9 +215,10 @@ public class OsuDecoder {
         return model;
     }
 
-    private void convert(BMSModel model, List<HitObject> hitObjects, List<TimingPoint> timingPoints, double sliderMultiplier, int keys) {
+    private void convert(BMSModel model, List<HitObject> hitObjects, List<TimingPoint> timingPoints, List<BGAEvent> bgaEvents, double sliderMultiplier, int keys) {
         Collections.sort(hitObjects);
         Collections.sort(timingPoints);
+        Collections.sort(bgaEvents);
 
         double currentBpm = 120;
         for (TimingPoint tp : timingPoints) {
@@ -213,6 +241,16 @@ public class OsuDecoder {
         timelineMap.put(0L, tl0);
         Note bgmNote = new NormalNote(1); // WAV 1
         tl0.addBackGroundNote(bgmNote);
+
+        // Add BGA Events
+        for (BGAEvent be : bgaEvents) {
+            TimeLine tl = timelineMap.get(be.time);
+            if (tl == null) {
+                tl = new TimeLine(be.time, be.time * 1000, 7296);
+                timelineMap.put(be.time, tl);
+            }
+            tl.setBGA(be.index);
+        }
 
         int timingIndex = 0;
         double currentBeatLength = 500; // Default 120 BPM
@@ -501,6 +539,21 @@ public class OsuDecoder {
             // If times are equal, uninherited (Red) comes first to reset SV?
             // Actually in Osu, if they are same time, usually Red comes first.
             return Boolean.compare(o.uninherited, this.uninherited);
+        }
+    }
+
+    private static class BGAEvent implements Comparable<BGAEvent> {
+        long time;
+        int index;
+
+        public BGAEvent(long time, int index) {
+            this.time = time;
+            this.index = index;
+        }
+
+        @Override
+        public int compareTo(BGAEvent o) {
+            return Long.compare(this.time, o.time);
         }
     }
 }

@@ -183,4 +183,58 @@ public class OsuDecoderTest {
         }
         assertTrue(noteFound, "Note not found at 1000ms");
     }
+
+    @Test
+    public void testVideoParsing() {
+        String osuContent = "osu file format v14\n" +
+                "\n" +
+                "[General]\n" +
+                "AudioFilename: audio.mp3\n" +
+                "Mode: 3\n" +
+                "\n" +
+                "[Events]\n" +
+                "//Background and Video events\n" +
+                "0,0,\"bg.jpg\",0,0\n" +
+                "Video,0,\"video.avi\"\n" +
+                "\n" +
+                "[TimingPoints]\n" +
+                "0,500,4,1,0,100,1,0\n" +
+                "\n" +
+                "[HitObjects]\n" +
+                "64,192,1000,1,0,0:0:0:0:\n";
+
+        OsuDecoder decoder = new OsuDecoder(0);
+        BMSModel model = decoder.decode(new ByteArrayInputStream(osuContent.getBytes(StandardCharsets.UTF_8)));
+
+        assertNotNull(model);
+        assertEquals("bg.jpg", model.getStagefile());
+        assertEquals("bg.jpg", model.getBackbmp());
+        
+        // Check BGA List
+        String[] bgaList = model.getBgaList();
+        assertNotNull(bgaList);
+        boolean videoFound = false;
+        int videoIndex = -1;
+        for (int i = 0; i < bgaList.length; i++) {
+            if ("video.avi".equals(bgaList[i])) {
+                videoFound = true;
+                videoIndex = i;
+                break;
+            }
+        }
+        assertTrue(videoFound, "Video file not found in BGA list");
+
+        // Check BGA Event
+        TimeLine[] timelines = model.getAllTimeLines();
+        boolean bgaEventFound = false;
+        for (TimeLine tl : timelines) {
+            if (tl.getTime() == 0) {
+                if (tl.getBGA() == videoIndex) {
+                    bgaEventFound = true;
+                    break;
+                }
+            }
+        }
+        assertTrue(bgaEventFound, "BGA event not found at time 0");
+    }
 }
