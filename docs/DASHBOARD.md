@@ -1,7 +1,7 @@
 # Project Dashboard
 
 ## Project Status
-- **Version**: 0.9.1
+- **Version**: 0.9.2
 - **Date**: 2025-12-27
 - **Build System**: Gradle (build.gradle)
 - **Java Version**: Java 21 (Target)
