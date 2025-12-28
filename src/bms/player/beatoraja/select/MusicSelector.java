@@ -33,7 +33,7 @@ import bms.player.beatoraja.arena.ArenaManager;
  *
  * @author exch
  */
-public final class MusicSelector extends MainState {
+public final class MusicSelector extends MainState implements ArenaManager.ArenaListener {
 
 	// TODO　ミラーランダム段位のスコア表示
 
@@ -189,6 +189,10 @@ public final class MusicSelector extends MainState {
 		manager.updateBar();
 
 		loadSkin(SkinType.MUSIC_SELECT);
+
+		if (main.getArenaManager() != null) {
+			main.getArenaManager().addListener(this);
+		}
 
 		// search text field
 		Rectangle searchRegion = ((MusicSelectSkin) getSkin()).getSearchTextRegion();
@@ -348,6 +352,9 @@ public final class MusicSelector extends MainState {
 	}
 
 	public void shutdown() {
+		if (main.getArenaManager() != null) {
+			main.getArenaManager().removeListener(this);
+		}
 		preview.stop();
 		if (search != null) {
 			search.unfocus(this);
@@ -708,6 +715,49 @@ public final class MusicSelector extends MainState {
 			currentir = null;
 			currentRankingDuration = -1;			
 		}
+
+		if (main.getArenaManager() != null && main.getArenaManager().isHost()) {
+            if (current instanceof SongBar && ((SongBar) current).existsSong()) {
+                main.getArenaManager().sendSongSelect(((SongBar) current).getSongData().getSha256());
+            }
+        }
+	}
+
+	@Override
+	public void onSongSelected(String songHash) {
+		Gdx.app.postRunnable(() -> {
+            Bar[] bars = manager.currentsongs;
+            if (bars != null) {
+                for (Bar bar : bars) {
+                    if (bar instanceof SongBar && ((SongBar) bar).getSongData() != null) {
+                        String h = ((SongBar) bar).getSongData().getSha256();
+                        if (h != null && h.equals(songHash)) {
+                            manager.setSelected(bar);
+                            return;
+                        }
+                    }
+                }
+            }
+            main.getMessageRenderer().addMessage("Host selected a song not in current list", 3000, Color.YELLOW, 0);
+        });
+	}
+
+	@Override
+	public void onStartGame() {
+		Gdx.app.postRunnable(() -> {
+			Bar current = manager.getSelected();
+			if (current instanceof SongBar && ((SongBar) current).existsSong()) {
+                String currentHash = ((SongBar) current).getSongData().getSha256();
+                String targetHash = main.getArenaManager().getCurrentSongHash();
+
+                if (targetHash != null && !targetHash.equals(currentHash)) {
+                    main.getMessageRenderer().addMessage("Cannot start: Song mismatch with Host!", 3000, Color.RED, 0);
+                    return;
+                }
+				main.getMessageRenderer().addMessage("Host started game!", 3000, Color.GREEN, 0);
+				selectSong(BMSPlayerMode.PLAY);
+			}
+		});
 	}
 
 	public void loadSelectedSongImages() {

@@ -795,6 +795,51 @@ public class JudgeManager {
 		}
 	}
 
+	/**
+	 * Updates the judge rank (difficulty) dynamically.
+	 * @param rank The new judge rank (e.g., 200 for EASY, 100 for HARD)
+	 */
+	public void setJudgeRank(int rank) {
+		PlayerResource resource = main.resource;
+		Mode orgmode = resource.getOriginalMode();
+		PlayerConfig config = resource.getPlayerConfig();
+		// Access the rule directly as in init
+		JudgeProperty judgeRule = BMSPlayerRule.getBMSPlayerRule(orgmode).judge;
+
+		final int[] keyJudgeWindowRate = config.isCustomJudge()
+				? new int[]{config.getKeyJudgeWindowRatePerfectGreat(), config.getKeyJudgeWindowRateGreat(), config.getKeyJudgeWindowRateGood()}
+				: new int[]{100, 100, 100};
+		final int[] scratchJudgeWindowRate = config.isCustomJudge()
+				? new int[]{config.getScratchJudgeWindowRatePerfectGreat(), config.getScratchJudgeWindowRateGreat(), config.getScratchJudgeWindowRateGood()}
+				: new int[]{100, 100, 100};
+
+		for (CourseData.CourseDataConstraint mode : resource.getConstraint()) {
+			if (mode == CourseData.CourseDataConstraint.NO_GREAT) {
+				keyJudgeWindowRate[1] = keyJudgeWindowRate[2] = 0;
+				scratchJudgeWindowRate[1] = scratchJudgeWindowRate[2] = 0;
+			} else if (mode == CourseData.CourseDataConstraint.NO_GOOD) {
+				keyJudgeWindowRate[2] = 0;
+				scratchJudgeWindowRate[2] = 0;
+			}
+		}
+
+		nmjudge = judgeRule.getJudge(NoteType.NOTE, rank, keyJudgeWindowRate);
+		cnendmjudge = judgeRule.getJudge(NoteType.LONGNOTE_END, rank, keyJudgeWindowRate);
+		smjudge = judgeRule.getJudge(NoteType.SCRATCH, rank, scratchJudgeWindowRate);
+		scnendmjudge = judgeRule.getJudge(NoteType.LONGSCRATCH_END, rank, scratchJudgeWindowRate);
+
+		mjudgestart = 0;
+		mjudgeend = 0;
+		for (long[] l : nmjudge) {
+			mjudgestart = Math.min(mjudgestart, l[0]);
+			mjudgeend = Math.max(mjudgeend, l[1]);
+		}
+		for (long[] l : smjudge) {
+			mjudgestart = Math.min(mjudgestart, l[0]);
+			mjudgeend = Math.max(mjudgeend, l[1]);
+		}
+	}
+
 	public long[] getRecentJudges() {
 		return recentJudges;
 	}
@@ -813,6 +858,19 @@ public class JudgeManager {
 
 	public long getRecentJudgeMicroTiming(int player) {
 		return player >= 0 && player < mjudgefast.length ? mjudgefast[player] : 0;
+	}
+
+	public double getAverageTimingError() {
+		long sum = 0;
+		int count = 0;
+		for(long val : microrecentJudges) {
+			if(val != Long.MIN_VALUE) {
+				sum += val;
+				count++;
+			}
+		}
+		if(count == 0) return 0;
+		return (double)sum / count / 1000.0;
 	}
 
 	public LongNote getProcessingLongNote(int lane) {

@@ -210,6 +210,28 @@ public class MusicResult extends AbstractResult {
 						main.changeState(MainStateType.COURSERESULT);
 					}
 				} else {
+					if (resource.getSessionEndTime() > 0 && System.currentTimeMillis() > resource.getSessionEndTime()) {
+						resource.setNonstop(false);
+						resource.setSessionEndTime(0);
+						main.changeState(MainStateType.MUSICSELECT);
+						return;
+					}
+
+					if (resource.isNonstop()) {
+						try {
+							String playerDir = main.getConfig().getPlayerpath() + "/" + main.getPlayerConfig().getId() + "/";
+							SongData[] songs = main.getSongDatabase().getSongDatas("1=1 ORDER BY RANDOM() LIMIT 1",
+									playerDir + "score.db", playerDir + "scorelog.db", main.getConfig().getSonginfopath());
+							if (songs.length > 0 && songs[0].getPath() != null) {
+								resource.setBMSFile(java.nio.file.Paths.get(songs[0].getPath()), BMSPlayerMode.PLAY);
+								main.changeState(MainStateType.PLAY);
+								return;
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+
 					resource.getPlayerConfig().setGauge(resource.getOrgGaugeOption());
 					ResultKeyProperty.ResultKey key = null;
 					for (int i = 0; i < property.getAssignLength(); i++) {
@@ -224,22 +246,10 @@ public class MusicResult extends AbstractResult {
 					}
 					if (resource.getPlayMode().mode == BMSPlayerMode.Mode.PLAY
 							&& key == ResultKeyProperty.ResultKey.REPLAY_DIFFERENT) {
-						Logger.getGlobal().info("オプションを変更せずリプレイ");
-						// オプションを変更せず同じ譜面でリプレイ
-						resource.getReplayData().randomoptionseed = -1;
-						resource.reloadBMSFile();
-						main.changeState(MainStateType.PLAY);
+						retry(false);
 					} else if (resource.getPlayMode().mode == BMSPlayerMode.Mode.PLAY
 							&& key == ResultKeyProperty.ResultKey.REPLAY_SAME) {
-						// 同じ譜面でリプレイ
-						if(resource.isUpdateScore()) {
-							Logger.getGlobal().info("同じ譜面でリプレイ");							
-						} else {
-							Logger.getGlobal().info("アシストモード時は同じ譜面でリプレイできません");
-							resource.getReplayData().randomoptionseed = -1;
-						}
-						resource.reloadBMSFile();
-						main.changeState(MainStateType.PLAY);
+						retry(true);
 					} else {
 						main.changeState(MainStateType.MUSICSELECT);
 					}
@@ -443,6 +453,10 @@ public class MusicResult extends AbstractResult {
 		if (resource.getPlayMode().mode == BMSPlayerMode.Mode.PLAY) {
 			main.getPlayDataAccessor().writeScoreData(resource.getScoreData(), resource.getBMSModel(),
 					resource.getPlayerConfig().getLnmode(), resource.isUpdateScore());
+
+            if (main.getMissionManager() != null) {
+                main.getMissionManager().checkResult(resource.getScoreData());
+            }
 		} else {
 			Logger.getGlobal().info("プレイモードが" + resource.getPlayMode().mode.name() + "のため、スコア登録はされません");
 		}
@@ -465,6 +479,24 @@ public class MusicResult extends AbstractResult {
 
 	public ScoreData getNewScore() {
 		return resource.getScoreData();
+	}
+
+	public void retry(boolean sameRandom) {
+		if (sameRandom) {
+			// 同じ譜面でリプレイ
+			if(resource.isUpdateScore()) {
+				Logger.getGlobal().info("同じ譜面でリプレイ");
+			} else {
+				Logger.getGlobal().info("アシストモード時は同じ譜面でリプレイできません");
+				resource.getReplayData().randomoptionseed = -1;
+			}
+		} else {
+			Logger.getGlobal().info("オプションを変更せずリプレイ");
+			// オプションを変更せず同じ譜面でリプレイ
+			resource.getReplayData().randomoptionseed = -1;
+		}
+		resource.reloadBMSFile();
+		main.changeState(MainStateType.PLAY);
 	}
 
 	static class IRSendStatus {

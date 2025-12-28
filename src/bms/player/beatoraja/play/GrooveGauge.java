@@ -26,6 +26,7 @@ public final class GrooveGauge {
 	public static final int CLASS = 6;
 	public static final int EXCLASS = 7;
 	public static final int EXHARDCLASS = 8;
+	public static final int TIMEHELL = 9;
 
 	private final int typeorg;
 	private int type = -1;

@@ -8,12 +8,14 @@ public class ArenaData {
     private int score;
     private int rank;
     private int arenaPoints;
+    private boolean isReady;
 
     public ArenaData(String playerName) {
         this.playerName = playerName;
         this.score = 0;
         this.rank = 0;
         this.arenaPoints = 0;
+        this.isReady = false;
     }
 
     public String getPlayerName() {
@@ -42,5 +44,13 @@ public class ArenaData {
 
     public void setArenaPoints(int points) {
         this.arenaPoints = points;
+    }
+
+    public boolean isReady() {
+        return isReady;
+    }
+
+    public void setReady(boolean ready) {
+        isReady = ready;
     }
 }

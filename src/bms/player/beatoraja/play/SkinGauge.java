@@ -179,7 +179,7 @@ public final class SkinGauge extends SkinObject {
 
 	public void draw(SkinObjectRenderer sprite) {
 
-		final int exgauge = (type >= CLASS ? type - 3 : type) * 6;
+		final int exgauge = (type == GrooveGauge.TIMEHELL ? GrooveGauge.HARD : (type >= CLASS ? type - 3 : type)) * 6;
 		final int notes = value > 0 ? Math.max(1 , (int) (value * parts / max)) : 0;
 		sprite.setColor(color);
 		sprite.setBlend(getBlend());

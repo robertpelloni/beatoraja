@@ -102,7 +102,26 @@ public class PlayConfig implements Cloneable {
 	 */
 	private String judgetype = JudgeAlgorithm.Combo.name();
 
+	/**
+	 * Pacemaker Type: 0=Rival, 1=Best, 2=AAA, 3=AA, 4=A
+	 */
+	private int pacemakerType = 0;
+
+	public static final int PACEMAKER_RIVAL = 0;
+	public static final int PACEMAKER_BEST = 1;
+	public static final int PACEMAKER_AAA = 2;
+	public static final int PACEMAKER_AA = 3;
+	public static final int PACEMAKER_A = 4;
+
 	public PlayConfig() {
+	}
+
+	public int getPacemakerType() {
+		return pacemakerType;
+	}
+
+	public void setPacemakerType(int pacemakerType) {
+		this.pacemakerType = pacemakerType;
 	}
 
 	public float getHispeed() {

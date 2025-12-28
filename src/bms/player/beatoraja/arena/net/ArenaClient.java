@@ -63,7 +63,9 @@ public class ArenaClient {
                     // Handle player left if needed
                     break;
                 case ArenaMessage.TYPE_SONG_SELECT:
-                    manager.onSongSelected(msg.payload);
+                    if (!msg.playerName.equals(this.playerName)) {
+                        manager.onRemoteSongSelected(msg.songHash);
+                    }
                     break;
             }
         } catch (Exception e) {
@@ -75,8 +77,22 @@ public class ArenaClient {
         sendMessage(new ArenaMessage(ArenaMessage.TYPE_SCORE_UPDATE, playerName, score));
     }
 
-    public void sendSong(String hash) {
+    public void sendSongSelect(String hash) {
         sendMessage(new ArenaMessage(ArenaMessage.TYPE_SONG_SELECT, playerName, hash));
+    }
+
+    public void sendReady(boolean ready) {
+        sendMessage(new ArenaMessage(ArenaMessage.TYPE_READY, playerName, ready));
+    }
+
+    public void sendStartGame() {
+        sendMessage(new ArenaMessage(ArenaMessage.TYPE_START_GAME, playerName, 0));
+    }
+
+    public void sendRules(int gauge) {
+        ArenaMessage msg = new ArenaMessage(ArenaMessage.TYPE_RULES, playerName, 0);
+        msg.ruleGauge = gauge;
+        sendMessage(msg);
     }
 
     private void sendMessage(ArenaMessage msg) {

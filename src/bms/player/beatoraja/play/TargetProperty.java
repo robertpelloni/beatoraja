@@ -407,7 +407,7 @@ class InternetRankingTargetProperty extends TargetProperty {
 	    			targetScore.setOption(0);
 	    		}
 	    		
-				main.getCurrentState().getScoreDataProperty().updateTargetScore(targetScore.getExscore());	    		
+				main.getCurrentState().getScoreDataProperty().updateTargetScore(targetScore.getExscore(), null);
 	    	}
 		});
 		irprocess.start();

@@ -250,6 +250,7 @@ public final class PlayerConfig {
 	private boolean lr2Judge = false;
 	private boolean lr2LN = false;
 	private boolean lr2Total = false;
+	private boolean autoScratch = false;
 
 	public PlayerConfig() {
 		validate();
@@ -820,6 +821,14 @@ public final class PlayerConfig {
 
 	public void setLr2Total(boolean lr2Total) {
 		this.lr2Total = lr2Total;
+	}
+
+	public boolean isAutoScratch() {
+		return autoScratch;
+	}
+
+	public void setAutoScratch(boolean autoScratch) {
+		this.autoScratch = autoScratch;
 	}
 
 	public void validate() {

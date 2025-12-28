@@ -19,6 +19,7 @@ import bms.player.beatoraja.play.*;
 import bms.player.beatoraja.result.AbstractResult;
 import bms.player.beatoraja.result.AbstractResult.TimingDistribution;
 import bms.player.beatoraja.result.CourseResult;
+import bms.player.beatoraja.arena.ArenaData;
 import bms.player.beatoraja.select.MusicSelector;
 import bms.player.beatoraja.select.bar.Bar;
 import bms.player.beatoraja.select.bar.DirectoryBar;
@@ -150,6 +151,16 @@ public class IntegerPropertyFactory {
 		case NUMBER_SLOW_SCRATCH:
 			return (state) -> (state.getScoreDataProperty().getScoreData() != null ?
 					state.getScoreDataProperty().getScoreData().getSlowScratch() : Integer.MIN_VALUE);
+		case NUMBER_ARENA_RANK:
+			return (state) -> {
+				if (state.main.getArenaManager() != null) {
+					ArenaData player = state.main.getArenaManager().getPlayer("1P");
+					if (player != null && player.getRank() > 0) {
+						return player.getRank();
+					}
+				}
+				return Integer.MIN_VALUE;
+			};
 		case NUMBER_POOR_PLUS_MISS:
 			return (state) -> (state.getJudgeCount(4, true) + state.getJudgeCount(4, false)
 					+ state.getJudgeCount(5, true) + state.getJudgeCount(5, false));

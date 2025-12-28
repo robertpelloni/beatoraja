@@ -256,6 +256,11 @@ public class EventFactory {
 		replay2(316, getReplayEventConsumer(1)),
 		replay3(317, getReplayEventConsumer(2)),
 		replay4(318, getReplayEventConsumer(3)),
+		retry(390, (state) -> {
+			if(state instanceof MusicResult) {
+				((MusicResult) state).retry(true);
+			}
+		}),
 		/**
 		 * 楽曲ファイルのIRサイトをOS既定のブラウザーで開く
 		 */

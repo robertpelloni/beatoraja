@@ -44,6 +44,7 @@ import bms.player.beatoraja.manager.UpdateManager;
 import bms.player.beatoraja.manager.ScreenshotManager;
 import bms.player.beatoraja.manager.InputManager;
 import bms.player.beatoraja.manager.DownloadManager;
+import bms.player.beatoraja.mission.MissionManager;
 
 /**
  * アプリケーションのルートクラス
@@ -149,6 +150,8 @@ public class MainController {
 	private InputManager inputManager;
 	
 	private DownloadManager downloadManager;
+
+	private MissionManager missionManager;
 
 	public static final int offsetCount = SkinProperty.OFFSET_MAX + 1;
 	private final SkinOffset[] offset = new SkinOffset[offsetCount];
@@ -406,6 +409,8 @@ public class MainController {
 
 		stepUpManager = new StepUpManager(this);
 		
+		missionManager = new MissionManager(this);
+
 		updateManager = new UpdateManager(this);
 		
 		screenshotManager = new ScreenshotManager(this);
@@ -634,6 +639,10 @@ public class MainController {
 
 	public StepUpManager getStepUpManager() {
 		return stepUpManager;
+	}
+
+	public MissionManager getMissionManager() {
+		return missionManager;
 	}
 
 	public MessageRenderer getMessageRenderer() {

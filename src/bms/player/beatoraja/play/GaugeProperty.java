@@ -18,7 +18,8 @@ public enum GaugeProperty {
             GaugeElementProperty.HAZARD_5,
             GaugeElementProperty.CLASS_5,
             GaugeElementProperty.EXCLASS_5,
-            GaugeElementProperty.EXHARDCLASS_5),
+            GaugeElementProperty.EXHARDCLASS_5,
+            GaugeElementProperty.TIMEHELL_5),
     SEVENKEYS(
     		GaugeElementProperty.ASSIST_EASY,
             GaugeElementProperty.EASY,
@@ -28,7 +29,8 @@ public enum GaugeProperty {
             GaugeElementProperty.HAZARD,
             GaugeElementProperty.CLASS,
             GaugeElementProperty.EXCLASS,
-            GaugeElementProperty.EXHARDCLASS),
+            GaugeElementProperty.EXHARDCLASS,
+            GaugeElementProperty.TIMEHELL),
     PMS(
             GaugeElementProperty.ASSIST_EASY_PMS,
             GaugeElementProperty.EASY_PMS,
@@ -38,7 +40,8 @@ public enum GaugeProperty {
             GaugeElementProperty.HAZARD_PMS,
             GaugeElementProperty.CLASS_PMS,
             GaugeElementProperty.EXCLASS_PMS,
-            GaugeElementProperty.EXHARDCLASS_PMS),
+            GaugeElementProperty.EXHARDCLASS_PMS,
+            GaugeElementProperty.TIMEHELL_PMS),
     KEYBOARD(
             GaugeElementProperty.ASSIST_EASY_KB,
             GaugeElementProperty.EASY_KB,
@@ -48,7 +51,8 @@ public enum GaugeProperty {
             GaugeElementProperty.HAZARD_KB,
             GaugeElementProperty.CLASS_KB,
             GaugeElementProperty.EXCLASS_KB,
-            GaugeElementProperty.EXHARDCLASS_KB),
+            GaugeElementProperty.EXHARDCLASS_KB,
+            GaugeElementProperty.TIMEHELL_KB),
     LR2(
             GaugeElementProperty.ASSIST_EASY_LR2,
             GaugeElementProperty.EASY_LR2,
@@ -58,7 +62,8 @@ public enum GaugeProperty {
             GaugeElementProperty.HAZARD_LR2,
             GaugeElementProperty.CLASS_LR2,
             GaugeElementProperty.EXCLASS_LR2,
-            GaugeElementProperty.EXHARDCLASS_LR2),
+            GaugeElementProperty.EXHARDCLASS_LR2,
+            GaugeElementProperty.TIMEHELL_LR2),
     ;
 
     public final GaugeElementProperty[] values;
@@ -123,6 +128,12 @@ public enum GaugeProperty {
         CLASS_LR2(null ,0 ,100 ,100, 0, new float[]{0.10f, 0.10f, 0.05f, -2f, -3f, -2f}, new float[][]{{30, 0.6f}}),
         EXCLASS_LR2(null ,0 ,100 ,100, 0, new float[]{0.10f, 0.10f, 0.05f, -6.0f, -10.0f, -2.0f}, new float[][]{{30, 0.6f}}),
         EXHARDCLASS_LR2(null ,0 ,100 ,100, 0, new float[]{0.10f, 0.10f, 0.05f, -12.0f, -20.0f, -2.0f}, new float[][]{}),
+
+        TIMEHELL_5(null ,0 ,100 ,100, 0, new float[]{0f, 0f, 0f, -5.0f, -10.0f, -5.0f}, new float[][]{}),
+        TIMEHELL(null ,0 ,100 ,100, 0, new float[]{0f, 0f, 0f, -5.0f, -10.0f, -5.0f}, new float[][]{}),
+        TIMEHELL_PMS(null ,0 ,100 ,100, 0, new float[]{0f, 0f, 0f, -5.0f, -10.0f, -10.0f}, new float[][]{}),
+        TIMEHELL_KB(null ,0 ,100 ,100, 0, new float[]{0f, 0f, 0f, -4.0f, -8.0f, -4.0f}, new float[][]{}),
+        TIMEHELL_LR2(null ,0 ,100 ,100, 0, new float[]{0f, 0f, 0f, -6.0f, -10.0f, -2.0f}, new float[][]{}),
         ;
 
         /**

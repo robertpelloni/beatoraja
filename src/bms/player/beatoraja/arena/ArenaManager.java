@@ -5,30 +5,56 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.io.IOException;
+import java.util.concurrent.CopyOnWriteArrayList;
 import bms.player.beatoraja.arena.net.ArenaClient;
 import bms.player.beatoraja.arena.net.ArenaServer;
 
 public class ArenaManager {
 
+    public interface ArenaListener {
+        void onSongSelected(String songHash);
+        void onStartGame();
+    }
+
     private final List<ArenaData> players;
+    private final List<ArenaListener> listeners = new CopyOnWriteArrayList<>();
     private ArenaServer server;
     private ArenaClient client;
-    private ArenaListener listener;
-
-    public interface ArenaListener {
-        void onSongSelected(String hash);
-    }
+    private boolean isHost = false;
+    private String currentSongHash;
+    private int ruleGauge = -1;
 
     public ArenaManager() {
         this.players = new ArrayList<>();
     }
 
-    public void setListener(ArenaListener listener) {
-        this.listener = listener;
+    public String getCurrentSongHash() {
+        return currentSongHash;
+    }
+
+    public int getRuleGauge() {
+        return ruleGauge;
+    }
+
+    public void onRemoteRules(int gauge) {
+        this.ruleGauge = gauge;
+    }
+
+    public void addListener(ArenaListener listener) {
+        listeners.add(listener);
+    }
+
+    public void removeListener(ArenaListener listener) {
+        listeners.remove(listener);
+    }
+
+    public boolean isHost() {
+        return isHost;
     }
 
     public void startServer(int port) throws IOException {
         server = new ArenaServer(port);
+        isHost = true;
     }
 
     public void connect(String host, int port, String playerName) throws IOException {
@@ -36,6 +62,52 @@ public class ArenaManager {
         // Ensure local player exists (usually handled by BMSPlayer adding "1P")
         if (getPlayer("1P") == null) {
             addPlayer("1P");
+        }
+    }
+
+    public void onRemoteSongSelected(String hash) {
+        this.currentSongHash = hash;
+        for (ArenaListener listener : listeners) {
+            listener.onSongSelected(hash);
+        }
+    }
+
+    public void onRemoteReady(String name, boolean ready) {
+        ArenaData player = getPlayer(name);
+        if (player != null) {
+            player.setReady(ready);
+        }
+    }
+
+    public void onStartGame() {
+        for (ArenaListener listener : listeners) {
+            listener.onStartGame();
+        }
+    }
+
+    public void sendSongSelect(String hash) {
+        this.currentSongHash = hash;
+        if (client != null) {
+            client.sendSongSelect(hash);
+        }
+    }
+
+    public void sendReady(boolean ready) {
+        if (client != null) {
+            client.sendReady(ready);
+        }
+    }
+
+    public void sendStartGame() {
+        if (client != null) {
+            client.sendStartGame();
+        }
+    }
+
+    public void sendRules(int gauge) {
+        this.ruleGauge = gauge;
+        if (client != null) {
+            client.sendRules(gauge);
         }
     }
 
@@ -69,18 +141,6 @@ public class ArenaManager {
         // If this update is for the local player ("1P"), broadcast it via client
         if (client != null && name.equals("1P")) {
             client.sendScore(score);
-        }
-    }
-
-    public void selectSong(String hash) {
-        if (client != null) {
-            client.sendSong(hash);
-        }
-    }
-
-    public void onSongSelected(String hash) {
-        if (listener != null) {
-            listener.onSongSelected(hash);
         }
     }
 

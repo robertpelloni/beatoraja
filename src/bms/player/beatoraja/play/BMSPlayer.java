@@ -62,7 +62,7 @@ public class BMSPlayer extends MainState {
 
 	private final FloatArray[] gaugelog;
 
-	private int playspeed = 100;
+	private float playbackRate = 1.0f;
 
 	/**
 	 * リプレイHS保存用 STATE READY時に保存
@@ -228,6 +228,12 @@ public class BMSPlayer extends MainState {
 			}
 			if(config.getExtranoteDepth() > 0) {
 				mods.add(new ExtraNoteModifier(config.getExtranoteType(), config.getExtranoteDepth(), config.isExtranoteScratch()));
+			}
+
+			if (config.isAutoScratch()) {
+				mods.add(new AutoplayModifier(model.getMode().scratchKey));
+				assist = Math.max(assist, 1);
+				score = false;
 			}
 
 			for(PatternModifier mod : mods) {
@@ -419,6 +425,13 @@ public class BMSPlayer extends MainState {
 		}
 		// プレイゲージ、初期値設定
 		int gaugeType = replay != null ? replay.gauge : config.getGauge();
+
+		// Arena Rule Override
+		if (main.getArenaManager() != null && main.getArenaManager().getRuleGauge() != -1) {
+			gaugeType = main.getArenaManager().getRuleGauge();
+			Logger.getGlobal().info("Arena Rule Applied: Gauge " + gaugeType);
+		}
+
 		// Apply LR2 Gauge if enabled and not playing a course (where gauge is fixed)
 		if (config.isLr2Gauge() && resource.getCourseBMSModels() == null) {
 			// Map standard gauge types to LR2 gauge properties if needed
@@ -534,13 +547,37 @@ public class BMSPlayer extends MainState {
 		} else {
 			main.getArenaManager().resetScores();
 			
-			if(resource.getRivalScoreData() == null || resource.getCourseBMSModels() != null) {
-				ScoreData targetScore = TargetProperty.getTargetProperty(config.getTargetid()).getTarget(main);
-				resource.setTargetScoreData(targetScore);
+			int pacemakerType = config.getPlayConfig(model.getMode()).getPlayconfig().getPacemakerType();
+			int targetExScore = 0;
+			int[] targetGhost = null;
+
+			if (pacemakerType == PlayConfig.PACEMAKER_RIVAL) {
+				if(resource.getRivalScoreData() == null || resource.getCourseBMSModels() != null) {
+					ScoreData targetScore = TargetProperty.getTargetProperty(config.getTargetid()).getTarget(main);
+					resource.setTargetScoreData(targetScore);
+				} else {
+					resource.setTargetScoreData(resource.getRivalScoreData());
+				}
+				if (resource.getTargetScoreData() != null) {
+					targetExScore = resource.getTargetScoreData().getExscore();
+					targetGhost = resource.getTargetScoreData().decodeGhost(); // Decode ghost if available (not actually stored in ScoreData usually, but logic exists)
+				}
+			} else if (pacemakerType == PlayConfig.PACEMAKER_BEST) {
+				targetExScore = score.getExscore();
+				targetGhost = score.decodeGhost();
 			} else {
-				resource.setTargetScoreData(resource.getRivalScoreData());
+				// Artificial
+				int maxScore = model.getTotalNotes() * 2;
+				if (pacemakerType == PlayConfig.PACEMAKER_AAA) {
+					targetExScore = (int)Math.ceil(maxScore * 8.0 / 9.0);
+				} else if (pacemakerType == PlayConfig.PACEMAKER_AA) {
+					targetExScore = (int)Math.ceil(maxScore * 7.0 / 9.0);
+				} else if (pacemakerType == PlayConfig.PACEMAKER_A) {
+					targetExScore = (int)Math.ceil(maxScore * 6.0 / 9.0);
+				}
 			}
-			getScoreDataProperty().setTargetScore(score.getExscore(), score.decodeGhost(), resource.getTargetScoreData() != null ? resource.getTargetScoreData().getExscore() : 0 , null, model.getTotalNotes());
+
+			getScoreDataProperty().setTargetScore(score.getExscore(), score.decodeGhost(), targetExScore, targetGhost, model.getTotalNotes());
 		}
 
 		modMenu = new ModMenu(this);
@@ -688,7 +725,7 @@ public class BMSPlayer extends MainState {
 			// プレイ
 			case STATE_PLAY -> {
 				final long deltatime = micronow - prevtime;
-				final long deltaplay = deltatime * (100 - playspeed) / 100;
+				final long deltaplay = (long)(deltatime * (playbackRate - 1.0f));
 				PracticeProperty property = practice.getPracticeProperty();
 				timer.setMicroTimer(TIMER_PLAY, timer.getMicroTimer(TIMER_PLAY) + deltaplay);
 
@@ -850,6 +887,7 @@ public class BMSPlayer extends MainState {
 
 		prevtime = micronow;
 
+
 		if (modMenu != null) {
 			modMenu.update();
 		}
@@ -862,15 +900,15 @@ public class BMSPlayer extends MainState {
 		}
 	}
 
-	public void setPlaySpeed(int playspeed) {
-		this.playspeed = playspeed;
+	public void setPlaybackRate(float rate) {
+		this.playbackRate = rate;
 		if (main.getConfig().getAudioConfig().getFastForward() == FrequencyType.FREQUENCY) {
-			main.getAudioProcessor().setGlobalPitch(playspeed / 100f);
+			main.getAudioProcessor().setGlobalPitch(rate);
 		}
 	}
 
-	public int getPlaySpeed() {
-		return playspeed;
+	public float getPlaybackRate() {
+		return playbackRate;
 	}
 
 	public void input() {
@@ -880,6 +918,10 @@ public class BMSPlayer extends MainState {
 
 	public KeyInputProccessor getKeyinput() {
 		return keyinput;
+	}
+
+	public BMSModel getModel() {
+		return model;
 	}
 
 	public int getState() {
@@ -1107,5 +1149,50 @@ public class BMSPlayer extends MainState {
 
 	public long getNowQuarterNoteTime() {
 		return rhythm != null ? rhythm.getNowQuarterNoteTime() : 0;
+	}
+
+	public void retry(boolean sameRandom) {
+		if (sameRandom) {
+			Logger.getGlobal().info("同じ譜面でリプレイ");
+		} else {
+			Logger.getGlobal().info("オプションを変更せずリプレイ");
+			resource.getReplayData().randomoptionseed = -1;
+		}
+		resource.reloadBMSFile();
+		main.changeState(MainStateType.PLAY);
+	}
+
+	public void updateTargetScore() {
+		PlayerConfig config = resource.getPlayerConfig();
+		int pacemakerType = config.getPlayConfig(model.getMode()).getPlayconfig().getPacemakerType();
+		int targetExScore = 0;
+		int[] targetGhost = null;
+
+		if (pacemakerType == PlayConfig.PACEMAKER_RIVAL) {
+			if(resource.getRivalScoreData() == null || resource.getCourseBMSModels() != null) {
+				ScoreData targetScore = TargetProperty.getTargetProperty(config.getTargetid()).getTarget(main);
+				resource.setTargetScoreData(targetScore);
+			} else {
+				resource.setTargetScoreData(resource.getRivalScoreData());
+			}
+			if (resource.getTargetScoreData() != null) {
+				targetExScore = resource.getTargetScoreData().getExscore();
+				targetGhost = resource.getTargetScoreData().decodeGhost();
+			}
+		} else if (pacemakerType == PlayConfig.PACEMAKER_BEST) {
+			targetExScore = getScoreDataProperty().getBestScore();
+			targetGhost = getScoreDataProperty().getBestGhost();
+		} else {
+			// Artificial
+			int maxScore = model.getTotalNotes() * 2;
+			if (pacemakerType == PlayConfig.PACEMAKER_AAA) {
+				targetExScore = (int)Math.ceil(maxScore * 8.0 / 9.0);
+			} else if (pacemakerType == PlayConfig.PACEMAKER_AA) {
+				targetExScore = (int)Math.ceil(maxScore * 7.0 / 9.0);
+			} else if (pacemakerType == PlayConfig.PACEMAKER_A) {
+				targetExScore = (int)Math.ceil(maxScore * 6.0 / 9.0);
+			}
+		}
+		getScoreDataProperty().updateTargetScore(targetExScore, targetGhost);
 	}
 }
