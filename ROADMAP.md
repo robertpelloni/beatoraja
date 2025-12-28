@@ -1,6 +1,6 @@
 # Roadmap
 
-## Version: 0.9.4 | Last Updated: 2025-12-28
+## Version: 0.9.5 | Last Updated: 2025-12-28
 
 ---
 
@@ -83,7 +83,9 @@
 - [x] **LWJGL 3**: Backend upgrade from LWJGL 2
 - [x] **LibGDX 1.12.1**: Latest stable game framework
 - [x] **CI/CD**: GitHub Actions workflow
-- [x] **Unit Testing**: JUnit 5 framework with 4 test classes
+- [x] **Unit Testing**: JUnit 5 framework with 6 test classes
+  - `MissionManagerTest`: 9 tests for mission system
+  - `StepUpManagerTest`: 12 tests for step-up mode
 - [x] **Centralized Versioning**: `VERSION.md` as single source of truth
 
 ### Code Quality
@@ -118,7 +120,7 @@
 ## 📋 Planned Features
 
 ### Osu! Mode Enhancements
-- [ ] **Timing Points**: Better inherited timing point handling
+- [x] **Timing Points**: Inherited timing point handling (0.9.5)
 - [ ] **Storyboard Events**: Parse and display storyboard elements
 - [ ] **Hit Sound Support**: Per-note hit sounds
 
@@ -187,6 +189,8 @@
 | `OsuDecoderBezierTest` | Bezier curve approximation |
 | `AudioTest` | WAV loading verification |
 | `ScoreDataTest` | EXScore, JudgeCount, Fast/Slow tracking |
+| `MissionManagerTest` | 9 tests - mission tracking, completion, daily/normal missions |
+| `StepUpManagerTest` | 12 tests - level progression, persistence, course generation |
 
 ---
 
@@ -194,6 +198,7 @@
 
 | Version | Date | Highlights |
 |---------|------|------------|
+| 0.9.5 | 2025-12-28 | Timing point support, MissionManagerTest, StepUpManagerTest |
 | 0.9.3 | 2025-12-28 | Documentation overhaul, Gradle fixes, ScoreDataTest |
 | 0.9.2 | 2025-12-27 | Osu! Background/Video, Mission System, Arena enhancements |
 | 0.9.1 | 2025-12-27 | FLAC support, PCM refactoring, Gradle 8.5 |

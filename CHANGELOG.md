@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.9.5] - 2025-12-28
+### Added
+- **Osu! Timing Point Improvements**: BPM changes and inherited timing points (SV) are now properly applied to timelines.
+- **MissionManagerTest**: 9 test cases covering mission creation, progress tracking, and criteria types.
+- **StepUpManagerTest**: 12 test cases covering level progression, bounds checking, and stage tracking.
+
+### Changed
+- **OsuDecoder**: Enhanced `convert()` method to set BPM and scroll values on timeline entries.
+
 ## [0.9.4] - 2025-12-28
 ### Added
 - **Osu! Spinner Support**: Spinners (type 8) are now mapped to scratch lane (lane 0) as long notes.
