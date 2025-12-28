@@ -61,6 +61,13 @@ Dependencies are now primarily managed via Gradle, with some legacy JARs in `lib
     - **Controller Support**: Added hot-plugging support.
     - **Osu! Support**: Improved slider curve approximation (Bezier/Linear) and column mapping.
     - **Arena Polish**: Added Disconnect button and optimized UI.
+    - **Merged `feature/build-update-and-lr2-features`**:
+        - **Mission System**: Added MissionManager, Daily/Normal missions, and UI integration.
+        - **Step-Up Mode**: Enhanced logic with fallback and level variation.
+        - **Arena Mode**: Enhanced with rule syncing, song sync, and rank display.
+        - **Mod Menu**: Added Mission and Arena tabs.
+        - **Skin Properties**: Added `NUMBER_ARENA_RANK`.
+        - **Player Config**: Added `autoScratch`.
 - **2025-12-26**:
     - **Arena Mode**: Implemented Song Sync protocol and integrated with Music Selector.
     - **Skin System**: Added support for Fast/Slow counts and Arena Rank display. Updated default skin.

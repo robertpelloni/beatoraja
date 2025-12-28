@@ -205,10 +205,17 @@ public final class MusicSelector extends MainState implements ArenaManager.Arena
 			setStage(search);
 		}
 
-		main.getArenaManager().setListener(hash -> {
-			Gdx.app.postRunnable(() -> {
-				selectSongByHash(hash);
-			});
+		main.getArenaManager().addListener(new ArenaManager.ArenaListener() {
+			@Override
+			public void onSongSelected(String hash) {
+				Gdx.app.postRunnable(() -> {
+					selectSongByHash(hash);
+				});
+			}
+			@Override
+			public void onStartGame() {
+				// TODO: Handle game start
+			}
 		});
 	}
 
@@ -684,9 +691,9 @@ public final class MusicSelector extends MainState implements ArenaManager.Arena
 			Bar current = manager.getSelected();
 			if (current instanceof SongBar) {
 				SongData song = ((SongBar) current).getSongData();
-				if (song != null) {
-					main.getArenaManager().selectSong(song.getSha256());
-				}
+				// if (song != null) {
+				// 	main.getArenaManager().selectSong(song.getSha256());
+				// }
 			}
 		}
 

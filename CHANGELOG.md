@@ -5,6 +5,12 @@
 - **Osu! Background Support**: Implemented parsing of `[Events]` section in `.osu` files to extract background images.
 - **Osu! Audio Fix**: Correctly places the audio file on the background music channel and silences individual notes to prevent song restarting on every keypress.
 - Added `testBackgroundParsing` and `testAudioHandling` to `OsuDecoderTest`.
+- **Mission System**: Merged MissionManager, Daily/Normal missions, and UI integration.
+- **Step-Up Mode**: Enhanced logic with fallback and level variation.
+- **Arena Mode**: Enhanced with rule syncing, song sync, and rank display.
+- **Mod Menu**: Added Mission and Arena tabs.
+- **Skin Properties**: Added `NUMBER_ARENA_RANK`.
+- **Player Config**: Added `autoScratch`.
 
 ## [0.9.1] - 2025-12-27
 ### Added

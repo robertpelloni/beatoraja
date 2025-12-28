@@ -22,6 +22,8 @@
 - [x] **Enhanced Controller Support**: Added hot-plugging support for controllers.
 - [x] **Audio Refactoring**: Generic `PCM` class and `PCMLoader` implementation.
 - [x] **Versioning**: Centralized versioning system (`VERSION.md`).
+- [x] **Mission System**: Daily and Normal missions.
+- [x] **Arena Mode Enhancements**: Rule syncing, Song Sync, Rank display.
 
 ## In Progress
 - [ ] **Documentation**: Continuous improvement of Dashboard and Agent Instructions.
