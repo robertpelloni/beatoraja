@@ -237,4 +237,51 @@ public class OsuDecoderTest {
         }
         assertTrue(bgaEventFound, "BGA event not found at time 0");
     }
+
+    @Test
+    public void testSpinnerParsing() {
+        // Spinner format: x,y,time,type,hitSound,endTime,extras
+        // Type 8 = Spinner
+        String osuContent = "osu file format v14\n" +
+                "\n" +
+                "[General]\n" +
+                "AudioFilename: audio.mp3\n" +
+                "Mode: 3\n" +
+                "\n" +
+                "[Metadata]\n" +
+                "Title:Test Song\n" +
+                "Artist:Test Artist\n" +
+                "Version:Normal\n" +
+                "\n" +
+                "[Difficulty]\n" +
+                "CircleSize:7\n" +
+                "\n" +
+                "[TimingPoints]\n" +
+                "0,500,4,1,0,100,1,0\n" +
+                "\n" +
+                "[HitObjects]\n" +
+                "256,192,2000,8,0,4000,0:0:0:0:\n"; // Spinner from 2000ms to 4000ms
+
+        OsuDecoder decoder = new OsuDecoder(0);
+        BMSModel model = decoder.decode(new ByteArrayInputStream(osuContent.getBytes(StandardCharsets.UTF_8)));
+
+        assertNotNull(model);
+        assertEquals(Mode.BEAT_7K, model.getMode());
+
+        // Find the spinner (should be on scratch lane 0)
+        TimeLine[] timelines = model.getAllTimeLines();
+        boolean spinnerFound = false;
+        for (TimeLine tl : timelines) {
+            if (tl.getTime() == 2000) {
+                Note note = tl.getNote(0); // Lane 0 = Scratch
+                assertNotNull(note, "Spinner note should be on lane 0");
+                assertTrue(note instanceof LongNote, "Spinner should be a LongNote");
+                // Duration = 4000 - 2000 = 2000ms = 2000000 microseconds
+                assertEquals(2000 * 1000, ((LongNote) note).getMicroDuration());
+                spinnerFound = true;
+                break;
+            }
+        }
+        assertTrue(spinnerFound, "Spinner not found at 2000ms");
+    }
 }

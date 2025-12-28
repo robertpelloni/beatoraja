@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.9.4] - 2025-12-28
+### Added
+- **Osu! Spinner Support**: Spinners (type 8) are now mapped to scratch lane (lane 0) as long notes.
+- **Test Coverage**: Added `testSpinnerParsing` to `OsuDecoderTest`.
+
+### Changed
+- **Documentation**: Comprehensive ROADMAP.md reorganization with package status table.
+- **DASHBOARD.md**: Updated with feature status overview and test summary.
+
 ## [0.9.3] - 2025-12-28
 ### Changed
 - **Documentation**: Comprehensive update of DASHBOARD.md with full dependency table and project structure.

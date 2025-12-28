@@ -1,117 +1,222 @@
 # Project Dashboard
 
 ## Project Status
-- **Version**: 0.9.3
-- **Date**: 2025-12-28
-- **Build System**: Gradle 8.5 (`build.gradle`)
-- **Java Version**: Java 21
-- **Backend**: LWJGL 3 / LibGDX 1.12.1
+| Property | Value |
+|----------|-------|
+| **Version** | 0.9.4 |
+| **Date** | 2025-12-28 |
+| **Build System** | Gradle 8.5 |
+| **Java Version** | Java 21 |
+| **Backend** | LWJGL 3 / LibGDX 1.12.1 |
+| **Build Status** | ✅ Passing |
+| **Test Status** | ✅ 4 test classes passing |
 
 ## Repository Information
 | Property | Value |
-| :--- | :--- |
+|----------|-------|
 | **Origin** | https://github.com/robertpelloni/beatoraja.git |
 | **Upstream** | https://github.com/exch-bms2/beatoraja.git |
 | **Default Branch** | master |
 | **Submodules** | None (dependencies via Gradle + `lib/`) |
 
+---
+
+## Feature Status Overview
+
+### ✅ Fully Implemented
+| Feature | Version | Package/Location |
+|---------|---------|------------------|
+| BMS Playback | Core | `play/`, `bms.model` |
+| Osu! Support | 0.9.0 | `bms.model.OsuDecoder` |
+| Arena Mode | 0.9.0 | `arena/`, `arena/net/` |
+| Mission System | 0.9.2 | `mission/` |
+| Step-Up Mode | 0.9.0 | `stepup/` |
+| Mod Menu | 0.9.0 | `play/ui/` |
+| In-Game Downloader | 0.9.0 | `manager/DownloadManager` |
+| Fast/Slow Separation | 0.9.0 | `ScoreData`, `JudgeManager` |
+| FLAC Audio | 0.9.1 | `audio/FlacProcessor` |
+| Controller Hot-plug | 0.9.0 | `input/` |
+| CI/CD Pipeline | 0.9.0 | `.github/workflows/` |
+
+### 🔄 In Progress
+| Feature | Notes |
+|---------|-------|
+| Audio Engine Improvements | Lower latency drivers |
+
+### 📋 Planned
+| Feature | Priority |
+|---------|----------|
+| Osu! Spinner Support | High |
+| Vulkan Rendering | Low |
+| Theme Editor | Medium |
+
+---
+
 ## Dependencies
 
-### Gradle-Managed Dependencies (Maven Central)
-| Library | Version | Description |
-| :--- | :--- | :--- |
-| LibGDX | 1.12.1 | Game framework (rendering, audio, input) |
-| LibGDX LWJGL3 Backend | 1.12.1 | Modern OpenGL backend |
-| LibGDX FreeType | 1.12.1 | TrueType font rendering |
-| LibGDX Controllers | 2.2.3 | Controller/gamepad support |
-| JavaFX | 21 | Launcher/configuration UI |
-| JavaCV | 1.5.10 | Computer vision framework |
+### Gradle-Managed (Maven Central)
+| Library | Version | Purpose |
+|---------|---------|---------|
+| LibGDX | 1.12.1 | Game framework |
+| LibGDX LWJGL3 Backend | 1.12.1 | Modern OpenGL |
+| LibGDX FreeType | 1.12.1 | Font rendering |
+| LibGDX Controllers | 2.2.3 | Gamepad support |
+| JavaFX | 21 | Configuration UI |
+| JavaCV | 1.5.10 | Video processing |
 | FFmpeg | 6.1.1-1.5.10 | Video/BGA playback |
-| Commons Compress | 1.26.0 | Archive handling (ZIP, 7z) |
+| Commons Compress | 1.26.0 | Archive handling |
 | Commons DBUtils | 1.8.1 | Database utilities |
-| SQLite JDBC | 3.45.1.0 | Song database connectivity |
+| SQLite JDBC | 3.45.1.0 | Song database |
 | Twitter4J | 4.0.4 | Twitter integration |
-| JUnit Jupiter | 5.10.2 | Unit testing framework |
+| JUnit Jupiter | 5.10.2 | Unit testing |
 
-### Local Dependencies (`lib/` directory)
-| Library | File | Description |
-| :--- | :--- | :--- |
-| JBMS Parser | `jbms-parser.jar` | BMS file format parser |
-| JBMS Table Parser | `jbmstable-parser.jar` | BMS table (difficulty) parser |
-| LuaJ | `luaj-jse-3.0.2-custom.jar` | Lua scripting for skins |
-| JPortAudio | `jportaudio.jar` | PortAudio native bindings |
-| jFLAC | `jflac-codec-1.5.3.jar` | FLAC audio decoder |
-| Discord RPC | `java-discord-rpc-2.0.1-all.jar` | Discord Rich Presence |
+### Local Dependencies (`lib/`)
+| Library | File | Purpose |
+|---------|------|---------|
+| JBMS Parser | `jbms-parser.jar` | BMS file parsing |
+| JBMS Table Parser | `jbmstable-parser.jar` | Difficulty tables |
+| LuaJ | `luaj-jse-3.0.2-custom.jar` | Lua skin scripting |
+| JPortAudio | `jportaudio.jar` | PortAudio bindings |
+| jFLAC | `jflac-codec-1.5.3.jar` | FLAC audio |
+| Discord RPC | `java-discord-rpc-2.0.1-all.jar` | Discord integration |
+
+---
 
 ## Project Directory Structure
 
 ```
 beatoraja/
-├── src/                          # Source code
+├── src/
 │   ├── bms/
-│   │   ├── model/                # BMS data model and parsing
-│   │   ├── player/
-│   │   │   └── beatoraja/        # Main application package
-│   │   │       ├── MainLoader.java      # Entry point
-│   │   │       ├── MainController.java  # Core game logic
-│   │   │       ├── arena/        # Arena Mode (multiplayer)
-│   │   │       ├── audio/        # Audio drivers (PCM, loaders)
-│   │   │       ├── config/       # Configuration management
-│   │   │       ├── input/        # Input handling
-│   │   │       ├── ir/           # Internet Ranking
-│   │   │       ├── manager/      # Extracted managers
-│   │   │       │   ├── UpdateManager.java
-│   │   │       │   ├── ScreenshotManager.java
-│   │   │       │   ├── InputManager.java
-│   │   │       │   └── DownloadManager.java
-│   │   │       ├── pattern/      # Chart pattern analysis
-│   │   │       ├── play/         # Gameplay logic
-│   │   │       ├── result/       # Score/result screens
-│   │   │       ├── select/       # Song selection
-│   │   │       ├── skin/         # Skin system
-│   │   │       ├── song/         # Song database (SQLite)
-│   │   │       └── stepup/       # Step-Up Mode
-│   │   └── tool/                 # Utility tools
-│   ├── glsl/                     # OpenGL shaders
-│   ├── resources/                # Resource files
-│   └── test/                     # Unit tests (JUnit 5)
-│       └── java/
-├── lib/                          # Local JAR dependencies
-├── skin/                         # Skin resources (Lua, JSON, images)
-├── docs/                         # Documentation
-│   └── DASHBOARD.md              # This file
-├── table/                        # BMS table configurations
-├── font/                         # Font resources
-├── natives/                      # Platform-specific native libraries
-├── build.gradle                  # Gradle build configuration
-├── settings.gradle               # Gradle project settings
-├── VERSION.md                    # Current version (single source of truth)
-├── CHANGELOG.md                  # Release history
-├── ROADMAP.md                    # Feature roadmap
-├── AGENTS.md                     # AI agent instructions
-├── LLM_INSTRUCTIONS.md           # Universal LLM instructions
-└── README.md                     # Project readme
+│   │   ├── model/                    # BMS/Osu data models
+│   │   │   └── OsuDecoder.java       # Osu! file parser
+│   │   ├── player/beatoraja/         # Main application
+│   │   │   ├── MainLoader.java       # Entry point
+│   │   │   ├── MainController.java   # Core game logic
+│   │   │   ├── arena/                # Arena Mode
+│   │   │   │   ├── net/              # Networking (Client/Server)
+│   │   │   │   ├── ArenaManager.java
+│   │   │   │   └── ArenaData.java
+│   │   │   ├── audio/                # Audio system
+│   │   │   │   ├── PCM.java          # Generic PCM base
+│   │   │   │   ├── PCMLoader.java    # Format loaders
+│   │   │   │   └── FlacProcessor.java
+│   │   │   ├── manager/              # Extracted managers
+│   │   │   │   ├── UpdateManager.java
+│   │   │   │   ├── ScreenshotManager.java
+│   │   │   │   ├── InputManager.java
+│   │   │   │   └── DownloadManager.java
+│   │   │   ├── mission/              # Mission system
+│   │   │   │   ├── MissionManager.java
+│   │   │   │   └── MissionData.java
+│   │   │   ├── stepup/               # Step-Up mode
+│   │   │   │   ├── StepUpManager.java
+│   │   │   │   └── StepUpData.java
+│   │   │   ├── play/                 # Gameplay
+│   │   │   │   ├── JudgeManager.java # Judging logic
+│   │   │   │   ├── LaneRenderer.java # Note rendering
+│   │   │   │   └── bga/              # BGA processing
+│   │   │   ├── select/               # Song selection
+│   │   │   │   ├── MusicSelector.java
+│   │   │   │   └── ArenaLobby.java
+│   │   │   ├── skin/                 # Skinning system
+│   │   │   │   ├── json/             # JSON skins
+│   │   │   │   ├── lr2/              # LR2 skins
+│   │   │   │   ├── lua/              # Lua skins
+│   │   │   │   └── property/         # Skin properties
+│   │   │   └── ...
+│   │   └── tool/                     # Utilities
+│   ├── glsl/                         # OpenGL shaders
+│   ├── resources/                    # Resource files
+│   └── test/java/                    # Unit tests
+│       ├── bms/model/
+│       │   ├── OsuDecoderTest.java
+│       │   └── OsuDecoderBezierTest.java
+│       └── bms/player/beatoraja/
+│           ├── ScoreDataTest.java
+│           └── audio/AudioTest.java
+├── lib/                              # Local JAR dependencies
+├── skin/                             # Skin resources
+│   └── default/                      # Default skin
+├── docs/                             # Documentation
+├── table/                            # BMS table configs
+├── .github/workflows/                # CI/CD
+│   └── gradle.yml                    # GitHub Actions
+├── build.gradle                      # Build configuration
+├── VERSION.md                        # Version (0.9.3)
+├── CHANGELOG.md                      # Release history
+├── ROADMAP.md                        # Feature roadmap
+├── HANDOFF.md                        # Session notes
+├── AGENTS.md                         # AI agent instructions
+└── LLM_INSTRUCTIONS.md               # Universal LLM guide
 ```
+
+---
 
 ## Build Commands
 
 | Command | Description |
-| :--- | :--- |
-| `gradlew build` | Compile and package the application |
-| `gradlew run` | Run the application |
-| `gradlew test` | Run all unit tests |
-| `gradlew test --tests "ClassName"` | Run a single test class |
+|---------|-------------|
+| `gradlew build` | Compile and package |
+| `gradlew run` | Run application |
+| `gradlew test` | Run all tests |
+| `gradlew test --tests "ClassName"` | Run single test |
+| `gradlew test --tests "ClassName.methodName"` | Run single method |
 | `gradlew clean` | Clean build artifacts |
+| `gradlew build --warning-mode all` | Build with deprecation warnings |
 
-## Recent Changes (0.9.3)
-- **2025-12-28**:
-  - Comprehensive documentation update (Dashboard, AGENTS.md).
-  - Version synchronization across project.
-  - Build verification on Gradle 8.5 / Java 21.
+---
 
-## Previous Releases Summary
-- **0.9.2**: Osu! Background/Video support, Audio fixes.
-- **0.9.1**: FLAC support, PCM refactoring, Gradle 8.5 migration.
-- **0.9.0**: Arena Mode, Mod Menu, Step-Up Mode, CI/CD, LWJGL 3.
-- **0.8.9**: Centralized versioning, build fixes.
-- **0.8.8**: Initial modernization, LLM instructions.
+## Test Summary
+
+| Test Class | Tests | Status |
+|------------|-------|--------|
+| `OsuDecoderTest` | 5 | ✅ Pass |
+| `OsuDecoderBezierTest` | 1 | ✅ Pass |
+| `AudioTest` | 1 | ✅ Pass |
+| `ScoreDataTest` | 9 | ✅ Pass |
+
+---
+
+## Recent Changes
+
+### 0.9.4 (2025-12-28)
+- Osu! Spinner support confirmed with test
+- Comprehensive ROADMAP.md reorganization with package status
+- Updated DASHBOARD.md with feature status overview
+
+### 0.9.3 (2025-12-28)
+- Fixed Gradle deprecation warnings (modern `application` block)
+- Added `ScoreDataTest` with 9 test cases
+- Comprehensive ROADMAP.md and DASHBOARD.md update
+- Version synchronization across project
+
+### 0.9.2 (2025-12-27)
+- Osu! Background/Video support in `[Events]` section
+- Audio fix: BGM on background channel, silent notes
+- Mission System integration
+- Arena Mode enhancements (rule sync, rank display)
+
+### 0.9.1 (2025-12-27)
+- FLAC audio support via jflac-codec
+- PCM class hierarchy refactoring
+- Gradle 8.5 + Java 21 migration
+- LWJGL 2 → LWJGL 3 backend
+
+### 0.9.0 (2025-12-26)
+- Arena Mode with networking
+- Osu! file support
+- Mod Menu overlay
+- Step-Up Mode
+- In-Game Downloader
+- CI/CD Pipeline
+- MainController refactoring
+
+---
+
+## Next Priority: Timing Point Improvements
+
+The next feature to implement is **improved Osu! timing point handling** in `OsuDecoder.java`:
+- Better inherited timing point support for SV changes
+- Multiple BPM handling throughout the chart
+- Add test coverage for complex timing scenarios
