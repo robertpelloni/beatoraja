@@ -53,13 +53,15 @@ Dependencies are now primarily managed via Gradle, with some legacy JARs in `lib
 
 ## Recent Changes
 - **2025-12-27**:
+    - **Osu! Support**:
+        - Implemented `[Events]` section parsing for Backgrounds and Videos.
+        - Fixed audio playback (BGM on channel 1, silent notes) to prevent restart loops.
     - **Versioning**: Centralized versioning using `VERSION.md`.
     - **Audio Refactoring**: Refactored `PCM` class hierarchy and re-implemented `PCMLoader`.
     - **Runtime Fix**: Fixed `FileNotFoundException` crash by adding `table/default.json`.
     - **Tests**: Added `AudioTest` and fixed `OsuDecoderTest`.
     - **Refactoring**: Extracted `UpdateManager`, `ScreenshotManager`, `InputManager`, and `DownloadManager` from `MainController`.
     - **Controller Support**: Added hot-plugging support.
-    - **Osu! Support**: Improved slider curve approximation (Bezier/Linear) and column mapping.
     - **Arena Polish**: Added Disconnect button and optimized UI.
     - **Merged `feature/build-update-and-lr2-features`**:
         - **Mission System**: Added MissionManager, Daily/Normal missions, and UI integration.
