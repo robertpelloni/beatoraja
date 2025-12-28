@@ -96,12 +96,14 @@ test {
     useJUnitPlatform()
 }
 
-mainClassName = 'bms.player.beatoraja.MainLoader'
+application {
+    mainClass = 'bms.player.beatoraja.MainLoader'
+}
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 
-run {
+tasks.named('run') {
     workingDir = project.projectDir
 }
