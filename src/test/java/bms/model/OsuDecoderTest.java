@@ -170,13 +170,13 @@ public class OsuDecoderTest {
         }
         assertTrue(bgmFound, "Background audio not found at time 0");
 
-        // Check Note Audio (Should be 0/Silent)
+        // Check Note Audio (Should use default hit sound WAV_NORMAL = 2)
         boolean noteFound = false;
         for (TimeLine tl : timelines) {
             if (tl.getTime() == 1000) {
                 Note note = tl.getNote(1);
                 assertNotNull(note);
-                assertEquals(0, note.getWav(), "Note should be silent (WAV 0)");
+                assertEquals(OsuDecoder.WAV_NORMAL, note.getWav(), "Note should use default hit sound (WAV_NORMAL)");
                 noteFound = true;
                 break;
             }
@@ -391,5 +391,102 @@ public class OsuDecoderTest {
         assertTrue(found3000, "Note timeline at 3000ms not found");
         assertTrue(found5000, "Note timeline at 5000ms not found");
         assertTrue(found7000, "Note timeline at 7000ms not found");
+    }
+
+    @Test
+    public void testHitSoundParsing() {
+        // Test hit sound parsing
+        // hitSound bitmask: 0=Normal, 2=Whistle, 4=Finish, 8=Clap
+        // WAV mapping: Normal=2, Whistle=3, Finish=4, Clap=5
+        String osuContent = "osu file format v14\n" +
+                "\n" +
+                "[General]\n" +
+                "AudioFilename: audio.mp3\n" +
+                "Mode: 3\n" +
+                "\n" +
+                "[Metadata]\n" +
+                "Title:Test Song\n" +
+                "Artist:Test Artist\n" +
+                "Version:Normal\n" +
+                "\n" +
+                "[Difficulty]\n" +
+                "CircleSize:4\n" +
+                "\n" +
+                "[TimingPoints]\n" +
+                "0,500,4,1,0,100,1,0\n" +
+                "\n" +
+                "[HitObjects]\n" +
+                "64,192,1000,1,0,0:0:0:0:\n" +   // Normal (hitSound=0) -> WAV 2
+                "192,192,2000,1,2,0:0:0:0:\n" +  // Whistle (hitSound=2) -> WAV 3
+                "320,192,3000,1,4,0:0:0:0:\n" +  // Finish (hitSound=4) -> WAV 4
+                "448,192,4000,1,8,0:0:0:0:\n";   // Clap (hitSound=8) -> WAV 5
+
+        OsuDecoder decoder = new OsuDecoder(0);
+        BMSModel model = decoder.decode(new ByteArrayInputStream(osuContent.getBytes(StandardCharsets.UTF_8)));
+
+        assertNotNull(model);
+
+        TimeLine[] timelines = model.getAllTimeLines();
+        assertNotNull(timelines);
+
+        // Verify Normal hit sound (WAV 2)
+        boolean foundNormal = false;
+        for (TimeLine tl : timelines) {
+            if (tl.getTime() == 1000) {
+                Note note = tl.getNote(1);
+                assertNotNull(note, "Note at 1000ms should exist");
+                assertEquals(OsuDecoder.WAV_NORMAL, note.getWav(), "Normal hitSound should map to WAV 2");
+                foundNormal = true;
+                break;
+            }
+        }
+        assertTrue(foundNormal, "Normal note not found at 1000ms");
+
+        // Verify Whistle hit sound (WAV 3)
+        boolean foundWhistle = false;
+        for (TimeLine tl : timelines) {
+            if (tl.getTime() == 2000) {
+                Note note = tl.getNote(2);
+                assertNotNull(note, "Note at 2000ms should exist");
+                assertEquals(OsuDecoder.WAV_WHISTLE, note.getWav(), "Whistle hitSound should map to WAV 3");
+                foundWhistle = true;
+                break;
+            }
+        }
+        assertTrue(foundWhistle, "Whistle note not found at 2000ms");
+
+        // Verify Finish hit sound (WAV 4)
+        boolean foundFinish = false;
+        for (TimeLine tl : timelines) {
+            if (tl.getTime() == 3000) {
+                Note note = tl.getNote(3);
+                assertNotNull(note, "Note at 3000ms should exist");
+                assertEquals(OsuDecoder.WAV_FINISH, note.getWav(), "Finish hitSound should map to WAV 4");
+                foundFinish = true;
+                break;
+            }
+        }
+        assertTrue(foundFinish, "Finish note not found at 3000ms");
+
+        // Verify Clap hit sound (WAV 5)
+        boolean foundClap = false;
+        for (TimeLine tl : timelines) {
+            if (tl.getTime() == 4000) {
+                Note note = tl.getNote(4);
+                assertNotNull(note, "Note at 4000ms should exist");
+                assertEquals(OsuDecoder.WAV_CLAP, note.getWav(), "Clap hitSound should map to WAV 5");
+                foundClap = true;
+                break;
+            }
+        }
+        assertTrue(foundClap, "Clap note not found at 4000ms");
+
+        // Verify hitSoundToWav utility method
+        assertEquals(OsuDecoder.WAV_NORMAL, OsuDecoder.hitSoundToWav(0));
+        assertEquals(OsuDecoder.WAV_WHISTLE, OsuDecoder.hitSoundToWav(2));
+        assertEquals(OsuDecoder.WAV_FINISH, OsuDecoder.hitSoundToWav(4));
+        assertEquals(OsuDecoder.WAV_CLAP, OsuDecoder.hitSoundToWav(8));
+        // Clap takes priority over other sounds
+        assertEquals(OsuDecoder.WAV_CLAP, OsuDecoder.hitSoundToWav(14)); // 8+4+2
     }
 }

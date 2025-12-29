@@ -138,17 +138,18 @@ public class OsuDecoder {
                     }
                 } else if (section.equals("HitObjects")) {
                     String[] parts = line.split(",");
-                    if (parts.length >= 3) {
+                    if (parts.length >= 4) {
                         try {
                             int x = Integer.parseInt(parts[0]);
                             int y = Integer.parseInt(parts[1]);
                             long time = Long.parseLong(parts[2]);
                             int type = Integer.parseInt(parts[3]);
+                            int hitSound = parts.length >= 5 ? Integer.parseInt(parts[4]) : 0;
 
                             // Spinner (Type 8) -> Scratch LN (Lane 0)
                             if ((type & 8) > 0) {
                                 long endTime = Long.parseLong(parts[5]); // Spinners have end time in 6th field
-                                hitObjects.add(new HitObject(0, time, endTime)); // Lane 0 = Scratch
+                                hitObjects.add(new HitObject(0, time, endTime, hitSound)); // Lane 0 = Scratch
                             } else {
                                 int column = (int)(x * keys / 512.0);
                                 column = Math.max(0, Math.min(keys - 1, column));
@@ -167,7 +168,7 @@ public class OsuDecoder {
                                 if ((type & 128) > 0) { // Hold Note
                                     String[] subparts = parts[5].split(":");
                                     long endTime = Long.parseLong(subparts[0]);
-                                    hitObjects.add(new HitObject(lane, time, endTime));
+                                    hitObjects.add(new HitObject(lane, time, endTime, hitSound));
                                 } else if ((type & 2) > 0) { // Slider
                                     // x,y,time,type,hitSound,curveType|curvePoints,slides,length
                                     if (parts.length >= 8) {
@@ -184,12 +185,12 @@ public class OsuDecoder {
                                         }
 
                                         // Duration will be calculated in convert()
-                                        hitObjects.add(new HitObject(lane, time, 0, length, slides, curveType, points));
+                                        hitObjects.add(new HitObject(lane, time, 0, length, slides, curveType, points, hitSound));
                                     } else {
-                                        hitObjects.add(new HitObject(lane, time, 0));
+                                        hitObjects.add(new HitObject(lane, time, 0, hitSound));
                                     }
                                 } else {
-                                    hitObjects.add(new HitObject(lane, time, 0));
+                                    hitObjects.add(new HitObject(lane, time, 0, hitSound));
                                 }
                             }
 
@@ -320,12 +321,13 @@ public class OsuDecoder {
                 continue;
             }
 
+            int wavIndex = hitSoundToWav(ho.hitSound);
             if (endTime > 0) {
-                note = new LongNote(0); // Use WAV 0 (Silent)
+                note = new LongNote(wavIndex);
                 note.setMicroDuration((endTime - ho.time) * 1000);
                 ((LongNote)note).setType(lntype);
             } else {
-                note = new NormalNote(0); // Use WAV 0 (Silent)
+                note = new NormalNote(wavIndex);
             }
             note.setMicroTime(ho.time * 1000);
 
@@ -512,6 +514,18 @@ public class OsuDecoder {
         return new Vector2(p1).lerp(p2, t);
     }
 
+    public static final int WAV_NORMAL = 2;
+    public static final int WAV_WHISTLE = 3;
+    public static final int WAV_FINISH = 4;
+    public static final int WAV_CLAP = 5;
+
+    public static int hitSoundToWav(int hitSound) {
+        if ((hitSound & 8) != 0) return WAV_CLAP;
+        if ((hitSound & 4) != 0) return WAV_FINISH;
+        if ((hitSound & 2) != 0) return WAV_WHISTLE;
+        return WAV_NORMAL;
+    }
+
     private static class HitObject implements Comparable<HitObject> {
         int lane;
         long time;
@@ -520,16 +534,21 @@ public class OsuDecoder {
         int slides;
         char curveType;
         List<Vector2> points;
+        int hitSound;
 
         public HitObject(int lane, long time, long endTime) {
-            this(lane, time, endTime, 0, 0, 'L', null);
+            this(lane, time, endTime, 0, 0, 'L', null, 0);
         }
 
-        public HitObject(int lane, long time, long endTime, double length, int slides) {
-            this(lane, time, endTime, length, slides, 'L', null);
+        public HitObject(int lane, long time, long endTime, int hitSound) {
+            this(lane, time, endTime, 0, 0, 'L', null, hitSound);
         }
 
         public HitObject(int lane, long time, long endTime, double length, int slides, char curveType, List<Vector2> points) {
+            this(lane, time, endTime, length, slides, curveType, points, 0);
+        }
+
+        public HitObject(int lane, long time, long endTime, double length, int slides, char curveType, List<Vector2> points, int hitSound) {
             this.lane = lane;
             this.time = time;
             this.endTime = endTime;
@@ -537,6 +556,7 @@ public class OsuDecoder {
             this.slides = slides;
             this.curveType = curveType;
             this.points = points;
+            this.hitSound = hitSound;
         }
 
         @Override

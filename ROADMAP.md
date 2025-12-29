@@ -1,6 +1,6 @@
 # Roadmap
 
-## Version: 0.9.5 | Last Updated: 2025-12-28
+## Version: 0.9.6 | Last Updated: 2025-12-28
 
 ---
 
@@ -121,8 +121,8 @@
 
 ### Osu! Mode Enhancements
 - [x] **Timing Points**: Inherited timing point handling (0.9.5)
+- [x] **Hit Sound Support**: Per-note hit sounds mapped to WAV indices (0.9.6)
 - [ ] **Storyboard Events**: Parse and display storyboard elements
-- [ ] **Hit Sound Support**: Per-note hit sounds
 
 ### Rendering Improvements
 - [ ] **Vulkan Backend**: Future LibGDX Vulkan support

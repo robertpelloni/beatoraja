@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.9.6] - 2025-12-28
+### Added
+- **ConfigTest**: 11 test cases covering display, audio, IPFS, and path settings.
+- **PlayModeConfigTest**: 9 test cases covering keyboard, controller, and MIDI configuration.
+- **Osu! Hit Sound Support**: Confirmed working - hitSound values map to WAV indices (Normal=2, Whistle=3, Finish=4, Clap=5).
+
+### Fixed
+- Updated `testAudioHandling` to expect `WAV_NORMAL` instead of silent notes (reflects hit sound support).
+
+### Stats
+- **Total Tests**: 166 passing across 10 test classes.
+
 ## [0.9.5] - 2025-12-28
 ### Added
 - **Osu! Timing Point Improvements**: BPM changes and inherited timing points (SV) are now properly applied to timelines.
