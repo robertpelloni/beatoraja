@@ -46,7 +46,7 @@
 ### 📋 Planned
 | Feature | Priority |
 |---------|----------|
-| Osu! Spinner Support | High |
+| Osu! Storyboard Events | Medium |
 | Vulkan Rendering | Low |
 | Theme Editor | Medium |
 
@@ -143,7 +143,7 @@ beatoraja/
 ├── .github/workflows/                # CI/CD
 │   └── gradle.yml                    # GitHub Actions
 ├── build.gradle                      # Build configuration
-├── VERSION.md                        # Version (0.9.3)
+├── VERSION.md                        # Version (0.9.6)
 ├── CHANGELOG.md                      # Release history
 ├── ROADMAP.md                        # Feature roadmap
 ├── HANDOFF.md                        # Session notes
@@ -232,9 +232,9 @@ beatoraja/
 
 ---
 
-## Next Priority: Timing Point Improvements
+## Next Priority: Osu! Storyboard Support
 
-The next feature to implement is **improved Osu! timing point handling** in `OsuDecoder.java`:
-- Better inherited timing point support for SV changes
-- Multiple BPM handling throughout the chart
-- Add test coverage for complex timing scenarios
+The next feature to implement is **storyboard support** in `OsuDecoder.java`:
+- Parse storyboard elements from `[Events]` section
+- Display background animations and sprites
+- Coordinate with BGA system for unified rendering
