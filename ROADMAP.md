@@ -181,16 +181,23 @@
 
 ---
 
-## 🧪 Test Coverage
+## 🧪 Test Coverage (13 Classes, 180+ Tests)
 
-| Test Class | Coverage |
-|------------|----------|
-| `OsuDecoderTest` | Slider duration, Background, Audio, Video parsing |
-| `OsuDecoderBezierTest` | Bezier curve approximation |
-| `AudioTest` | WAV loading verification |
-| `ScoreDataTest` | EXScore, JudgeCount, Fast/Slow tracking |
-| `MissionManagerTest` | 9 tests - mission tracking, completion, daily/normal missions |
-| `StepUpManagerTest` | 12 tests - level progression, persistence, course generation |
+| Test Class | Tests | Coverage |
+|------------|-------|----------|
+| `OsuDecoderTest` | 7 | Slider, Spinner, BG, Video, Audio, Timing, HitSound |
+| `OsuDecoderBezierTest` | 1 | Bezier curve approximation |
+| `AudioTest` | 22 | PCM loading, format detection, streams |
+| `ScoreDataTest` | 9 | EXScore, JudgeCount, Fast/Slow tracking |
+| `MissionManagerTest` | 9 | Mission creation, progress, criteria |
+| `StepUpManagerTest` | 12 | Level progression, bounds, stages |
+| `ArenaDataTest` | 6 | Player data, score, rank |
+| `ArenaManagerTest` | 15 | Players, scores, ranks, listeners |
+| `ConfigTest` | 11 | Display, audio, IPFS, paths |
+| `PlayModeConfigTest` | 9 | Keyboard, controller, MIDI |
+| `PlayerConfigTest` | 12 | Player preferences |
+| `ClearTypeTest` | 7 | Clear types, gauge mappings |
+| `ResolutionTest` | 5 | Resolution values, aspect ratios |
 
 ---
 
@@ -198,7 +205,9 @@
 
 | Version | Date | Highlights |
 |---------|------|------------|
+| 0.9.6 | 2025-12-28 | ConfigTest, PlayModeConfigTest, Hit Sound support, 180+ tests |
 | 0.9.5 | 2025-12-28 | Timing point support, MissionManagerTest, StepUpManagerTest |
+| 0.9.4 | 2025-12-28 | Osu! Spinner support, comprehensive ROADMAP |
 | 0.9.3 | 2025-12-28 | Documentation overhaul, Gradle fixes, ScoreDataTest |
 | 0.9.2 | 2025-12-27 | Osu! Background/Video, Mission System, Arena enhancements |
 | 0.9.1 | 2025-12-27 | FLAC support, PCM refactoring, Gradle 8.5 |
