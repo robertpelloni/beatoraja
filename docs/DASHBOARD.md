@@ -3,13 +3,13 @@
 ## Project Status
 | Property | Value |
 |----------|-------|
-| **Version** | 0.9.4 |
+| **Version** | 0.9.6 |
 | **Date** | 2025-12-28 |
 | **Build System** | Gradle 8.5 |
 | **Java Version** | Java 21 |
 | **Backend** | LWJGL 3 / LibGDX 1.12.1 |
 | **Build Status** | ✅ Passing |
-| **Test Status** | ✅ 4 test classes passing |
+| **Test Status** | ✅ 13 test classes, 180+ tests passing |
 
 ## Repository Information
 | Property | Value |
@@ -171,14 +171,32 @@ beatoraja/
 
 | Test Class | Tests | Status |
 |------------|-------|--------|
-| `OsuDecoderTest` | 5 | ✅ Pass |
+| `OsuDecoderTest` | 7 | ✅ Pass |
 | `OsuDecoderBezierTest` | 1 | ✅ Pass |
-| `AudioTest` | 1 | ✅ Pass |
+| `AudioTest` | 22 | ✅ Pass |
 | `ScoreDataTest` | 9 | ✅ Pass |
+| `MissionManagerTest` | 9 | ✅ Pass |
+| `StepUpManagerTest` | 12 | ✅ Pass |
+| `ArenaDataTest` | 6 | ✅ Pass |
+| `ArenaManagerTest` | 15 | ✅ Pass |
+| `ConfigTest` | 11 | ✅ Pass |
+| `PlayModeConfigTest` | 9 | ✅ Pass |
+| `PlayerConfigTest` | 12 | ✅ Pass |
+| `ClearTypeTest` | 7 | ✅ Pass |
+| `ResolutionTest` | 5 | ✅ Pass |
 
 ---
 
 ## Recent Changes
+
+### 0.9.6 (2025-12-28)
+- ConfigTest, PlayModeConfigTest, ClearTypeTest, ResolutionTest added
+- Osu! Hit Sound support confirmed
+- 13 test classes with 180+ tests total
+
+### 0.9.5 (2025-12-28)
+- Osu! Timing Point improvements (BPM/SV)
+- MissionManagerTest, StepUpManagerTest, ArenaTests added
 
 ### 0.9.4 (2025-12-28)
 - Osu! Spinner support confirmed with test
