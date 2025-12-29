@@ -2,24 +2,52 @@
 
 See [LLM_INSTRUCTIONS.md](LLM_INSTRUCTIONS.md) for universal instructions.
 
-## Build Commands
+## Project Overview
+- **Type**: Java 21 Application (Gradle)
+- **Frameworks**: 
+  - **LibGDX 1.12.1** (Game Engine, LWJGL3 Backend)
+  - **JavaFX 21** (Launcher/Config UI)
+  - **SQLite** (Data Storage)
+- **Platform**: Cross-platform (Windows, Linux, macOS), though current environment is Windows.
+
+## Build & Run Commands
 - **Build**: `./gradlew build`
 - **Run**: `./gradlew run`
-- **Test all**: `./gradlew test`
-- **Single test**: `./gradlew test --tests "ClassName"` or `./gradlew test --tests "ClassName.methodName"`
+- **Test All**: `./gradlew test`
+- **Single Test**: `./gradlew test --tests "bms.player.beatoraja.ConfigTest"`
 - **Clean**: `./gradlew clean`
 
-## Architecture
-- **Java 21** with **LibGDX 1.12.1** game framework and **LWJGL 3** backend
-- **Database**: SQLite (`songdata.db`) via sqlite-jdbc
-- **Packages**: `bms.player.beatoraja` (main), `bms.model` (BMS parsing), `bms.tool` (utilities)
-- **Entry point**: `bms.player.beatoraja.MainLoader`
-- **Skins**: Lua scripts in `skin/` directory
-- **Local libs**: `lib/` contains jbms-parser, luaj, jportaudio, jflac
+## Project Structure
+- **Source**: `src/` contains BOTH Java source code and resources (images, shaders, properties).
+  - **Note**: `build.gradle` defines `src` as both java and resource dir.
+- **Tests**: `src/test/java/` (JUnit 5).
+- **Local Libs**: `lib/` contains critical dependencies not in Maven Central (jbms-parser, luaj-custom, etc.).
+- **Skins**: `skin/` directory contains Lua scripts and assets for game skins.
+- **Config**: Root directory contains `.json` config files (e.g., `config_sys.json`).
 
-## Code Style
-- **Encoding**: UTF-8
-- **Naming**: camelCase for methods/variables, PascalCase for classes
-- **Imports**: Explicit imports preferred (no wildcards)
-- **Versioning**: Update `VERSION.md` and `CHANGELOG.md` for releases (never hardcode versions)
-- **Testing**: JUnit 5 (Jupiter) in `src/test/java/`
+## Key Packages & Classes
+- **Entry Point**: `bms.player.beatoraja.MainLoader` (JavaFX App -> Launches LibGDX)
+- **Core Logic**: `bms.player.beatoraja`
+  - `BMSPlayer`: Main gameplay state and logic.
+  - `Config`: Configuration management (`config_sys.json`).
+  - `MainController`: Bridge between system and game states.
+- **Data Models**: `bms.player.beatoraja.song`
+  - `SongData`: Represents a BMS song entry.
+  - `SQLiteSongDatabaseAccessor`: Database operations.
+- **Skins**: `bms.player.beatoraja.skin`
+  - Handles Lua (`.lua`) and JSON skin parsing/rendering.
+
+## Development Patterns
+- **Architecture**: Hybrid JavaFX (Setup/Launcher) and LibGDX (Game Loop).
+- **Database**: SQLite accessed via JDBC. `songdata.db` is the main database.
+- **Audio/Video**: Uses custom drivers wrapping PortAudio/OpenAL and FFmpeg (via JavaCV).
+- **Style**:
+  - **Encoding**: UTF-8 (Strictly enforced).
+  - **Naming**: PascalCase classes, camelCase methods/vars.
+  - **Imports**: Explicit imports preferred over wildcards.
+
+## Critical Gotchas
+1.  **Resources in Source**: Non-java files in `src/` are production resources. Do not delete or move them without updating `build.gradle`.
+2.  **Local Dependencies**: The project relies on JARs in `lib/`. Ensure `flatDir` repository is preserved in build scripts.
+3.  **Dual UI Context**: Code running in `MainLoader` (JavaFX thread) behaves differently from code in `BMSPlayer` (LibGDX/OpenGL thread). Be careful with thread safety and context context.
+4.  **BMS Format**: Parsing logic is largely in the external `jbms-parser` library, not the main source tree.
