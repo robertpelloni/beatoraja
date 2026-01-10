@@ -1,3 +1,17 @@
 [submodule "bobcoin"]
 	path = bobcoin
 	url = https://github.com/robertpelloni/bobcoin
+
+[submodule "beatoraja-english-guide"]
+	path = beatoraja-english-guide
+	url = https://github.com/robertpelloni/beatoraja-english-guide
+
+[submodule "lr2oraja"]
+	path = lr2oraja
+	url = https://github.com/robertpelloni/lr2oraja
+	branch = lr2oraja
+
+[submodule "lr2oraja-endlessdream"]
+	path = lr2oraja-endlessdream
+	url = https://github.com/robertpelloni/lr2oraja-endlessdream
+
