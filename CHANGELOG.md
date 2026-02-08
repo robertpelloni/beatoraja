@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.9.7] - 2026-02-07
+### Fixed
+- **Submodules**: Converted submodule URLs to relative paths in `.gitmodules` to improve compatibility with mirrored or proxied environments (e.g., Jules CI).
+
 ## [0.9.6] - 2025-12-28
 ### Added
 - **ConfigTest**: 11 test cases covering display, audio, IPFS, and path settings.

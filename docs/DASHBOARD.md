@@ -3,7 +3,7 @@
 ## Project Status
 | Property | Value |
 |----------|-------|
-| **Version** | 0.9.6 |
+| **Version** | 0.9.7 |
 | **Date** | 2025-12-28 |
 | **Build System** | Gradle 8.5 |
 | **Java Version** | Java 21 |
@@ -143,7 +143,7 @@ beatoraja/
 ├── .github/workflows/                # CI/CD
 │   └── gradle.yml                    # GitHub Actions
 ├── build.gradle                      # Build configuration
-├── VERSION.md                        # Version (0.9.6)
+├── VERSION.md                        # Version (0.9.7)
 ├── CHANGELOG.md                      # Release history
 ├── ROADMAP.md                        # Feature roadmap
 ├── HANDOFF.md                        # Session notes

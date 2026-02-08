@@ -1,6 +1,6 @@
 # Roadmap
 
-## Version: 0.9.6 | Last Updated: 2025-12-28
+## Version: 0.9.7 | Last Updated: 2026-02-07
 
 ---
 
@@ -205,6 +205,7 @@
 
 | Version | Date | Highlights |
 |---------|------|------------|
+| 0.9.7 | 2026-02-07 | Submodule URL fix for mirrored environments (Jules CI) |
 | 0.9.6 | 2025-12-28 | ConfigTest, PlayModeConfigTest, Hit Sound support, 180+ tests |
 | 0.9.5 | 2025-12-28 | Timing point support, MissionManagerTest, StepUpManagerTest |
 | 0.9.4 | 2025-12-28 | Osu! Spinner support, comprehensive ROADMAP |

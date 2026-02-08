@@ -53,7 +53,7 @@ import bms.player.beatoraja.mission.MissionManager;
  */
 public class MainController {
 
-	private static String VERSION = "beatoraja 0.8.9";
+	private static String VERSION = "beatoraja 0.9.7";
 
 	static {
 		try {
