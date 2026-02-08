@@ -1,58 +1,70 @@
 package bms.player.beatoraja;
 
+import static bms.player.beatoraja.skin.SkinProperty.*;
+
 import java.io.*;
 import java.nio.file.*;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Calendar;
+import java.util.*;
+import java.util.function.Consumer;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
-import bms.player.beatoraja.play.TargetProperty;
-import bms.player.beatoraja.select.bar.TableBar;
-import bms.player.beatoraja.skin.SkinLoader;
-import bms.player.beatoraja.skin.SkinProperty;
-import com.badlogic.gdx.Graphics;
-
-import bms.player.beatoraja.skin.SkinObject.SkinOffset;
-import bms.player.beatoraja.audio.*;
-import bms.player.beatoraja.config.KeyConfiguration;
-import bms.player.beatoraja.decide.MusicDecide;
-import bms.player.beatoraja.input.BMSPlayerInputProcessor;
-import bms.player.beatoraja.ir.IRConnection;
-import bms.player.beatoraja.play.BMSPlayer;
-import bms.player.beatoraja.result.CourseResult;
-import bms.player.beatoraja.result.MusicResult;
-import bms.player.beatoraja.select.MusicSelector;
-import bms.player.beatoraja.song.SQLiteSongDatabaseAccessor;
-import bms.player.beatoraja.song.SongDatabaseAccessor;
-import bms.player.beatoraja.song.SongInformationAccessor;
+import org.lwjgl.input.Mouse;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.*;
-import com.badlogic.gdx.utils.JsonWriter.OutputType;
+import com.badlogic.gdx.utils.StringBuilder;
+
+import bms.player.beatoraja.PlayerResource.PlayMode;
+import bms.player.beatoraja.audio.*;
+import bms.player.beatoraja.config.KeyConfiguration;
+import bms.player.beatoraja.config.SkinConfiguration;
+import bms.player.beatoraja.decide.MusicDecide;
+import bms.player.beatoraja.input.BMSPlayerInputProcessor;
+import bms.player.beatoraja.ir.IRConnection;
+import bms.player.beatoraja.ir.IRResponse;
+import bms.player.beatoraja.play.BMSPlayer;
+import bms.player.beatoraja.play.TargetProperty;
+import bms.player.beatoraja.result.CourseResult;
+import bms.player.beatoraja.result.MusicResult;
+import bms.player.beatoraja.select.MusicSelector;
+import bms.player.beatoraja.select.bar.TableBar;
+import bms.player.beatoraja.skin.SkinLoader;
+import bms.player.beatoraja.skin.SkinObject.SkinOffset;
+import bms.player.beatoraja.skin.SkinProperty;
+import bms.player.beatoraja.song.*;
+import bms.tool.mdprocessor.MusicDownloadProcessor;
+import twitter4j.*;
+import twitter4j.conf.ConfigurationBuilder;
 
 /**
  * アプリケーションのルートクラス
- * 
+ *
  * @author exch
  */
 public class MainController extends ApplicationAdapter {
 
-	public static final String VERSION = "beatoraja 0.5.1";
+	public static final String VERSION = "beatoraja 0.6";
+
+	private static final boolean debug = false;
 
 	/**
 	 *
 	 */
 	private final long boottime = System.currentTimeMillis();
 	private final Calendar cl = Calendar.getInstance();
+	private long mouseMovedTime;
 
 	private BMSPlayer bmsplayer;
 	private MusicDecide decide;
@@ -60,25 +72,34 @@ public class MainController extends ApplicationAdapter {
 	private MusicResult result;
 	private CourseResult gresult;
 	private KeyConfiguration keyconfig;
+	private SkinConfiguration skinconfig;
 
 	private AudioDriver audio;
-	
+
 	private PlayerResource resource;
 
+	private FreeTypeFontGenerator generator;
 	private BitmapFont systemfont;
+	private MessageRenderer messageRenderer;
 
 	private MainState current;
+	private static MainState currentState;
+	/**
+	 * 状態の開始時間
+	 */
+	private long starttime;
+	private long nowmicrotime;
 
 	private Config config;
 	private PlayerConfig player;
-	private int auto;
+	private PlayMode auto;
 	private boolean songUpdated;
 
 	private SongDatabaseAccessor songdb;
 	private SongInformationAccessor infodb;
 
 	private IRConnection ir;
-	
+
 	private SpriteBatch sprite;
 	/**
 	 * 1曲プレイで指定したBMSファイル
@@ -99,51 +120,74 @@ public class MainController extends ApplicationAdapter {
 	private static final Path songdbpath = Paths.get("songdata.db");
 	private static final Path infodbpath = Paths.get("songinfo.db");
 
+	private SystemSoundManager sound;
+
 	private ScreenShotThread screenshot;
 
-	public static final int timerCount = SkinProperty.TIMER_MAX + 1;
-	private long[] timer = new long[timerCount];
-	public static final int offsetCount = SkinProperty.OFFSET_MAX + 1;
-	private SkinOffset[] offset = new SkinOffset[offsetCount];
+	private TwitterUploadThread twitterUpload;
 
-	public MainController(Path f, Config config, int auto, boolean songUpdated) {
+	private MusicDownloadProcessor download;
+
+	public static final int timerCount = SkinProperty.TIMER_MAX + 1;
+	private final long[] timer = new long[timerCount];
+	public static final int offsetCount = SkinProperty.OFFSET_MAX + 1;
+	private final SkinOffset[] offset = new SkinOffset[offsetCount];
+
+	protected TextureRegion black;
+	protected TextureRegion white;
+
+	public MainController(Path f, Config config, PlayerConfig player, PlayMode auto, boolean songUpdated) {
 		this.auto = auto;
 		this.config = config;
 		this.songUpdated = songUpdated;
-		
+
 		for(int i = 0;i < offset.length;i++) {
 			offset[i] = new SkinOffset();
 		}
-		
-		player = MainLoader.readPlayerConfig(config.getPlayername());
+
+		if(player == null) {
+			player = PlayerConfig.readPlayerConfig(config.getPlayername());
+		}
+		this.player = player;
+
 		this.bmsfile = f;
 
+		if (config.isEnableIpfs()) {
+			Path ipfspath = Paths.get("ipfs").toAbsolutePath();
+			if (!ipfspath.toFile().exists())
+				ipfspath.toFile().mkdirs();
+			List<String> roots = new ArrayList<>(Arrays.asList(getConfig().getBmsroot()));
+			if (ipfspath.toFile().exists() && !roots.contains(ipfspath.toString())) {
+				roots.add(ipfspath.toString());
+				getConfig().setBmsroot(roots.toArray(new String[roots.size()]));
+			}
+		}
 		try {
 			Class.forName("org.sqlite.JDBC");
 			songdb = new SQLiteSongDatabaseAccessor(songdbpath.toString(), config.getBmsroot());
 			if(config.isUseSongInfo()) {
-				infodb = new SongInformationAccessor(infodbpath.toString());				
+				infodb = new SongInformationAccessor(infodbpath.toString());
 			}
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 
 		playdata = new PlayDataAccessor(config.getPlayername());
-		
+
 		ir = IRConnection.getIRConnection(player.getIrname());
-		if(player.getUserid().length() > 0 && ir != null) {
-			ir.login(player.getUserid(), player.getPassword());
-		}
-		
-		switch(config.getAudioDriver()) {
-		case Config.AUDIODRIVER_ASIO:
-			try {
-				audio = new ASIODriver(config);
-			} catch(Throwable e) {
-				e.printStackTrace();
-				config.setAudioDriver(Config.AUDIODRIVER_SOUND);
+		if(ir != null) {
+			if(player.getUserid().length() == 0 || player.getPassword().length() == 0) {
+				ir = null;
+			} else {
+				IRResponse response = ir.login(player.getUserid(), player.getPassword());
+				if(!response.isSuccessed()) {
+					Logger.getGlobal().warning("IRへのログイン失敗 : " + response.getMessage());
+					ir = null;
+				}
 			}
-			break;
+		}
+
+		switch(config.getAudioDriver()) {
 		case Config.AUDIODRIVER_PORTAUDIO:
 			try {
 				audio = new PortAudioDriver(config);
@@ -154,10 +198,7 @@ public class MainController extends ApplicationAdapter {
 			break;
 		}
 
-	}
-
-	public long[] getTimer() {
-		return timer;
+		sound = new SystemSoundManager(config);
 	}
 
 	public SkinOffset getOffset(int index) {
@@ -198,6 +239,7 @@ public class MainController extends ApplicationAdapter {
 	public static final int STATE_RESULT = 3;
 	public static final int STATE_GRADE_RESULT = 4;
 	public static final int STATE_CONFIG = 5;
+	public static final int STATE_SKIN_SELECT = 6;
 
 	public void changeState(int state) {
 		MainState newState = null;
@@ -205,8 +247,9 @@ public class MainController extends ApplicationAdapter {
 		case STATE_SELECTMUSIC:
 			if (this.bmsfile != null) {
 				exit();
+			} else {
+				newState = selector;
 			}
-			newState = selector;
 			break;
 		case STATE_DECIDE:
 			newState = decide;
@@ -227,6 +270,9 @@ public class MainController extends ApplicationAdapter {
 		case STATE_CONFIG:
 			newState = keyconfig;
 			break;
+		case STATE_SKIN_SELECT:
+			newState = skinconfig;
+			break;
 		}
 
 		if (newState != null && current != newState) {
@@ -237,7 +283,10 @@ public class MainController extends ApplicationAdapter {
 			newState.create();
 			newState.getSkin().prepare(newState);
 			current = newState;
-			current.setStartTime();
+			currentState = newState;
+			starttime = System.nanoTime();
+			nowmicrotime = ((System.nanoTime() - starttime) / 1000);
+			current.prepare();
 		}
 		if (current.getStage() != null) {
 			Gdx.input.setInputProcessor(new InputMultiplexer(current.getStage(), input.getKeyBoardInputProcesseor()));
@@ -246,7 +295,7 @@ public class MainController extends ApplicationAdapter {
 		}
 	}
 
-	public void setAuto(int auto) {
+	public void setPlayMode(PlayMode auto) {
 		this.auto = auto;
 
 	}
@@ -255,14 +304,25 @@ public class MainController extends ApplicationAdapter {
 	public void create() {
 		final long t = System.currentTimeMillis();
 		sprite = new SpriteBatch();
+		SkinLoader.initPixmapResourcePool(config.getSkinPixmapGen());
 
-		input = new BMSPlayerInputProcessor(config);
+		generator = new FreeTypeFontGenerator(Gdx.files.internal("skin/default/VL-Gothic-Regular.ttf"));
+		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
+		parameter.size = 24;
+		systemfont = generator.generateFont(parameter);
+		messageRenderer = new MessageRenderer();
+		
+		if(ir != null) {
+			messageRenderer.addMessage(player.getIrname() + " Connection Succeed : " + player.getUserid() ,3000, Color.GREEN, 1);
+		}
+
+		input = new BMSPlayerInputProcessor(config, player);
 		switch(config.getAudioDriver()) {
 		case Config.AUDIODRIVER_SOUND:
-			audio = new GdxSoundDriver();
+			audio = new GdxSoundDriver(config);
 			break;
 		case Config.AUDIODRIVER_AUDIODEVICE:
-			audio = new GdxAudioDeviceDriver();
+			audio = new GdxAudioDeviceDriver(config);
 			break;
 		}
 
@@ -272,9 +332,10 @@ public class MainController extends ApplicationAdapter {
 		result = new MusicResult(this);
 		gresult = new CourseResult(this);
 		keyconfig = new KeyConfiguration(this);
+		skinconfig = new SkinConfiguration(this);
 		if (bmsfile != null) {
 			if(resource.setBMSFile(bmsfile, auto)) {
-				changeState(STATE_PLAYBMS);				
+				changeState(STATE_PLAYBMS);
 			} else {
 				// ダミーステートに移行してすぐexitする
 				changeState(STATE_CONFIG);
@@ -284,49 +345,68 @@ public class MainController extends ApplicationAdapter {
 			changeState(STATE_SELECTMUSIC);
 		}
 
-		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("skin/default/VL-Gothic-Regular.ttf"));
-		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-		parameter.size = 24;
-		systemfont = generator.generateFont(parameter);
-		generator.dispose();
 		Logger.getGlobal().info("初期化時間(ms) : " + (System.currentTimeMillis() - t));
-		
-		Thread polling = new Thread() {
-			public void run() {
-				long time = 0;
-				for (;;) {
-					final long now = System.nanoTime() / 1000000;
-					if (time != now) {
-						time = now;
-						input.poll();
-					} else {
-						try {
-							sleep(0, 500000);
-						} catch (InterruptedException e) {
-						}
+
+		Thread polling = new Thread(() -> {
+			long time = 0;
+			for (;;) {
+				final long now = System.nanoTime() / 1000000;
+				if (time != now) {
+					time = now;
+					input.poll();
+				} else {
+					try {
+						Thread.sleep(0, 500000);
+					} catch (InterruptedException e) {
 					}
 				}
-			}			
-		};
+			}
+		});
 		polling.start();
 
 		if(player.getTarget() >= TargetProperty.getAllTargetProperties().length) {
 			player.setTarget(0);
 		}
+
+		Pixmap plainPixmap = new Pixmap(2,1, Pixmap.Format.RGBA8888);
+		plainPixmap.drawPixel(0,0, Color.toIntBits(255,0,0,0));
+		plainPixmap.drawPixel(1,0, Color.toIntBits(255,255,255,255));
+		Texture plainTexture = new Texture(plainPixmap);
+		black = new TextureRegion(plainTexture,0,0,1,1);
+		white = new TextureRegion(plainTexture,1,0,1,1);
+		plainPixmap.dispose();
+
 		Gdx.gl.glClearColor(0, 0, 0, 1);
+
+		if (config.isEnableIpfs()) {
+			download = new MusicDownloadProcessor(config.getIpfsUrl(), (md5) -> {
+				SongData[] s = getSongDatabase().getSongDatas(md5);
+				String[] result = new String[s.length];
+				for(int i = 0;i < result.length;i++) {
+					result[i] = s[i].getPath();
+				}
+				return result;
+			});
+			download.start(null);
+		}
 	}
-	
+
 	private long prevtime;
+
+	private final StringBuilder message = new StringBuilder();
 
 	@Override
 	public void render() {
 //		input.poll();
+		nowmicrotime = ((System.nanoTime() - starttime) / 1000);
 
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		current.render();
 		sprite.begin();
-		current.getSkin().drawAllObjects(sprite, current);
+		if (current.getSkin() != null) {
+			current.getSkin().drawAllObjects(sprite, current);
+		}
 		sprite.end();
 
 		final Stage stage = current.getStage();
@@ -339,39 +419,60 @@ public class MainController extends ApplicationAdapter {
 		if (showfps) {
 			sprite.begin();
 			systemfont.setColor(Color.PURPLE);
-			systemfont.draw(sprite, String.format("FPS %d", Gdx.graphics.getFramesPerSecond()), 10,
+			message.setLength(0);
+			systemfont.draw(sprite, message.append("FPS ").append(Gdx.graphics.getFramesPerSecond()), 10,
 					config.getResolution().height - 2);
+			if(debug) {
+				message.setLength(0);
+				systemfont.draw(sprite, message.append("Skin Pixmap Images ").append(SkinLoader.getResource().size()), 10,
+						config.getResolution().height - 26);
+				message.setLength(0);
+				systemfont.draw(sprite, message.append("Total Memory Used(MB) ").append(Runtime.getRuntime().totalMemory() / (1024 * 1024)), 10,
+						config.getResolution().height - 50);
+				message.setLength(0);
+				systemfont.draw(sprite, message.append("Total Free Memory(MB) ").append(Runtime.getRuntime().freeMemory() / (1024 * 1024)), 10,
+						config.getResolution().height - 74);
+				message.setLength(0);
+				systemfont.draw(sprite, message.append("Max Sprite In Batch ").append(sprite.maxSpritesInBatch), 10,
+						config.getResolution().height - 98);
+			}
+
 			sprite.end();
 		}
-		// show screenshot status
-		if (screenshot != null && screenshot.savetime + 2000 > System.currentTimeMillis()) {
-			sprite.begin();
-			systemfont.setColor(Color.GOLD);
-			systemfont.draw(sprite, "Screen shot saved : " + screenshot.path, 100,
-					config.getResolution().height - 2);
-			sprite.end();
-		} else if(updateSong != null && updateSong.isAlive()) {
-			sprite.begin();
-			systemfont.setColor(0,1,1,0.5f + (System.currentTimeMillis() % 500) / 1000.0f);
-			systemfont.draw(sprite, updateSong.message, 100, config.getResolution().height - 2);
-			sprite.end();
+		
+		// show message
+		sprite.begin();
+		messageRenderer.render(current, sprite, 100, config.getResolution().height - 2);
+		sprite.end();
+
+		// TODO renderループに入れるのではなく、MusicDownloadProcessorのListenerとして実装したほうがいいのでは
+		if(download != null && download.isDownload()){
+			downloadIpfsMessageRenderer(download.getMessage());
 		}
 
 		final long time = System.currentTimeMillis();
 		if(time > prevtime) {
 		    prevtime = time;
             current.input();
-            // move song bar position by mouse
+            // event - move pressed
             if (input.isMousePressed()) {
                 input.setMousePressed();
                 current.getSkin().mousePressed(current, input.getMouseButton(), input.getMouseX(), input.getMouseY());
             }
+            // event - move dragged
             if (input.isMouseDragged()) {
                 input.setMouseDragged();
                 current.getSkin().mouseDragged(current, input.getMouseButton(), input.getMouseX(), input.getMouseY());
             }
 
-            // FPS表示切替
+            // マウスカーソル表示判定
+            if(input.isMouseMoved()) {
+            	input.setMouseMoved(false);
+            	mouseMovedTime = time;
+			}
+			Mouse.setGrabbed(current == bmsplayer && time > mouseMovedTime + 5000 && Mouse.isInsideWindow());
+
+			// FPS表示切替
             if (input.getFunctionstate()[0] && input.getFunctiontime()[0] != 0) {
                 showfps = !showfps;
                 input.getFunctiontime()[0] = 0;
@@ -385,7 +486,7 @@ public class MainController extends ApplicationAdapter {
                 } else {
                     Gdx.graphics.setFullscreenMode(currentMode);
                 }
-                config.setFullscreen(!fullscreen);
+                config.setDisplaymode(fullscreen ? Config.DisplayMode.WINDOW : Config.DisplayMode.FULLSCREEN);
                 input.getFunctiontime()[3] = 0;
             }
 
@@ -409,17 +510,37 @@ public class MainController extends ApplicationAdapter {
             // screen shot
             if (input.getFunctionstate()[5] && input.getFunctiontime()[5] != 0) {
                 if (screenshot == null || screenshot.savetime != 0) {
-                    screenshot = new ScreenShotThread(ScreenUtils.getFrameBufferPixels(0, 0, Gdx.graphics.getBackBufferWidth(),
+                    screenshot = new ScreenShotThread(messageRenderer, ScreenUtils.getFrameBufferPixels(0, 0, Gdx.graphics.getBackBufferWidth(),
                             Gdx.graphics.getBackBufferHeight(), true));
                     screenshot.start();
                 }
                 input.getFunctiontime()[5] = 0;
             }
+
+            if (input.getFunctionstate()[6] && input.getFunctiontime()[6] != 0) {
+                if (twitterUpload == null || twitterUpload.savetime != 0) {
+                	twitterUpload = new TwitterUploadThread(messageRenderer, ScreenUtils.getFrameBufferPixels(0, 0, Gdx.graphics.getBackBufferWidth(),
+                            Gdx.graphics.getBackBufferHeight(), false), player);
+                	twitterUpload.start();
+                }
+                input.getFunctiontime()[6] = 0;
+            }
+
+			if (download != null && download.getDownloadpath() != null) {
+            	this.updateSong(download.getDownloadpath());
+            	download.setDownloadpath(null);
+            }
+			if (updateSong != null && !updateSong.isAlive()) {
+				selector.getBarRender().updateBar();
+				updateSong = null;
+			}
         }
 	}
 
 	@Override
 	public void dispose() {
+		saveConfig();
+
 		if (bmsplayer != null) {
 			bmsplayer.dispose();
 		}
@@ -438,9 +559,18 @@ public class MainController extends ApplicationAdapter {
 		if (keyconfig != null) {
 			keyconfig.dispose();
 		}
+		if (skinconfig != null) {
+			skinconfig.dispose();
+		}
 		resource.dispose();
 //		input.dispose();
 		SkinLoader.getResource().dispose();
+		ShaderManager.dispose();
+		if (download != null) {
+			download.dispose();
+		}
+
+		Logger.getGlobal().info("全リソース破棄完了");
 	}
 
 	@Override
@@ -459,30 +589,12 @@ public class MainController extends ApplicationAdapter {
 	}
 
 	public void saveConfig(){
-		Json json = new Json();
-		json.setOutputType(OutputType.json);
-		try (FileWriter fw = new FileWriter(configpath.toFile())) {
-			fw.write(json.prettyPrint(config));
-			fw.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		Logger.getGlobal().info("設定情報をconfig.jsonに保存");
-
-		Path p = Paths.get("player/" + config.getPlayername() + "/config.json");
-		try (FileWriter fw = new FileWriter(p.toFile())) {
-			fw.write(json.prettyPrint(player));
-			fw.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		Logger.getGlobal().info("設定情報を" + p.toString() + "に保存");
+		Config.write(config);
+		PlayerConfig.write(player);
+		Logger.getGlobal().info("設定情報を保存");
 	}
 
 	public void exit() {
-		saveConfig();
-
-		dispose();
 		Gdx.app.exit();
 	}
 
@@ -498,6 +610,14 @@ public class MainController extends ApplicationAdapter {
 		return ir;
 	}
 
+	public SystemSoundManager getSoundManager() {
+		return sound;
+	}
+
+	public MusicDownloadProcessor getMusicDownloadProcessor(){
+		return download;
+	}
+
 	public long getPlayTime() {
 		return System.currentTimeMillis() - boottime;
 	}
@@ -506,9 +626,99 @@ public class MainController extends ApplicationAdapter {
 		cl.setTimeInMillis(System.currentTimeMillis());
 		return cl;
 	}
+
+	public long getStartTime() {
+		return starttime / 1000000;
+	}
+
+	public long getStartMicroTime() {
+		return starttime / 1000;
+	}
+
+	public long getNowTime() {
+		return nowmicrotime / 1000;
+	}
+
+	public long getNowTime(int id) {
+		if(isTimerOn(id)) {
+			return (nowmicrotime - timer[id]) / 1000;
+		}
+		return 0;
+	}
+
+	public long getNowMicroTime() {
+		return nowmicrotime;
+	}
+
+	public long getNowMicroTime(int id) {
+		if(isTimerOn(id)) {
+			return nowmicrotime - timer[id];
+		}
+		return 0;
+	}
+
+	public long getTimer(int id) {
+		return timer[id] / 1000;
+	}
+
+	public long getMicroTimer(int id) {
+		return timer[id];
+	}
+
+	public boolean isTimerOn(int id) {
+		return timer[id] != Long.MIN_VALUE;
+	}
+
+	public void setTimerOn(int id) {
+		timer[id] = nowmicrotime;
+	}
+
+	public void setTimerOff(int id) {
+		timer[id] = Long.MIN_VALUE;
+	}
+
+	public void setMicroTimer(int id, long microtime) {
+		timer[id] = microtime;
+	}
+
+	public void switchTimer(int id, boolean on) {
+		if(on) {
+			if(timer[id] == Long.MIN_VALUE) {
+				timer[id] = nowmicrotime;
+			}
+		} else {
+			timer[id] = Long.MIN_VALUE;
+		}
+	}
+
+	public static String getClearTypeName() {
+		String[] clearTypeName = { "NO PLAY", "FAILED", "ASSIST EASY CLEAR", "LIGHT ASSIST EASY CLEAR", "EASY CLEAR",
+				"CLEAR", "HARD CLEAR", "EXHARD CLEAR", "FULL COMBO", "PERFECT", "MAX" };
+
+		if(currentState.getNumberValue(NUMBER_CLEAR) >= 0 && currentState.getNumberValue(NUMBER_CLEAR) < clearTypeName.length) {
+			return clearTypeName[currentState.getNumberValue(NUMBER_CLEAR)];
+		}
+
+		return "";
+	}
+
+	public static String getRankTypeName() {
+		String rankTypeName = "";
+		if(currentState.getBooleanValue(OPTION_RESULT_AAA_1P)) rankTypeName += "AAA";
+		else if(currentState.getBooleanValue(OPTION_RESULT_AA_1P)) rankTypeName += "AA";
+		else if(currentState.getBooleanValue(OPTION_RESULT_A_1P)) rankTypeName += "A";
+		else if(currentState.getBooleanValue(OPTION_RESULT_B_1P)) rankTypeName += "B";
+		else if(currentState.getBooleanValue(OPTION_RESULT_C_1P)) rankTypeName += "C";
+		else if(currentState.getBooleanValue(OPTION_RESULT_D_1P)) rankTypeName += "D";
+		else if(currentState.getBooleanValue(OPTION_RESULT_E_1P)) rankTypeName += "E";
+		else if(currentState.getBooleanValue(OPTION_RESULT_F_1P)) rankTypeName += "F";
+		return rankTypeName;
+	}
+
+
 	/**
 	 * スクリーンショット処理用スレッド
-	 * 
+	 *
 	 * @author exch
 	 */
 	static class ScreenShotThread extends Thread {
@@ -526,10 +736,45 @@ public class MainController extends ApplicationAdapter {
 		 */
 		private final byte[] pixels;
 		
-		public ScreenShotThread(byte[] pixels) {
+		private final MessageRenderer message;
+
+		public ScreenShotThread(MessageRenderer message, byte[] pixels) {
+			this.message = message;
 			this.pixels = pixels;
 			final SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss");
-			path = "screenshot/" + sdf.format(Calendar.getInstance().getTime()) + ".png";
+			String stateName = "";
+			if(currentState instanceof MusicSelector) {
+				stateName = "_Music_Select";
+			} else if(currentState instanceof MusicDecide) {
+				stateName = "_Decide";
+			} if(currentState instanceof BMSPlayer) {
+				if(currentState.getTextValue(STRING_TABLE_LEVEL).length() > 0){
+					stateName = "_Play_" + currentState.getTextValue(STRING_TABLE_LEVEL);
+				}else{
+					stateName = "_Play_LEVEL" + currentState.getNumberValue(NUMBER_PLAYLEVEL);
+				}
+				if(currentState.getTextValue(STRING_FULLTITLE).length() > 0) stateName += " " + currentState.getTextValue(STRING_FULLTITLE);
+			} else if(currentState instanceof MusicResult || currentState instanceof CourseResult) {
+				if(currentState instanceof MusicResult){
+					if(currentState.getTextValue(STRING_TABLE_LEVEL).length() > 0){
+						stateName += "_" + currentState.getTextValue(STRING_TABLE_LEVEL) + " ";
+					}else{
+						stateName += "_LEVEL" + currentState.getNumberValue(NUMBER_PLAYLEVEL) + " ";
+					}
+				}else{
+					stateName += "_";
+				}
+				if(currentState.getTextValue(STRING_FULLTITLE).length() > 0) stateName += currentState.getTextValue(STRING_FULLTITLE);
+				stateName += " " + getClearTypeName();
+				stateName += " " + getRankTypeName();
+			} else if(currentState instanceof KeyConfiguration) {
+				stateName = "_Config";
+			} else if(currentState instanceof SkinConfiguration) {
+				stateName = "_Skin_Select";
+			}
+			stateName = stateName.replace("\\", "￥").replace("/", "／").replace(":", "：").replace("*", "＊").replace("?", "？").replace("\"", "”").replace("<", "＜").replace(">", "＞").replace("|", "｜").replace("\t", " ");
+
+			path = "screenshot/" + sdf.format(Calendar.getInstance().getTime()) + stateName +".png";
 		}
 
 		@Override
@@ -545,6 +790,122 @@ public class MainController extends ApplicationAdapter {
 			pixmap.dispose();
 			Logger.getGlobal().info("スクリーンショット保存:" + path);
 			savetime = System.currentTimeMillis();
+			
+			message.addMessage("Screen shot saved : " + path, 2000, Color.GOLD, 0);
+		}
+	}
+
+	/**
+	 * Twitter投稿用スレッド
+	 */
+	static class TwitterUploadThread extends Thread {
+
+		/**
+		 * 処理が完了した時間
+		 */
+		private long savetime;
+
+		/**
+		 * 処理が完了した時間
+		 */
+		private String text = "";
+
+		private final PlayerConfig player;
+
+		/**
+		 * スクリーンショットのpixelデータ
+		 */
+		private final byte[] pixels;
+
+		private final MessageRenderer message;
+
+		public TwitterUploadThread(MessageRenderer message, byte[] pixels, PlayerConfig player) {
+			this.message = message;
+			this.pixels = pixels;
+			this.player = player;
+			java.lang.StringBuilder builder = new java.lang.StringBuilder();
+			if(currentState instanceof MusicSelector) {
+				// empty
+			} else if(currentState instanceof MusicDecide) {
+				// empty
+			} if(currentState instanceof BMSPlayer) {
+				if(currentState.getTextValue(STRING_TABLE_NAME).length() > 0){
+					builder.append(currentState.getTextValue(STRING_TABLE_LEVEL));
+				}else{
+					builder.append("LEVEL");
+					builder.append(currentState.getNumberValue(NUMBER_PLAYLEVEL));
+				}
+				if(currentState.getTextValue(STRING_FULLTITLE).length() > 0) {
+					builder.append(" ");
+					builder.append(currentState.getTextValue(STRING_FULLTITLE));
+				}
+			} else if(currentState instanceof MusicResult || currentState instanceof CourseResult) {
+				if(currentState instanceof MusicResult) {
+					if(currentState.getTextValue(STRING_TABLE_NAME).length() > 0){
+						builder.append(currentState.getTextValue(STRING_TABLE_LEVEL));
+					}else{
+						builder.append("LEVEL");
+						builder.append(currentState.getNumberValue(NUMBER_PLAYLEVEL));
+					}
+				}
+				if(currentState.getTextValue(STRING_FULLTITLE).length() > 0) {
+					builder.append(" ");
+					builder.append(currentState.getTextValue(STRING_FULLTITLE));
+				}
+				builder.append(" ");
+				builder.append(getClearTypeName());
+				builder.append(" ");
+				builder.append(getRankTypeName());
+			} else if(currentState instanceof KeyConfiguration) {
+				// empty
+			} else if(currentState instanceof SkinConfiguration) {
+				// empty
+			}
+			text = builder.toString();
+			text = text.replace("\\", "￥").replace("/", "／").replace(":", "：").replace("*", "＊").replace("?", "？").replace("\"", "”").replace("<", "＜").replace(">", "＞").replace("|", "｜").replace("\t", " ");
+		}
+
+		@Override
+		public void run() {
+			ConfigurationBuilder cb = new ConfigurationBuilder();
+			cb.setOAuthConsumerKey(player.getTwitterConsumerKey())
+			  .setOAuthConsumerSecret(player.getTwitterConsumerSecret())
+			  .setOAuthAccessToken(player.getTwitterAccessToken())
+			  .setOAuthAccessTokenSecret(player.getTwitterAccessTokenSecret());
+			TwitterFactory twitterFactory = new TwitterFactory(cb.build());
+			Twitter twitter = twitterFactory.getInstance();
+
+			Pixmap pixmap = null;
+	        try {
+				// 全ピクセルのアルファ値を255にする(=透明色を無くす)
+				for(int i = 3;i < pixels.length;i+=4) {
+					pixels[i] = (byte) 0xff;
+				}
+
+				// create png byte stream
+				pixmap = new Pixmap(Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight(),
+						Pixmap.Format.RGBA8888);
+				BufferUtils.copy(pixels, 0, pixmap.getPixels(), pixels.length);
+				ByteArrayOutputStream byteArrayOutputStream=new ByteArrayOutputStream();
+				PixmapIO.PNG png = new PixmapIO.PNG((int)(pixmap.getWidth() * pixmap.getHeight() * 1.5f));
+				png.write(byteArrayOutputStream, pixmap);
+				byte[] imageBytes=byteArrayOutputStream.toByteArray();
+				ByteArrayInputStream byteArrayInputStream=new ByteArrayInputStream(imageBytes);
+
+				// Upload Media and Post
+				UploadedMedia mediastatus = twitter.uploadMedia("from beatoraja", byteArrayInputStream);
+				Logger.getGlobal().info("Twitter Media Upload:" + mediastatus.toString());
+				StatusUpdate update = new StatusUpdate(text);
+				update.setMediaIds(new long[]{mediastatus.getMediaId()});
+				Status status = twitter.updateStatus(update);
+				Logger.getGlobal().info("Twitter Post:" + status.toString());
+				savetime = System.currentTimeMillis();
+				message.addMessage( "Twitter Upload : " + text, 2000, Color.YELLOW, 0);
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				if(pixmap != null) pixmap.dispose();
+			}
 		}
 	}
 
@@ -568,9 +929,20 @@ public class MainController extends ApplicationAdapter {
 		}
 	}
 
+	private UpdateThread downloadIpfs;
+
+	public void downloadIpfsMessageRenderer(String message) {
+		if (downloadIpfs == null || !downloadIpfs.isAlive()) {
+			downloadIpfs = new DownloadMessageThread(message);
+			downloadIpfs.start();
+		} else {
+			Logger.getGlobal().warning("楽曲ダウンロード中です");
+		}
+	}
+
 	abstract class UpdateThread extends Thread {
 
-		private String message;
+		protected String message;
 
 		public UpdateThread(String message) {
 			this.message = message;
@@ -592,7 +964,9 @@ public class MainController extends ApplicationAdapter {
 		}
 
 		public void run() {
+			Message message = messageRenderer.addMessage(this.message, Color.CYAN, 1);
 			getSongDatabase().updateSongDatas(path, false, getInfoDatabase());
+			message.stop();
 		}
 	}
 
@@ -606,17 +980,188 @@ public class MainController extends ApplicationAdapter {
 		private final TableBar accessor;
 
 		public TableUpdateThread(TableBar bar) {
-			super("updating table : " + bar.getReader().name);
+			super("updating table : " + bar.getAccessor().name);
 			accessor = bar;
 		}
 
 		public void run() {
-			TableData td = accessor.getReader().read();
+			Message message = messageRenderer.addMessage(this.message, Color.CYAN, 1);
+			TableData td = accessor.getAccessor().read();
 			if (td != null) {
-				new TableDataAccessor().write(td);
+				accessor.getAccessor().write(td);
 				accessor.setTableData(td);
 			}
+			message.stop();
 		}
 	}
 
+	class DownloadMessageThread extends UpdateThread {
+		public DownloadMessageThread(String message) {
+			super(message);
+		}
+
+		public void run() {
+			Message message = messageRenderer.addMessage(this.message, Color.LIME, 1);
+			while (download != null && download.isDownload() && download.getMessage() != null) {
+				message.setText(download.getMessage());
+				try {
+					sleep(100);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			message.stop();
+		}
+	}
+
+	public static class SystemSoundManager {
+		private Array<Path> bgms = new Array<Path>();
+		private Path currentBGMPath;
+		private Array<Path> sounds = new Array<Path>();
+		private Path currentSoundPath;
+
+		public SystemSoundManager(Config config) {
+			scan(Paths.get(config.getBgmpath()), bgms, "select.");
+			scan(Paths.get(config.getSoundpath()), sounds, "clear.");
+			Logger.getGlobal().info("検出されたBGM Set : " + bgms.size + " Sound Set : " + sounds.size);
+		}
+
+		public void shuffle() {
+			if(bgms.size > 0) {
+				currentBGMPath = bgms.get((int) (Math.random() * bgms.size));
+			}
+			if(sounds.size > 0) {
+				currentSoundPath = sounds.get((int) (Math.random() * sounds.size));
+			}
+			Logger.getGlobal().info("BGM Set : " + currentBGMPath + " Sound Set : " + currentSoundPath);
+		}
+
+		public Path getBGMPath() {
+			return currentBGMPath;
+		}
+
+		public Path getSoundPath() {
+			return currentSoundPath;
+		}
+
+		private void scan(Path p, Array<Path> paths, String name) {
+			if (Files.isDirectory(p)) {
+				try (Stream<Path> sub = Files.list(p)) {
+					sub.forEach(new Consumer<Path>() {
+						@Override
+						public void accept(Path t) {
+							scan(t, paths, name);
+						}
+					});
+				} catch (IOException e) {
+				}
+			} else if (p.getFileName().toString().toLowerCase().equals(name + "wav") ||
+					p.getFileName().toString().toLowerCase().equals(name + "ogg")) {
+				paths.add(p.getParent());
+			}
+
+		}
+	}
+	
+	/**
+	 * メッセージ描画用クラス。
+	 * 
+	 * @author exch
+	 */
+	public static class MessageRenderer implements Disposable  {
+		
+		private FreeTypeFontGenerator generator;
+		private final Array<Message> messages = new Array<Message>();
+		
+		public MessageRenderer() {
+			generator = new FreeTypeFontGenerator(Gdx.files.internal("skin/default/VL-Gothic-Regular.ttf"));
+		}
+		
+		public void render(MainState state, SpriteBatch sprite, int x, int y) {
+			for(int i = messages.size - 1, dy = 0;i >= 0;i--) {
+				final Message message = messages.get(i);
+				
+				if(message.time < System.currentTimeMillis()) {
+					message.dispose();
+					messages.removeIndex(i);
+				} else {
+					message.draw(state, sprite, x, y - dy);
+					dy+=24;
+				}
+			}
+		}
+		
+		public Message addMessage(String text, Color color, int type) {
+			return addMessage(text, 24 * 60 * 60 * 1000 , color, type);
+		}
+
+		public Message addMessage(String text, int time, Color color, int type) {
+			Message message = new Message(text, time, color, type);
+			Gdx.app.postRunnable(() -> {
+				message.init(generator);
+				messages.add(message);
+			});
+			return message;
+		}
+
+		@Override
+		public void dispose() {
+			generator.dispose();
+		}
+	}
+	
+	/**
+	 * MessageRendererで描画されるメッセージ
+	 * 
+	 * @author exch
+	 */
+	public static class Message implements Disposable {
+		
+		private BitmapFont font;
+		private long time;
+		private String text;
+		private final Color color;
+		private final int type;
+		
+		public Message(String text, long time, Color color, int type) {
+			this.time = time + System.currentTimeMillis();
+			this.text = text;
+			this.color = color;
+			this.type = type;
+		}
+		
+		public void init(FreeTypeFontGenerator generator) {
+			FreeTypeFontParameter parameter = new FreeTypeFontParameter();
+			parameter.size = 24;
+			parameter.characters += text;
+			font = generator.generateFont(parameter);
+			font.setColor(color);			
+		}
+		
+		public void setText(String text) {
+			this.text = text;
+		}
+		
+		public void stop() {
+			time = -1;
+		}
+		
+		public void draw(MainState state, SpriteBatch sprite, int x, int y) {
+			switch(type) {
+			case 0:
+				break;
+			case 1:
+				if(state instanceof MusicSelector) {
+					font.setColor(color.r, color.g, color.b, MathUtils.sinDeg((System.currentTimeMillis() % 1440) / 4.0f) * 0.3f + 0.7f);
+					font.draw(sprite, text, x, y);
+				}
+				break;
+			}
+		}
+
+		@Override
+		public void dispose() {
+			font.dispose();
+		}
+	}
 }
