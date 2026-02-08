@@ -1,14 +1,10 @@
 package bms.player.beatoraja.select;
 
-import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
 import java.util.Deque;
-import java.util.Objects;
 import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.logging.Logger;
 
 import bms.player.beatoraja.Config;
-import bms.player.beatoraja.Config.SongPreview;
 import bms.player.beatoraja.audio.AudioDriver;
 import bms.player.beatoraja.song.SongData;
 
@@ -48,16 +44,8 @@ public class PreviewMusicProcessor {
             preview.start();
         }
         current = song;
-
-        String previewPath = "";
-        if (song != null && song.getPreview() != null && song.getPreview().length() > 0) {
-            try {
-                previewPath = Paths.get(song.getPath()).getParent().resolve(song.getPreview()).toString();
-            } catch (InvalidPathException e) {
-                Logger.getGlobal().warning(e.getMessage());
-            }
-        }
-        commands.add(previewPath);
+        commands.add(song != null && song.getPreview() != null && song.getPreview().length() > 0 ?
+                Paths.get(song.getPath()).getParent().resolve(song.getPreview()).toString() : "");
     }
 
     public SongData getSongData() {
@@ -73,12 +61,9 @@ public class PreviewMusicProcessor {
 
         private boolean stop;
         private String playing;
-        private float currentVolume;
 
         public void run() {
-            audio.play(defaultMusic, config.getAudioConfig().getSystemvolume(), true);
-            playing = defaultMusic;
-            currentVolume = config.getAudioConfig().getSystemvolume();
+            audio.play(defaultMusic, config.getSystemvolume(), true);
             while(!stop) {
                 if(!commands.isEmpty()) {
                     String path = commands.removeFirst();
@@ -87,21 +72,13 @@ public class PreviewMusicProcessor {
                     }
                     if(!path.equals(playing)) {
                         stopPreview(true);
-                        if(!path.equals(defaultMusic)) {
-                            audio.play(path, config.getAudioConfig().getSystemvolume(), config.getSongPreview() == SongPreview.LOOP);
+                        if(path != defaultMusic) {
+                            audio.play(path, config.getSystemvolume(), true);
                         } else {
-                            audio.setVolume(defaultMusic, config.getAudioConfig().getSystemvolume());
+                            audio.setVolume(defaultMusic, config.getSystemvolume());
                         }
                         playing = path;
                     }
-                } else if(!Objects.equals(playing, defaultMusic) && !audio.isPlaying(playing)){
-                	// プレビュー演奏終了後に選曲BGMに戻す
-                    stopPreview(true);
-                    audio.setVolume(defaultMusic, config.getAudioConfig().getSystemvolume());
-                    playing = defaultMusic;
-                } else if(currentVolume != config.getAudioConfig().getSystemvolume()){
-                    audio.setVolume(playing, config.getAudioConfig().getSystemvolume());
-                    currentVolume = config.getAudioConfig().getSystemvolume();
                 } else {
                     try {
                         sleep(50);
@@ -119,7 +96,7 @@ public class PreviewMusicProcessor {
                     audio.dispose(playing);
                 } else if(pause) {
                 	for(int i = 10;i >= 0;i--) {
-                		float vol = i * 0.1f * config.getAudioConfig().getSystemvolume();
+                		float vol = i * 0.1f * config.getSystemvolume();
                         audio.setVolume(playing, vol);
                         // TODO フェードアウトはAudioDriver側で実装したい
                         try {

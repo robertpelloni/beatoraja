@@ -1,60 +1,26 @@
 package bms.player.beatoraja;
 
-import bms.player.beatoraja.play.JudgeAlgorithm;
-import com.badlogic.gdx.math.MathUtils;
+import bms.player.beatoraja.input.BMControllerInputProcessor.BMKeys;
+
+import com.badlogic.gdx.Input.Keys;
 
 /**
  * プレイコンフィグ。モード毎に保持するべき値についてはこちらに格納する
- *
+ * 
  * @author exch
  */
-public class PlayConfig implements Cloneable {
+public class PlayConfig {
+
+	// TODO 複数デバイスの混合キー設定(ex.鍵盤キーボード、皿を専コン等)
 
 	/**
 	 * ハイスピード。1.0で等速
 	 */
 	private float hispeed = 1.0f;
-	
-	public static final float HISPEED_MAX = 20f;
-	public static final float HISPEED_MIN = 0.01f;
-
 	/**
 	 * デュレーション(ノーツ表示時間)
 	 */
 	private int duration = 500;
-	
-	public static final int DURATION_MAX = 10000;
-	public static final int DURATION_MIN = 1;
-
-	/**
-	 * CONSTANT 使用
-	 */
-	private boolean enableConstant = false;
-	/**
-	 * CONSTANT フェードイン時間(ms)
-	 */
-	private int constantFadeinTime = 100;
-	public static final int CONSTANT_FADEIN_MAX = 1000;
-	public static final int CONSTANT_FADEIN_MIN = -1000;
-
-	/**
-	 * ハイスピード固定。固定する場合はデュレーションが有効となり、固定しない場合はハイスピードが有効になる
-	 */
-	private int fixhispeed = FIX_HISPEED_MAINBPM;
-
-	public static final int FIX_HISPEED_OFF = 0;
-	public static final int FIX_HISPEED_STARTBPM = 1;
-	public static final int FIX_HISPEED_MAXBPM = 2;
-	public static final int FIX_HISPEED_MAINBPM = 3;
-	public static final int FIX_HISPEED_MINBPM = 4;
-
-	/**
-	 * ハイスピード変化間隔
-	 */
-	public float hispeedmargin = 0.25f;
-
-	public static final float HISPEEDMARGIN_MAX = 10f;
-	public static final float HISPEEDMARGIN_MIN = 0f;
 
 	/**
 	 * レーンカバー表示量(0-1)
@@ -73,58 +39,51 @@ public class PlayConfig implements Cloneable {
 	 */
 	private boolean enablelift = false;
 	/**
-	 * HIDDEN表示量(0-1)
+	 * キーボード設定
 	 */
-	private float hidden = 0.1f;
+	private KeyboardConfig keyboard = new KeyboardConfig();
 	/**
-	 * HIDDEN使用
-	 */
-	private boolean enablehidden = false;
-
+	 * コントローラー設定
+ 	 */
+	private ControllerConfig[] controller = new ControllerConfig[] { ControllerConfig.default7() };
 	/**
-	 * レーンカバー変化間隔(低速)
+	 * MIDI設定
 	 */
-	private float lanecovermarginlow = 0.001f;
-	/**
-	 * レーンカバー変化間隔(高速)
-	 */
-	private float lanecovermarginhigh = 0.01f;
-	/**
-	 * レーンカバー変化速度切り替え時間
-	 */
-	private int lanecoverswitchduration = 500;
-	/**
-	 * HI-SPEED固定自動調整：レーンカバーを変化するとHI-SPEED固定を現在のBPMに自動的に調整する（皿チョン）
-	 */
-	private boolean hispeedautoadjust = false;
-	/**
-	 * 判定アルゴリズム
-	 */
-	private String judgetype = JudgeAlgorithm.Combo.name();
-
-	/**
-	 * Pacemaker Type: 0=Rival, 1=Best, 2=AAA, 3=AA, 4=A
-	 */
-	private int pacemakerType = 0;
-
-	public static final int PACEMAKER_RIVAL = 0;
-	public static final int PACEMAKER_BEST = 1;
-	public static final int PACEMAKER_AAA = 2;
-	public static final int PACEMAKER_AA = 3;
-	public static final int PACEMAKER_A = 4;
-
+	private MidiConfig midi = new MidiConfig();
+	
 	public PlayConfig() {
 	}
-
-	public int getPacemakerType() {
-		return pacemakerType;
+	
+	public PlayConfig(KeyboardConfig keyboard, ControllerConfig[] controllers, MidiConfig midi) {
+		this.keyboard = keyboard;
+		this.controller = controllers.clone();
+		this.midi = midi;
+	}
+		
+	public KeyboardConfig getKeyboardConfig() {
+		return keyboard;
 	}
 
-	public void setPacemakerType(int pacemakerType) {
-		this.pacemakerType = pacemakerType;
+	public void setKeyboardConfig(KeyboardConfig keyboard) {
+		this.keyboard = keyboard;
+	}
+
+	public ControllerConfig[] getController() {
+		return controller;
+	}
+
+	public MidiConfig getMidiConfig() {
+		return midi;
+	}
+
+	public void setController(ControllerConfig[] controllerassign) {
+		this.controller = controllerassign;
 	}
 
 	public float getHispeed() {
+		if(hispeed < 0.01) {
+			hispeed = 0.01f;
+		}
 		return hispeed;
 	}
 
@@ -133,6 +92,9 @@ public class PlayConfig implements Cloneable {
 	}
 
 	public int getDuration() {
+		if(duration < 1) {
+			duration = 1;
+		}
 		return duration;
 	}
 
@@ -140,39 +102,10 @@ public class PlayConfig implements Cloneable {
 		this.duration = duration;
 	}
 
-	public boolean isEnableConstant() {
-		return enableConstant;
-	}
-
-	public void setEnableConstant(boolean enableConstant) {
-		this.enableConstant = enableConstant;
-	}
-
-	public int getConstantFadeinTime() {
-		return constantFadeinTime;
-	}
-
-	public void setConstantFadeinTime(int constantFadeinTime) {
-		this.constantFadeinTime = constantFadeinTime;
-	}
-
-	public float getHispeedMargin() {
-		return hispeedmargin;
-	}
-
-	public void setHispeedMargin(float hispeedmargin) {
-		this.hispeedmargin = hispeedmargin;
-	}
-
-	public int getFixhispeed() {
-		return fixhispeed;
-	}
-
-	public void setFixhispeed(int fixhispeed) {
-		this.fixhispeed = fixhispeed;
-	}
-
 	public float getLanecover() {
+		if(lanecover < 0 || lanecover > 1) {
+			lanecover = 0;
+		}
 		return lanecover;
 	}
 
@@ -189,6 +122,9 @@ public class PlayConfig implements Cloneable {
 	}
 
 	public float getLift() {
+		if(lift < 0 || lift > 1) {
+			lift = 0;
+		}
 		return lift;
 	}
 
@@ -204,91 +140,275 @@ public class PlayConfig implements Cloneable {
 		this.enablelift = enablelift;
 	}
 
-	public float getHidden() {
-		return hidden;
+	/**
+	 * キーボード設定定義用クラス
+	 *
+	 * @author exch
+	 */
+	public static class KeyboardConfig {
+
+		private int[] keys = { Keys.Z, Keys.S, Keys.X, Keys.D, Keys.C, Keys.F, Keys.V, Keys.SHIFT_LEFT,
+				Keys.CONTROL_LEFT, Keys.COMMA, Keys.L, Keys.PERIOD, Keys.SEMICOLON, Keys.SLASH, Keys.APOSTROPHE,
+				Keys.UNKNOWN, Keys.SHIFT_RIGHT, Keys.CONTROL_RIGHT };
+
+		private int start = Keys.Q;
+
+		private int select = Keys.W;
+
+		public KeyboardConfig() {
+
+		}
+
+		public KeyboardConfig(int[] keys, int start, int select) {
+			this.keys = keys;
+			this.start = start;
+			this.select = select;
+		}
+
+		public int[] getKeyAssign() {
+			return keys;
+		}
+
+		public int getStart() {
+			return start;
+		}
+
+		public int getSelect() {
+			return select;
+		}
+
+		public void setKeyAssign(int[] keys) {
+			this.keys = keys;
+		}
+
+		public void setStart(int start) {
+			this.start = start;
+		}
+
+		public void setSelect(int select) {
+			this.select = select;
+		}
+
+		public static KeyboardConfig default14() {
+			return new KeyboardConfig();
+		}
+
+		public static KeyboardConfig default9() {
+			KeyboardConfig config = new KeyboardConfig();
+			config.keys = new int [] { Keys.Z, Keys.S, Keys.X, Keys.D, Keys.C, Keys.F, Keys.V, Keys.G, Keys.B, Keys.COMMA, Keys.L,
+					Keys.PERIOD, Keys.SEMICOLON, Keys.SLASH, Keys.APOSTROPHE, Keys.UNKNOWN, Keys.SHIFT_RIGHT,
+					Keys.CONTROL_RIGHT };
+			config.start = Keys.Q;
+			config.select = Keys.W;
+			return config;
+		}
 	}
 
-	public void setHidden(float hidden) {
-		this.hidden = hidden;
+	/**
+	 * コントローラー設定定義用クラス
+	 *
+	 * @author exch
+	 */
+	public static class ControllerConfig {
+
+		private String name = "";
+
+		private int[] keys = { BMKeys.BUTTON_4, BMKeys.BUTTON_7, BMKeys.BUTTON_3, BMKeys.BUTTON_8,
+				BMKeys.BUTTON_2, BMKeys.BUTTON_5, BMKeys.LEFT, BMKeys.UP, BMKeys.DOWN };
+
+		private int start = BMKeys.BUTTON_9;
+
+		private int select = BMKeys.BUTTON_10;
+
+		// TODO:コントローラー毎に利用できるようにする
+		private boolean analogScratch = false;
+
+		public ControllerConfig() {
+			
+		}
+		
+		public ControllerConfig(int[] keys, int start, int select) {
+			this.keys = keys;
+			this.start = start;
+			this.select = select;
+		}
+		
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+		
+		public boolean isAnalogScratch() {
+			return analogScratch;
+		}
+
+		public void setAnalogScratch(boolean analog) {
+			this.analogScratch = analog;
+		}
+
+		public int[] getKeyAssign() {
+			return keys;
+		}
+
+		public int getStart() { return start; }
+
+		public int getSelect() { return select; }
+
+		public void setKeyAssign(int[] keys) {
+			this.keys = keys;
+		}
+
+		public void setStart(int start) {
+			this.start = start;
+		}
+
+		public void setSelect(int select) {
+			this.select = select;
+		}
+		
+		public static ControllerConfig default7() {
+			return new ControllerConfig();
+		}
+
+		public static ControllerConfig default9() {
+			return new ControllerConfig();
+		}
 	}
 
-	public boolean isEnablehidden() {
-		return enablehidden;
-	}
+	public static class MidiConfig {
 
-	public void setEnablehidden(boolean enablehidden) {
-		this.enablehidden = enablehidden;
-	}
-
-	public float getLanecovermarginlow() {
-		return lanecovermarginlow;
-	}
-
-	public void setLanecovermarginlow(float lanecovermarginlow) {
-		this.lanecovermarginlow = lanecovermarginlow;
-	}
-
-	public float getLanecovermarginhigh() {
-		return lanecovermarginhigh;
-	}
-
-	public void setLanecovermarginhigh(float lanecovermarginhigh) {
-		this.lanecovermarginhigh = lanecovermarginhigh;
-	}
-
-	public int getLanecoverswitchduration() {
-		return lanecoverswitchduration;
-	}
-
-	public void setLanecoverswitchduration(int lanecoverswitchduration) {
-		this.lanecoverswitchduration = lanecoverswitchduration;
-	}
-
-	public boolean isEnableHispeedAutoAdjust() {
-		return hispeedautoadjust;
-	}
-
-	public void setHispeedAutoAdjust(boolean hispeedautoadjust) {
-		this.hispeedautoadjust = hispeedautoadjust;
-	}
-
-	public String getJudgetype() {
-		for(JudgeAlgorithm type : JudgeAlgorithm.values()) {
-			if(type.name().equals(judgetype)) {
-				return judgetype;
+		public static class Input {
+			public enum Type {
+				NOTE,
+				PITCH_BEND,
+				CONTROL_CHANGE,
+			}
+			public Type type;
+			public int value;
+			public Input() {
+				this.type = Type.NOTE;
+				this.value = 0;
+			}
+			public Input(Input input) {
+				this.type = input.type;
+				this.value = input.value;
+			}
+			public Input(Type type, int value) {
+				this.type = type;
+				this.value = value;
+			}
+			public String toString() {
+				switch (type) {
+				case NOTE:
+					return "NOTE " + value;
+				case PITCH_BEND:
+					return "PITCH " + (value > 0 ? "+" : "-");
+				case CONTROL_CHANGE:
+					return "CC " + value;
+				default:
+					return null;
+				}
 			}
 		}
-		judgetype = JudgeAlgorithm.Combo.name();
-		return judgetype;
-	}
 
-	public void setJudgetype(String judgetype) {
-		this.judgetype = judgetype;
-	}
+		private Input[] keys;
+		private Input start;
+		private Input select;
 
-	public void validate() {
-		hispeed = MathUtils.clamp(hispeed, HISPEED_MIN, HISPEED_MAX);
-		duration = MathUtils.clamp(duration, DURATION_MIN, DURATION_MAX);
-		constantFadeinTime = MathUtils.clamp(constantFadeinTime, CONSTANT_FADEIN_MIN, CONSTANT_FADEIN_MAX);
-		hispeedmargin = MathUtils.clamp(hispeedmargin, HISPEEDMARGIN_MIN, HISPEEDMARGIN_MAX);
-		fixhispeed = MathUtils.clamp(fixhispeed, 0, FIX_HISPEED_MINBPM);
-		lanecover = MathUtils.clamp(lanecover, 0f, 1f);
-		lift = MathUtils.clamp(lift, 0f, 1f);
-		hidden = MathUtils.clamp(hidden, 0f, 1f);
-		lanecovermarginlow = MathUtils.clamp(lanecovermarginlow, 0f, 1f);
-		lanecovermarginhigh = MathUtils.clamp(lanecovermarginhigh, 0f, 1f);
-		lanecoverswitchduration = MathUtils.clamp(lanecoverswitchduration, 0, 1000000);
-		if(JudgeAlgorithm.getIndex(judgetype) == -1) {
-			judgetype = JudgeAlgorithm.Combo.name();
+		public Input[] getKeys() { return keys; }
+		public void setKeys(Input[] keys) { this.keys = keys; }
+		public Input getStart() { return start; }
+		public Input getSelect() { return select; }
+		public void setStart(Input input) { start = input; }
+		public void setSelect(Input input) { select = input; }
+
+		public MidiConfig() {
+			// 7keys
+			keys = new Input[9];
+			for (int i=0; i<7; i++) {
+				keys[i] = new Input(Input.Type.NOTE, 53 + i);
+			}
+			keys[7] = new Input(Input.Type.NOTE, 49);
+			keys[8] = new Input(Input.Type.NOTE, 51);
+			start = new Input(Input.Type.NOTE, 47);
+			select = new Input(Input.Type.NOTE, 48);
+		}
+
+		public Input getKeyAssign(int index) {
+			return keys[index];
+		}
+
+		public void setKeyAssign(int index, Input input) {
+			keys[index] = input;
+		}
+
+		public static MidiConfig default7() {
+			return new MidiConfig();
+		}
+
+		public static MidiConfig default14() {
+			MidiConfig config = new MidiConfig();
+			config.keys = new Input[18];
+			for (int i=0; i<7; i++) {
+				// 1P keys
+				config.keys[i] = new Input(Input.Type.NOTE, 53 + i);
+				// 2P keys
+				config.keys[9 + i] = new Input(Input.Type.NOTE, 65 + i);
+			}
+			// 1P turntables
+			config.keys[7] = new Input(Input.Type.NOTE, 49);
+			config.keys[8] = new Input(Input.Type.NOTE, 51);
+			// 2P turntables
+			config.keys[16] = new Input(Input.Type.NOTE, 73);
+			config.keys[17] = new Input(Input.Type.NOTE, 75);
+			// start/select
+			config.start = new Input(Input.Type.NOTE, 47);
+			config.select = new Input(Input.Type.NOTE, 48);
+			return config;
+		}
+
+		public static MidiConfig default9() {
+			MidiConfig config = new MidiConfig();
+			config.keys = new Input[9];
+			for (int i=0; i<9; i++) {
+				config.keys[i] = new Input(Input.Type.NOTE, 52 + i);
+			}
+			config.start = new Input(Input.Type.NOTE, 47);
+			config.select = new Input(Input.Type.NOTE, 48);
+			return config;
+		}
+
+		public static MidiConfig default24() {
+			MidiConfig config = new MidiConfig();
+			config.keys = new Input[26];
+			for (int i=0; i<24; i++) {
+				config.keys[i] = new Input(Input.Type.NOTE, 48 + i);
+			}
+			config.keys[24] = new Input(Input.Type.PITCH_BEND, 1);
+			config.keys[25] = new Input(Input.Type.PITCH_BEND, -1);
+			config.start = new Input(Input.Type.NOTE, 44);
+			config.select = new Input(Input.Type.NOTE, 46);
+			return config;
+		}
+
+		public static MidiConfig default24double() {
+			MidiConfig config = new MidiConfig();
+			config.keys = new Input[52];
+			for (int i=0; i<24; i++) {
+				config.keys[i] = new Input(Input.Type.NOTE, 48 + i);
+				config.keys[i + 26] = new Input(Input.Type.NOTE, 72 + i);
+			}
+			config.keys[24] = new Input(Input.Type.PITCH_BEND, 1);
+			config.keys[25] = new Input(Input.Type.PITCH_BEND, -1);
+			config.keys[50] = new Input(Input.Type.NOTE, 99);
+			config.keys[51] = new Input(Input.Type.NOTE, 97);
+			config.start = new Input(Input.Type.NOTE, 44);
+			config.select = new Input(Input.Type.NOTE, 46);
+			return config;
 		}
 	}
 
-	public PlayConfig clone() {
-		try {
-			return (PlayConfig) super.clone();
-		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
 }
