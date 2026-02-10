@@ -13,6 +13,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.TextFieldTableCell;
@@ -65,6 +66,14 @@ public class InputConfigurationView implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         inputconfig.getItems().setAll(PlayConfigurationView.PlayMode.values());
         PlayConfigurationView.initComboBox(mouseScratchMode, new String[] { "Ver. 2 (Newest)", "Ver. 1 (~0.8.3)" });
+
+		// Add Tooltips
+		inputconfig.setTooltip(new Tooltip("Select key mode to configure."));
+		inputduration.setTooltip(new Tooltip("Input duration window (polling rate adjustment)."));
+		jkoc_hack.setTooltip(new Tooltip("Enable JKOC workaround for certain adapters."));
+		mouseScratch.setTooltip(new Tooltip("Enable Mouse Scratch (use mouse movement for turntable)."));
+		mouseScratchTimeThreshold.setTooltip(new Tooltip("Time threshold for mouse scratch detection."));
+		mouseScratchDistance.setTooltip(new Tooltip("Distance threshold for mouse scratch detection."));
     }
 
     @FXML

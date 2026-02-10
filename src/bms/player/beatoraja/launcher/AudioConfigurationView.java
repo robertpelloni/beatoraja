@@ -20,6 +20,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Spinner;
+import javafx.scene.control.Tooltip;
 
 public class AudioConfigurationView implements Initializable {
 
@@ -56,6 +57,20 @@ public class AudioConfigurationView implements Initializable {
 
 		audioFreqOption.getItems().setAll(FrequencyType.UNPROCESSED , FrequencyType.FREQUENCY);
 		audioFastForward.getItems().setAll(FrequencyType.UNPROCESSED , FrequencyType.FREQUENCY);
+
+		// Add Tooltips
+		audio.setTooltip(new Tooltip("Select Audio Driver (PortAudio recommended)."));
+		audioname.setTooltip(new Tooltip("Select specific audio device."));
+		audiobuffer.setTooltip(new Tooltip("Audio buffer size (lower = less latency, higher = safer)."));
+		audiosim.setTooltip(new Tooltip("Max simultaneous audio sources."));
+		audiosamplerate.setTooltip(new Tooltip("Sample rate (44100Hz or 48000Hz)."));
+		systemvolume.setTooltip(new Tooltip("Master volume for system sounds."));
+		keyvolume.setTooltip(new Tooltip("Volume for key sounds (notes)."));
+		bgvolume.setTooltip(new Tooltip("Volume for background music (BGM)."));
+		audioFreqOption.setTooltip(new Tooltip("Frequency processing method for speed changes."));
+		audioFastForward.setTooltip(new Tooltip("Fast forward processing method."));
+		loopResultSound.setTooltip(new Tooltip("Loop the result screen music."));
+		loopCourseResultSound.setTooltip(new Tooltip("Loop the course result screen music."));
 	}
 
 	public void update(AudioConfig config) {

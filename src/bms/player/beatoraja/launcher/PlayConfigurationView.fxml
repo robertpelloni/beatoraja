@@ -458,6 +458,21 @@
                 <fx:include fx:id="stream" source="StreamConfigurationView.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
             </AnchorPane>
         </Tab>
+        <Tab fx:id="arenaTab" closable="false" text="Arena">
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                <fx:include fx:id="arena" source="ArenaConfigurationView.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            </AnchorPane>
+        </Tab>
+        <Tab fx:id="missionTab" closable="false" text="Mission">
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                <fx:include fx:id="mission" source="MissionConfigurationView.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            </AnchorPane>
+        </Tab>
+        <Tab fx:id="osuTab" closable="false" text="Osu!">
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                <fx:include fx:id="osu" source="OsuConfigurationView.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            </AnchorPane>
+        </Tab>
     </TabPane>
     <HBox fx:id="controlPanel" prefWidth="552.0">
         <VBox.margin>

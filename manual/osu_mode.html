@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>beatoraja Osu! Mode Support</title>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; max-width: 800px; margin: 0 auto; padding: 20px; color: #333; }
+        h1, h2 { color: #2c3e50; }
+        h3 { color: #34495e; margin-top: 25px; }
+        code { background: #ecf0f1; padding: 2px 5px; border-radius: 3px; font-family: monospace; }
+        .section { margin-bottom: 40px; }
+        .feature-box { border: 1px solid #ddd; padding: 15px; background: #f9f9f9; border-radius: 5px; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+    <h1>Osu! Mode Support</h1>
+    <p><a href="index.html">&larr; Back to Index</a></p>
+
+    <div class="section">
+        <h2>Playing .osu Files</h2>
+        <p>beatoraja includes built-in support for loading and playing Osu! beatmaps (.osu files), specifically those designed for Osu!mania.</p>
+
+        <h3>How to Load</h3>
+        <ol>
+            <li>Add your Osu! Songs folder to the <strong>Resource Tab</strong> in the Launcher.</li>
+            <li>Alternatively, copy your Osu! beatmap folders into your beatoraja BMS directory.</li>
+            <li>Click "Update BMS Database" to scan for .osu files.</li>
+        </ol>
+        <p><em>Note: Only Osu!mania (Mode 3) and Standard (Mode 0, auto-converted) are fully supported.</em></p>
+    </div>
+
+    <div class="section">
+        <h2>Features</h2>
+        <ul>
+            <li><strong>Key Counts:</strong> Supports 4K to 9K key modes automatically based on Circle Size (CS).</li>
+            <li><strong>Long Notes (Sliders):</strong> Sliders are converted to Long Notes (LN).</li>
+            <li><strong>Spinners:</strong> Spinners are mapped to the Scratch lane as Long Notes.</li>
+            <li><strong>Hit Sounds:</strong> Supports custom hit sounds from the beatmap folder.</li>
+            <li><strong>Background/Video:</strong> Displays background images and video events (if enabled in settings).</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>Configuration</h2>
+        <p>In the <strong>Osu!</strong> tab of the Launcher, you can adjust specific settings:</p>
+
+        <div class="feature-box">
+            <h3>Audio Settings</h3>
+            <ul>
+                <li><strong>Hit Sound Volume:</strong> Adjust the volume of note hit sounds relative to the music.</li>
+            </ul>
+        </div>
+
+        <div class="feature-box">
+            <h3>Visual Settings</h3>
+            <ul>
+                <li><strong>Background Dim:</strong> Darken the background image/video for better note visibility (0% to 100%).</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Key Mapping</h2>
+        <p>Key bindings for Osu! mode follow the standard BMS key configuration.</p>
+        <ul>
+            <li><strong>4K:</strong> Uses the center 4 keys of the 7K layout (Keys 2, 3, 4, 5).</li>
+            <li><strong>7K:</strong> Uses the full 7K layout (Keys 1-7).</li>
+            <li><strong>8K:</strong> Uses 7K + Scratch.</li>
+        </ul>
+        <p>You can customize these in the <strong>Input</strong> tab under "7KEYS".</p>
+    </div>
+
+</body>
+</html>
