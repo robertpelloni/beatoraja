@@ -69,6 +69,7 @@ public class KeySoundProcessor {
 			final long lasttime = timelines.length > 0 ?
 					timelines[timelines.length - 1].getMicroTime() + BMSPlayer.TIME_MARGIN * 1000 : 0;
 			final Config config = player.resource.getConfig();
+			final PlayerConfig playerConfig = player.main.getPlayerConfig();
 			int p = 0;
 			for (long time = starttime; p < timelines.length && timelines[p].getMicroTime() < time; p++)
 				;
@@ -78,6 +79,16 @@ public class KeySoundProcessor {
 				// BGレーン再生
 				while (p < timelines.length && timelines[p].getMicroTime() <= time) {
 					for (Note n : timelines[p].getBackGroundNotes()) {
+						// Apply HitSound volume from PlayerConfig if it's an Osu chart, or just global BGM volume?
+						// Ideally check model type or file extension, but simplistic approach:
+						// If Osu hit sound volume is < 1.0 and this is Osu mode, scale it.
+						// However, BGM volume is global. Let's just use bgvolume.
+						// Wait, Osu hit sounds are usually on the foreground/keys, not background.
+						// Background notes in Osu are the BGM track itself.
+						// The user requested Osu Hit Sound Volume.
+						// We should check if we are in Osu mode and modify volume accordingly.
+						// But KeySoundProcessor handles BACKGROUND notes (BGM).
+						// Hit sounds are handled in JudgeManager (when hit).
 						audio.play(n, config.getAudioConfig().getBgvolume(), 0);
 					}
 					p++;

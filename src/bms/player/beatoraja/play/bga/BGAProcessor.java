@@ -305,7 +305,15 @@ public class BGAProcessor {
 
 
 	public void drawBGA(SkinBGA dst, SkinObjectRenderer sprite, Rectangle r) {
-		sprite.setColor(dst.getColor());
+		// Apply Background Dim if Osu mode is active or generally
+		Color color = new Color(dst.getColor());
+		if (player.getOsuBackgroundDim() > 0) {
+			float dim = 1.0f - player.getOsuBackgroundDim();
+			// Darken the color
+			color.mul(dim, dim, dim, 1.0f);
+		}
+
+		sprite.setColor(color);
 		sprite.setBlend(dst.getBlend());
 		if (time < 0 || timelines == null) {
 			sprite.draw(blanktex, r.x, r.y, r.width, r.height);
