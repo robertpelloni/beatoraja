@@ -8,6 +8,7 @@ import bms.model.BMSModel;
 import bms.model.Note;
 import bms.model.TimeLine;
 import bms.player.beatoraja.Config;
+import bms.player.beatoraja.PlayerConfig;
 import bms.player.beatoraja.audio.AudioDriver;
 
 /**
