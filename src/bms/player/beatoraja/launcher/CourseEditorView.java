@@ -46,6 +46,20 @@ public class CourseEditorView implements Initializable {
         // songTable.setItems(allSongs);
     }
 
+    // Stub methods to satisfy TableEditorView dependencies
+    public void setSongDatabaseAccessor(SongDatabaseAccessor songDB) {
+        // Implementation
+    }
+
+    public void setCourseData(bms.player.beatoraja.CourseData[] courses) {
+        // Implementation
+    }
+
+    public bms.player.beatoraja.CourseData[] getCourseData() {
+        // Implementation
+        return new bms.player.beatoraja.CourseData[0];
+    }
+
     private void filterSongs(String query) {
         // Filter logic
     }

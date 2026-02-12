@@ -16,6 +16,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Bezier;
 import com.badlogic.gdx.math.CatmullRomSpline;
 
+import bms.model.storyboard.*;
+
 /**
  * Basic Osu file decoder to convert .osu files to BMSModel.
  * Direct port attempt/adaptation for basic 7K support.
@@ -126,9 +128,9 @@ public class OsuDecoder {
                             if (parts.length >= 6) {
                                 String layerStr = parts[1];
                                 String originStr = parts[2];
-                                String filename = parts[3];
-                                if (filename.startsWith("\"") && filename.endsWith("\"")) {
-                                    filename = filename.substring(1, filename.length() - 1);
+                                String spriteFilename = parts[3];
+                                if (spriteFilename.startsWith("\"") && spriteFilename.endsWith("\"")) {
+                                    spriteFilename = spriteFilename.substring(1, spriteFilename.length() - 1);
                                 }
                                 float x = Float.parseFloat(parts[4]);
                                 float y = Float.parseFloat(parts[5]);
@@ -136,12 +138,12 @@ public class OsuDecoder {
                                 StoryboardSprite.Layer layer = StoryboardSprite.Layer.valueOf(layerStr);
                                 StoryboardSprite.Origin origin = StoryboardSprite.Origin.valueOf(originStr);
 
-                                currentSprite = new StoryboardSprite(layer, origin, filename, x, y);
+                                currentSprite = new StoryboardSprite(layer, origin, spriteFilename, x, y);
                                 storyboard.sprites.add(currentSprite);
 
                                 // Backward compatibility: Set BG if not set
                                 if (layer == StoryboardSprite.Layer.Background && model.getBackbmp() == null) {
-                                     model.setBackbmp(filename);
+                                     model.setBackbmp(spriteFilename);
                                 }
                             }
                         } else if ((line.startsWith(" ") || line.startsWith("_")) && currentSprite != null) {

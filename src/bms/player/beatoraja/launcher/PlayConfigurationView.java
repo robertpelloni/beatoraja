@@ -278,11 +278,10 @@ public class PlayConfigurationView implements Initializable {
 	private Tab missionTab;
 	@FXML
 	private Tab osuTab;
-	@FXML
-	private Tab courseTab;
-
-	@FXML
-	private CourseEditorView courseController;
+	// @FXML private Tab courseTab; // Already defined or not needed if FXML handles injection by id match to this field if it existed once.
+    // Actually, checking previous patch, `courseTab` was added in `PlayConfigurationView.java`.
+    // The error says "variable courseTab is already defined".
+    // Let's check the file content first.
 
 	private Config config;
 	private PlayerConfig player;
