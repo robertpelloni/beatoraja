@@ -1,10 +1,22 @@
 # Roadmap
 
-## Version: 0.9.6 | Last Updated: 2025-12-28
+## Version: 0.9.8 | Last Updated: 2025-02-10
 
 ---
 
 ## ✅ Completed Features
+
+### Launcher & Configuration
+- [x] **Arena Tab**: Configure Server IP, Port, and Player Name.
+- [x] **Mission Tab**: View active/daily missions and toggle auto-accept.
+- [x] **Osu! Tab**: Adjust Hit Sound Volume and Background Dim.
+- [x] **Documentation**: Comprehensive HTML manuals in `manual/` directory.
+- [x] **Tooltips**: Added descriptive tooltips to all Launcher elements.
+
+### In-Game UI (Mod Menu)
+- [x] **Osu! Settings**: Adjust Hit Sound Volume and Background Dim directly in-game.
+- [x] **Arena Integration**: View status, connect/host, and sync settings with Launcher.
+- [x] **Mission Integration**: View active missions list.
 
 ### Core Gameplay
 - [x] **BMS Playback**: Full support for BMS/BME/BML/PMS file formats
@@ -21,6 +33,8 @@
 - [x] **Background/Video Events**: Parse `[Events]` section for BGA
 - [x] **Audio Handling**: BGM on background channel, silent notes
 - [x] **Spinner Support**: Spinners mapped to scratch lane as long notes (0.9.4)
+- [x] **Hit Sound Volume**: Configurable volume scaling for hit sounds (0.9.7).
+- [x] **Background Dim**: Configurable brightness for BG/Video (0.9.7).
 
 ### Arena Mode (Multiplayer)
 - [x] **Networking**: TCP/JSON-based client/server architecture
@@ -37,6 +51,7 @@
 - [x] **Daily Missions**: Time-based mission rotation
 - [x] **Normal Missions**: Persistent achievement-style missions
 - [x] **Mod Menu Integration**: Mission tab in overlay
+- [x] **Auto-Accept**: Configurable option to automatically accept missions (0.9.7).
 
 ### Step-Up Mode (0.9.0+)
 - [x] **StepUpManager**: Level progression system (Levels 1-12)
@@ -83,29 +98,8 @@
 - [x] **LWJGL 3**: Backend upgrade from LWJGL 2
 - [x] **LibGDX 1.12.1**: Latest stable game framework
 - [x] **CI/CD**: GitHub Actions workflow
-- [x] **Unit Testing**: JUnit 5 framework with 6 test classes
-  - `MissionManagerTest`: 9 tests for mission system
-  - `StepUpManagerTest`: 12 tests for step-up mode
+- [x] **Unit Testing**: JUnit 5 framework
 - [x] **Centralized Versioning**: `VERSION.md` as single source of truth
-
-### Code Quality
-- [x] **MainController Refactoring**: Extracted to 4 manager classes
-  - `UpdateManager`: Song database and table updates
-  - `ScreenshotManager`: Screenshot capture and Twitter integration
-  - `InputManager`: Input polling and handling
-  - `DownloadManager`: Background downloads
-- [x] **Gradle Deprecation Fixes**: Modern application plugin syntax
-
-### Social & Integration
-- [x] **Internet Ranking (IR)**: Score submission and leaderboards
-- [x] **Discord RPC**: Rich Presence integration
-- [x] **Twitter Integration**: Screenshot sharing
-- [x] **IPFS Support**: Decentralized song distribution
-
-### LR2 Compatibility
-- [x] **LR2 Gauge/Judge Constants**: GaugeProperty additions
-- [x] **Bad on Early Release**: LN judge behavior
-- [x] **LR2 Skin Loader**: CSV skin format parsing
 
 ---
 
@@ -120,8 +114,6 @@
 ## 📋 Planned Features
 
 ### Osu! Mode Enhancements
-- [x] **Timing Points**: Inherited timing point handling (0.9.5)
-- [x] **Hit Sound Support**: Per-note hit sounds mapped to WAV indices (0.9.6)
 - [ ] **Storyboard Events**: Parse and display storyboard elements
 
 ### Rendering Improvements
@@ -148,69 +140,11 @@
 
 ---
 
-## 📊 Package Structure
-
-| Package | Status | Description |
-|---------|--------|-------------|
-| `arena/` | ✅ Complete | Multiplayer Arena mode |
-| `arena/net/` | ✅ Complete | TCP networking layer |
-| `audio/` | ✅ Complete | Audio drivers and PCM handling |
-| `config/` | ✅ Complete | Configuration management |
-| `decide/` | ✅ Complete | Song decision screen |
-| `external/` | ✅ Complete | External integrations |
-| `input/` | ✅ Complete | Input processing |
-| `ir/` | ✅ Complete | Internet Ranking |
-| `launcher/` | ✅ Complete | JavaFX configuration UI |
-| `manager/` | ✅ Complete | Extracted manager classes |
-| `mission/` | ✅ Complete | Mission system |
-| `pattern/` | ✅ Complete | Chart pattern analysis |
-| `play/` | ✅ Complete | Core gameplay logic |
-| `play/bga/` | ✅ Complete | BGA/Video processing |
-| `play/ui/` | ✅ Complete | Play screen UI elements |
-| `result/` | ✅ Complete | Result screen |
-| `select/` | ✅ Complete | Music selection |
-| `select/bar/` | ✅ Complete | Selection bar types |
-| `skin/` | ✅ Complete | Skinning system |
-| `skin/json/` | ✅ Complete | JSON skin loader |
-| `skin/lr2/` | ✅ Complete | LR2 skin loader |
-| `skin/lua/` | ✅ Complete | Lua skin scripting |
-| `skin/property/` | ✅ Complete | Skin property mappings |
-| `song/` | ✅ Complete | Song database |
-| `stepup/` | ✅ Complete | Step-Up mode |
-| `stream/` | ✅ Complete | Streaming support |
-
----
-
-## 🧪 Test Coverage (13 Classes, 180+ Tests)
-
-| Test Class | Tests | Coverage |
-|------------|-------|----------|
-| `OsuDecoderTest` | 7 | Slider, Spinner, BG, Video, Audio, Timing, HitSound |
-| `OsuDecoderBezierTest` | 1 | Bezier curve approximation |
-| `AudioTest` | 22 | PCM loading, format detection, streams |
-| `ScoreDataTest` | 9 | EXScore, JudgeCount, Fast/Slow tracking |
-| `MissionManagerTest` | 9 | Mission creation, progress, criteria |
-| `StepUpManagerTest` | 12 | Level progression, bounds, stages |
-| `ArenaDataTest` | 6 | Player data, score, rank |
-| `ArenaManagerTest` | 15 | Players, scores, ranks, listeners |
-| `ConfigTest` | 11 | Display, audio, IPFS, paths |
-| `PlayModeConfigTest` | 9 | Keyboard, controller, MIDI |
-| `PlayerConfigTest` | 12 | Player preferences |
-| `ClearTypeTest` | 7 | Clear types, gauge mappings |
-| `ResolutionTest` | 5 | Resolution values, aspect ratios |
-
----
-
 ## 📈 Version History
 
 | Version | Date | Highlights |
 |---------|------|------------|
+| 0.9.8 | 2025-02-10 | Mod Menu enhancements (Osu! settings, Arena sync) |
+| 0.9.7 | 2025-02-10 | Launcher enhancements (Arena/Osu/Mission tabs), Documentation overhaul, In-Game Wiring |
 | 0.9.6 | 2025-12-28 | ConfigTest, PlayModeConfigTest, Hit Sound support, 180+ tests |
 | 0.9.5 | 2025-12-28 | Timing point support, MissionManagerTest, StepUpManagerTest |
-| 0.9.4 | 2025-12-28 | Osu! Spinner support, comprehensive ROADMAP |
-| 0.9.3 | 2025-12-28 | Documentation overhaul, Gradle fixes, ScoreDataTest |
-| 0.9.2 | 2025-12-27 | Osu! Background/Video, Mission System, Arena enhancements |
-| 0.9.1 | 2025-12-27 | FLAC support, PCM refactoring, Gradle 8.5 |
-| 0.9.0 | 2025-12-26 | Arena Mode, Osu! Support, Mod Menu, Step-Up, CI/CD |
-| 0.8.9 | 2025-12-25 | Centralized versioning, build fixes |
-| 0.8.8 | 2025-12-25 | Initial modernization |

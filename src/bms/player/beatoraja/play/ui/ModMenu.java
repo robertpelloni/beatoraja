@@ -92,6 +92,10 @@ public class ModMenu {
     private Slider bgmVolumeSlider;
     private Label bgmVolumeLabel;
     private TextButton guideSEButton;
+    private Slider osuVolumeSlider;
+    private Label osuVolumeLabel;
+    private Slider osuDimSlider;
+    private Label osuDimLabel;
 
     // Arena UI
     private Window arenaWindow;
@@ -676,6 +680,39 @@ public class ModMenu {
         content.add(guideSEButton).pad(5);
         content.row();
 
+        // Osu Settings
+        osuVolumeLabel = new Label("Osu Vol: " + (int)(player.resource.getPlayerConfig().getOsuHitSoundVolume() * 100) + "%", skin);
+        osuVolumeSlider = new Slider(0f, 1f, 0.05f, false, skin);
+        osuVolumeSlider.setValue(player.resource.getPlayerConfig().getOsuHitSoundVolume());
+        osuVolumeSlider.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                float val = osuVolumeSlider.getValue();
+                player.resource.getPlayerConfig().setOsuHitSoundVolume(val);
+                osuVolumeLabel.setText("Osu Vol: " + (int)(val * 100) + "%");
+            }
+        });
+        content.add(osuVolumeLabel).pad(2);
+        content.row();
+        content.add(osuVolumeSlider).width(200).pad(2);
+        content.row();
+
+        osuDimLabel = new Label("BG Dim: " + (int)(player.resource.getPlayerConfig().getOsuBackgroundDim() * 100) + "%", skin);
+        osuDimSlider = new Slider(0f, 1f, 0.05f, false, skin);
+        osuDimSlider.setValue(player.resource.getPlayerConfig().getOsuBackgroundDim());
+        osuDimSlider.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                float val = osuDimSlider.getValue();
+                player.resource.getPlayerConfig().setOsuBackgroundDim(val);
+                osuDimLabel.setText("BG Dim: " + (int)(val * 100) + "%");
+            }
+        });
+        content.add(osuDimLabel).pad(2);
+        content.row();
+        content.add(osuDimSlider).width(200).pad(2);
+        content.row();
+
         TextButton closeButton = new TextButton("Close", skin);
         closeButton.addListener(new ClickListener() {
             @Override
@@ -698,13 +735,13 @@ public class ModMenu {
         arenaWindow.add(content).pad(10);
 
         Label nameLabel = new Label("Name:", skin);
-        nameField = new TextField("Player", skin);
+        nameField = new TextField(player.resource.getPlayerConfig().getArenaPlayerName(), skin);
 
         Label hostLabel = new Label("Host:", skin);
-        hostField = new TextField("localhost", skin);
+        hostField = new TextField(player.resource.getPlayerConfig().getArenaServerIP(), skin);
 
         Label portLabel = new Label("Port:", skin);
-        portField = new TextField("5073", skin);
+        portField = new TextField(String.valueOf(player.resource.getPlayerConfig().getArenaPort()), skin);
 
         content.add(nameLabel);
         content.add(nameField).width(150);
@@ -1174,6 +1211,17 @@ public class ModMenu {
 
             // Refresh values
             hispeedSlider.setValue(getHiSpeed());
+
+            // Refresh Audio Window if created
+            if (keyVolumeSlider != null) keyVolumeSlider.setValue(player.main.getConfig().getAudioConfig().getKeyvolume());
+            if (bgmVolumeSlider != null) bgmVolumeSlider.setValue(player.main.getConfig().getAudioConfig().getBgvolume());
+            if (osuVolumeSlider != null) osuVolumeSlider.setValue(player.resource.getPlayerConfig().getOsuHitSoundVolume());
+            if (osuDimSlider != null) osuDimSlider.setValue(player.resource.getPlayerConfig().getOsuBackgroundDim());
+
+            // Refresh Arena Window if created
+            if (nameField != null) nameField.setText(player.resource.getPlayerConfig().getArenaPlayerName());
+            if (hostField != null) hostField.setText(player.resource.getPlayerConfig().getArenaServerIP());
+            if (portField != null) portField.setText(String.valueOf(player.resource.getPlayerConfig().getArenaPort()));
 
             laneCoverSlider.setValue(getLaneCover() * 1000);
             laneCoverLabel.setText("Lane Cover: " + (int)laneCoverSlider.getValue());
