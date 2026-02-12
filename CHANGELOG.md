@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.9.10] - 2025-02-10
+
+### Added
+- **Osu!**: Implemented backend infrastructure for Storyboard support.
+    - Added `StoryboardData`, `StoryboardSprite`, `StoryboardCommand` structures.
+    - Updated `OsuDecoder` to parse `[Events]` commands (Move, Fade, Scale, etc).
+    - Created `StoryboardRegistry` to manage storyboard data alongside immutable BMS models.
+    - Created `StoryboardRenderer` (foundation) and wired it into `BGAProcessor`.
+- **Launcher**: Added "Course Editor" tab with basic UI for creating custom courses.
+
+### Changed
+- **Config**: Bumped version to 0.9.10.
+
+## [0.9.9] - 2025-02-10
+
+### Added
+- **Skinning**: Added new skin properties `NUMBER_MISSION_CURRENT`, `NUMBER_MISSION_TARGET`, `NUMBER_ARENA_PLAYERS_COUNT`.
+- **Skinning**: Added `NUMBER_ARENA_SCORE_DIFF` to display real-time score difference against the top opponent in Arena mode.
+- **Osu!**: Basic support for parsing "Sprite" events in Osu! storyboards (currently extracts background images).
+
+### Changed
+- **Config**: Bumped version to 0.9.9.
+
 ## [0.9.8] - 2025-02-10
 
 ### Added

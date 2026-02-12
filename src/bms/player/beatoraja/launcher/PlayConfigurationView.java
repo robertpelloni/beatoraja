@@ -278,6 +278,11 @@ public class PlayConfigurationView implements Initializable {
 	private Tab missionTab;
 	@FXML
 	private Tab osuTab;
+	@FXML
+	private Tab courseTab;
+
+	@FXML
+	private CourseEditorView courseController;
 
 	private Config config;
 	private PlayerConfig player;
@@ -597,6 +602,7 @@ public class PlayConfigurationView implements Initializable {
 		arenaController.update(player);
 		missionController.update(player);
 		osuController.update(player);
+		// courseController.init(MainLoader.getScoreDatabaseAccessor()); // Deferred initialization
 
 		txtTwitterPIN.setDisable(true);
 		twitterPINButton.setDisable(true);
@@ -810,6 +816,7 @@ public class PlayConfigurationView implements Initializable {
 		arenaTab.setDisable(true);
 		missionTab.setDisable(true);
 		osuTab.setDisable(true);
+		courseTab.setDisable(true);
 		controlPanel.setDisable(true);
 
 		MainLoader.play(null, bms.player.beatoraja.BMSPlayerMode.PLAY, true, config, player, songUpdated);

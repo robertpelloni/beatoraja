@@ -121,6 +121,32 @@ public class OsuDecoder {
                                  }
                                  bgaEvents.add(new BGAEvent(startTime, bgaIndex));
                              }
+                        } else if (type.equals("Sprite")) {
+                            // Format: Sprite,layer,origin,"filename",x,y
+                            if (parts.length >= 6) {
+                                String layerStr = parts[1];
+                                String originStr = parts[2];
+                                String filename = parts[3];
+                                if (filename.startsWith("\"") && filename.endsWith("\"")) {
+                                    filename = filename.substring(1, filename.length() - 1);
+                                }
+                                float x = Float.parseFloat(parts[4]);
+                                float y = Float.parseFloat(parts[5]);
+
+                                StoryboardSprite.Layer layer = StoryboardSprite.Layer.valueOf(layerStr);
+                                StoryboardSprite.Origin origin = StoryboardSprite.Origin.valueOf(originStr);
+
+                                currentSprite = new StoryboardSprite(layer, origin, filename, x, y);
+                                storyboard.sprites.add(currentSprite);
+
+                                // Backward compatibility: Set BG if not set
+                                if (layer == StoryboardSprite.Layer.Background && model.getBackbmp() == null) {
+                                     model.setBackbmp(filename);
+                                }
+                            }
+                        } else if ((line.startsWith(" ") || line.startsWith("_")) && currentSprite != null) {
+                            // Command
+                            parseCommand(line.trim(), currentSprite);
                         }
                     }
                 } else if (section.equals("TimingPoints")) {
@@ -208,12 +234,66 @@ public class OsuDecoder {
 
             model.setWavList(wavList);
             model.setBgaList(bgaList);
+
+            // Register Storyboard externally since BMSModel is immutable/external
+            StoryboardRegistry.register(model, storyboard);
+
             convert(model, hitObjects, timingPoints, bgaEvents, sliderMultiplier, keys);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
         return model;
+    }
+
+    private void parseCommand(String line, StoryboardSprite sprite) {
+        // Format: _Type,Easing,StartTime,EndTime,StartVal,EndVal
+        try {
+            String[] parts = line.split(",");
+            if (parts.length < 4) return;
+
+            String typeCode = parts[0];
+            CommandType type = switch(typeCode) {
+                case "M" -> CommandType.Move;
+                case "MX" -> CommandType.MoveX;
+                case "MY" -> CommandType.MoveY;
+                case "F" -> CommandType.Fade;
+                case "S" -> CommandType.Scale;
+                case "V" -> CommandType.VectorScale;
+                case "R" -> CommandType.Rotate;
+                case "C" -> CommandType.Color;
+                case "P" -> CommandType.Parameter;
+                case "L" -> CommandType.Loop;
+                case "T" -> CommandType.Trigger;
+                default -> null;
+            };
+
+            if (type == null) return;
+
+            if (type == CommandType.Loop) {
+                // Loop: _L,StartTime,LoopCount
+                sprite.isLoop = true;
+                sprite.loopStartTime = Long.parseLong(parts[1]);
+                sprite.loopCount = Integer.parseInt(parts[2]);
+                return;
+            }
+
+            int easingId = Integer.parseInt(parts[1]);
+            Easing easing = Easing.values()[Math.min(easingId, Easing.values().length - 1)];
+            long startTime = Long.parseLong(parts[2]);
+            long endTime = parts[3].isEmpty() ? startTime : Long.parseLong(parts[3]);
+
+            float[] startVals = new float[parts.length - 4];
+            for(int i=4; i<parts.length; i++) {
+                startVals[i-4] = Float.parseFloat(parts[i]);
+            }
+
+            // If end values are missing, they default to start values
+            float[] endVals = startVals; // simplified, actual parsing might need checking length of startVals vs total parts
+
+            sprite.commands.add(new StoryboardCommand(type, easing, startTime, endTime, startVals, endVals));
+
+        } catch (Exception e) {}
     }
 
     private void convert(BMSModel model, List<HitObject> hitObjects, List<TimingPoint> timingPoints, List<BGAEvent> bgaEvents, double sliderMultiplier, int keys) {

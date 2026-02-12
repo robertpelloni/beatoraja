@@ -12,6 +12,8 @@ import bms.player.beatoraja.ResourcePool;
 import bms.player.beatoraja.play.BMSPlayer;
 import bms.player.beatoraja.play.SkinBGA;
 import bms.player.beatoraja.skin.Skin.SkinObjectRenderer;
+import bms.model.storyboard.StoryboardRegistry;
+import bms.model.storyboard.StoryboardData;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
@@ -70,6 +72,8 @@ public class BGAProcessor {
 	private boolean rbga;
 	private boolean rlayer;
 
+	private StoryboardRenderer storyboardRenderer;
+
 	public BGAProcessor(Config config, PlayerConfig player) {
 		this.player = player;
 
@@ -101,6 +105,17 @@ public class BGAProcessor {
 
 		cache.clear();
 		resetCurrentlyPlayingBGA();
+
+		// Initialize Storyboard if available
+		StoryboardData sbData = StoryboardRegistry.get(model);
+		if (sbData != null) {
+			storyboardRenderer = new StoryboardRenderer(sbData);
+		} else {
+			if (storyboardRenderer != null) {
+				storyboardRenderer.dispose();
+				storyboardRenderer = null;
+			}
+		}
 
 		int id = 0;
 
@@ -318,6 +333,11 @@ public class BGAProcessor {
 		if (time < 0 || timelines == null) {
 			sprite.draw(blanktex, r.x, r.y, r.width, r.height);
 			return;
+		}
+
+		// Draw Storyboard (Background layer)
+		if (storyboardRenderer != null) {
+			storyboardRenderer.render(time, sprite, r);
 		}
 
 		if (misslayer != null && misslayertime != 0 && time >= misslayertime && time < misslayertime + getMisslayerduration) {

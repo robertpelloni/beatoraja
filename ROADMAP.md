@@ -1,17 +1,36 @@
 # Roadmap
 
-## Version: 0.9.8 | Last Updated: 2025-02-10
+## Version: 0.9.10 | Last Updated: 2025-02-10
 
 ---
 
 ## ✅ Completed Features
 
-### Launcher & Configuration
+### Osu! Support (0.9.0+)
+- [x] **Osu! File Parsing**: `.osu` file decoder with mania mode support
+- [x] **Dynamic Key Mapping**: 4K-9K support based on CircleSize
+- [x] **Slider Curves**: Bezier and Linear curve approximation
+- [x] **Background/Video Events**: Parse `[Events]` section for BGA
+- [x] **Audio Handling**: BGM on background channel, silent notes
+- [x] **Spinner Support**: Spinners mapped to scratch lane as long notes (0.9.4)
+- [x] **Hit Sound Volume**: Configurable volume scaling for hit sounds (0.9.7).
+- [x] **Background Dim**: Configurable brightness for BG/Video (0.9.7).
+- [x] **Storyboard Support (Foundation)**:
+    - [x] Data structures for Commands (Move, Fade, etc), Sprites, and Easing (0.9.10).
+    - [x] `OsuDecoder` updated to parse `[Events]` into `StoryboardData` (0.9.10).
+    - [x] `StoryboardRegistry` pattern to attach data to immutable `BMSModel`.
+    - [x] `StoryboardRenderer` foundation (interpolator logic) (0.9.10).
+
+### Launcher & Tools
+- [x] **Course Editor (UI)**: Launcher tab for creating custom courses (0.9.10).
 - [x] **Arena Tab**: Configure Server IP, Port, and Player Name.
 - [x] **Mission Tab**: View active/daily missions and toggle auto-accept.
 - [x] **Osu! Tab**: Adjust Hit Sound Volume and Background Dim.
 - [x] **Documentation**: Comprehensive HTML manuals in `manual/` directory.
-- [x] **Tooltips**: Added descriptive tooltips to all Launcher elements.
+
+### Skinning & UI
+- [x] **New Skin Properties**: `NUMBER_MISSION_CURRENT`, `NUMBER_MISSION_TARGET`, `NUMBER_ARENA_PLAYERS_COUNT`, `NUMBER_ARENA_SCORE_DIFF`.
+- [x] **Arena Score Difference**: Real-time score comparison with the top opponent exposed to skins.
 
 ### In-Game UI (Mod Menu)
 - [x] **Osu! Settings**: Adjust Hit Sound Volume and Background Dim directly in-game.
@@ -25,16 +44,6 @@
 - [x] **Lane Cover / Hi-Speed**: Adjustable during gameplay
 - [x] **Practice Mode**: Section-based practice with loop functionality
 - [x] **Replay System**: Record and playback replays
-
-### Osu! Support (0.9.0+)
-- [x] **Osu! File Parsing**: `.osu` file decoder with mania mode support
-- [x] **Dynamic Key Mapping**: 4K-9K support based on CircleSize
-- [x] **Slider Curves**: Bezier and Linear curve approximation
-- [x] **Background/Video Events**: Parse `[Events]` section for BGA
-- [x] **Audio Handling**: BGM on background channel, silent notes
-- [x] **Spinner Support**: Spinners mapped to scratch lane as long notes (0.9.4)
-- [x] **Hit Sound Volume**: Configurable volume scaling for hit sounds (0.9.7).
-- [x] **Background Dim**: Configurable brightness for BG/Video (0.9.7).
 
 ### Arena Mode (Multiplayer)
 - [x] **Networking**: TCP/JSON-based client/server architecture
@@ -105,6 +114,10 @@
 
 ## 🔄 In Progress
 
+### Osu! Storyboard
+- [ ] **Full Rendering**: Complete the `StoryboardRenderer` (textures, layering).
+- [ ] **Easing Functions**: Implement all easing types in `Easing.java`.
+
 ### Audio Engine Improvements
 - [ ] **Lower Latency Drivers**: Investigate ASIO/WASAPI exclusive mode
 - [ ] **Additional Formats**: Consider OPUS support
@@ -112,9 +125,6 @@
 ---
 
 ## 📋 Planned Features
-
-### Osu! Mode Enhancements
-- [ ] **Storyboard Events**: Parse and display storyboard elements
 
 ### Rendering Improvements
 - [ ] **Vulkan Backend**: Future LibGDX Vulkan support
@@ -134,7 +144,6 @@
 - [ ] RTL language support
 
 ### Advanced Features
-- [ ] **Course Editor**: Create custom courses in-app
 - [ ] **Network Spectating**: Watch live Arena matches
 - [ ] **Score Import/Export**: Migrate scores between installations
 
@@ -144,7 +153,8 @@
 
 | Version | Date | Highlights |
 |---------|------|------------|
+| 0.9.10 | 2025-02-10 | Osu! Storyboard foundation (Parsing/Backend), Course Editor UI |
+| 0.9.9 | 2025-02-10 | Skin System expansion (Arena Score Diff, Mission Progress) |
 | 0.9.8 | 2025-02-10 | Mod Menu enhancements (Osu! settings, Arena sync) |
 | 0.9.7 | 2025-02-10 | Launcher enhancements (Arena/Osu/Mission tabs), Documentation overhaul, In-Game Wiring |
 | 0.9.6 | 2025-12-28 | ConfigTest, PlayModeConfigTest, Hit Sound support, 180+ tests |
-| 0.9.5 | 2025-12-28 | Timing point support, MissionManagerTest, StepUpManagerTest |
