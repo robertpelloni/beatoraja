@@ -54,6 +54,8 @@ public class OsuDecoder {
             int keys = 4; // Default to 4K if undefined
             double sliderMultiplier = 1.4; // Default
             List<BGAEvent> bgaEvents = new ArrayList<>();
+            StoryboardData storyboard = new StoryboardData();
+            StoryboardSprite currentSprite = null;
 
             while ((line = reader.readLine()) != null) {
                 line = line.trim();
