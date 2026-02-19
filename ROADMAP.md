@@ -1,6 +1,6 @@
 # Roadmap
 
-## Version: 0.9.10 | Last Updated: 2025-02-10
+## Version: 0.9.11 | Last Updated: 2025-02-10
 
 ---
 
@@ -15,11 +15,16 @@
 - [x] **Spinner Support**: Spinners mapped to scratch lane as long notes (0.9.4)
 - [x] **Hit Sound Volume**: Configurable volume scaling for hit sounds (0.9.7).
 - [x] **Background Dim**: Configurable brightness for BG/Video (0.9.7).
-- [x] **Storyboard Support (Foundation)**:
+- [x] **Storyboard Support (Full)**:
     - [x] Data structures for Commands (Move, Fade, etc), Sprites, and Easing (0.9.10).
     - [x] `OsuDecoder` updated to parse `[Events]` into `StoryboardData` (0.9.10).
     - [x] `StoryboardRegistry` pattern to attach data to immutable `BMSModel`.
-    - [x] `StoryboardRenderer` foundation (interpolator logic) (0.9.10).
+    - [x] `StoryboardRenderer`:
+        - [x] Sprite Loading via `PixmapResourcePool`.
+        - [x] Command Interpolation (Move, Fade, Scale, Rotate).
+        - [x] Easing Functions (Quad, Cubic, Quart, Quint, Sine, Expo, Circ, Back) (0.9.11).
+        - [x] Coordinate Projection (640x480 -> Screen) (0.9.11).
+        - [x] Layer Sorting (0.9.11).
 
 ### Launcher & Tools
 - [x] **Course Editor (UI)**: Launcher tab for creating custom courses (0.9.10).
@@ -114,10 +119,6 @@
 
 ## 🔄 In Progress
 
-### Osu! Storyboard
-- [ ] **Full Rendering**: Complete the `StoryboardRenderer` (textures, layering).
-- [ ] **Easing Functions**: Implement all easing types in `Easing.java`.
-
 ### Audio Engine Improvements
 - [ ] **Lower Latency Drivers**: Investigate ASIO/WASAPI exclusive mode
 - [ ] **Additional Formats**: Consider OPUS support
@@ -153,6 +154,7 @@
 
 | Version | Date | Highlights |
 |---------|------|------------|
+| 0.9.11 | 2025-02-10 | Full Osu! Storyboard rendering (Easing, Interpolation, Sorting) |
 | 0.9.10 | 2025-02-10 | Osu! Storyboard foundation (Parsing/Backend), Course Editor UI |
 | 0.9.9 | 2025-02-10 | Skin System expansion (Arena Score Diff, Mission Progress) |
 | 0.9.8 | 2025-02-10 | Mod Menu enhancements (Osu! settings, Arena sync) |
