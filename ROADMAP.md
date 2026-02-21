@@ -1,6 +1,6 @@
 # Roadmap
 
-## Version: 0.9.12 | Last Updated: 2025-02-10
+## Version: 0.9.13 | Last Updated: 2025-02-10
 
 ---
 
@@ -25,12 +25,13 @@
         - [x] Easing Functions (Quad, Cubic, Quart, Quint, Sine, Expo, Circ, Back) (0.9.11).
         - [x] Coordinate Projection (640x480 -> Screen) (0.9.11).
         - [x] Layer Sorting (0.9.11).
+        - [x] **Refinement**: Rotation, Flip support, Robust resource handling (0.9.13).
 
 ### Launcher & Tools
 - [x] **Course Editor (Full)**:
     - [x] UI: `CourseEditorView` with song search and drag-and-drop (0.9.10).
     - [x] Backend: Wired to `SongDatabaseAccessor` for real song queries (0.9.12).
-    - [x] Logic: Construct `CourseData` from selection (0.9.12).
+    - [x] **Saving**: Export courses to `.crs` files (0.9.13).
 - [x] **Arena Tab**: Configure Server IP, Port, and Player Name.
 - [x] **Mission Tab**: View active/daily missions and toggle auto-accept.
 - [x] **Osu! Tab**: Adjust Hit Sound Volume and Background Dim.
@@ -160,6 +161,7 @@
 
 | Version | Date | Highlights |
 |---------|------|------------|
+| 0.9.13 | 2025-02-10 | Course Editor Saving, Storyboard Refinement |
 | 0.9.12 | 2025-02-10 | Arena Chat, Course Editor backend logic |
 | 0.9.11 | 2025-02-10 | Full Osu! Storyboard rendering (Easing, Interpolation, Sorting) |
 | 0.9.10 | 2025-02-10 | Osu! Storyboard foundation (Parsing/Backend), Course Editor UI |

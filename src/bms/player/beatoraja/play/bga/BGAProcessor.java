@@ -109,7 +109,8 @@ public class BGAProcessor {
 		// Initialize Storyboard if available
 		StoryboardData sbData = StoryboardRegistry.get(model);
 		if (sbData != null) {
-			storyboardRenderer = new StoryboardRenderer(sbData);
+			String baseDir = Paths.get(model.getPath()).getParent().toString();
+			storyboardRenderer = new StoryboardRenderer(sbData, baseDir);
 		} else {
 			if (storyboardRenderer != null) {
 				storyboardRenderer.dispose();
@@ -419,6 +420,10 @@ public class BGAProcessor {
 			cache.dispose();
 		}
 		mpgresource.dispose();
+		if (storyboardRenderer != null) {
+			storyboardRenderer.dispose();
+			storyboardRenderer = null;
+		}
 	}
 
 	public float getProgress() {

@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.9.13] - 2025-02-10
+
+### Added
+- **Course Editor**: Implemented saving functionality.
+    - Users can now save created courses as `.crs` files.
+    - Uses absolute paths to reference songs for maximum compatibility.
+- **Osu!**: Refined Storyboard Renderer.
+    - Added support for `FlipH` and `FlipV` commands.
+    - Implemented correct rotation (degrees vs radians) and origin handling.
+    - Secured image loading with `PixmapResourcePool` to prevent memory leaks.
+- **Documentation**: Added "Course Editor" manual page and updated "Osu! Mode" page with Storyboard details.
+
+### Changed
+- **Config**: Bumped version to 0.9.13.
+
 ## [0.9.12] - 2025-02-10
 
 ### Added
