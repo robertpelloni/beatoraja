@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.9.12] - 2025-02-10
+
+### Added
+- **Arena**: Implemented Chat System.
+    - Updated `ArenaMessage` to support `TYPE_CHAT`.
+    - Added `sendChat`/`onChatMessage` handling in `ArenaClient` and `ArenaManager`.
+    - Added Chat Log and Input Field to the Arena window in `ModMenu` (in-game).
+- **Course Editor**: Implemented Backend Logic.
+    - Wired `CourseEditorView` to `SongDatabaseAccessor` for real song searching and filtering.
+    - Implemented stub methods for `getCourseData`/`setCourseData` to support `TableEditorView` integration.
+
+### Changed
+- **Config**: Bumped version to 0.9.12.
+
 ## [0.9.11] - 2025-02-10
 
 ### Added

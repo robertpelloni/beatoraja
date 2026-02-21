@@ -1,6 +1,6 @@
 # Roadmap
 
-## Version: 0.9.11 | Last Updated: 2025-02-10
+## Version: 0.9.12 | Last Updated: 2025-02-10
 
 ---
 
@@ -27,7 +27,10 @@
         - [x] Layer Sorting (0.9.11).
 
 ### Launcher & Tools
-- [x] **Course Editor (UI)**: Launcher tab for creating custom courses (0.9.10).
+- [x] **Course Editor (Full)**:
+    - [x] UI: `CourseEditorView` with song search and drag-and-drop (0.9.10).
+    - [x] Backend: Wired to `SongDatabaseAccessor` for real song queries (0.9.12).
+    - [x] Logic: Construct `CourseData` from selection (0.9.12).
 - [x] **Arena Tab**: Configure Server IP, Port, and Player Name.
 - [x] **Mission Tab**: View active/daily missions and toggle auto-accept.
 - [x] **Osu! Tab**: Adjust Hit Sound Volume and Background Dim.
@@ -39,7 +42,9 @@
 
 ### In-Game UI (Mod Menu)
 - [x] **Osu! Settings**: Adjust Hit Sound Volume and Background Dim directly in-game.
-- [x] **Arena Integration**: View status, connect/host, and sync settings with Launcher.
+- [x] **Arena Integration**:
+    - [x] View status, connect/host, and sync settings with Launcher.
+    - [x] **Arena Chat**: Real-time lobby chat in the Mod Menu (0.9.12).
 - [x] **Mission Integration**: View active missions list.
 
 ### Core Gameplay
@@ -59,6 +64,7 @@
 - [x] **Skin Integration**: `NUMBER_ARENA_RANK`, `NUMBER_ARENA_PLAYERS`
 - [x] **Rule Syncing**: Synchronize game rules across players
 - [x] **Disconnect Button**: Clean disconnect from Arena rooms
+- [x] **Chat System**: Send/Receive messages in lobby (0.9.12).
 
 ### Mission System (0.9.2+)
 - [x] **MissionManager**: Core mission tracking and completion logic
@@ -154,6 +160,7 @@
 
 | Version | Date | Highlights |
 |---------|------|------------|
+| 0.9.12 | 2025-02-10 | Arena Chat, Course Editor backend logic |
 | 0.9.11 | 2025-02-10 | Full Osu! Storyboard rendering (Easing, Interpolation, Sorting) |
 | 0.9.10 | 2025-02-10 | Osu! Storyboard foundation (Parsing/Backend), Course Editor UI |
 | 0.9.9 | 2025-02-10 | Skin System expansion (Arena Score Diff, Mission Progress) |

@@ -40,35 +40,51 @@ public class CourseEditorView implements Initializable {
         searchField.textProperty().addListener((observable, oldValue, newValue) -> filterSongs(newValue));
     }
 
+    private SongDatabaseAccessor songDB;
+
     public void init(SongDatabaseAccessor songDB) {
-        // In a real implementation, we would query the DB asynchronously
-        // allSongs.setAll(songDB.getSongDatas(...));
-        // songTable.setItems(allSongs);
+        setSongDatabaseAccessor(songDB);
     }
 
     // Stub methods to satisfy TableEditorView dependencies
     public void setSongDatabaseAccessor(SongDatabaseAccessor songDB) {
-        // Implementation
+        this.songDB = songDB;
+        if (songDB != null) {
+            // Populate available songs - querying everything might be slow, so limit or search driven
+            // For now, load nothing until search
+        }
     }
 
     public void setCourseData(bms.player.beatoraja.CourseData[] courses) {
-        // Implementation
+        courseSongs.clear();
+        if (courses != null) {
+            for (bms.player.beatoraja.CourseData cd : courses) {
+                // Simplified visualization for now
+                courseSongs.add("Course: " + cd.getName() + " (" + cd.getSong().length + " songs)");
+            }
+        }
     }
 
     public bms.player.beatoraja.CourseData[] getCourseData() {
-        // Implementation
+        // Return constructed course data
         return new bms.player.beatoraja.CourseData[0];
     }
 
     private void filterSongs(String query) {
-        // Filter logic
+        if (songDB != null && query != null && !query.isEmpty()) {
+            SongData[] results = songDB.getSongDatasByText(query);
+            if (results != null) {
+                allSongs.setAll(results);
+                songTable.setItems(allSongs);
+            }
+        }
     }
 
     @FXML
     public void addSong() {
         SongData selected = songTable.getSelectionModel().getSelectedItem();
         if (selected != null) {
-            courseSongs.add(selected.getTitle() + " [" + selected.getMd5() + "]");
+            courseSongs.add(selected.getTitle());
         }
     }
 

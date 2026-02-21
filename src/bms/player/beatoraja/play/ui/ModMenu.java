@@ -104,6 +104,8 @@ public class ModMenu {
     private TextField nameField;
     private Label arenaStatusLabel;
     private Label arenaPlayersLabel;
+    private Label chatLogLabel;
+    private TextField chatInputField;
 
     // Missions UI
     private Window missionsWindow;
@@ -731,6 +733,29 @@ public class ModMenu {
         arenaWindow = new Window("Arena Mode", skin);
         arenaWindow.getTitleLabel().setAlignment(1);
 
+        // Add Listener to receive chat
+        player.main.getArenaManager().addListener(new ArenaManager.ArenaListener() {
+            @Override
+            public void onSongSelected(String songHash) {}
+            @Override
+            public void onStartGame() {}
+            @Override
+            public void onChatMessage(String sender, String message) {
+                if (chatLogLabel != null) {
+                    String current = chatLogLabel.getText().toString();
+                    String line = sender + ": " + message + "\n";
+                    // Keep last 10 lines
+                    String[] lines = (current + line).split("\n");
+                    StringBuilder sb = new StringBuilder();
+                    int start = Math.max(0, lines.length - 10);
+                    for (int i = start; i < lines.length; i++) {
+                        sb.append(lines[i]).append("\n");
+                    }
+                    chatLogLabel.setText(sb.toString());
+                }
+            }
+        });
+
         Table content = new Table();
         arenaWindow.add(content).pad(10);
 
@@ -849,6 +874,31 @@ public class ModMenu {
         arenaPlayersLabel = new Label("Players: ", skin);
         content.row();
         content.add(arenaPlayersLabel).colspan(2).padTop(10);
+
+        // Chat UI
+        chatLogLabel = new Label("Chat Log:\n\n\n\n\n", skin);
+        chatLogLabel.setWrap(true);
+        content.row();
+        content.add(chatLogLabel).colspan(2).width(300).height(100).padTop(10);
+
+        chatInputField = new TextField("", skin);
+        TextButton sendChatButton = new TextButton("Send", skin);
+        sendChatButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                String msg = chatInputField.getText();
+                if (msg != null && !msg.isEmpty()) {
+                    player.main.getArenaManager().sendChat(msg);
+                    chatInputField.setText("");
+                }
+            }
+        });
+
+        Table chatInputTable = new Table();
+        chatInputTable.add(chatInputField).width(230);
+        chatInputTable.add(sendChatButton).width(60);
+        content.row();
+        content.add(chatInputTable).colspan(2).padTop(5);
 
         arenaWindow.pack();
         arenaWindow.setPosition((Gdx.graphics.getWidth() - arenaWindow.getWidth()) / 2 + 50, (Gdx.graphics.getHeight() - arenaWindow.getHeight()) / 2 - 50);
