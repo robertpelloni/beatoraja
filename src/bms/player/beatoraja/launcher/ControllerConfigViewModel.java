@@ -16,6 +16,7 @@ public class ControllerConfigViewModel {
     private BooleanProperty isAnalogScratchProperty = new SimpleBooleanProperty();
     private ObjectProperty<Integer> analogScratchThresholdProperty = new SimpleIntegerProperty().asObject();
     private ObjectProperty<Integer> analogScratchModeProperty = new SimpleIntegerProperty().asObject();
+    private ObjectProperty<Integer> durationProperty = new SimpleIntegerProperty().asObject(); // Added for Input Interval
     
     private ControllerConfig config;
     
@@ -26,7 +27,7 @@ public class ControllerConfigViewModel {
         this.isAnalogScratchProperty.set(config.isAnalogScratch());
         this.analogScratchThresholdProperty.set(config.getAnalogScratchThreshold());
         this.analogScratchModeProperty.set(config.getAnalogScratchMode());
-        
+        this.durationProperty.set(config.getDuration());
     }
     
     public String getName() {
@@ -64,6 +65,16 @@ public class ControllerConfigViewModel {
     }
     public ObjectProperty<Integer> getAnalogScratchModeProperty() {
         return analogScratchModeProperty;
+    }
+
+    public int getDuration() {
+        return this.durationProperty.get();
+    }
+    public void setDuration(int duration) {
+        this.durationProperty.set(duration);
+    }
+    public ObjectProperty<Integer> getDurationProperty() {
+        return durationProperty;
     }
     
     public ControllerConfig getConfig() {

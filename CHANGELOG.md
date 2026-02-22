@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.9.15] - 2025-02-10
+
+### Added
+- **Input**: Implemented Device-Specific Input Interval Configuration.
+    - Added "Min Interval" column to the Input Configuration table.
+    - Decoupled Keyboard polling rate from Controller polling rates.
+    - Allows fine-tuning of input latency per controller device.
+
+### Changed
+- **Config**: Bumped version to 0.9.15.
+
 ## [0.9.14] - 2025-02-10
 
 ### Added

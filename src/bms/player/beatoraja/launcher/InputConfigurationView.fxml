@@ -44,10 +44,11 @@
 	    <TableView fx:id="controller_tableView" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 			<columns>
 				<TableColumn fx:id="playsideCol" prefWidth="40.0" text="" />
-				<TableColumn fx:id="nameCol" prefWidth="185.0" text="" />
-				<TableColumn fx:id="isAnalogCol" prefWidth="185.0" text="%ANALOG_SCRATCH" />
-				<TableColumn fx:id="analogThresholdCol" prefWidth="185.0" text="%ANALOG_SCRATCH_THRESHOLD" />
-				<TableColumn fx:id="analogModeCol" prefWidth="185.0" text="%ANALOG_SCRATCH_ALGORITHM" />
+				<TableColumn fx:id="nameCol" prefWidth="150.0" text="" />
+				<TableColumn fx:id="durationCol" prefWidth="100.0" text="%MINIMUM_INPUT_DURATION" />
+				<TableColumn fx:id="isAnalogCol" prefWidth="130.0" text="%ANALOG_SCRATCH" />
+				<TableColumn fx:id="analogThresholdCol" prefWidth="160.0" text="%ANALOG_SCRATCH_THRESHOLD" />
+				<TableColumn fx:id="analogModeCol" prefWidth="160.0" text="%ANALOG_SCRATCH_ALGORITHM" />
 			</columns>
 		</TableView>
     </HBox>
