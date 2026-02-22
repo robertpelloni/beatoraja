@@ -1,48 +1,63 @@
 # Universal LLM Instructions
 
-This file serves as the central instruction set for all AI models working on this project.
+*Last Updated: 2025-02-10*
 
-## Core Principles
-1.  **Single Source of Truth**: Always refer to `VERSION.md` for the current project version. Do not hardcode version numbers in source files.
-2.  **Changelog Management**: Every significant change must be logged in `CHANGELOG.md` under the appropriate version header.
-3.  **Build System**: The project uses **Gradle**. The main build file is `build.gradle`.
-    -   Use `./gradlew build` (or `gradle build`) to compile and package.
-    -   Target Java Version: **Java 21**.
-4.  **Dependencies**: Dependencies are managed via Gradle and the `lib/` folder.
-5.  **Backend**: The project uses **LWJGL 3** and **LibGDX 1.12.1**.
+This document contains universal instructions for all AI models (Claude, Gemini, GPT, Copilot, etc.) working on the `beatoraja` project. All models **MUST** read and follow these instructions.
 
-## Project Structure
--   `src/`: Source code.
--   `lib/`: Local dependencies (jar files).
--   `build/`: Compiled output (Gradle).
--   `docs/`: Documentation, including `DASHBOARD.md` and `ROADMAP.md`.
--   `skin/`: Skin resources (Lua scripts, JSON, images).
+## 1. Core Directives
 
-## Agent Protocols
--   **Plan**: When asked to plan, research the problem space and outline a multi-step approach.
--   **Implement**: When implementing features, follow the existing code style and patterns.
--   **Test**: Verify changes by running the build script and checking for errors.
+*   **Autonomy:** Proceed autonomously as much as possible. Do not ask for confirmation unless absolutely necessary.
+*   **Continuity:** Do not stop. If you complete a feature, commit, push, and immediately proceed to the next feature or improvement.
+*   **Robustness:** Implement features in full detail. Ensure 100% feature parity with requirements. No bugs, no missing/hidden/unrepresented functionality.
+*   **Documentation:**
+    *   Every feature must be fully documented in the manual (`manual/`).
+    *   Every UI element must have labels, descriptions, and tooltips.
+    *   Code must be commented in depth (why it's there, side effects, optimizations).
+*   **Versioning:**
+    *   Every build/session must have a new version number.
+    *   Update `VERSION.md`, `CHANGELOG.md`, and any internal version references.
+    *   Commit messages must reference the version bump.
 
-## Versioning Protocol
-1.  Update `VERSION.md` with the new version number (e.g., `0.9.0`).
-2.  Update `CHANGELOG.md` with the new version and a list of changes.
-3.  Commit changes with a message referencing the new version (e.g., "Bump version to 0.9.0").
+## 2. Project Management
 
-## Specific Model Instructions
+*   **Roadmap & TODO:** Keep `ROADMAP.md` and `TODO.md` updated with extreme granularity. Organize features, packages, and implementation details.
+*   **Vision:** Maintain `VISION.md` describing the ultimate goal and design.
+*   **Memory:** Maintain `MEMORY.md` with ongoing observations and design preferences.
+*   **Dashboard:** Maintain `DASHBOARD.md` listing submodules, versions, and project structure.
+*   **Handoff:** Create `HANDOFF.md` at the end of a session for the next model.
 
-### Claude
--   Focus on clear, concise explanations.
--   Prioritize safety and correctness.
+## 3. Git & Deployment
 
-### Gemini
--   Leverage large context window for deep analysis of the codebase.
--   Use available tools to verify assumptions.
+*   **Submodules:** Update all submodules recursively (`git submodule update --init --recursive`). Keep them clean.
+*   **Merging:** Intelligently merge local feature branches into `main`. Resolve conflicts without losing features.
+*   **Upstream:** Sync with the upstream parent repo if applicable.
+*   **Commit Protocol:**
+    1.  Merge feature branches/Update submodules.
+    2.  Reanalyze project.
+    3.  Update Roadmap/Docs.
+    4.  Update Dashboard.
+    5.  Update Changelog & Version.
+    6.  Commit and Push.
+    7.  Redeploy (Simulated/Instructions).
 
-### GPT
--   Focus on code generation and refactoring.
--   Ensure adherence to best practices.
+## 4. Analysis & Research
 
-### GitHub Copilot
--   Use the provided tools to explore the codebase and implement features.
--   Follow the "Plan -> Implement -> Verify" cycle.
--   Keep the `HANDOFF.md` updated with session progress.
+*   **Deep Analysis:** Before starting, analyze the entire project, conversation history, and documentation in extreme detail.
+*   **Missing Features:** actively look for:
+    *   Unfinished code.
+    *   Backend logic not wired to UI.
+    *   Unpolished features.
+    *   Missing documentation.
+*   **Research:** Research libraries, submodules, and referenced projects to understand their purpose.
+
+## 5. UI/UX Guidelines
+
+*   **Completeness:** Ensure every backend feature has a corresponding UI control.
+*   **Clarity:** Use tooltips (`setTooltip`) extensively.
+*   **Polish:** Ensure layout is logical and user-friendly.
+
+## 6. Specific Instructions from User
+
+*   "Make sure every single implemented and planned feature and functionality is very well represented in full detail in UI with all possible functionality."
+*   "Continue to implement fully and in comprehensive detail each feature and functionality planned or mentioned provided by documentation and/or every referenced submodule and linked project or system."
+*   "Do not stop. Keep on goin'. Don't ever stop. Don't ever quit. Don't stop the party."

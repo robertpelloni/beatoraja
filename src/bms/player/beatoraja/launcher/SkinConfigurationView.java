@@ -17,6 +17,8 @@ import bms.player.beatoraja.skin.lua.LuaSkinLoader;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
@@ -35,6 +37,8 @@ public class SkinConfigurationView implements Initializable {
 	private ComboBox<SkinHeader> skinheaderSelector;
 	@FXML
 	private ScrollPane skinconfig;
+	@FXML
+	private ImageView previewImage;
 
 	private PlayerConfig player;
 	private SkinType mode = null;
@@ -260,10 +264,46 @@ public class SkinConfigurationView implements Initializable {
 					break;
 				}
 			}
+
+			// Load preview image
+			updatePreview(header);
+		} else {
+			previewImage.setImage(null);
 		}
 		skinconfig.setContent(create(header, property));
-    	
     }
+
+	private void updatePreview(SkinHeader header) {
+		try {
+			Path skinPath = header.getPath();
+			Path previewPath = null;
+
+			// Check for common preview filenames
+			String[] previewNames = {"preview.png", "preview.jpg", "PREVIEW.PNG", "PREVIEW.JPG"};
+
+			// 1. Check in the same directory as the skin file
+			Path parent = skinPath.getParent();
+			if (parent != null) {
+				for (String name : previewNames) {
+					Path p = parent.resolve(name);
+					if (Files.exists(p)) {
+						previewPath = p;
+						break;
+					}
+				}
+			}
+
+			if (previewPath != null) {
+				Image image = new Image(Files.newInputStream(previewPath));
+				previewImage.setImage(image);
+			} else {
+				previewImage.setImage(null);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			previewImage.setImage(null);
+		}
+	}
     
     public void commitSkinHeader() {
 		// history保存

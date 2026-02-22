@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.9.14] - 2025-02-10
+
+### Added
+- **Launcher**: Added Skin Preview functionality.
+    - The Skin Configuration tab now displays a `preview.png` (or `.jpg`) if available in the selected skin's directory.
+- **Documentation**: Overhauled development documentation.
+    - Added `LLM_INSTRUCTIONS.md`, `VISION.md`, `DEPLOY.md`, `DASHBOARD.md`.
+    - Updated agent-specific instruction files.
+
+### Changed
+- **Config**: Bumped version to 0.9.14.
+
 ## [0.9.13] - 2025-02-10
 
 ### Added

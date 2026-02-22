@@ -1,6 +1,25 @@
 # Roadmap
 
-## Version: 0.9.13 | Last Updated: 2025-02-10
+## Version: 0.9.14 | Last Updated: 2025-02-10
+
+---
+
+## 🛠 Feature Parity & Stability Goals
+
+### 1. User Interface Completeness
+- [ ] **Skin Preview**: Add a preview image pane to the Skin tab in the Launcher (missing, see `// TODO スキンプレビュー機能` in `PlayConfigurationView`).
+- [ ] **Input Configuration**: Implement "Minimum input interval per device" (`// TODO 各デバイス毎の最小入力間隔設定` in `InputConfigurationView`).
+- [ ] **Chart Preview**: Verify `chartpreview` checkbox in `PlayConfigurationView` actually renders a preview in Music Select.
+- [ ] **Theme Editor**: In-app tool to create/edit skins (Long term).
+
+### 2. Gameplay Mechanics
+- [ ] **Internet Ranking (IR)**: Polish the IR configuration and submission logic.
+- [ ] **Replay System**: Enhance replay saving options and add a dedicated Replay Analysis UI.
+- [ ] **Step-Up Mode**: Fully integrate Step-Up progress into the result screen and launcher.
+
+### 3. Rendering & Audio
+- [ ] **Vulkan Backend**: Migration path for future LibGDX versions.
+- [ ] **Lower Latency Audio**: ASIO/WASAPI exclusive mode investigation.
 
 ---
 
@@ -121,39 +140,6 @@
 - [x] **CI/CD**: GitHub Actions workflow
 - [x] **Unit Testing**: JUnit 5 framework
 - [x] **Centralized Versioning**: `VERSION.md` as single source of truth
-
----
-
-## 🔄 In Progress
-
-### Audio Engine Improvements
-- [ ] **Lower Latency Drivers**: Investigate ASIO/WASAPI exclusive mode
-- [ ] **Additional Formats**: Consider OPUS support
-
----
-
-## 📋 Planned Features
-
-### Rendering Improvements
-- [ ] **Vulkan Backend**: Future LibGDX Vulkan support
-- [ ] **Shader Improvements**: Enhanced visual effects
-
-### Quality of Life
-- [ ] **Theme Editor**: In-app skin/theme creation tool
-- [ ] **Replay Analysis**: Detailed replay statistics
-- [ ] **Chart Preview**: Pre-play chart visualization
-
----
-
-## 📦 Backlog
-
-### Localization
-- [ ] Additional language translations
-- [ ] RTL language support
-
-### Advanced Features
-- [ ] **Network Spectating**: Watch live Arena matches
-- [ ] **Score Import/Export**: Migrate scores between installations
 
 ---
 
