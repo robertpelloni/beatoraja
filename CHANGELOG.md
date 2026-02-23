@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.9.16] - 2025-02-10
+
+### Added
+- **Replay**: Added Replay Analysis UI Foundation.
+    - Implemented `ReplayAnalysisView` and `ReplayAnalysisView.fxml` for viewing detailed replay statistics (Hit Error Histogram, Gauge History).
+    - NOTE: This feature is currently in backend implementation state and will be fully wired in the next update.
+
+### Changed
+- **Config**: Bumped version to 0.9.16.
+
 ## [0.9.15] - 2025-02-10
 
 ### Added
