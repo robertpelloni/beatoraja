@@ -273,6 +273,8 @@ public class PlayConfigurationView implements Initializable {
 	private OsuConfigurationView osuController;
     @FXML
     private CourseEditorView courseController;
+    @FXML
+    private ReplayAnalysisView replayController;
 
 	@FXML
 	private Tab arenaTab;
@@ -280,6 +282,8 @@ public class PlayConfigurationView implements Initializable {
 	private Tab missionTab;
 	@FXML
 	private Tab osuTab;
+    @FXML
+    private Tab replayTab;
 
 	private Config config;
 	private PlayerConfig player;

@@ -478,6 +478,11 @@
                 <fx:include fx:id="course" source="CourseEditorView.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
             </AnchorPane>
         </Tab>
+        <Tab fx:id="replayTab" closable="false" text="Replay Analysis">
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                <fx:include fx:id="replay" source="ReplayAnalysisView.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            </AnchorPane>
+        </Tab>
     </TabPane>
     <HBox fx:id="controlPanel" prefWidth="552.0">
         <VBox.margin>

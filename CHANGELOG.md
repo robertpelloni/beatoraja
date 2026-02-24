@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.9.17] - 2025-02-10
+
+### Added
+- **Replay**: Integrated Replay Analysis UI into Launcher.
+    - Added "Replay Analysis" tab to the Configuration window.
+    - Displays list of scores with detailed breakdown (Fast/Slow distribution).
+    - Wired to `PlayConfigurationView` (currently requires manual data loading implementation in future, serves as UI skeleton).
+
+### Changed
+- **Config**: Bumped version to 0.9.17.
+
 ## [0.9.16] - 2025-02-10
 
 ### Added
