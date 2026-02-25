@@ -2,13 +2,8 @@
 
 ## Priority 1: High Impact / Missing Features
 
-### Gameplay
-- [ ] **Replay Analysis (Wire-up)**:
-    - [ ] Integrate `ReplayAnalysisView` into `PlayConfigurationView` or a new Launcher tab.
-    - [ ] Implement data population logic (Histogram from hit deltas, Gauge graph from replay frames).
-
 ### Launcher
-- [ ] **Chart Preview**: Verify rendering in `MusicSelector`. It relies on skin properties to actually draw the note graph.
+- [ ] **Chart Preview**: Ensure the preview in Music Select is performant and accurate.
 - [ ] **Folder Editing**: Polish `FolderEditorView`.
 
 ## Priority 2: Polish & Refinement
@@ -27,6 +22,12 @@
 - [ ] **Spectator Mode**: Allow clients to spectate an Arena match without playing.
 
 ---
+
+## Completed (0.9.18)
+- [x] **Replay Analysis (Data Wiring)**
+
+## Completed (0.9.17)
+- [x] **Replay Analysis UI Integration**
 
 ## Completed (0.9.16)
 - [x] **Replay Analysis UI Foundation**

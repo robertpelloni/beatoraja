@@ -515,6 +515,19 @@ public class PlayConfigurationView implements Initializable {
             if (courseController != null) {
                 courseController.init(MainLoader.getScoreDatabaseAccessor());
             }
+            if (replayController != null && replayTab != null) {
+                replayTab.setOnSelectionChanged(e -> {
+                    if (replayTab.isSelected()) {
+                        try {
+                            // Load recent scores (last 50)
+                            List<ScoreData> scores = MainLoader.getScoreDatabaseAccessor().getScoreDatas("1 ORDER BY date DESC LIMIT 50");
+                            replayController.setScoreData(scores);
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                });
+            }
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}

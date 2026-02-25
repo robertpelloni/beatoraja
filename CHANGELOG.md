@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.9.18] - 2025-02-10
+
+### Added
+- **Replay**: Functional Data Loading for Replay Analysis.
+    - The "Replay Analysis" tab in the Launcher now automatically loads the last 50 scores from the database when selected.
+    - Users can select a score to view detailed statistics (Score, PG/GR/etc breakdown, Hit Error Histogram).
+
+### Changed
+- **Config**: Bumped version to 0.9.18.
+
 ## [0.9.17] - 2025-02-10
 
 ### Added
