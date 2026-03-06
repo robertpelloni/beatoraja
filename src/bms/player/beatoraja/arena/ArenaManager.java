@@ -14,7 +14,7 @@ public class ArenaManager {
     public interface ArenaListener {
         void onSongSelected(String songHash);
         void onStartGame();
-        void onChatMessage(String sender, String message);
+        default void onChatMessage(String sender, String message) {}
     }
 
     private final List<ArenaData> players;

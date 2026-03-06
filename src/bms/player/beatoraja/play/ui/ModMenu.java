@@ -742,16 +742,18 @@ public class ModMenu {
             @Override
             public void onChatMessage(String sender, String message) {
                 if (chatLogLabel != null) {
-                    String current = chatLogLabel.getText().toString();
-                    String line = sender + ": " + message + "\n";
-                    // Keep last 10 lines
-                    String[] lines = (current + line).split("\n");
-                    StringBuilder sb = new StringBuilder();
-                    int start = Math.max(0, lines.length - 10);
-                    for (int i = start; i < lines.length; i++) {
-                        sb.append(lines[i]).append("\n");
-                    }
-                    chatLogLabel.setText(sb.toString());
+                    Gdx.app.postRunnable(() -> {
+                        String current = chatLogLabel.getText().toString();
+                        String line = sender + ": " + message + "\n";
+                        // Keep last 10 lines
+                        String[] lines = (current + line).split("\n");
+                        StringBuilder sb = new StringBuilder();
+                        int start = Math.max(0, lines.length - 10);
+                        for (int i = start; i < lines.length; i++) {
+                            sb.append(lines[i]).append("\n");
+                        }
+                        chatLogLabel.setText(sb.toString());
+                    });
                 }
             }
         });

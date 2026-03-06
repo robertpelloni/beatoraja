@@ -294,8 +294,10 @@ public class SkinConfigurationView implements Initializable {
 			}
 
 			if (previewPath != null) {
-				Image image = new Image(Files.newInputStream(previewPath));
-				previewImage.setImage(image);
+				try (java.io.InputStream is = Files.newInputStream(previewPath)) {
+					Image image = new Image(is);
+					previewImage.setImage(image);
+				}
 			} else {
 				previewImage.setImage(null);
 			}

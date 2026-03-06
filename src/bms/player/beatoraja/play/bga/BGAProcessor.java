@@ -73,6 +73,7 @@ public class BGAProcessor {
 	private boolean rlayer;
 
 	private StoryboardRenderer storyboardRenderer;
+	private boolean isOsuMode = false;
 
 	public BGAProcessor(Config config, PlayerConfig player) {
 		this.player = player;
@@ -117,6 +118,8 @@ public class BGAProcessor {
 				storyboardRenderer = null;
 			}
 		}
+
+		isOsuMode = model != null && model.getPath() != null && model.getPath().toLowerCase().endsWith(".osu");
 
 		int id = 0;
 
@@ -321,9 +324,9 @@ public class BGAProcessor {
 
 
 	public void drawBGA(SkinBGA dst, SkinObjectRenderer sprite, Rectangle r) {
-		// Apply Background Dim if Osu mode is active or generally
+		// Apply Background Dim only if Osu mode is active
 		Color color = new Color(dst.getColor());
-		if (player.getOsuBackgroundDim() > 0) {
+		if (isOsuMode && player.getOsuBackgroundDim() > 0) {
 			float dim = 1.0f - player.getOsuBackgroundDim();
 			// Darken the color
 			color.mul(dim, dim, dim, 1.0f);

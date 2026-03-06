@@ -2,15 +2,14 @@
 
 ## Priority 1: High Impact / Missing Features
 
-### Launcher
-- [ ] **Chart Preview**: Ensure the preview in Music Select is performant and accurate.
-- [ ] **Folder Editing**: Polish `FolderEditorView`.
+### Osu! Support
+- [ ] **Spinner Graphics**: Improve visualization of spinners (currently Scratch LNs).
+- [ ] **Storyboard Loops**: Implement `Loop` and `Trigger` command support in `StoryboardRenderer` and `OsuDecoder` (requires structural parsing updates).
 
 ## Priority 2: Polish & Refinement
 
-### Osu! Support
-- [ ] **Spinner Graphics**: Improve visualization of spinners (currently Scratch LNs).
-- [ ] **Storyboard Loops**: Implement `Loop` and `Trigger` command support in `StoryboardRenderer`.
+### Launcher
+- [ ] **Chart Preview**: Enhance performance of the in-game preview rendering.
 
 ## Priority 3: Long Term / Architectural
 
@@ -22,6 +21,9 @@
 - [ ] **Spectator Mode**: Allow clients to spectate an Arena match without playing.
 
 ---
+
+## Completed (0.9.19)
+- [x] **Folder Editing Polish (Tooltips)**
 
 ## Completed (0.9.18)
 - [x] **Replay Analysis (Data Wiring)**

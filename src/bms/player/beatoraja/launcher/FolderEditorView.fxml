@@ -17,6 +17,7 @@
 <?import javafx.scene.text.Font?>
 
 <?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Tooltip?>
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bms.player.beatoraja.launcher.FolderEditorView">
    <children>
       <HBox VBox.vgrow="ALWAYS">
@@ -36,10 +37,26 @@
                               <Insets right="30.0" />
                            </HBox.margin>
                         </Label>
-                        <Button mnemonicParsing="false" onAction="#addTableFolder" text="＋" />
-                        <Button mnemonicParsing="false" onAction="#removeTableFolder" text="ー" />
-                        <Button mnemonicParsing="false" onAction="#moveTableFolderUp" text="↑" />
-                        <Button mnemonicParsing="false" onAction="#moveTableFolderDown" text="↓" />
+                        <Button mnemonicParsing="false" onAction="#addTableFolder" text="＋">
+                           <tooltip>
+                              <Tooltip text="Add new folder" />
+                           </tooltip>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#removeTableFolder" text="ー">
+                           <tooltip>
+                              <Tooltip text="Remove selected folder" />
+                           </tooltip>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#moveTableFolderUp" text="↑">
+                           <tooltip>
+                              <Tooltip text="Move folder up" />
+                           </tooltip>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#moveTableFolderDown" text="↓">
+                           <tooltip>
+                              <Tooltip text="Move folder down" />
+                           </tooltip>
+                        </Button>
                      </children>
                   </HBox>
                   <ListView fx:id="folders" prefHeight="400.0" prefWidth="240.0" VBox.vgrow="ALWAYS" />
@@ -81,16 +98,25 @@
                                  <VBox.margin>
                                     <Insets />
                                  </VBox.margin>
+                                 <tooltip>
+                                    <Tooltip text="Remove song from folder" />
+                                 </tooltip>
                               </Button>
                               <Button mnemonicParsing="false" onAction="#moveSongDataUp" prefWidth="60.0" text="↑">
                                  <VBox.margin>
                                     <Insets />
                                  </VBox.margin>
+                                 <tooltip>
+                                    <Tooltip text="Move song up in folder" />
+                                 </tooltip>
                               </Button>
                               <Button mnemonicParsing="false" onAction="#moveSongDataDown" prefWidth="60.0" text="↓">
                                  <VBox.margin>
                                     <Insets />
                                  </VBox.margin>
+                                 <tooltip>
+                                    <Tooltip text="Move song down in folder" />
+                                 </tooltip>
                               </Button>
                            </children>
                         </VBox>
@@ -112,6 +138,9 @@
                                  <HBox.margin>
                                     <Insets />
                                  </HBox.margin>
+                                 <tooltip>
+                                    <Tooltip text="Add selected search results to folder" />
+                                 </tooltip>
                               </Button>
                               <TextField fx:id="search" prefHeight="24.0" prefWidth="342.0" HBox.hgrow="ALWAYS" />
                               <Button mnemonicParsing="false" onAction="#searchSongs" text="Search">

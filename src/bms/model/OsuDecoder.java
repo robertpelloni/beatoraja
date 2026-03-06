@@ -287,13 +287,49 @@ public class OsuDecoder {
             long startTime = Long.parseLong(parts[2]);
             long endTime = parts[3].isEmpty() ? startTime : Long.parseLong(parts[3]);
 
-            float[] startVals = new float[parts.length - 4];
-            for(int i=4; i<parts.length; i++) {
-                startVals[i-4] = Float.parseFloat(parts[i]);
+            int numParams = parts.length - 4;
+            if (numParams <= 0) return;
+
+            int valsPerState = switch(type) {
+                case Move -> 2;
+                case MoveX -> 1;
+                case MoveY -> 1;
+                case Fade -> 1;
+                case Scale -> 1;
+                case VectorScale -> 2;
+                case Rotate -> 1;
+                case Color -> 3;
+                case Parameter -> 1;
+                default -> 1;
+            };
+
+            float[] startVals = new float[valsPerState];
+            float[] endVals = new float[valsPerState];
+
+            // Read start values
+            for (int i = 0; i < valsPerState && i < numParams; i++) {
+                if (type == CommandType.Parameter) {
+                    // Parameter command value is 'H', 'V', or 'A'. Store as float representation.
+                    char p = parts[4 + i].charAt(0);
+                    startVals[i] = p == 'H' ? 1.0f : p == 'V' ? 2.0f : 3.0f;
+                } else {
+                    startVals[i] = Float.parseFloat(parts[4 + i]);
+                }
             }
 
-            // If end values are missing, they default to start values
-            float[] endVals = startVals; // simplified, actual parsing might need checking length of startVals vs total parts
+            // Read end values if they exist, otherwise copy from start
+            if (numParams <= valsPerState) {
+                System.arraycopy(startVals, 0, endVals, 0, valsPerState);
+            } else {
+                for (int i = 0; i < valsPerState && (valsPerState + i) < numParams; i++) {
+                    if (type == CommandType.Parameter) {
+                        char p = parts[4 + valsPerState + i].charAt(0);
+                        endVals[i] = p == 'H' ? 1.0f : p == 'V' ? 2.0f : 3.0f;
+                    } else {
+                        endVals[i] = Float.parseFloat(parts[4 + valsPerState + i]);
+                    }
+                }
+            }
 
             sprite.commands.add(new StoryboardCommand(type, easing, startTime, endTime, startVals, endVals));
 

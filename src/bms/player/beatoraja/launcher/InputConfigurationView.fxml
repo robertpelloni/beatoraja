@@ -45,7 +45,7 @@
 			<columns>
 				<TableColumn fx:id="playsideCol" prefWidth="40.0" text="" />
 				<TableColumn fx:id="nameCol" prefWidth="150.0" text="" />
-				<TableColumn fx:id="durationCol" prefWidth="100.0" text="%MINIMUM_INPUT_DURATION" />
+				<TableColumn fx:id="durationCol" prefWidth="100.0" text="Min Interval" />
 				<TableColumn fx:id="isAnalogCol" prefWidth="130.0" text="%ANALOG_SCRATCH" />
 				<TableColumn fx:id="analogThresholdCol" prefWidth="160.0" text="%ANALOG_SCRATCH_THRESHOLD" />
 				<TableColumn fx:id="analogModeCol" prefWidth="160.0" text="%ANALOG_SCRATCH_ALGORITHM" />

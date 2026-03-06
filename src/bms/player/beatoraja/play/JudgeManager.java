@@ -518,16 +518,11 @@ public class JudgeManager {
 						}
 
 						if (n != null && state.passing == null && !(n instanceof MineNote)) {
-							// Apply Osu Hit Sound Volume?
-							// For now, standard keyvolume is used.
-							// If we wanted Osu volume, we would check PlayerConfig.getOsuHitSoundVolume()
-							// But that is global volume control.
-							// keysound.play(n, config.getAudioConfig().getKeyvolume() * playerConfig.getOsuHitSoundVolume(), 0);
-							// Let's implement this improvement.
 							float volume = config.getAudioConfig().getKeyvolume();
-							// Simple check if this is an Osu mode/file? For now, apply globally if < 1.0?
-							// Or just apply it. If it's 1.0 (default), no change.
-							volume *= playerConfig.getOsuHitSoundVolume();
+							// Only apply Osu! hit sound volume scaling if an Osu file is actually playing
+							if (main.resource.getBMSModel() != null && main.resource.getBMSModel().getPath() != null && main.resource.getBMSModel().getPath().toLowerCase().endsWith(".osu")) {
+								volume *= playerConfig.getOsuHitSoundVolume();
+							}
 
 							keysound.play(n, volume, 0);
 						}
