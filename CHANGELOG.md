@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.9.23] - 2025-02-10
+
+### Fixed
+- **Performance**: Highly optimized the `SkinNoteDistributionGraph` (Chart Preview/Hit Error Graph) rendering. Instead of redrawing the entire graph on every note hit during gameplay, the renderer now only updates the specific columns corresponding to the current playback time. This drastically reduces GPU overhead and frame drops during intense sections.
+
+### Changed
+- **Config**: Bumped version to 0.9.23.
+
 ## [0.9.22] - 2025-02-10
 
 ### Fixed
