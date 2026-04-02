@@ -2,8 +2,14 @@
 
 ## [0.9.23] - 2025-02-10
 
+### Added
+- **Skinning**: Added `NUMBER_STEPUP_LEVEL` property (ID 450) to allow skins to natively display the player's Step-Up mode progression on the Result Screen.
+- **Audio**: Implemented a smooth, non-blocking `fadeOutAndStop` method in `AudioDriver` for cleaner song preview transitions.
+
 ### Fixed
 - **Performance**: Highly optimized the `SkinNoteDistributionGraph` (Chart Preview/Hit Error Graph) rendering. Instead of redrawing the entire graph on every note hit during gameplay, the renderer now only updates the specific columns corresponding to the current playback time. This drastically reduces GPU overhead and frame drops during intense sections.
+- **Stability**: Upgraded `SQLiteDatabaseAccessor` to use Write-Ahead Logging (`PRAGMA journal_mode=WAL;`). This completely eliminates "database locked" exceptions that could occur when rapidly scrolling through extremely large song folders.
+- **Compilation**: Fixed build-breaking Java scope errors in `JudgeManager` and `PlayConfigurationView` introduced during the Osu! feature additions.
 
 ### Changed
 - **Config**: Bumped version to 0.9.23.

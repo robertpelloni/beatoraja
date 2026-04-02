@@ -374,6 +374,9 @@ public class SkinProperty {
 	public static final int NUMBER_FAST_SCRATCH = 430;
 	public static final int NUMBER_SLOW_SCRATCH = 431;
 	public static final int NUMBER_ARENA_RANK = 440;
+
+	// Step-Up Mode
+	public static final int NUMBER_STEPUP_LEVEL = 450;
 	public static final int NUMBER_TOTAL_RATE = 115;
 	public static final int NUMBER_TOTAL_RATE_AFTERDOT = 116;
 	public static final int NUMBER_TARGET_SCORE = 121;

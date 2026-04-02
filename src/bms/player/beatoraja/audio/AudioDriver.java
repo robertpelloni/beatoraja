@@ -38,6 +38,31 @@ public interface AudioDriver extends Disposable {
 	public void setVolume(String path, float volume);
 	
 	/**
+	 * 指定したパスの音源を徐々にフェードアウトして止める
+	 * @param path
+	 *            音源のファイルパス
+	 * @param durationMs
+	 *            フェードアウトにかける時間（ミリ秒）
+	 */
+	public default void fadeOutAndStop(String path, long durationMs) {
+		new Thread(() -> {
+			float startVol = 1.0f; // Could be tracked internally, assuming 1.0 multiplier
+			int steps = 10;
+			long sleepTime = durationMs / steps;
+			for (int i = steps; i >= 0; i--) {
+				if (!isPlaying(path)) break;
+				setVolume(path, (i / (float)steps));
+				try {
+					Thread.sleep(sleepTime);
+				} catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
+				}
+			}
+			stop(path);
+		}).start();
+	}
+
+	/**
 	 * 指定したパスの音源がなっている場合はtrueを返す
 	 * 
 	 * @param path

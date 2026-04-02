@@ -2,16 +2,12 @@
 
 This list represents the immediate next steps required to fully wire and polish the recently integrated features, and address remaining systemic constraints identified during the `0.9.23` deep dive.
 
-## Critical / Blocking
-*   [ ] **SQLite Concurrency Test**: Profile `ScoreDatabaseAccessor` under heavy load (e.g. holding down the arrow key in a dense folder) to ensure no `database locked` exceptions are thrown. Add `PRAGMA journal_mode=WAL;` if necessary.
-
 ## Internet Ranking (IR) Modernization
 *   [ ] **Deprecate Old Format**: Find and replace outdated IR submission payloads in `RankingData.java` and `RankingDataCache.java` (grep `TODO 旧方式のため後で削除`).
 *   [ ] **Hash Validation**: Implement logic to verify the integrity of the score hash before submission (`// TODO スコアハッシュを付与するかどうかの判定`).
 *   [ ] **Battle Mode IR**: Ensure that 2-player battle mode scores are assigned independent hashes and submitted separately (`// TODO BATTLEは別ハッシュで登録したい`).
 
 ## Step-Up Mode Polish
-*   [ ] **Result Screen Integration**: Step-Up progression logic works, but it needs to trigger unique visual feedback. Hook up `SkinProperty.NUMBER_STEPUP_LEVEL` so skins can display level-ups.
 *   [ ] **Dynamic Course Caching**: Currently, Step-Up generates a new course layout via `StepUpManager` every time the folder is opened. Cache the current level's course to avoid unnecessary DB lookups.
 
 ## Replay Playback Mechanics
@@ -19,7 +15,6 @@ This list represents the immediate next steps required to fully wire and polish 
 *   [ ] **Heatmap Generation**: Add an option in `ReplayAnalysisView` to export the hit-error distribution over time as a PNG heatmap for sharing.
 
 ## Audio Engine Polish
-*   [ ] **Fade-out Execution**: Move fade-out logic from `PreviewMusicProcessor.java` (which manually adjusts volume) directly into the `AudioDriver` for smoother transitions (`// TODO フェードアウトはAudioDriver側で実装したい`).
 *   [ ] **HCN (Hell Charge Note) Re-triggering**: Determine logic for keysound re-triggering if a player releases and re-presses an HCN (`// TODO HCN押し直しの発音はどうする？` in `JudgeManager.java`).
 
 ## Skinning Engine (LR2 Parity & Expansion)

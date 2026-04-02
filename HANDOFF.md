@@ -12,9 +12,10 @@
 4. **Arena Chat:** Brought the `ArenaManager` chat architecture alive by adding UI components in `ModMenu.java`, allowing real-time chat in multiplayer lobbies.
 5. **Chart Preview Optimization:** Completely rebuilt the render logic for `SkinNoteDistributionGraph`. It now updates *only* the currently active time-slice column, rather than redrawing the entire graph every frame, saving massive GPU overhead.
 6. **Documentation Overhaul:** Wrote HTML manuals (`manual/` folder), added tooltips to almost every element in the JavaFX Launcher, and synchronized all meta-files (`VISION.md`, `DEPLOY.md`, `LLM_INSTRUCTIONS.md`, `ROADMAP.md`).
+7. **SQLite WAL Migration:** Upgraded `SQLiteDatabaseAccessor` to use `PRAGMA journal_mode=WAL;`, significantly improving read/write concurrency and eliminating database lock exceptions during rapid folder scrolling.
+8. **Audio Fade-out Refactor:** Moved manual, thread-blocking audio fade-out loops into a non-blocking `fadeOutAndStop` default method in `AudioDriver`, resulting in much smoother song preview transitions.
 
 ### Known Bugs / Edge Cases (To Investigate)
-*   *SQLite Concurrency:* `ScoreDatabaseAccessor` handles many rapid queries during song selection. Needs observation to ensure no `database locked` errors occur on slower drives.
 *   *Osu! Storyboard Memory:* While `WeakHashMap` is used in `StoryboardRegistry`, extremely heavy Osu! maps (10,000+ sprites) might still cause GC stutter on lower-end systems.
 *   *Controller Hot-plugging:* JavaFX occasionally drops the selected ComboBox value if a controller is hot-plugged while the Input config tab is open.
 

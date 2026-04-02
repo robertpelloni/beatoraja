@@ -118,15 +118,11 @@ public class PreviewMusicProcessor {
                     audio.stop(playing);
                     audio.dispose(playing);
                 } else if(pause) {
-                	for(int i = 10;i >= 0;i--) {
-                		float vol = i * 0.1f * config.getAudioConfig().getSystemvolume();
-                        audio.setVolume(playing, vol);
-                        // TODO フェードアウトはAudioDriver側で実装したい
-                        try {
-							sleep(15);
-						} catch (InterruptedException e) {
-						}
-                	}
+                    audio.fadeOutAndStop(playing, 150);
+                    try {
+                        sleep(150);
+                    } catch (InterruptedException e) {
+                    }
                 } else {
                     audio.stop(playing);
                 }
