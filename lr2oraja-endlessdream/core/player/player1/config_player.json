@@ -86,146 +86,7 @@
 "isWindowHold": false,
 "isRandomSelect": false,
 "skin": [
-	{
-		"path": "skin\\default\\play\\play7.luaskin",
-		"properties": {
-			"option": [
-				{
-					"name": "Play Side",
-					"value": 920
-				},
-				{
-					"name": "Scratch Side",
-					"value": 922
-				},
-				{
-					"name": "Score Graph",
-					"value": 900
-				},
-				{
-					"name": "Judge Count",
-					"value": 905
-				},
-				{
-					"name": "Judge Detail",
-					"value": 910
-				}
-			],
-			"file": [
-				{
-					"name": "Background",
-					"path": "play.png"
-				},
-				{
-					"name": "Note",
-					"path": "default.png"
-				},
-				{
-					"name": "Bomb",
-					"path": "bomb.png"
-				},
-				{
-					"name": "Gauge",
-					"path": "gauge.png"
-				},
-				{
-					"name": "Judge",
-					"path": "judge.png"
-				},
-				{
-					"name": "Laser",
-					"path": "default.png"
-				},
-				{
-					"name": "Lanecover",
-					"path": "lanecover1.png"
-				}
-			],
-			"offset": [
-				{
-					"name": "Laser Offset",
-					"x": 0,
-					"y": 0,
-					"w": 0,
-					"h": 0,
-					"r": 0,
-					"a": 0
-				},
-				{
-					"name": "Bomb Offset",
-					"x": 0,
-					"y": 0,
-					"w": 0,
-					"h": 0,
-					"r": 0,
-					"a": 0
-				},
-				{
-					"name": "Judge Count Offset",
-					"x": 0,
-					"y": 0,
-					"w": 0,
-					"h": 0,
-					"r": 0,
-					"a": 0
-				},
-				{
-					"name": "BGA Offset",
-					"x": 0,
-					"y": 0,
-					"w": 0,
-					"h": 0,
-					"r": 0,
-					"a": 0
-				},
-				{
-					"name": "Lane Background Offset",
-					"x": 0,
-					"y": 0,
-					"w": 0,
-					"h": 0,
-					"r": 0,
-					"a": 0
-				},
-				{
-					"name": "All offset(%)",
-					"x": 0,
-					"y": 0,
-					"w": 0,
-					"h": 0,
-					"r": 0,
-					"a": 0
-				},
-				{
-					"name": "Notes offset",
-					"x": 0,
-					"y": 0,
-					"w": 0,
-					"h": 0,
-					"r": 0,
-					"a": 0
-				},
-				{
-					"name": "Judge offset",
-					"x": 0,
-					"y": 0,
-					"w": 0,
-					"h": 0,
-					"r": 0,
-					"a": 0
-				},
-				{
-					"name": "Judge Detail offset",
-					"x": 0,
-					"y": 0,
-					"w": 0,
-					"h": 0,
-					"r": 0,
-					"a": 0
-				}
-			]
-		}
-	},
+	null,
 	{
 		"path": "skin/default/play5.json",
 		"properties": {
@@ -347,148 +208,7 @@
 		"properties": null
 	}
 ],
-"skinHistory": [
-	{
-		"path": "skin\\default\\play\\play7.luaskin",
-		"properties": {
-			"option": [
-				{
-					"name": "Play Side",
-					"value": 920
-				},
-				{
-					"name": "Scratch Side",
-					"value": 922
-				},
-				{
-					"name": "Score Graph",
-					"value": 900
-				},
-				{
-					"name": "Judge Count",
-					"value": 905
-				},
-				{
-					"name": "Judge Detail",
-					"value": 910
-				}
-			],
-			"file": [
-				{
-					"name": "Background",
-					"path": "play.png"
-				},
-				{
-					"name": "Note",
-					"path": "default.png"
-				},
-				{
-					"name": "Bomb",
-					"path": "bomb.png"
-				},
-				{
-					"name": "Gauge",
-					"path": "gauge.png"
-				},
-				{
-					"name": "Judge",
-					"path": "judge.png"
-				},
-				{
-					"name": "Laser",
-					"path": "default.png"
-				},
-				{
-					"name": "Lanecover",
-					"path": "lanecover1.png"
-				}
-			],
-			"offset": [
-				{
-					"name": "Laser Offset",
-					"x": 0,
-					"y": 0,
-					"w": 0,
-					"h": 0,
-					"r": 0,
-					"a": 0
-				},
-				{
-					"name": "Bomb Offset",
-					"x": 0,
-					"y": 0,
-					"w": 0,
-					"h": 0,
-					"r": 0,
-					"a": 0
-				},
-				{
-					"name": "Judge Count Offset",
-					"x": 0,
-					"y": 0,
-					"w": 0,
-					"h": 0,
-					"r": 0,
-					"a": 0
-				},
-				{
-					"name": "BGA Offset",
-					"x": 0,
-					"y": 0,
-					"w": 0,
-					"h": 0,
-					"r": 0,
-					"a": 0
-				},
-				{
-					"name": "Lane Background Offset",
-					"x": 0,
-					"y": 0,
-					"w": 0,
-					"h": 0,
-					"r": 0,
-					"a": 0
-				},
-				{
-					"name": "All offset(%)",
-					"x": 0,
-					"y": 0,
-					"w": 0,
-					"h": 0,
-					"r": 0,
-					"a": 0
-				},
-				{
-					"name": "Notes offset",
-					"x": 0,
-					"y": 0,
-					"w": 0,
-					"h": 0,
-					"r": 0,
-					"a": 0
-				},
-				{
-					"name": "Judge offset",
-					"x": 0,
-					"y": 0,
-					"w": 0,
-					"h": 0,
-					"r": 0,
-					"a": 0
-				},
-				{
-					"name": "Judge Detail offset",
-					"x": 0,
-					"y": 0,
-					"w": 0,
-					"h": 0,
-					"r": 0,
-					"a": 0
-				}
-			]
-		}
-	}
-],
+"skinHistory": [],
 "mode5": {
 	"playconfig": {
 		"hispeed": 1,
@@ -534,7 +254,7 @@
 			"jkoc_hack": false,
 			"analogScratch": false,
 			"analogScratchMode": 0,
-			"analogScratchThreshold": 100
+			"analogScratchThreshold": 50
 		}
 	],
 	"midi": {
@@ -603,7 +323,7 @@
 			"jkoc_hack": false,
 			"analogScratch": false,
 			"analogScratchMode": 0,
-			"analogScratchThreshold": 100
+			"analogScratchThreshold": 50
 		}
 	],
 	"midi": {
@@ -674,7 +394,7 @@
 			"jkoc_hack": false,
 			"analogScratch": false,
 			"analogScratchMode": 0,
-			"analogScratchThreshold": 100
+			"analogScratchThreshold": 50
 		},
 		{
 			"name": "",
@@ -685,7 +405,7 @@
 			"jkoc_hack": false,
 			"analogScratch": false,
 			"analogScratchMode": 0,
-			"analogScratchThreshold": 100
+			"analogScratchThreshold": 50
 		}
 	],
 	"midi": {
@@ -761,7 +481,7 @@
 			"jkoc_hack": false,
 			"analogScratch": false,
 			"analogScratchMode": 0,
-			"analogScratchThreshold": 100
+			"analogScratchThreshold": 50
 		},
 		{
 			"name": "",
@@ -772,7 +492,7 @@
 			"jkoc_hack": false,
 			"analogScratch": false,
 			"analogScratchMode": 0,
-			"analogScratchThreshold": 100
+			"analogScratchThreshold": 50
 		}
 	],
 	"midi": {
@@ -852,7 +572,7 @@
 			"jkoc_hack": false,
 			"analogScratch": false,
 			"analogScratchMode": 0,
-			"analogScratchThreshold": 100
+			"analogScratchThreshold": 50
 		}
 	],
 	"midi": {
@@ -923,7 +643,7 @@
 			"jkoc_hack": false,
 			"analogScratch": false,
 			"analogScratchMode": 0,
-			"analogScratchThreshold": 100
+			"analogScratchThreshold": 50
 		}
 	],
 	"midi": {
@@ -1089,7 +809,7 @@
 			"jkoc_hack": false,
 			"analogScratch": false,
 			"analogScratchMode": 0,
-			"analogScratchThreshold": 100
+			"analogScratchThreshold": 50
 		},
 		{
 			"name": "",
@@ -1100,7 +820,7 @@
 			"jkoc_hack": false,
 			"analogScratch": false,
 			"analogScratchMode": 0,
-			"analogScratchThreshold": 100
+			"analogScratchThreshold": 50
 		}
 	],
 	"midi": {

@@ -19,6 +19,10 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.net.ssl.*;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -65,6 +69,28 @@ public class HttpDownloadProcessor {
         this.main = main;
         this.httpDownloadSource = httpDownloadSource;
         this.downloadDirectory = downloadDirectory;
+        setupSSLBypass();
+    }
+
+    private void setupSSLBypass() {
+        try {
+            TrustManager[] trustAllCerts = new TrustManager[]{
+                new X509TrustManager() {
+                    public X509Certificate[] getAcceptedIssuers() { return null; }
+                    public void checkClientTrusted(X509Certificate[] certs, String authType) { }
+                    public void checkServerTrusted(X509Certificate[] certs, String authType) { }
+                }
+            };
+
+            SSLContext sc = SSLContext.getInstance("SSL");
+            sc.init(null, trustAllCerts, new SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+
+            HostnameVerifier allHostsValid = (hostname, session) -> true;
+            HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static HttpDownloadSourceMeta getDefaultDownloadSource() {
@@ -89,19 +115,42 @@ public class HttpDownloadProcessor {
     public void submitMD5Task(String md5, String taskName) {
         logger.info("[HttpDownloadProcessor] Trying to submit new download task[{}](based on md5: {})", taskName, md5);
         String sourceName = httpDownloadSource.getName();
-        String downloadURL;
+        String downloadURL = null;
+        
         try {
             downloadURL = httpDownloadSource.getDownloadURLBasedOnMd5(md5);
         } catch (FileNotFoundException e) {
-            logger.error("[HttpDownloadProcessor] Remote server[{}] reports no such data", sourceName);
-            ImGuiNotify.error(String.format("Cannot find specified song from %s", sourceName));
-            return;
+            logger.warn("[HttpDownloadProcessor] Primary server[{}] reports no such data. Trying fallbacks...", sourceName);
+            // Fallback logic
+            for (HttpDownloadSourceMeta meta : DOWNLOAD_SOURCES.values()) {
+                if (meta.getName().equals(sourceName)) continue;
+                try {
+                    HttpDownloadSource fallbackSource = meta.build(main.getConfig());
+                    downloadURL = fallbackSource.getDownloadURLBasedOnMd5(md5);
+                    if (downloadURL != null) {
+                        logger.info("[HttpDownloadProcessor] Found song on fallback server[{}]", meta.getName());
+                        sourceName = meta.getName();
+                        break;
+                    }
+                } catch (Exception ex) {
+                    // Ignore fallback failure and try next
+                }
+            }
         } catch (RuntimeException e) {
             e.printStackTrace();
             logger.error("[HttpDownloadProcessor] Cannot get download url from remote server[{}] due to unexpected exception: {}", sourceName, e.getMessage());
-			ImGuiNotify.error(String.format("%s returns a severe error: %s", sourceName, e.getMessage()));
+            ImGuiNotify.error(String.format("%s returns a severe error: %s", sourceName, e.getMessage()));
             return;
         }
+
+        if (downloadURL == null) {
+            logger.error("[HttpDownloadProcessor] All servers reported no such data for md5: {}", md5);
+            ImGuiNotify.error(String.format("Cannot find song from any available server"));
+            return;
+        }
+
+        final String finalDownloadURL = downloadURL;
+        final String finalSourceName = sourceName;
 
         // NOTE: The reason of using executor instead of using 'synchronized' on tasks directly is forcing
         // it to run the submit step on an different thread to get rid of the re-entrant feature of 'synchronized'.
@@ -110,15 +159,15 @@ public class HttpDownloadProcessor {
             synchronized (tasks) {
                 // NOTE: This reject strategy works for Konmai because the download url could be considered as a unique
                 // info, but not wriggle since it doesn't offer a meta query api.
-                if (tasks.values().stream().anyMatch(task -> task.getUrl().equals(downloadURL))) {
-                    logger.error("[HttpDownloadProcessor] Rejecting download task[{}] because duplication has been found", downloadURL);
+                if (tasks.values().stream().anyMatch(task -> task.getUrl().equals(finalDownloadURL))) {
+                    logger.error("[HttpDownloadProcessor] Rejecting download task[{}] because duplication has been found", finalDownloadURL);
                     ImGuiNotify.warning("Already submitted");
                     return null;
                 }
                 int taskId = idGenerator.addAndGet(1);
-                DownloadTask downloadTask = new DownloadTask(taskId, downloadURL, taskName, md5);
+                DownloadTask downloadTask = new DownloadTask(taskId, finalDownloadURL, taskName, md5);
                 tasks.put(taskId, downloadTask);
-                ImGuiNotify.info(String.format("New download task[%s] submitted", taskName));
+                ImGuiNotify.info(String.format("New download task[%s] submitted (Source: %s)", taskName, finalSourceName));
                 return downloadTask;
             }
         });
@@ -220,6 +269,7 @@ public class HttpDownloadProcessor {
         try {
             URL url = new URL(task.getUrl());
             conn = ((HttpURLConnection) url.openConnection());
+            conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36");
             conn.connect();
             int responseCode = conn.getResponseCode();
             if (responseCode != HttpURLConnection.HTTP_OK) {

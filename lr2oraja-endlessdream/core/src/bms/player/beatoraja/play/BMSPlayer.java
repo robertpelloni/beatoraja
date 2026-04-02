@@ -218,9 +218,11 @@ public class BMSPlayer extends MainState {
 		boolean forceNoIRSend = false;
 
 		// Allow osu score submission
+		/*
 		if (model.isFromOSU()) {
 			forceNoIRSend = false;
 		}
+		*/
 
 		// RANDOM構文処理
 		if (model.getRandom() != null && model.getRandom().length > 0) {
