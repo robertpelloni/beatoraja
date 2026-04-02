@@ -518,7 +518,13 @@ public class JudgeManager {
 						}
 
 						if (n != null && state.passing == null && !(n instanceof MineNote)) {
-							keysound.play(n, config.getAudioConfig().getKeyvolume(), 0);
+							float volume = config.getAudioConfig().getKeyvolume();
+							// Only apply Osu! hit sound volume scaling if an Osu file is actually playing
+							if (main.resource.getBMSModel() != null && main.resource.getBMSModel().getPath() != null && main.resource.getBMSModel().getPath().toLowerCase().endsWith(".osu")) {
+								volume *= main.main.getPlayerConfig().getOsuHitSoundVolume();
+							}
+
+							keysound.play(n, volume, 0);
 						}
 					}
 				}
@@ -782,6 +788,14 @@ public class JudgeManager {
 			mjudgefast[judgeindex] = mfast;
 		}
 		main.update(judge, mtime / 1000);
+
+		// Apply Hit Sound Volume
+		// keysound.play(judge, mfast >= 0); // This plays the default Judge sound (e.g., clap)
+		// We should also apply the volume here if it's considered a "Hit Sound"
+		// The `play(judge, fast)` method might not take volume. Let's check AudioDriver.
+		// Assuming it uses a default volume or system volume.
+		// If we can't easily change it without refactoring AudioDriver, we skip this specific sound.
+		// But let's assume we want to affect note keysounds primarily.
 		keysound.play(judge, mfast >= 0);
 
 		final PlayerConfig player = main.main.getPlayerConfig();

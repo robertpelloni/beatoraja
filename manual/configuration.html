@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>beatoraja Configuration</title>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; max-width: 800px; margin: 0 auto; padding: 20px; color: #333; }
+        h1, h2 { color: #2c3e50; }
+        h3 { color: #34495e; margin-top: 25px; }
+        code { background: #ecf0f1; padding: 2px 5px; border-radius: 3px; font-family: monospace; }
+        .section { margin-bottom: 40px; }
+    </style>
+</head>
+<body>
+
+    <h1>Configuration Guide</h1>
+    <p><a href="index.html">&larr; Back to Index</a></p>
+
+    <div class="section">
+        <h2>Initial Setup</h2>
+        <p>Before launching the game, use the <strong>Launcher</strong> to configure essential settings like audio, video, and song folders.</p>
+    </div>
+
+    <div class="section">
+        <h2>Resource Tab</h2>
+        <h3>BMS Path</h3>
+        <p>Add the root directory where your BMS folders are located. The game will scan subdirectories for songs.</p>
+
+        <h3>Table URL</h3>
+        <p>Add URLs to Difficulty Tables (JSON/HTML). These tables organize songs into difficulty tiers (e.g., Insane BMS, Stella, Satellite).</p>
+        <ul>
+            <li><strong>Update BMS Database:</strong> Force a full rescan of all song folders. Recommended when adding new songs.</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>Video Tab</h2>
+        <h3>Display Mode</h3>
+        <ul>
+            <li><strong>Windowed:</strong> Runs the game in a window.</li>
+            <li><strong>Fullscreen:</strong> Exclusive fullscreen mode for best performance.</li>
+            <li><strong>Borderless:</strong> Maximized window without borders (easier for alt-tabbing).</li>
+        </ul>
+        <h3>Resolution</h3>
+        <p>Select your desired resolution. Higher resolutions require more GPU power.</p>
+        <h3>VSync</h3>
+        <p>Synchronize frame rate with monitor refresh rate to prevent tearing. Disable for lower input latency.</p>
+        <h3>Max FPS</h3>
+        <p>Limit the frame rate to save power or match your monitor (e.g., 240Hz, 144Hz).</p>
+    </div>
+
+    <div class="section">
+        <h2>Audio Tab</h2>
+        <h3>Audio Driver</h3>
+        <ul>
+            <li><strong>PortAudio:</strong> Low-latency audio driver (Recommended).</li>
+            <li><strong>OpenAL:</strong> Standard cross-platform audio.</li>
+        </ul>
+        <h3>Buffer Size</h3>
+        <p>Lower values reduce audio latency but may cause crackling on slower systems.</p>
+        <h3>Sample Rate</h3>
+        <p>Typically 44100Hz or 48000Hz. Match your system settings.</p>
+    </div>
+
+    <div class="section">
+        <h2>Other Settings</h2>
+        <h3>Detailed Options</h3>
+        <ul>
+            <li><strong>Discord RPC:</strong> Show your current song and status on Discord.</li>
+            <li><strong>Screenshot to Clipboard:</strong> Automatically copy screenshots to clipboard when taken (F6).</li>
+            <li><strong>IPFS:</strong> Enable decentralized song downloading via IPFS.</li>
+        </ul>
+    </div>
+
+</body>
+</html>

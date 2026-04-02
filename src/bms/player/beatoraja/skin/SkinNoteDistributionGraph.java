@@ -396,9 +396,21 @@ public final class SkinNoteDistributionGraph extends SkinObject {
 				backtex.getTexture().draw(back, 0, 0);
 			}
 			
+		} else if (!refresh && state instanceof BMSPlayer) {
+			// Optimization: During gameplay, only redraw the column corresponding to current time and recent past
+			long now = state.timer.getNowTime(SkinProperty.TIMER_PLAY);
+			int currentIndex = (int)(now / 1000);
+			start = Math.max(0, currentIndex - 2);
+			end = Math.min(data.length, currentIndex + 2);
 		}
 
 		for (int i = start; i < end; i++) {
+			// Clear this specific column before redrawing
+			if (!updateall) {
+				shape.setColor(TRANSPARENT_COLOR);
+				shape.fillRectangle(i * 5, 0, 5, max * 5);
+			}
+
 			final int[] n = data[i];
 			if(!isOrderReverse) {
 				for (int j = 0, k = n[0], index = 0; j < max && index < n.length;) {

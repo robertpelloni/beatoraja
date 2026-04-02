@@ -10,6 +10,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Spinner;
+import javafx.scene.control.Tooltip;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -37,6 +38,15 @@ public class VideoConfigurationView implements Initializable {
 		updateResolutions();
 
 		displayMode.getItems().setAll(Config.DisplayMode.values());
+
+		// Add Tooltips
+		resolution.setTooltip(new Tooltip("Select the game resolution."));
+		displayMode.setTooltip(new Tooltip("Select display mode (Windowed, Fullscreen, Borderless)."));
+		vSync.setTooltip(new Tooltip("Synchronize frame rate with monitor refresh rate (VSync)."));
+		maxFps.setTooltip(new Tooltip("Limit the maximum frame rate (FPS)."));
+		bgaOp.setTooltip(new Tooltip("Background Animation (BGA) settings (On/Off/Autoplay)."));
+		bgaExpand.setTooltip(new Tooltip("BGA scaling options (Full/Keep Aspect Ratio)."));
+		missLayerTime.setTooltip(new Tooltip("Duration of the Miss Layer image display in ms."));
     }
 
     public void update(Config config) {
