@@ -547,7 +547,7 @@ public class SQLiteSongDatabaseAccessor extends SQLiteDatabaseAccessor implement
 			int skipCount = 0, newCount = 0;
 			BMSDecoder bmsdecoder = null;
 			BMSONDecoder bmsondecoder = null;
-			// OSUDecoder osudecoder = null;
+			OSUDecoder osudecoder = null;
 			final int len = records.size();
 			for (Path path : bmsfiles) {
 				long lastModifiedTime = -1;
@@ -582,7 +582,6 @@ public class SQLiteSongDatabaseAccessor extends SQLiteDatabaseAccessor implement
 					} catch (Exception e) {
 						logger.error("Error while decoding bmson at path: {}{}", pathname, e.getMessage());
 					}
-				/*
 				} else if (pathname.toLowerCase().endsWith(".osu")) {
 					if (osudecoder == null) {
 						osudecoder = new OSUDecoder(BMSModel.LNTYPE_LONGNOTE);
@@ -592,7 +591,6 @@ public class SQLiteSongDatabaseAccessor extends SQLiteDatabaseAccessor implement
 					} catch (Exception e) {
 						logger.error("Error while decoding osu at path: {}{}", pathname, e.getMessage());
 					}
-				*/
 				} else {
 					if (bmsdecoder == null) {
 						bmsdecoder = new BMSDecoder(BMSModel.LNTYPE_LONGNOTE);

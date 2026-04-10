@@ -55,7 +55,6 @@
 "mode": null,
 "misslayerDuration": 500,
 "lnmode": 0,
-"forcedcnendings": false,
 "scrollMode": 0,
 "scrollSection": 4,
 "scrollRate": 0.5,
@@ -1339,5 +1338,9 @@
 "enableRequest": false,
 "notifyRequest": false,
 "maxRequestCount": 30,
+"lr2Gauge": false,
+"lr2Judge": false,
+"lr2LN": false,
+"lr2Total": false,
 "eventMode": false
 }

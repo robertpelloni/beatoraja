@@ -2,6 +2,13 @@
 	path = bobcoin
 	url = ../bobcoin.git
 
+[submodule "beatoraja-english-guide"]
+	path = beatoraja-english-guide
+<<<<<<< HEAD
+	url = ../beatoraja-english-guide.git
+=======
+	url = https://github.com/wcko87/beatoraja-english-guide
+
 [submodule "lr2oraja"]
 	path = lr2oraja
 	url = https://github.com/wcko87/lr2oraja
@@ -10,3 +17,5 @@
 [submodule "lr2oraja-endlessdream"]
 	path = lr2oraja-endlessdream
 	url = https://github.com/seraxis/lr2oraja-endlessdream
+>>>>>>> master
+

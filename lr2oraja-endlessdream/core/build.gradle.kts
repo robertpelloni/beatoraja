@@ -9,17 +9,11 @@ plugins {
     id("application")
     id("com.gradleup.shadow") version "8.3.9"
     id("org.endlessdream.extra.multiplatform-convention")
-    id("org.openjfx.javafxplugin") version "0.1.0"
-}
-
-javafx {
-    version = "21.0.2"
-    modules("javafx.controls", "javafx.fxml", "javafx.graphics", "javafx.media", "javafx.swing", "javafx.web")
 }
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(21))
+        languageVersion.set(JavaLanguageVersion.of(17))
     }
 }
 
@@ -28,7 +22,7 @@ repositories {
     gradlePluginPortal()
 
     flatDir{
-        dirs("../../lib")
+        dirs("../lib")
     }
     maven(url = "https://jitpack.io" )
 }
@@ -37,17 +31,13 @@ version = libs.versions.beatoraja.get()
 
 sourceSets {
     main {
-        java.srcDirs(listOf("src/"))
+        java.srcDirs(listOf("src/", "dependencies/jbms-parser/", "dependencies/jbmstable-parser"))
         resources.srcDirs(listOf("src/"))
     }
 }
 
 application {
     mainClass.set("bms.player.beatoraja.MainLoader")
-}
-
-tasks.named<JavaExec>("run") {
-    workingDir = rootProject.projectDir.parentFile
 }
 
 tasks {
@@ -181,11 +171,8 @@ dependencies {
 
     implementation(libs.javawebsocket)
     implementation(libs.bundles.slf4j)
-    implementation(libs.bundles.javafx)
 
     // non-gradle managed file dependencies. jportaudio not on maven. "custom" scares me.
     implementation(":jportaudio")
     implementation(":luaj-jse:3.0.2-custom")
-    implementation(":jbms-parser")
-    implementation(":jbmstable-parser")
 }

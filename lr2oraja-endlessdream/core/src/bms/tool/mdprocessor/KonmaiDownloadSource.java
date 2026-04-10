@@ -48,7 +48,6 @@ public class KonmaiDownloadSource implements HttpDownloadSource {
         try {
             URL url = new URL(metaURL);
             conn = ((HttpURLConnection) url.openConnection());
-            conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36");
             conn.connect();
             // Konmai backend doesn't offer an 404 status code
             int responseCode = conn.getResponseCode();

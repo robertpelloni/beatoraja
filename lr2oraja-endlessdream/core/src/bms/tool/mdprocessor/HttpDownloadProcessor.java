@@ -19,10 +19,6 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.net.ssl.*;
-import java.security.SecureRandom;
-import java.security.cert.X509Certificate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -69,28 +65,6 @@ public class HttpDownloadProcessor {
         this.main = main;
         this.httpDownloadSource = httpDownloadSource;
         this.downloadDirectory = downloadDirectory;
-        setupSSLBypass();
-    }
-
-    private void setupSSLBypass() {
-        try {
-            TrustManager[] trustAllCerts = new TrustManager[]{
-                new X509TrustManager() {
-                    public X509Certificate[] getAcceptedIssuers() { return null; }
-                    public void checkClientTrusted(X509Certificate[] certs, String authType) { }
-                    public void checkServerTrusted(X509Certificate[] certs, String authType) { }
-                }
-            };
-
-            SSLContext sc = SSLContext.getInstance("SSL");
-            sc.init(null, trustAllCerts, new SecureRandom());
-            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-
-            HostnameVerifier allHostsValid = (hostname, session) -> true;
-            HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public static HttpDownloadSourceMeta getDefaultDownloadSource() {
@@ -115,42 +89,19 @@ public class HttpDownloadProcessor {
     public void submitMD5Task(String md5, String taskName) {
         logger.info("[HttpDownloadProcessor] Trying to submit new download task[{}](based on md5: {})", taskName, md5);
         String sourceName = httpDownloadSource.getName();
-        String downloadURL = null;
-        
+        String downloadURL;
         try {
             downloadURL = httpDownloadSource.getDownloadURLBasedOnMd5(md5);
         } catch (FileNotFoundException e) {
-            logger.warn("[HttpDownloadProcessor] Primary server[{}] reports no such data. Trying fallbacks...", sourceName);
-            // Fallback logic
-            for (HttpDownloadSourceMeta meta : DOWNLOAD_SOURCES.values()) {
-                if (meta.getName().equals(sourceName)) continue;
-                try {
-                    HttpDownloadSource fallbackSource = meta.build(main.getConfig());
-                    downloadURL = fallbackSource.getDownloadURLBasedOnMd5(md5);
-                    if (downloadURL != null) {
-                        logger.info("[HttpDownloadProcessor] Found song on fallback server[{}]", meta.getName());
-                        sourceName = meta.getName();
-                        break;
-                    }
-                } catch (Exception ex) {
-                    // Ignore fallback failure and try next
-                }
-            }
+            logger.error("[HttpDownloadProcessor] Remote server[{}] reports no such data", sourceName);
+            ImGuiNotify.error(String.format("Cannot find specified song from %s", sourceName));
+            return;
         } catch (RuntimeException e) {
             e.printStackTrace();
             logger.error("[HttpDownloadProcessor] Cannot get download url from remote server[{}] due to unexpected exception: {}", sourceName, e.getMessage());
-            ImGuiNotify.error(String.format("%s returns a severe error: %s", sourceName, e.getMessage()));
+			ImGuiNotify.error(String.format("%s returns a severe error: %s", sourceName, e.getMessage()));
             return;
         }
-
-        if (downloadURL == null) {
-            logger.error("[HttpDownloadProcessor] All servers reported no such data for md5: {}", md5);
-            ImGuiNotify.error(String.format("Cannot find song from any available server"));
-            return;
-        }
-
-        final String finalDownloadURL = downloadURL;
-        final String finalSourceName = sourceName;
 
         // NOTE: The reason of using executor instead of using 'synchronized' on tasks directly is forcing
         // it to run the submit step on an different thread to get rid of the re-entrant feature of 'synchronized'.
@@ -159,15 +110,15 @@ public class HttpDownloadProcessor {
             synchronized (tasks) {
                 // NOTE: This reject strategy works for Konmai because the download url could be considered as a unique
                 // info, but not wriggle since it doesn't offer a meta query api.
-                if (tasks.values().stream().anyMatch(task -> task.getUrl().equals(finalDownloadURL))) {
-                    logger.error("[HttpDownloadProcessor] Rejecting download task[{}] because duplication has been found", finalDownloadURL);
+                if (tasks.values().stream().anyMatch(task -> task.getUrl().equals(downloadURL))) {
+                    logger.error("[HttpDownloadProcessor] Rejecting download task[{}] because duplication has been found", downloadURL);
                     ImGuiNotify.warning("Already submitted");
                     return null;
                 }
                 int taskId = idGenerator.addAndGet(1);
-                DownloadTask downloadTask = new DownloadTask(taskId, finalDownloadURL, taskName, md5);
+                DownloadTask downloadTask = new DownloadTask(taskId, downloadURL, taskName, md5);
                 tasks.put(taskId, downloadTask);
-                ImGuiNotify.info(String.format("New download task[%s] submitted (Source: %s)", taskName, finalSourceName));
+                ImGuiNotify.info(String.format("New download task[%s] submitted", taskName));
                 return downloadTask;
             }
         });
@@ -204,7 +155,7 @@ public class HttpDownloadProcessor {
             String taskName = downloadTask.getName();
             String downloadURL = downloadTask.getUrl();
             String hash = downloadTask.getHash();
-            logger.info("[HttpDownloadProcessor] Trying to kick new download task[{}̉]({})", taskName, downloadURL);
+            logger.info("[HttpDownloadProcessor] Trying to kick new download task[{}]({})", taskName, downloadURL);
             downloadTask.setDownloadTaskStatus(DownloadTask.DownloadTaskStatus.Downloading);
             Path result = null;
             // 1) Download file from remote http server
@@ -261,47 +212,14 @@ public class HttpDownloadProcessor {
      * @return result file path, null if failed
      */
     private Path downloadFileFromURL(DownloadTask task, String fallbackFileName) {
-        String urlStr = task.getUrl();
-        try {
-            return downloadFileFromURLInternal(urlStr, task, fallbackFileName);
-        } catch (Exception e) {
-            if (urlStr.startsWith("https://")) {
-                String httpUrl = urlStr.replaceFirst("https://", "http://");
-                logger.warn("[HttpDownloadProcessor] HTTPS failed for {}, retrying with HTTP fallback: {}", urlStr, httpUrl);
-                try {
-                    return downloadFileFromURLInternal(httpUrl, task, fallbackFileName);
-                } catch (Exception ex) {
-                    e = ex;
-                }
-            }
-            e.printStackTrace();
-            logger.info("[HttpDownloadProcessor] Failed to download file from url: {}", e.getMessage());
-            task.setDownloadSize(0);
-            task.setContentLength(0);
-            task.setErrorMessage(e.getMessage());
-            // All other unexpected exception are rethrown as RuntimeException
-            throw new RuntimeException(e.getMessage());
-        }
-    }
-
-    private Path downloadFileFromURLInternal(String urlStr, DownloadTask task, String fallbackFileName) throws IOException {
         HttpURLConnection conn = null;
         InputStream is = null;
         FileOutputStream fos = null;
         Path result = null;
 
         try {
-            URL url = new URL(urlStr);
-            if ("bms.wrigglebug.xyz".equals(url.getHost())) {
-                String ipUrl = urlStr.replace("bms.wrigglebug.xyz", "104.21.42.145");
-                conn = (HttpURLConnection) new URL(ipUrl).openConnection();
-                conn.setRequestProperty("Host", "bms.wrigglebug.xyz");
-            } else {
-                conn = (HttpURLConnection) url.openConnection();
-            }
-            conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36");
-            conn.setConnectTimeout(10000);
-            conn.setReadTimeout(30000);
+            URL url = new URL(task.getUrl());
+            conn = ((HttpURLConnection) url.openConnection());
             conn.connect();
             int responseCode = conn.getResponseCode();
             if (responseCode != HttpURLConnection.HTTP_OK) {
@@ -329,6 +247,7 @@ public class HttpDownloadProcessor {
             result = Path.of(downloadDirectory, fileName);
             fos = new FileOutputStream(result.toFile());
 
+            // TODO: We can bind the buffer to the worker thread instead of creating & releasing it repeatedly
             byte[] buffer = new byte[8192];
             long downloadBytes = 0;
 
@@ -341,6 +260,14 @@ public class HttpDownloadProcessor {
             }
             logger.info("[HttpDownloadProcessor] Download successfully to {}", result);
             task.setDownloadTaskStatus(DownloadTask.DownloadTaskStatus.Downloaded);
+        } catch (Exception e) {
+            e.printStackTrace();
+			logger.info("[HttpDownloadProcessor] Failed to download file from url: {}", e.getMessage());
+            task.setDownloadSize(0);
+            task.setContentLength(0);
+            task.setErrorMessage(e.getMessage());
+            // All other unexpected exception are rethrown as RuntimeException
+            throw new RuntimeException(e.getMessage());
         } finally {
             try {
                 if (conn != null) {
