@@ -27,7 +27,14 @@ public class WriggleDownloadSource implements HttpDownloadSource {
         String urlStr = String.format(downloadURL, md5);
         try {
             java.net.URL url = new java.net.URL(urlStr);
-            java.net.HttpURLConnection conn = (java.net.HttpURLConnection) url.openConnection();
+            java.net.HttpURLConnection conn = null;
+            if ("bms.wrigglebug.xyz".equals(url.getHost())) {
+                String ipUrl = urlStr.replace("bms.wrigglebug.xyz", "104.21.42.145");
+                conn = (java.net.HttpURLConnection) new java.net.URL(ipUrl).openConnection();
+                conn.setRequestProperty("Host", "bms.wrigglebug.xyz");
+            } else {
+                conn = (java.net.HttpURLConnection) url.openConnection();
+            }
             conn.setRequestMethod("HEAD");
             conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36");
             conn.setConnectTimeout(5000);

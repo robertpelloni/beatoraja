@@ -204,7 +204,7 @@ public class HttpDownloadProcessor {
             String taskName = downloadTask.getName();
             String downloadURL = downloadTask.getUrl();
             String hash = downloadTask.getHash();
-            logger.info("[HttpDownloadProcessor] Trying to kick new download task[{}]({})", taskName, downloadURL);
+            logger.info("[HttpDownloadProcessor] Trying to kick new download task[{}̉]({})", taskName, downloadURL);
             downloadTask.setDownloadTaskStatus(DownloadTask.DownloadTaskStatus.Downloading);
             Path result = null;
             // 1) Download file from remote http server
@@ -261,15 +261,47 @@ public class HttpDownloadProcessor {
      * @return result file path, null if failed
      */
     private Path downloadFileFromURL(DownloadTask task, String fallbackFileName) {
+        String urlStr = task.getUrl();
+        try {
+            return downloadFileFromURLInternal(urlStr, task, fallbackFileName);
+        } catch (Exception e) {
+            if (urlStr.startsWith("https://")) {
+                String httpUrl = urlStr.replaceFirst("https://", "http://");
+                logger.warn("[HttpDownloadProcessor] HTTPS failed for {}, retrying with HTTP fallback: {}", urlStr, httpUrl);
+                try {
+                    return downloadFileFromURLInternal(httpUrl, task, fallbackFileName);
+                } catch (Exception ex) {
+                    e = ex;
+                }
+            }
+            e.printStackTrace();
+            logger.info("[HttpDownloadProcessor] Failed to download file from url: {}", e.getMessage());
+            task.setDownloadSize(0);
+            task.setContentLength(0);
+            task.setErrorMessage(e.getMessage());
+            // All other unexpected exception are rethrown as RuntimeException
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    private Path downloadFileFromURLInternal(String urlStr, DownloadTask task, String fallbackFileName) throws IOException {
         HttpURLConnection conn = null;
         InputStream is = null;
         FileOutputStream fos = null;
         Path result = null;
 
         try {
-            URL url = new URL(task.getUrl());
-            conn = ((HttpURLConnection) url.openConnection());
+            URL url = new URL(urlStr);
+            if ("bms.wrigglebug.xyz".equals(url.getHost())) {
+                String ipUrl = urlStr.replace("bms.wrigglebug.xyz", "104.21.42.145");
+                conn = (HttpURLConnection) new URL(ipUrl).openConnection();
+                conn.setRequestProperty("Host", "bms.wrigglebug.xyz");
+            } else {
+                conn = (HttpURLConnection) url.openConnection();
+            }
             conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36");
+            conn.setConnectTimeout(10000);
+            conn.setReadTimeout(30000);
             conn.connect();
             int responseCode = conn.getResponseCode();
             if (responseCode != HttpURLConnection.HTTP_OK) {
@@ -297,7 +329,6 @@ public class HttpDownloadProcessor {
             result = Path.of(downloadDirectory, fileName);
             fos = new FileOutputStream(result.toFile());
 
-            // TODO: We can bind the buffer to the worker thread instead of creating & releasing it repeatedly
             byte[] buffer = new byte[8192];
             long downloadBytes = 0;
 
@@ -310,14 +341,6 @@ public class HttpDownloadProcessor {
             }
             logger.info("[HttpDownloadProcessor] Download successfully to {}", result);
             task.setDownloadTaskStatus(DownloadTask.DownloadTaskStatus.Downloaded);
-        } catch (Exception e) {
-            e.printStackTrace();
-			logger.info("[HttpDownloadProcessor] Failed to download file from url: {}", e.getMessage());
-            task.setDownloadSize(0);
-            task.setContentLength(0);
-            task.setErrorMessage(e.getMessage());
-            // All other unexpected exception are rethrown as RuntimeException
-            throw new RuntimeException(e.getMessage());
         } finally {
             try {
                 if (conn != null) {
