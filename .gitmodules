@@ -2,11 +2,6 @@
 	path = bobcoin
 	url = https://github.com/robertpelloni/bobcoin.git
 
-[submodule "lr2oraja"]
-	path = lr2oraja
-	url = https://github.com/robertpelloni/lr2oraja.git
-	branch = main
-
 [submodule "lr2oraja-endlessdream"]
 	path = lr2oraja-endlessdream
 	url = https://github.com/seraxis/lr2oraja-endlessdream
