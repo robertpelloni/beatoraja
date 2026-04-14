@@ -8,7 +8,7 @@ import java.nio.ByteBuffer;
  * 
  * @author exch
  */
-public class FloatPCM extends PCM<float[]> {
+public class FloatPCM extends PCM {
 
 	FloatPCM(int channels, int sampleRate, int start, int len, float[] sample) {
 		super(channels, sampleRate, start, len, sample);

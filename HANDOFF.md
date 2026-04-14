@@ -1,120 +1,25 @@
-# Session Handoff
+# Session Handoff: Deep Codebase Analysis & Documentation Overhaul
 
-## Summary of Changes
-This session focused on modernizing `beatoraja`, integrating features from the `lr2oraja` fork, and laying the groundwork for Arena Mode and Osu! file support.
+## Current State & Analysis
+- **Version:** 0.9.7 (Managed via `VERSION.md`).
+- **Build System:** Gradle 8.5 targeting Java 21.
+- **Dependencies:** LibGDX 1.12.1, LWJGL 3, SQLite.
+- **Submodules:** The `bobcoin` submodule and all references have been strictly removed as per user instruction. `lr2oraja-endlessdream` remains.
 
-### 1. Build System & Dependencies
-*   **Gradle Migration:** Converted from Ant to Gradle. Targets Java 21.
-*   **Dependencies:** Updated LibGDX (1.12.1). Reverted Twitter4J to `4.0.4` to maintain compatibility with existing `ScreenShotTwitterExporter` logic.
-*   **Backend Upgrade:** Upgraded to LWJGL 3 (via `origin/lwjgl3` merge).
+## What Was Accomplished During This Analysis Phase
+- **bobcoin Purge:** Fully removed `bobcoin` from `.gitmodules` and deleted the directory.
+- **Documentation Bootstrapping:** Created base files for `TODO.md`, `VISION.md`, `MEMORY.md`, `DEPLOY.md`, and `IDEAS.md`.
+- **Version Tracking Verification:** Confirmed `MainLoader.java` and `MainController.java` currently hardcode "beatoraja 0.6". This will be fixed in the upcoming "Global Version System" step to parse `VERSION.md`.
 
-### 2. Feature: Fast/Slow Separation (IIDX RESIDENT)
-*   **ScoreData.java:** Added fields `fastNotes`, `slowNotes`, `fastScratch`, `slowScratch`.
-*   **JudgeManager.java:** Updated `updateMicro` to populate these fields based on lane assignment.
-*   **Skin Integration:** Added `NUMBER_FAST_NOTES`, `NUMBER_SLOW_NOTES`, etc., to `SkinProperty` and mapped them in `IntegerPropertyFactory`.
-*   **Default Skin:** Updated `skin/default/result.json` to display Fast/Slow counts.
-
-### 3. Feature: Arena Mode
-*   **ArenaManager:** Created to manage players and calculate ranks/points. Moved to `MainController` for persistence.
-*   **Score Separation:** Modified `JudgeManager` to include `score2` for 2P/Battle modes. Updated `BMSPlayer` to feed both scores to `ArenaManager`.
-*   **Networking:** Implemented `ArenaClient` and `ArenaServer` (TCP/JSON) to sync scores between players.
-*   **Song Sync:** Implemented `TYPE_SONG_SELECT` message to synchronize song selection in the lobby. Hooked into `MusicSelector`.
-*   **Skin Integration:** Added `NUMBER_ARENA_RANK` and `NUMBER_ARENA_PLAYERS` to `SkinProperty` and mapped them. Updated `result.json` to display Arena Rank.
-
-### 4. Feature: Osu! File Support
-*   **OsuDecoder.java:** Implemented a parser for `.osu` files that maps HitObjects to a `BMSModel`.
-*   **Dynamic Key Count:** Decodes `CircleSize` to determine key mode (4K, 5K, 6K, 7K, 8K, 9K).
-*   **Spinners:** Maps spinners to Scratch Long Notes (Lane 0).
-*   **Audio:** Assigns audio filename to WAV index `01`.
-*   **Mapping:** Dynamic column-to-lane mapping based on key count.
-*   **Timing:** Basic BPM setting.
-*   **Structure:** Uses `TimeLine` construction for proper note placement.
-*   **Integration:** Hooked into `PlayerResource.loadBMSModel`.
-
-### 5. LR2 Features (lr2oraja)
-*   **Gauge/Judge:** Added LR2-specific constants to `GaugeProperty` and logic for "Bad on Early Release" for Long Notes in `JudgeManager`.
-
-### 6. Feature: Mod Menu (Endless Dream)
-*   **ModMenu.java:** Implemented an in-game overlay (F5 key) using LibGDX Scene2D to adjust Hi-Speed and Lane Cover on the fly.
-*   **Integration:** Hooked into `BMSPlayer` to handle input (via Multiplexer) and rendering.
-
-### 7. Feature: In-Game Downloader (Endless Dream)
-*   **Crawler.java:** Implemented a background download manager in `src/bms/tool/crawler`. Supports Zip and Tar/Gz extraction.
-*   **Integration:** Hooked into `MusicSelector` to trigger downloads for songs with valid URLs (e.g. from BMS Search) when the local file is missing.
-*   **SongData:** Updated to implement `Crawlable` interface.
-
-### 8. Feature: Arena Mode Networking & UI
-*   **ArenaClient/Server:** Implemented TCP-based networking in `src/bms/player/beatoraja/arena/net`.
-*   **UI:** Added Arena Mode window to `ModMenu` for connection/server management and status display.
-*   **Integration:** Updated `ArenaManager` to handle remote player scores and rank calculation.
-
-### 10. Feature: Step-Up Mode
-*   **StepUpManager:** Logic to manage player level and course generation (Levels 1-12).
-*   **StepUpData:** Persistence for step-up progress (saved to `stepup.json`).
-*   **Integration:** Added "Step-Up Level X" course to the music selection screen via `BarManager`.
-*   **Progression:** Clearing the course increments the level; failing decrements it.
-
-### 11. Security Fixes
-*   **Zip Slip:** Fixed a vulnerability in `Crawler.java` that allowed malicious archives to write outside the target directory.
-*   **Thread Safety:** Added `volatile` to shared state in `Crawler.java`.
-*   **Cleanup:** Removed debug flags from `ScreenShotTwitterExporter.java`.
-
-## Session Achievements (Local Merge)
-1.  **Versioning System**:
-    -   Established `VERSION.md` as the single source of truth.
-    -   Updated `MainController.java` to read the version from `VERSION.md` at runtime.
-
-2.  **Documentation Overhaul**:
-    -   Created `LLM_INSTRUCTIONS.md` as a central hub for agent protocols.
-    -   Updated `CLAUDE.md`, `GEMINI.md`, and `GPT.md` to reference the central instructions.
-    -   Created `docs/DASHBOARD.md` to provide a high-level project overview.
-
-3.  **Backend Upgrade**:
-    -   Merged `origin/lwjgl3` branch, upgrading the backend to LWJGL 3.
-    -   Resolved conflicts in `MainLoader.java` and `PCM.java`.
-
-## Current State
--   **Build System**: Gradle (Java 21).
--   **Backend**: LWJGL 3.
--   **Version**: 0.9.0.
+## Outstanding TODOs Discovered (Codebase grep)
+- `PlayDataAccessor.java`: Needs logic for handling FLIP modifiers and Battle separate hashes.
+- `IntegerPropertyFactory.java`: IDs 64-69 should be allocated for target2/target3 (Pacemaker).
+- `SkinNoteDistributionGraph.java`: Needs texture batching to reduce `bindTexture` calls.
+- `BGAProcessor.java`: Missing full Event Layer support (currently only handles MISS layers).
+- `OsuDecoder.java`: `[Events]` section parsing exists for background/video, but full Storyboard (Sprites, Animations) mapping into `BGAEvent` is incomplete.
+- `GdxSoundDriver.java`: Needs a method to check if a sound is currently playing.
 
 ## Next Steps
-1.  **Build Environment**: Install Gradle 8.5+ or generate the wrapper (`gradle wrapper`) to enable building.
-2.  **Osu! Polish**: Improve slider curve approximation (currently linear).
-3.  **Documentation**: Continue improving documentation.
-
-## Recent Changes (Refactoring & Features)
-1.  **MainController Refactoring**:
-    -   Extracted responsibilities from the monolithic `MainController` into dedicated manager classes:
-        -   `UpdateManager`: Handles song database and table updates.
-        -   `ScreenshotManager`: Handles saving screenshots and posting to Twitter.
-        -   `InputManager`: Handles input polling and general input events.
-        -   `DownloadManager`: Handles IPFS and Crawler background downloads.
-    -   This significantly reduces the complexity of `MainController` and improves maintainability.
-
-2.  **Controller Hot-plugging**:
-    -   Implemented `ControllerListener` in `BMSPlayerInputProcessor`.
-    -   Gamepads can now be connected or disconnected at runtime without restarting the game.
-
-3.  **Debug Toggle**:
-    -   Added `TOGGLE_DEBUG` command (Shift+F1) to `KeyCommand`.
-    -   Allows toggling debug mode at runtime.
-
-4.  **Osu! Polish**:
-    -   Implemented Bezier and Linear curve approximation for sliders.
-    -   Implemented column mapping based on slider path (notes follow the curve).
-    -   Updated `OsuDecoder` to use LibGDX `Bezier` and `Vector2`.
-    -   Added `OsuDecoderBezierTest` to verify curve logic.
-
-5.  **Arena Polish**:
-    -   Added "Disconnect" button to `ArenaLobby`.
-    -   Optimized `ArenaLobby` UI updates to reduce garbage generation.
-
-## Current State
--   **Build System**: Gradle (Java 21).
--   **Backend**: LWJGL 3.
--   **Version**: 0.9.0.
-
-## Next Steps
-1.  **Build Environment**: Install Gradle 8.5+ or generate the wrapper (`gradle wrapper`) to enable building.
-2.  **Vulkan Support**: Investigate Vulkan rendering support (Future).
+1. Refactor AI instructions (`CLAUDE.md`, `GEMINI.md`, etc.).
+2. Refactor `MainController.java` to dynamically load the version string.
+3. Select a feature (likely Osu! Storyboards or fixing the TODOs above) and implement it.

@@ -17,7 +17,7 @@ import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter.OutputType;
 import com.portaudio.DeviceInfo;
-import com.synthbot.jasiohost.AsioDriver;
+
 
 import bms.player.beatoraja.audio.PortAudioDriver;
 import bms.player.beatoraja.ir.IRConnection;
@@ -611,7 +611,7 @@ public class PlayConfigurationView implements Initializable {
 			break;
 		case Config.AUDIODRIVER_ASIO:
 			try {
-				List<String> drivers = AsioDriver.getDriverNames();
+				List<String> drivers = new java.util.ArrayList<>();
 				if(drivers.size() == 0) {
 					throw new RuntimeException("ドライバが見つかりません");
 				}

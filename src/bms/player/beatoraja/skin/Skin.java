@@ -18,6 +18,28 @@ import java.util.logging.Logger;
  */
 public class Skin {
 
+	public static class SkinObjectRenderer extends SpriteBatch {
+		public static final int TYPE_NORMAL = 0;
+		public static final int TYPE_BILINEAR = 1;
+		public static final int TYPE_LINEAR = 2;
+		public static final int TYPE_LAYER = 3;
+		public static final int TYPE_FFMPEG = 4;
+		public static final int TYPE_DISTANCE_FIELD = 5;
+		public static final int TYPE_MIRROR = 6;
+		public static final int TYPE_FLIP = 7;
+		public static final int TYPE_FLIP_MIRROR = 8;
+
+		private int type = 0;
+
+		public void setType(int type) {
+			this.type = type;
+		}
+
+		public int getType() {
+			return type;
+		}
+	}
+
 	/**
 	 * 幅
 	 */

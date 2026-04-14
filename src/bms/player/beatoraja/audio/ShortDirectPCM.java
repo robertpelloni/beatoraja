@@ -9,7 +9,7 @@ import java.nio.ByteOrder;
  * 
  * @author exch
  */
-public class ShortDirectPCM extends PCM<ByteBuffer> {
+public class ShortDirectPCM extends PCM {
 
 	ShortDirectPCM(int channels, int sampleRate, int start, int len, ByteBuffer sample) {
 		super(channels, sampleRate, start, len, sample);

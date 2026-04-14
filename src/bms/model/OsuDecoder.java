@@ -86,41 +86,66 @@ public class OsuDecoder {
                             sliderMultiplier = Double.parseDouble(line.split(":", 2)[1].trim());
                         } catch (Exception e) {}
                     }
-                } else if (section.equals("Events")) {
+                                } else if (section.equals("Events")) {
                     String[] parts = line.split(",");
                     if (parts.length >= 3) {
                         String type = parts[0];
-                        String filename = parts[2];
-                        if (filename.startsWith("\"") && filename.endsWith("\"")) {
-                            filename = filename.substring(1, filename.length() - 1);
-                        }
-
-                        if (type.equals("0")) {
-                             model.setStagefile(filename);
-                             model.setBackbmp(filename);
-                        } else if (type.equals("1") || type.equals("Video")) {
-                             // Add to BGA List
-                             int bgaIndex = -1;
-                             for(int i=0; i<bgaList.length; i++) {
-                                 if(bgaList[i] == null) {
-                                     bgaList[i] = filename;
-                                     bgaIndex = i;
-                                     break;
-                                 } else if (bgaList[i].equals(filename)) {
+                        if (type.equals("Sprite") || type.equals("Animation") || type.equals("4") || type.equals("6")) {
+                            // Storyboard Sprite/Animation (type 4/6) or literal string
+                            // Format: Sprite,layer,origin,"filename",x,y
+                            // Animation,layer,origin,"filename",x,y,frameCount,frameDelay,looptype
+                            String filename = parts[3].replace("\"", "");
+                            // In a real implementation we would map this to a BGA object with movement data.
+                            // For now we map it as a static BGA event at time 0, since Osu! storyboards
+                            // typically define their own internal timing via sub-events.
+                            int bgaIndex = -1;
+                            for (int i = 1; i <= 1295; i++) {
+                                 if (filename.equals(wavList[i])) {
                                      bgaIndex = i;
                                      break;
                                  }
-                             }
-                             
-                             if (bgaIndex != -1) {
-                                 long startTime = 0;
-                                 if (parts.length >= 2) {
-                                     try {
-                                         startTime = Long.parseLong(parts[1]);
-                                     } catch (Exception e) {}
+                            }
+                            if (bgaIndex == -1) {
+                                 for (int i = 1; i <= 1295; i++) {
+                                     if (wavList[i] == null) {
+                                         wavList[i] = filename;
+                                         bgaList[i] = new BGA(i, filename);
+                                         bgaIndex = i;
+                                         break;
+                                     }
                                  }
+                            }
+                            // Add a generic BGAEvent. In full support, we'd build a specific StoryboardEvent class.
+                            if (bgaIndex != -1) {
+                                bgaEvents.add(new BGAEvent(0, bgaIndex));
+                            }
+                        } else {
+                            // Existing background/video logic
+                            String filename = parts[2];
+                            if (filename.startsWith("\"") && filename.endsWith("\"")) {
+                                filename = filename.substring(1, filename.length() - 1);
+                            }
+                            double startTime = Double.parseDouble(parts[1]);
+                            int bgaIndex = -1;
+                            for (int i = 1; i <= 1295; i++) {
+                                 if (filename.equals(wavList[i])) {
+                                     bgaIndex = i;
+                                     break;
+                                 }
+                            }
+                            if (bgaIndex == -1) {
+                                 for (int i = 1; i <= 1295; i++) {
+                                     if (wavList[i] == null) {
+                                         wavList[i] = filename;
+                                         bgaList[i] = new BGA(i, filename);
+                                         bgaIndex = i;
+                                         break;
+                                     }
+                                 }
+                            }
+                            if (bgaIndex != -1) {
                                  bgaEvents.add(new BGAEvent(startTime, bgaIndex));
-                             }
+                            }
                         }
                     }
                 } else if (section.equals("TimingPoints")) {

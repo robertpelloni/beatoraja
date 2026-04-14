@@ -14,7 +14,7 @@ import com.badlogic.gdx.utils.StreamUtils;
  * 
  * @author exch
  */
-public class LegacyPCM extends PCM<short[]> {
+public class LegacyPCM extends PCM {
 
 	/**
 	 * PCMのタイプ

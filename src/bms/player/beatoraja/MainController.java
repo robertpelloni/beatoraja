@@ -55,7 +55,32 @@ import twitter4j.conf.ConfigurationBuilder;
  */
 public class MainController extends ApplicationAdapter {
 
-	public static final String VERSION = "beatoraja 0.6";
+	private static String VERSION = "beatoraja (unknown version)";
+
+	static {
+		try {
+			java.io.InputStream is = MainController.class.getResourceAsStream("/VERSION.md");
+			if (is != null) {
+				java.util.Scanner scanner = new java.util.Scanner(is, "UTF-8").useDelimiter("\\A");
+				if (scanner.hasNext()) {
+					VERSION = "beatoraja " + scanner.next().trim();
+				}
+				scanner.close();
+			} else {
+				java.io.File versionFile = new java.io.File("VERSION.md");
+				if (versionFile.exists()) {
+					java.nio.file.Path path = versionFile.toPath();
+					VERSION = "beatoraja " + java.nio.file.Files.readString(path).trim();
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static String getVersion() {
+		return VERSION;
+	}
 
 	private static final boolean debug = false;
 
