@@ -205,6 +205,13 @@ public class IntegerPropertyFactory {
 				}
 				return Integer.MIN_VALUE;
 			};
+		case NUMBER_STEPUP_LEVEL:
+			return (state) -> {
+				if(state.main.getStepUpManager() != null) {
+					return state.main.getStepUpManager().getCurrentLevel();
+				}
+				return Integer.MIN_VALUE;
+			};
 		case NUMBER_ARENA_PLAYERS:
 			return (state) -> {
 				if (state.main.getArenaManager() != null) {

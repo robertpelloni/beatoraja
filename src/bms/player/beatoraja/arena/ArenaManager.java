@@ -14,6 +14,7 @@ public class ArenaManager {
     public interface ArenaListener {
         void onSongSelected(String songHash);
         void onStartGame();
+        default void onChatMessage(String sender, String message) {}
     }
 
     private final List<ArenaData> players;
@@ -72,6 +73,12 @@ public class ArenaManager {
         }
     }
 
+    public void onChatMessage(String sender, String message) {
+        for (ArenaListener listener : listeners) {
+            listener.onChatMessage(sender, message);
+        }
+    }
+
     public void onRemoteReady(String name, boolean ready) {
         ArenaData player = getPlayer(name);
         if (player != null) {
@@ -108,6 +115,12 @@ public class ArenaManager {
         this.ruleGauge = gauge;
         if (client != null) {
             client.sendRules(gauge);
+        }
+    }
+
+    public void sendChat(String message) {
+        if (client != null) {
+            client.sendChat(message);
         }
     }
 

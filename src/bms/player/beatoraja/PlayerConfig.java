@@ -252,6 +252,18 @@ public final class PlayerConfig {
 	private boolean lr2Total = false;
 	private boolean autoScratch = false;
 
+	// Arena Mode
+	private String arenaServerIP = "localhost";
+	private int arenaPort = 12345;
+	private String arenaPlayerName = "Player";
+
+	// Osu! Mode
+	private float osuHitSoundVolume = 1.0f;
+	private float osuBackgroundDim = 0.5f;
+
+	// Mission Mode
+	private boolean missionAutoAccept = true;
+
 	public PlayerConfig() {
 		validate();
 	}
@@ -831,6 +843,54 @@ public final class PlayerConfig {
 		this.autoScratch = autoScratch;
 	}
 
+	public String getArenaServerIP() {
+		return arenaServerIP;
+	}
+
+	public void setArenaServerIP(String arenaServerIP) {
+		this.arenaServerIP = arenaServerIP;
+	}
+
+	public int getArenaPort() {
+		return arenaPort;
+	}
+
+	public void setArenaPort(int arenaPort) {
+		this.arenaPort = arenaPort;
+	}
+
+	public String getArenaPlayerName() {
+		return arenaPlayerName;
+	}
+
+	public void setArenaPlayerName(String arenaPlayerName) {
+		this.arenaPlayerName = arenaPlayerName;
+	}
+
+	public float getOsuHitSoundVolume() {
+		return osuHitSoundVolume;
+	}
+
+	public void setOsuHitSoundVolume(float osuHitSoundVolume) {
+		this.osuHitSoundVolume = osuHitSoundVolume;
+	}
+
+	public float getOsuBackgroundDim() {
+		return osuBackgroundDim;
+	}
+
+	public void setOsuBackgroundDim(float osuBackgroundDim) {
+		this.osuBackgroundDim = osuBackgroundDim;
+	}
+
+	public boolean isMissionAutoAccept() {
+		return missionAutoAccept;
+	}
+
+	public void setMissionAutoAccept(boolean missionAutoAccept) {
+		this.missionAutoAccept = missionAutoAccept;
+	}
+
 	public void validate() {
 		if(skin == null) {
 			skin = new SkinConfig[SkinType.getMaxSkinTypeID() + 1];
@@ -942,6 +1002,15 @@ public final class PlayerConfig {
 
 		// --Stream
 		maxRequestCount = MathUtils.clamp(maxRequestCount, 0, 100);
+
+		// Arena
+		if (arenaServerIP == null) arenaServerIP = "localhost";
+		arenaPort = MathUtils.clamp(arenaPort, 1, 65535);
+		if (arenaPlayerName == null) arenaPlayerName = "Player";
+
+		// Osu!
+		osuHitSoundVolume = MathUtils.clamp(osuHitSoundVolume, 0.0f, 1.0f);
+		osuBackgroundDim = MathUtils.clamp(osuBackgroundDim, 0.0f, 1.0f);
 	}
 
 	public static void init(Config config) {

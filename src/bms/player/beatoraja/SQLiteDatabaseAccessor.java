@@ -38,6 +38,9 @@ public abstract class SQLiteDatabaseAccessor {
 	 */
 	public void validate(QueryRunner qr) throws SQLException {
 		
+		// Enable Write-Ahead Logging (WAL) for better concurrency and performance
+		qr.update("PRAGMA journal_mode=WAL;");
+
 		for(Table table : tables) {
 			List<Column> pk = new ArrayList<Column>();
 			if (qr.query("SELECT * FROM sqlite_master WHERE name = ? and type='table';", new MapListHandler(), table.getName())

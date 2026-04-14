@@ -16,6 +16,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Bezier;
 import com.badlogic.gdx.math.CatmullRomSpline;
 
+import bms.model.storyboard.*;
+
 /**
  * Basic Osu file decoder to convert .osu files to BMSModel.
  * Direct port attempt/adaptation for basic 7K support.
@@ -52,6 +54,8 @@ public class OsuDecoder {
             int keys = 4; // Default to 4K if undefined
             double sliderMultiplier = 1.4; // Default
             List<BGAEvent> bgaEvents = new ArrayList<>();
+            StoryboardData storyboard = new StoryboardData();
+            StoryboardSprite currentSprite = null;
 
             while ((line = reader.readLine()) != null) {
                 line = line.trim();
@@ -121,6 +125,32 @@ public class OsuDecoder {
                                  }
                                  bgaEvents.add(new BGAEvent(startTime, bgaIndex));
                              }
+                        } else if (type.equals("Sprite")) {
+                            // Format: Sprite,layer,origin,"filename",x,y
+                            if (parts.length >= 6) {
+                                String layerStr = parts[1];
+                                String originStr = parts[2];
+                                String spriteFilename = parts[3];
+                                if (spriteFilename.startsWith("\"") && spriteFilename.endsWith("\"")) {
+                                    spriteFilename = spriteFilename.substring(1, spriteFilename.length() - 1);
+                                }
+                                float x = Float.parseFloat(parts[4]);
+                                float y = Float.parseFloat(parts[5]);
+
+                                StoryboardSprite.Layer layer = StoryboardSprite.Layer.valueOf(layerStr);
+                                StoryboardSprite.Origin origin = StoryboardSprite.Origin.valueOf(originStr);
+
+                                currentSprite = new StoryboardSprite(layer, origin, spriteFilename, x, y);
+                                storyboard.sprites.add(currentSprite);
+
+                                // Backward compatibility: Set BG if not set
+                                if (layer == StoryboardSprite.Layer.Background && model.getBackbmp() == null) {
+                                     model.setBackbmp(spriteFilename);
+                                }
+                            }
+                        } else if ((line.startsWith(" ") || line.startsWith("_")) && currentSprite != null) {
+                            // Command
+                            parseCommand(line.trim(), currentSprite);
                         }
                     }
                 } else if (section.equals("TimingPoints")) {
@@ -208,12 +238,102 @@ public class OsuDecoder {
 
             model.setWavList(wavList);
             model.setBgaList(bgaList);
+
+            // Register Storyboard externally since BMSModel is immutable/external
+            StoryboardRegistry.register(model, storyboard);
+
             convert(model, hitObjects, timingPoints, bgaEvents, sliderMultiplier, keys);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
         return model;
+    }
+
+    private void parseCommand(String line, StoryboardSprite sprite) {
+        // Format: _Type,Easing,StartTime,EndTime,StartVal,EndVal
+        try {
+            String[] parts = line.split(",");
+            if (parts.length < 4) return;
+
+            String typeCode = parts[0];
+            CommandType type = switch(typeCode) {
+                case "M" -> CommandType.Move;
+                case "MX" -> CommandType.MoveX;
+                case "MY" -> CommandType.MoveY;
+                case "F" -> CommandType.Fade;
+                case "S" -> CommandType.Scale;
+                case "V" -> CommandType.VectorScale;
+                case "R" -> CommandType.Rotate;
+                case "C" -> CommandType.Color;
+                case "P" -> CommandType.Parameter;
+                case "L" -> CommandType.Loop;
+                case "T" -> CommandType.Trigger;
+                default -> null;
+            };
+
+            if (type == null) return;
+
+            if (type == CommandType.Loop) {
+                // Loop: _L,StartTime,LoopCount
+                sprite.isLoop = true;
+                sprite.loopStartTime = Long.parseLong(parts[1]);
+                sprite.loopCount = Integer.parseInt(parts[2]);
+                return;
+            }
+
+            int easingId = Integer.parseInt(parts[1]);
+            Easing easing = Easing.values()[Math.min(easingId, Easing.values().length - 1)];
+            long startTime = Long.parseLong(parts[2]);
+            long endTime = parts[3].isEmpty() ? startTime : Long.parseLong(parts[3]);
+
+            int numParams = parts.length - 4;
+            if (numParams <= 0) return;
+
+            int valsPerState = switch(type) {
+                case Move -> 2;
+                case MoveX -> 1;
+                case MoveY -> 1;
+                case Fade -> 1;
+                case Scale -> 1;
+                case VectorScale -> 2;
+                case Rotate -> 1;
+                case Color -> 3;
+                case Parameter -> 1;
+                default -> 1;
+            };
+
+            float[] startVals = new float[valsPerState];
+            float[] endVals = new float[valsPerState];
+
+            // Read start values
+            for (int i = 0; i < valsPerState && i < numParams; i++) {
+                if (type == CommandType.Parameter) {
+                    // Parameter command value is 'H', 'V', or 'A'. Store as float representation.
+                    char p = parts[4 + i].charAt(0);
+                    startVals[i] = p == 'H' ? 1.0f : p == 'V' ? 2.0f : 3.0f;
+                } else {
+                    startVals[i] = Float.parseFloat(parts[4 + i]);
+                }
+            }
+
+            // Read end values if they exist, otherwise copy from start
+            if (numParams <= valsPerState) {
+                System.arraycopy(startVals, 0, endVals, 0, valsPerState);
+            } else {
+                for (int i = 0; i < valsPerState && (valsPerState + i) < numParams; i++) {
+                    if (type == CommandType.Parameter) {
+                        char p = parts[4 + valsPerState + i].charAt(0);
+                        endVals[i] = p == 'H' ? 1.0f : p == 'V' ? 2.0f : 3.0f;
+                    } else {
+                        endVals[i] = Float.parseFloat(parts[4 + valsPerState + i]);
+                    }
+                }
+            }
+
+            sprite.commands.add(new StoryboardCommand(type, easing, startTime, endTime, startVals, endVals));
+
+        } catch (Exception e) {}
     }
 
     private void convert(BMSModel model, List<HitObject> hitObjects, List<TimingPoint> timingPoints, List<BGAEvent> bgaEvents, double sliderMultiplier, int keys) {

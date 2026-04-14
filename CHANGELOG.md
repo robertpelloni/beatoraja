@@ -1,125 +1,178 @@
 # Changelog
 
+<<<<<<< HEAD
 ## [0.9.7] - 2026-02-07
 ### Fixed
 - **Submodules**: Converted submodule URLs to relative paths in `.gitmodules` to improve compatibility with mirrored or proxied environments (e.g., Jules CI).
 
 ## [0.9.6] - 2025-12-28
+=======
+## [0.9.23] - 2025-02-10
+
+>>>>>>> origin/feature/launcher-enhancement-docs-10151933133890025217
 ### Added
-- **ConfigTest**: 11 test cases covering display, audio, IPFS, and path settings.
-- **PlayModeConfigTest**: 9 test cases covering keyboard, controller, and MIDI configuration.
-- **Osu! Hit Sound Support**: Confirmed working - hitSound values map to WAV indices (Normal=2, Whistle=3, Finish=4, Clap=5).
+- **Skinning**: Added `NUMBER_STEPUP_LEVEL` property (ID 450) to allow skins to natively display the player's Step-Up mode progression on the Result Screen.
+- **Audio**: Implemented a smooth, non-blocking `fadeOutAndStop` method in `AudioDriver` for cleaner song preview transitions.
 
 ### Fixed
-- Updated `testAudioHandling` to expect `WAV_NORMAL` instead of silent notes (reflects hit sound support).
-
-### Stats
-- **Total Tests**: 166 passing across 10 test classes.
-
-## [0.9.5] - 2025-12-28
-### Added
-- **Osu! Timing Point Improvements**: BPM changes and inherited timing points (SV) are now properly applied to timelines.
-- **MissionManagerTest**: 9 test cases covering mission creation, progress tracking, and criteria types.
-- **StepUpManagerTest**: 12 test cases covering level progression, bounds checking, and stage tracking.
+- **Performance**: Highly optimized the `SkinNoteDistributionGraph` (Chart Preview/Hit Error Graph) rendering. Instead of redrawing the entire graph on every note hit during gameplay, the renderer now only updates the specific columns corresponding to the current playback time. This drastically reduces GPU overhead and frame drops during intense sections.
+- **Stability**: Upgraded `SQLiteDatabaseAccessor` to use Write-Ahead Logging (`PRAGMA journal_mode=WAL;`). This completely eliminates "database locked" exceptions that could occur when rapidly scrolling through extremely large song folders.
+- **Compilation**: Fixed build-breaking Java scope errors in `JudgeManager` and `PlayConfigurationView` introduced during the Osu! feature additions.
 
 ### Changed
-- **OsuDecoder**: Enhanced `convert()` method to set BPM and scroll values on timeline entries.
+- **Config**: Bumped version to 0.9.23.
 
-## [0.9.4] - 2025-12-28
-### Added
-- **Osu! Spinner Support**: Spinners (type 8) are now mapped to scratch lane (lane 0) as long notes.
-- **Test Coverage**: Added `testSpinnerParsing` to `OsuDecoderTest`.
-
-### Changed
-- **Documentation**: Comprehensive ROADMAP.md reorganization with package status table.
-- **DASHBOARD.md**: Updated with feature status overview and test summary.
-
-## [0.9.3] - 2025-12-28
-### Changed
-- **Documentation**: Comprehensive update of DASHBOARD.md with full dependency table and project structure.
-- **AGENTS.md**: Updated with build commands, architecture, and code style guidelines.
-- **Version Sync**: Synchronized VERSION.md files across the project.
-
-### Maintenance
-- Verified build and tests pass on Gradle 8.5 / Java 21.
-- Updated ROADMAP.md with completed documentation milestone.
-
-## [0.9.2] - 2025-12-27
-### Added
-- **Osu! Background Support**: Implemented parsing of `[Events]` section in `.osu` files to extract background images.
-- **Osu! Audio Fix**: Correctly places the audio file on the background music channel and silences individual notes to prevent song restarting on every keypress.
-- Added `testBackgroundParsing` and `testAudioHandling` to `OsuDecoderTest`.
-- **Mission System**: Merged MissionManager, Daily/Normal missions, and UI integration.
-- **Step-Up Mode**: Enhanced logic with fallback and level variation.
-- **Arena Mode**: Enhanced with rule syncing, song sync, and rank display.
-- **Mod Menu**: Added Mission and Arena tabs.
-- **Skin Properties**: Added `NUMBER_ARENA_RANK`.
-- **Player Config**: Added `autoScratch`.
-
-## [0.9.1] - 2025-12-27
-### Added
-- Centralized versioning using `VERSION.md`.
-- **FLAC Audio Support**: Implemented FLAC decoding in `PCMLoader` using `jflac-codec`.
-- New `AudioTest` unit test for verifying WAV loading.
-- `table/default.json` configuration file to fix runtime crash.
-
-### Changed
-- Refactored `PCM` class hierarchy:
-    - Created generic `PCM<T>` base class.
-    - Renamed original `PCM` to `LegacyPCM`.
-    - Updated `AbstractAudioDriver` to use `LegacyPCM`.
-- Re-implemented `PCMLoader` to support MP3, OGG, and WAV loading using `JLayer` and `OggInputStream`.
-- Updated `OsuDecoderTest` to match `BMSModel` API changes.
-- Upgraded build environment to Gradle 8.5 and Java 21.
-- Replaced `gdx-backend-lwjgl` with `gdx-backend-lwjgl3`.
+## [0.9.22] - 2025-02-10
 
 ### Fixed
-- `FileNotFoundException: table\default.json` runtime crash.
-- Compilation errors in `OsuDecoderTest` and `OsuDecoderBezierTest`.
-- Missing `org.lwjgl.input` package errors by migrating to LibGDX Input API.
-
-## [0.9.0] - 2025-12-26
-### Added
-- **Arena Mode**: Implemented Song Sync protocol (`TYPE_SONG_SELECT`) and integrated with `MusicSelector`.
-- **Skin System**: Added support for Fast/Slow counts (`NUMBER_FAST_NOTES`, etc.) and Arena Rank (`NUMBER_ARENA_RANK`).
-- **Osu! Support**: Added `.osu` file parser and playback support.
-- **Mod Menu**: Added in-game overlay for Hi-Speed/Lane Cover adjustment.
-- **In-Game Downloader**: Added background download manager for songs.
-- **Step-Up Mode**: Added Step-Up mode logic and persistence.
-- **Unit Testing**: Added JUnit 5 framework and initial tests.
-- **CI/CD**: Added GitHub Actions workflow for Gradle build.
-- **Controller Support**: Added hot-plugging support for controllers.
-- **Debug**: Added debug toggle command (Shift+F1).
+- **Hotfix**: Fixed a critical ArrayOutOfBoundsException in the `OsuDecoder` caused by incorrect parameter parsing for Storyboard commands. Animations now correctly interpolate between start and end states.
+- **Hotfix**: Fixed a severe UI destruction regression where `CourseEditorView.fxml` and its controller were completely overwritten. The original, fully-featured Dan/Class configuration UI has been successfully restored.
+- **Hotfix**: Fixed a Threading violation (OpenGL crash) in Arena Chat. Incoming chat messages now correctly queue UI updates on the main rendering thread using `Gdx.app.postRunnable()`.
+- **Hotfix**: Fixed an `ArenaListener` interface compilation breakage by ensuring the `onChatMessage` method has a `default` implementation, maintaining compatibility with existing listeners.
+- **Hotfix**: Removed an unlocalized string key from the Input Configuration UI that could cause rendering errors.
 
 ### Changed
-- **Build System**: Migrated from Ant to Gradle (Java 21 target).
-- **Backend**: Upgraded to LWJGL 3 and LibGDX 1.12.1.
-- **Default Skin**: Updated `result.json` to display Fast/Slow stats and Arena Rank.
-- **Refactoring**: Extracted `UpdateManager`, `ScreenshotManager`, `InputManager`, and `DownloadManager` from `MainController`.
-- **Osu! Support**: Improved slider curve approximation (Bezier/Linear) and column mapping.
-- **Arena Mode**: Added "Disconnect" button to Arena Lobby and optimized UI updates.
+- **Config**: Bumped version to 0.9.22.
 
-## [0.8.9] - 2025-12-25
-### Added
-- Added `VERSION.md` as the single source of truth for versioning.
-- Added `Launcher.java` to bypass JavaFX module encapsulation checks on Java 9+.
-- Added `build_release.ps1` helper script for building releases.
-- Added `docs/DASHBOARD.md` for project overview.
-- Added `LLM_INSTRUCTIONS.md` for unified agent instructions.
+## [0.9.21] - 2025-02-10
 
 ### Fixed
-- Fixed build failure due to missing JavaFX dependencies by downloading them to `lib/`.
-- Fixed Launch4j configuration error (missing icon).
-- Fixed Windows release not including `beatoraja.jar`.
-- Fixed `build.xml` to correctly package JavaFX and other dependencies.
-
-## [0.8.8] - 2025-12-25
-### Added
-- Added `VERSION` file to track project version.
-- Added `docs/DASHBOARD.md` for project overview.
-- Added LLM instruction files (`CLAUDE.md`, `AGENTS.md`, etc.).
+- **Hotfix**: Reverted accidental destruction of `CourseEditorView.fxml` and `.java`. The original, highly detailed configuration UI for Dan/Class courses has been fully restored.
+- **Hotfix**: Fixed a critical bug in `OsuDecoder.java` where Storyboard animation `startVals` and `endVals` arrays were sharing the same reference, resulting in static/broken animations. The parser now correctly separates start and end states.
+- **Hotfix**: Fixed a compilation breakage caused by adding `onChatMessage` to `ArenaListener` without a `default` implementation.
+- **Hotfix**: Removed missing translation key `%MINIMUM_INPUT_DURATION` from `InputConfigurationView.fxml` to prevent UI rendering errors.
 
 ### Changed
-- Updated version in `build.xml` to 0.8.8.
-- Updated version in `MainController.java` to 0.8.8.
-- Merged upstream changes (simulated).
+- **Config**: Bumped version to 0.9.21.
+
+## [0.9.20] - 2025-02-10
+
+### Fixed
+- **Hotfix**: Resolved a critical bug where standard BMS background videos/images were globally darkened by the Osu! `Background Dim` setting. The dimming is now strictly limited to `.osu` charts.
+- **Hotfix**: Resolved a critical bug where standard BMS keysounds were scaled down by the Osu! `Hit Sound Volume` setting. The volume scaling is now correctly isolated to Osu! mode.
+- **Hotfix**: Fixed a major bug in the `CourseEditorView` where saving configuration settings in the Launcher would wipe existing custom courses from `config.json`. The editor now correctly preserves existing state.
+- **Hotfix**: Fixed a file resource leak in `SkinConfigurationView` that locked `preview.png` files on Windows while the Launcher was open.
+
+### Changed
+- **Config**: Bumped version to 0.9.20.
+
+## [0.9.19] - 2025-02-10
+
+### Added
+- **UI Polish**: Enhanced Folder Editor View.
+    - Added comprehensive tooltips to all editor controls (+, -, Up, Down) for improved usability and clarity.
+
+### Changed
+- **Config**: Bumped version to 0.9.19.
+
+## [0.9.18] - 2025-02-10
+
+### Added
+- **Replay**: Functional Data Loading for Replay Analysis.
+    - The "Replay Analysis" tab in the Launcher now automatically loads the last 50 scores from the database when selected.
+    - Users can select a score to view detailed statistics (Score, PG/GR/etc breakdown, Hit Error Histogram).
+
+### Changed
+- **Config**: Bumped version to 0.9.18.
+
+## [0.9.17] - 2025-02-10
+
+### Added
+- **Replay**: Integrated Replay Analysis UI into Launcher.
+    - Added "Replay Analysis" tab to the Configuration window.
+    - Displays list of scores with detailed breakdown (Fast/Slow distribution).
+    - Wired to `PlayConfigurationView` (currently requires manual data loading implementation in future, serves as UI skeleton).
+
+### Changed
+- **Config**: Bumped version to 0.9.17.
+
+## [0.9.16] - 2025-02-10
+
+### Added
+- **Replay**: Added Replay Analysis UI Foundation.
+    - Implemented `ReplayAnalysisView` and `ReplayAnalysisView.fxml` for viewing detailed replay statistics (Hit Error Histogram, Gauge History).
+    - NOTE: This feature is currently in backend implementation state and will be fully wired in the next update.
+
+### Changed
+- **Config**: Bumped version to 0.9.16.
+
+## [0.9.15] - 2025-02-10
+
+### Added
+- **Input**: Implemented Device-Specific Input Interval Configuration.
+    - Added "Min Interval" column to the Input Configuration table.
+    - Decoupled Keyboard polling rate from Controller polling rates.
+    - Allows fine-tuning of input latency per controller device.
+
+### Changed
+- **Config**: Bumped version to 0.9.15.
+
+## [0.9.14] - 2025-02-10
+
+### Added
+- **Launcher**: Added Skin Preview functionality.
+    - The Skin Configuration tab now displays a `preview.png` (or `.jpg`) if available in the selected skin's directory.
+- **Documentation**: Overhauled development documentation.
+    - Added `LLM_INSTRUCTIONS.md`, `VISION.md`, `DEPLOY.md`, `DASHBOARD.md`.
+    - Updated agent-specific instruction files.
+
+### Changed
+- **Config**: Bumped version to 0.9.14.
+
+## [0.9.13] - 2025-02-10
+
+### Added
+- **Course Editor**: Implemented saving functionality.
+    - Users can now save created courses as `.crs` files.
+    - Uses absolute paths to reference songs for maximum compatibility.
+- **Osu!**: Refined Storyboard Renderer.
+    - Added support for `FlipH` and `FlipV` commands.
+    - Implemented correct rotation (degrees vs radians) and origin handling.
+    - Secured image loading with `PixmapResourcePool` to prevent memory leaks.
+- **Documentation**: Added "Course Editor" manual page and updated "Osu! Mode" page with Storyboard details.
+
+### Changed
+- **Config**: Bumped version to 0.9.13.
+
+## [0.9.12] - 2025-02-10
+
+### Added
+- **Arena**: Implemented Chat System.
+    - Updated `ArenaMessage` to support `TYPE_CHAT`.
+    - Added `sendChat`/`onChatMessage` handling in `ArenaClient` and `ArenaManager`.
+    - Added Chat Log and Input Field to the Arena window in `ModMenu` (in-game).
+- **Course Editor**: Implemented Backend Logic.
+    - Wired `CourseEditorView` to `SongDatabaseAccessor` for real song searching and filtering.
+    - Implemented stub methods for `getCourseData`/`setCourseData` to support `TableEditorView` integration.
+
+### Changed
+- **Config**: Bumped version to 0.9.12.
+
+## [0.9.11] - 2025-02-10
+
+### Added
+- **Osu!**: Full Storyboard Rendering support.
+    - Implemented `StoryboardRenderer` to draw sprites during gameplay.
+    - Implemented easing functions (Linear, Quad, Cubic, Quart, Quint, Sine, Expo, Circ, Back) in `Easing.java`.
+    - Added sorting of storyboard sprites by layer (Background -> Overlay) for correct draw order.
+    - Implemented coordinate projection to scale Osu! 640x480 coordinates to the player's screen resolution.
+
+### Changed
+- **Config**: Bumped version to 0.9.11.
+
+## [0.9.10] - 2025-02-10
+
+### Added
+- **Osu!**: Implemented backend infrastructure for Storyboard support.
+    - Added `StoryboardData`, `StoryboardSprite`, `StoryboardCommand` structures.
+    - Updated `OsuDecoder` to parse `[Events]` commands (Move, Fade, Scale, etc).
+    - Created `StoryboardRegistry` to manage storyboard data alongside immutable BMS models.
+    - Created `StoryboardRenderer` (foundation) and wired it into `BGAProcessor`.
+- **Launcher**: Added "Course Editor" tab with basic UI for creating custom courses.
+
+## [0.9.9] - 2025-02-10
+
+### Added
+- **Skinning**: Added new skin properties `NUMBER_MISSION_CURRENT`, `NUMBER_MISSION_TARGET`, `NUMBER_ARENA_PLAYERS_COUNT`.
+- **Skinning**: Added `NUMBER_ARENA_SCORE_DIFF` to display real-time score difference against the top opponent in Arena mode.
+- **Osu!**: Basic support for parsing "Sprite" events in Osu! storyboards (currently extracts background images).

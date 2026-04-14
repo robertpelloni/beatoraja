@@ -12,6 +12,8 @@ import bms.player.beatoraja.ResourcePool;
 import bms.player.beatoraja.play.BMSPlayer;
 import bms.player.beatoraja.play.SkinBGA;
 import bms.player.beatoraja.skin.Skin.SkinObjectRenderer;
+import bms.model.storyboard.StoryboardRegistry;
+import bms.model.storyboard.StoryboardData;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.*;
@@ -70,6 +72,9 @@ public class BGAProcessor {
 	private boolean rbga;
 	private boolean rlayer;
 
+	private StoryboardRenderer storyboardRenderer;
+	private boolean isOsuMode = false;
+
 	public BGAProcessor(Config config, PlayerConfig player) {
 		this.player = player;
 
@@ -101,6 +106,20 @@ public class BGAProcessor {
 
 		cache.clear();
 		resetCurrentlyPlayingBGA();
+
+		// Initialize Storyboard if available
+		StoryboardData sbData = StoryboardRegistry.get(model);
+		if (sbData != null) {
+			String baseDir = Paths.get(model.getPath()).getParent().toString();
+			storyboardRenderer = new StoryboardRenderer(sbData, baseDir);
+		} else {
+			if (storyboardRenderer != null) {
+				storyboardRenderer.dispose();
+				storyboardRenderer = null;
+			}
+		}
+
+		isOsuMode = model != null && model.getPath() != null && model.getPath().toLowerCase().endsWith(".osu");
 
 		int id = 0;
 
@@ -305,11 +324,24 @@ public class BGAProcessor {
 
 
 	public void drawBGA(SkinBGA dst, SkinObjectRenderer sprite, Rectangle r) {
-		sprite.setColor(dst.getColor());
+		// Apply Background Dim only if Osu mode is active
+		Color color = new Color(dst.getColor());
+		if (isOsuMode && player.getOsuBackgroundDim() > 0) {
+			float dim = 1.0f - player.getOsuBackgroundDim();
+			// Darken the color
+			color.mul(dim, dim, dim, 1.0f);
+		}
+
+		sprite.setColor(color);
 		sprite.setBlend(dst.getBlend());
 		if (time < 0 || timelines == null) {
 			sprite.draw(blanktex, r.x, r.y, r.width, r.height);
 			return;
+		}
+
+		// Draw Storyboard (Background layer)
+		if (storyboardRenderer != null) {
+			storyboardRenderer.render(time, sprite, r);
 		}
 
 		if (misslayer != null && misslayertime != 0 && time >= misslayertime && time < misslayertime + getMisslayerduration) {
@@ -391,6 +423,10 @@ public class BGAProcessor {
 			cache.dispose();
 		}
 		mpgresource.dispose();
+		if (storyboardRenderer != null) {
+			storyboardRenderer.dispose();
+			storyboardRenderer = null;
+		}
 	}
 
 	public float getProgress() {

@@ -65,6 +65,10 @@ public class CourseEditorView implements Initializable {
 	
 	private SongDatabaseAccessor songdb;
 	
+    public void init(SongDatabaseAccessor songdb) {
+        this.songdb = songdb;
+    }
+
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		gradeType.getItems().setAll(null, CLASS, MIRROR, RANDOM);
 		hispeedType.getItems().setAll(null, NO_SPEED);
