@@ -20,3 +20,9 @@
 ## Platform Support
 - **Mobile/Android Port**: Port the game to Android using LibGDX's mobile backends.
 - **WebAssembly Build**: A "lite" browser-based version using TeaVM/GWT.
+
+
+## Code Architecture & Refactoring
+- **Completely Resolve LWJGL 3 Migration Errors**: The project is currently transitioning from LWJGL 2/Ant to LWJGL 3/Gradle 8.8/Java 21. There are roughly 1,200 compilation errors in the codebase mainly due to `SkinObjectRenderer` mismatches and parameterized `PCM` classes. This should be the highest priority technical debt task.
+- **Isolate Network Logic**: Currently `ArenaManager` is tightly coupled; abstracting the TCP layer would make spectating and ghost features much easier to implement.
+- **Implement True Sound Polling**: LibGDX `Sound` interface doesn't expose an `isPlaying()` or `duration()` method natively, causing us to stub it for pacemakers. We should consider wrapping LibGDX's `Sound` implementation or switching exclusively to `Music` objects if we need fine-grained duration tracking for sound effects.
