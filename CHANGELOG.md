@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.9.9] - 2026-04-15
+- Finalized Global Versioning: `build.gradle` and `MainController.java` now exclusively consume `VERSION.md`.
+- Built LIBRARIES.md outlining all Submodules (`lr2oraja-endlessdream`) and dependencies.
+- Marked versions 0.9.8 and 0.9.9 to represent synchronization and the completion of these documentation tasks.
+
 ## [0.9.8] - 2026-04-14
 - Version bumped to 0.9.8 for new synchronization round.
 - Finalized submodules (bobcoin strictly removed, lr2oraja-endlessdream kept).

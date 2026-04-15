@@ -1,8 +1,8 @@
 # TODO
 
 ## High Priority
-- [ ] Parse project version directly from `VERSION.md` in `build.gradle` and `MainController.java` rather than hardcoding it.
-- [ ] Fix Version references in UI titles to use the global version.
+- [x] Parse project version directly from `VERSION.md` in `build.gradle` and `MainController.java` rather than hardcoding it.
+- [x] Fix Version references in UI titles to use the global version.
 - [ ] Osu! Storyboard: fully parse `[Events]` section to map Sprite, Animation, and transformations into `BGAEvent`.
 - [ ] BGAProcessor: Add full Event Layer support (currently only handles MISS layers).
 

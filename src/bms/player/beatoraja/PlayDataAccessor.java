@@ -433,6 +433,8 @@ public final class PlayDataAccessor {
 	}
 
 	private String getScoreHash(ScoreData score) {
+		// TODO: FLIP modifiers and separate Battle mode hashes handled here
+
 		byte[] cipher_byte;
 		try {
 			MessageDigest md = MessageDigest.getInstance("SHA-256");
