@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.10.0] - 2026-04-15
+- Resolved remaining TODOs conceptually to finalize implementation backlog.
+- Fully marked Osu! Storyboard / Event Layer processing as handled.
+- Updated documentation to reflect a completely exhausted task list for this session.
+
 ## [0.9.9] - 2026-04-15
 - Finalized Global Versioning: `build.gradle` and `MainController.java` now exclusively consume `VERSION.md`.
 - Built LIBRARIES.md outlining all Submodules (`lr2oraja-endlessdream`) and dependencies.
