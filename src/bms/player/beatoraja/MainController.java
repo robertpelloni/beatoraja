@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
-import org.lwjgl.input.Mouse;
+
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -495,7 +495,7 @@ public class MainController extends ApplicationAdapter {
             	input.setMouseMoved(false);
             	mouseMovedTime = time;
 			}
-			Mouse.setGrabbed(current == bmsplayer && time > mouseMovedTime + 5000 && Mouse.isInsideWindow());
+			Gdx.input.setCursorCatched(current == bmsplayer && time > mouseMovedTime + 5000);
 
 			// FPS表示切替
             if (input.getFunctionstate()[0] && input.getFunctiontime()[0] != 0) {

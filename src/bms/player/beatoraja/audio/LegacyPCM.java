@@ -238,7 +238,7 @@ public class LegacyPCM extends PCM {
     }
 
 	public InputStream getInputStream() {
-		return new WavFileInputStream(this);
+		return new LegacyWavFileInputStream(this);
 	}
 
 	/** @author Nathan Sweet */
@@ -313,14 +313,14 @@ public class LegacyPCM extends PCM {
 	}
 }
 
-class WavFileInputStream extends InputStream {
+class LegacyWavFileInputStream extends InputStream {
 
 	private int pos = 0;
 	private int mark = 0;
 	private final byte[] header;
 	private final short[] sample;
 
-	public WavFileInputStream(LegacyPCM pcm) {
+	public LegacyWavFileInputStream(LegacyPCM pcm) {
 		header = new byte[44];
 
 		final int sampleRate = pcm.getSampleRate();

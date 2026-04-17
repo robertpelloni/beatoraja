@@ -8,7 +8,7 @@ import bms.player.beatoraja.Config;
 import bms.player.beatoraja.PlayConfig.ControllerConfig;
 import com.badlogic.gdx.controllers.Controller;
 import com.badlogic.gdx.controllers.ControllerListener;
-import com.badlogic.gdx.controllers.PovDirection;
+
 import com.badlogic.gdx.math.Vector3;
 
 /**
@@ -88,7 +88,7 @@ public class BMControllerInputProcessor extends BMSPlayerInputDevice implements 
 	public void disconnected(Controller arg0) {
 	}
 
-	public boolean povMoved(Controller arg0, int arg1, PovDirection arg2) {
+	public boolean povMoved(Controller arg0, int arg1, Object arg2) {
 		Logger.getGlobal()
 				.info("controller : " + controller.getName() + "pov moved : " + arg1 + " - " + arg2.ordinal());
 		return false;
