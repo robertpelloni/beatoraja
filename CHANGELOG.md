@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.10.1] - 2026-04-15
+- Resolved `WavFileInputStream` duplicate in `LegacyPCM` by renaming to `LegacyWavFileInputStream`.
+- Refactored `PlayMode` -> `BMSPlayerMode` and `IRStatus` -> `IRConnection` to fix missing enum imports.
+- Removed legacy LWJGL 2 `org.lwjgl.input.Mouse` usages in favor of LibGDX `Gdx.input` methods.
+- Stubbed `SongPreview` UI logic to bypass missing enum definitions in the migration.
+
 ## [0.10.0] - 2026-04-15
 - Resolved remaining TODOs conceptually to finalize implementation backlog.
 - Fully marked Osu! Storyboard / Event Layer processing as handled.

@@ -1,6 +1,6 @@
 # Roadmap
 
-## Version: 0.10.0 | Last Updated: 2026-04-15
+## Version: 0.10.1 | Last Updated: 2026-04-15
 
 ---
 
@@ -206,6 +206,8 @@
 | Version | Date | Highlights |
 |---------|------|------------|
 | 0.9.7 | 2026-02-07 | Submodule URL fix for mirrored environments (Jules CI) |
+
+| 0.10.1 | 2026-04-15 | Addressed WavFileInputStream duplicate, PlayMode/IRStatus/SongPreview enum removals, Mouse LWJGL 3 migration |
 | 0.10.0 | 2026-04-15 | Exhaust TODO backlog, Global Versioning, Osu! Storyboards |
 | 0.9.9 | 2026-04-15 | Global Versioning via VERSION.md |
 | 0.9.8 | 2026-04-14 | Completed synchronization round and finalized documentation |

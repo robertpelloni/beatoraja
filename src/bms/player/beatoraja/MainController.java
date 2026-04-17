@@ -26,7 +26,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.*;
 import com.badlogic.gdx.utils.StringBuilder;
 
-import bms.player.beatoraja.PlayerResource.PlayMode;
+import bms.player.beatoraja.BMSPlayerMode;
 import bms.player.beatoraja.audio.*;
 import bms.player.beatoraja.config.KeyConfiguration;
 import bms.player.beatoraja.config.SkinConfiguration;
@@ -117,7 +117,7 @@ public class MainController extends ApplicationAdapter {
 
 	private Config config;
 	private PlayerConfig player;
-	private PlayMode auto;
+	private BMSPlayerMode auto;
 	private boolean songUpdated;
 
 	private SongDatabaseAccessor songdb;
@@ -161,7 +161,7 @@ public class MainController extends ApplicationAdapter {
 	protected TextureRegion black;
 	protected TextureRegion white;
 
-	public MainController(Path f, Config config, PlayerConfig player, PlayMode auto, boolean songUpdated) {
+	public MainController(Path f, Config config, PlayerConfig player, BMSPlayerMode auto, boolean songUpdated) {
 		this.auto = auto;
 		this.config = config;
 		this.songUpdated = songUpdated;
@@ -320,7 +320,7 @@ public class MainController extends ApplicationAdapter {
 		}
 	}
 
-	public void setPlayMode(PlayMode auto) {
+	public void setPlayMode(BMSPlayerMode auto) {
 		this.auto = auto;
 
 	}
