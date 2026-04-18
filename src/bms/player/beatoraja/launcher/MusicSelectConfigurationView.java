@@ -5,7 +5,6 @@ import java.util.ResourceBundle;
 import java.util.stream.Stream;
 
 import bms.player.beatoraja.Config;
-import bms.player.beatoraja.Config.SongPreview;
 import bms.player.beatoraja.PlayerConfig;
 import bms.player.beatoraja.select.MusicSelector.ChartReplicationMode;
 import javafx.fxml.FXML;
@@ -36,9 +35,7 @@ public class MusicSelectConfigurationView implements Initializable {
     private CheckBox useSongInfo;
 	@FXML
 	private CheckBox shownoexistingbar;
-	@FXML
-	private ComboBox<SongPreview> songPreview;
-	@FXML
+		@FXML
 	private CheckBox randomselect;
 	@FXML
 	private NumericSpinner<Integer> maxsearchbar;
@@ -50,8 +47,7 @@ public class MusicSelectConfigurationView implements Initializable {
     private PlayerConfig player;
 
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		songPreview.getItems().setAll(SongPreview.values());
-		chartReplicationMode.getItems().setAll(Stream.of(ChartReplicationMode.allMode).map(ChartReplicationMode::name).toList());
+				chartReplicationMode.getItems().setAll(Stream.of(ChartReplicationMode.allMode).map(ChartReplicationMode::name).toList());
 	}
 
 	public void update(Config config) {

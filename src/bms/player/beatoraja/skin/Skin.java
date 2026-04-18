@@ -4,7 +4,6 @@ import bms.player.beatoraja.MainState;
 import bms.player.beatoraja.Resolution;
 import bms.player.beatoraja.SkinConfig.Offset;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.IntArray;
 
@@ -18,6 +17,8 @@ import java.util.logging.Logger;
  */
 public class Skin {
 
+	import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
 	public static class SkinObjectRenderer extends SpriteBatch {
 		public static final int TYPE_NORMAL = 0;
 		public static final int TYPE_BILINEAR = 1;
@@ -29,7 +30,17 @@ public class Skin {
 		public static final int TYPE_FLIP = 7;
 		public static final int TYPE_FLIP_MIRROR = 8;
 
+
 		private int type = 0;
+		private int blend = 0;
+
+		public void setBlend(int blend) {
+			this.blend = blend;
+		}
+
+		public int getBlend() {
+			return blend;
+		}
 
 		public void setType(int type) {
 			this.type = type;
@@ -209,11 +220,11 @@ public class Skin {
 		option.clear();
 	}
 
-	public void drawAllObjects(SpriteBatch sprite, MainState state) {
+	public void drawAllObjects(SkinObjectRenderer sprite, MainState state) {
 		final long time = state.getNowTime();
 		for (SkinObject obj : objectarray) {
 			if (isDraw(obj.getOption(), state)) {
-				obj.draw(sprite, time, state);
+				obj.draw(sprite);
 			}
 		}
 	}
