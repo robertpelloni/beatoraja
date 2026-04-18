@@ -6,6 +6,7 @@ import bms.player.beatoraja.SkinConfig.Offset;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.IntArray;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.*;
 import java.util.logging.Logger;
@@ -17,7 +18,6 @@ import java.util.logging.Logger;
  */
 public class Skin {
 
-	import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 	public static class SkinObjectRenderer extends SpriteBatch {
 		public static final int TYPE_NORMAL = 0;
