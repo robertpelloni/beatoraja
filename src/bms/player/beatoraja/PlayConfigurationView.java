@@ -25,7 +25,7 @@ import bms.player.beatoraja.play.JudgeAlgorithm;
 import bms.player.beatoraja.play.TargetProperty;
 import bms.player.beatoraja.skin.SkinHeader;
 import bms.player.beatoraja.skin.SkinHeader.*;
-import bms.player.beatoraja.skin.JSONSkinLoader;
+import bms.player.beatoraja.skin.json.JsonSkinObjectLoader;
 import bms.player.beatoraja.skin.SkinType;
 import bms.player.beatoraja.skin.lr2.LR2SkinHeaderLoader;
 import bms.player.beatoraja.song.SQLiteSongDatabaseAccessor;

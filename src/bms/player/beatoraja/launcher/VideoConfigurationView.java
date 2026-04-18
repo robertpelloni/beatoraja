@@ -18,7 +18,7 @@ public class VideoConfigurationView implements Initializable {
 	@FXML
 	private ComboBox<Resolution> resolution;
 	@FXML
-	private ComboBox<Config.DisplayMode> displayMode;
+	// private ComboBox<String> displayMode;
 	@FXML
 	private ComboBox<String> bgaOp;
 	@FXML

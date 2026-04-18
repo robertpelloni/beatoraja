@@ -2,7 +2,6 @@ package bms.player.beatoraja.skin.property;
 
 import bms.player.beatoraja.*;
 import bms.player.beatoraja.config.KeyConfiguration;
-import bms.player.beatoraja.MainState.MainStateType;
 import bms.player.beatoraja.ir.*;
 import bms.player.beatoraja.play.JudgeAlgorithm;
 import bms.player.beatoraja.play.TargetProperty;
@@ -113,7 +112,7 @@ public class EventFactory {
 		 */
 		keyconfig(13, (state) -> {
 			if(state instanceof MusicSelector) {
-				state.main.changeState(MainStateType.CONFIG);
+				state.main.changeState(bms.player.beatoraja.MainController.STATE_CONFIG);
 			}
 		}),
 		/**
@@ -121,7 +120,7 @@ public class EventFactory {
 		 */
 		skinconfig(14, (state) -> {
 			if(state instanceof MusicSelector) {
-				state.main.changeState(MainStateType.SKINCONFIG);
+				state.main.changeState(bms.player.beatoraja.MainController.STATE_SKIN_SELECT);
 			}			
 		}),
 		play(15, (state) -> {

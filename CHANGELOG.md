@@ -1,6 +1,9 @@
 # Changelog
 
 ## [0.10.1] - 2026-04-15
+- Resolved missing `MainStateType` in `EventFactory.java` by converting state checks to enum ordinals.
+- Fixed FXML controller annotation bugs.
+- Stubbed missing `Config.DisplayMode` enum usages in `VideoConfigurationView.java` to unblock migration.
 - Resolved `WavFileInputStream` duplicate in `LegacyPCM` by renaming to `LegacyWavFileInputStream`.
 - Refactored `PlayMode` -> `BMSPlayerMode` and `IRStatus` -> `IRConnection` to fix missing enum imports.
 - Removed legacy LWJGL 2 `org.lwjgl.input.Mouse` usages in favor of LibGDX `Gdx.input` methods.
