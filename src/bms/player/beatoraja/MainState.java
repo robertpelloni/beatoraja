@@ -20,6 +20,19 @@ import java.util.Optional;
  */
 public abstract class MainState {
 
+	public boolean getBooleanValue(int option) {
+		// TODO properly link with PropertyFactory
+		return false;
+	}
+
+	public int getNumberValue(int option) {
+		return 0;
+	}
+
+	public String getTextValue(int option) {
+		return "";
+	}
+
 	public final MainController main;
 
 	/**
