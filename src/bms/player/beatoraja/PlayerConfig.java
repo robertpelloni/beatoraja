@@ -63,6 +63,15 @@ public final class PlayerConfig {
 	/**
 	 * スコアターゲット
 	 */
+
+	private String target2id = "RATE_AA";
+	private String target3id = "RATE_A";
+
+	public String getTarget2id() { return target2id; }
+	public void setTarget2id(String target2id) { this.target2id = target2id; }
+	public String getTarget3id() { return target3id; }
+	public void setTarget3id(String target3id) { this.target3id = target3id; }
+
 	private String targetid = "MAX";
 	
 	private String[] targetlist = new String[] {"RATE_A-","RATE_A", "RATE_A+","RATE_AA-","RATE_AA", "RATE_AA+", "RATE_AAA-", "RATE_AAA", "RATE_AAA+", "RATE_MAX-", "MAX"
@@ -889,6 +898,8 @@ public final class PlayerConfig {
 		doubleoption = MathUtils.clamp(doubleoption, 0, 3);
 		chartReplicationMode = chartReplicationMode != null ? chartReplicationMode : "NONE";
 		targetid = targetid!= null ? targetid : "MAX";
+		target2id = target2id!= null ? target2id : "RATE_AA";
+		target3id = target3id!= null ? target3id : "RATE_A";
 		targetlist = targetlist != null ? targetlist : new String[0];
 		judgetiming = MathUtils.clamp(judgetiming, JUDGETIMING_MIN, JUDGETIMING_MAX);
 		misslayerDuration = MathUtils.clamp(misslayerDuration, 0, 5000);

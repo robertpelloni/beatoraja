@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.10.3] - 2026-04-16
+- Added extensive UI options for Pacemaker targets (`target2`, `target3`) to `PlayConfigurationView`.
+- Added comprehensive XML tooltips for key JavaFX launcher components to ensure user accessibility and documentation parity.
+- Updated backend hooks in `PlayerConfig` to maintain persistence for the new Pacemaker options.
+
 ## [0.10.2] - 2026-04-16
 - Fully restructured `TODO.md` with in-depth technical implementation tickets (Rewind Mode, Dynamic Charts, Arena Spectating).
 - Solidified technical debt targets regarding LWJGL 3 backend upgrade and compilation fixes.
