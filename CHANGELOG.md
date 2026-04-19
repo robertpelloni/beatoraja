@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.10.4] - 2026-04-16
+- Added `UI_MAPPING.md` to map backend functionality to frontend GUI elements (Song selection, pacing, difficulty, and tracking features).
+- Confirmed the existence and integration of the core song selection, difficulty adjustments, and score tracking displays built during the LWJGL 3 backend upgrade sprint.
+
 ## [0.10.3] - 2026-04-16
 - Added extensive UI options for Pacemaker targets (`target2`, `target3`) to `PlayConfigurationView`.
 - Added comprehensive XML tooltips for key JavaFX launcher components to ensure user accessibility and documentation parity.
