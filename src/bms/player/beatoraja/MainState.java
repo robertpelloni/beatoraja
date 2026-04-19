@@ -181,7 +181,7 @@ public abstract class MainState {
 		this.stage = stage;
 	}
 
-	public String getSound(SystemSoundManager.SoundType sound) {
+	public String getSound(bms.player.beatoraja.SystemSoundManager.SoundType sound) {
 		return main.getSoundManager().getSound(sound);
 	}
 	
@@ -189,11 +189,11 @@ public abstract class MainState {
 		play(sound, false);
 	}
 	
-	public void play(SystemSoundManager.SoundType sound, boolean loop) {
+	public void play(bms.player.beatoraja.SystemSoundManager.SoundType sound, boolean loop) {
 		main.getSoundManager().play(sound, loop);
 	}
 	
-	public void stop(SystemSoundManager.SoundType sound) {
+	public void stop(bms.player.beatoraja.SystemSoundManager.SoundType sound) {
 		main.getSoundManager().stop(sound);
 	}
 	

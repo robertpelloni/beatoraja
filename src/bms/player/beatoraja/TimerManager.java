@@ -20,6 +20,11 @@ public class TimerManager {
 	public static final int timerCount = SkinProperty.TIMER_MAX + 1;
 	private final long[] timer = new long[timerCount];
 
+	public long[] getTimer() {
+		return timer;
+	}
+
+
 	private MainState current;
 	
 	public long getStartTime() {

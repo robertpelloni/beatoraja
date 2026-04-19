@@ -660,6 +660,11 @@ public class MainController extends ApplicationAdapter {
 		return starttime / 1000;
 	}
 
+
+	public long[] getTimer() {
+		return timerManager.getTimer();
+	}
+
 	public long getNowTime() {
 		return nowmicrotime / 1000;
 	}

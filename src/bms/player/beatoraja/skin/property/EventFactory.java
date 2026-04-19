@@ -207,7 +207,7 @@ public class EventFactory {
 			if(state instanceof MusicSelector selector) {
 	            PlayConfig pc = selector.getSelectedBarPlayConfig();
 	            if (pc != null) {
-	                pc.setFixhispeed((pc.getFixhispeed() + (arg1 >= 0 ? 1 : 4)) % 5);
+	                state.main.getConfig().setFixhispeed((state.main.getConfig().getFixhispeed() + (arg1 >= 0 ? 1 : 4)) % 5);
 	                state.play(OPTION_CHANGE);
 	            }				
 			}

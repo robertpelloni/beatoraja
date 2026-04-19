@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.10.2] - 2026-04-16
+- Fully restructured `TODO.md` with in-depth technical implementation tickets (Rewind Mode, Dynamic Charts, Arena Spectating).
+- Solidified technical debt targets regarding LWJGL 3 backend upgrade and compilation fixes.
+
 ## [0.10.1] - 2026-04-15
 - Resolved missing `MainStateType` in `EventFactory.java` by converting state checks to enum ordinals.
 - Fixed FXML controller annotation bugs.
