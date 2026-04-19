@@ -221,7 +221,7 @@ public class Skin {
 	}
 
 	public void drawAllObjects(SkinObjectRenderer sprite, MainState state) {
-		final long time = state.getNowTime();
+		final long time = state.timer.getNowTime();
 		for (SkinObject obj : objectarray) {
 			if (isDraw(obj.getOption(), state)) {
 				obj.draw(sprite);

@@ -23,6 +23,15 @@ public class Config {
 
 	// TODO プレイヤー毎に異なる見込みの大きい要素をPlayerConfigに移動
 
+
+	private AudioConfig audioConfig = new AudioConfig();
+	public AudioConfig getAudioConfig() {
+		return audioConfig;
+	}
+	public void setAudioConfig(AudioConfig audioConfig) {
+		this.audioConfig = audioConfig;
+	}
+
 	private String playername;
 	/**
 	 * フルスクリーン

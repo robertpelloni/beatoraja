@@ -17,7 +17,6 @@ import java.util.ResourceBundle;
 public class VideoConfigurationView implements Initializable {
 	@FXML
 	private ComboBox<Resolution> resolution;
-	@FXML
 	// private ComboBox<String> displayMode;
 	@FXML
 	private ComboBox<String> bgaOp;
