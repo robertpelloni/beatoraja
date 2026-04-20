@@ -32,6 +32,11 @@ public class Config {
 		this.audioConfig = audioConfig;
 	}
 
+
+	private String playerpath = "player";
+	public String getPlayerpath() { return playerpath; }
+	public void setPlayerpath(String playerpath) { this.playerpath = playerpath; }
+
 	private String playername;
 	/**
 	 * フルスクリーン

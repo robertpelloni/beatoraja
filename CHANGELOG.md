@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.10.9] - 2026-04-16
+- Resolved remaining `EventFactory` missing symbol compilation errors related to `Config.java` and `MainState.java`.
+- Repaired `MainController` initialization parameters (`PlayerConfig`, `PlayDataAccessor`, `IRConnection`) broken by global refactoring.
+- Fully exhausted UI-based technical debt mappings from the previous iteration.
+
 ## [0.10.8] - 2026-04-16
 - Implemented the foundational JavaFX GUI scaffolding for the **In-Game Theme/Skin Editor** (`ThemeEditorView.java`, `ThemeEditorView.fxml`). This sets the stage for a WYSIWYG skin editing experience by mapping JSON coordinates (`dstX`, `dstY`, `scale`) directly to frontend fields and reserving space for a live LibGDX preview canvas.
 

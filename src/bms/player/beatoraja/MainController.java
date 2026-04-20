@@ -171,7 +171,7 @@ public class MainController extends ApplicationAdapter {
 		}
 
 		if(player == null) {
-			player = PlayerConfig.readPlayerConfig(config.getPlayername());
+			player = PlayerConfig.readPlayerConfig(config.getPlayerpath(), config.getPlayername());
 		}
 		this.player = player;
 
@@ -197,17 +197,19 @@ public class MainController extends ApplicationAdapter {
 			e.printStackTrace();
 		}
 
-		playdata = new PlayDataAccessor(config.getPlayername());
+		playdata = new PlayDataAccessor(config);
 
-		ir = IRConnection.getIRConnection(player.getIrname());
+		if (player.getIrconfig().length > 0) {
+			ir = bms.player.beatoraja.ir.IRConnection.getIRConnection(player.getIrconfig()[0].getIrname());
+		}
 		if(ir != null) {
 			if(player.getUserid().length() == 0 || player.getPassword().length() == 0) {
-				ir = null;
+
 			} else {
-				IRResponse response = ir.login(player.getUserid(), player.getPassword());
+				bms.player.beatoraja.ir.IRResponse response = ir.login(player.getIrconfig()[0].getUserid(), player.getIrconfig()[0].getPassword());
 				if(!response.isSuccessed()) {
 					Logger.getGlobal().warning("IRへのログイン失敗 : " + response.getMessage());
-					ir = null;
+
 				}
 			}
 		}
@@ -338,7 +340,7 @@ public class MainController extends ApplicationAdapter {
 		messageRenderer = new MessageRenderer();
 		
 		if(ir != null) {
-			messageRenderer.addMessage(player.getIrname() + " Connection Succeed : " + player.getUserid() ,3000, Color.GREEN, 1);
+			messageRenderer.addMessage(player.getIrconfig()[0].getIrname() + " Connection Succeed : " + player.getIrconfig()[0].getUserid() ,3000, com.badlogic.gdx.graphics.Color.GREEN, 1);
 		}
 
 		input = new BMSPlayerInputProcessor(config, player);
@@ -615,7 +617,7 @@ public class MainController extends ApplicationAdapter {
 
 	public void saveConfig(){
 		Config.write(config);
-		PlayerConfig.write(player);
+		PlayerConfig.write(config.getPlayerpath(), player);
 		Logger.getGlobal().info("設定情報を保存");
 	}
 
@@ -668,6 +670,11 @@ public class MainController extends ApplicationAdapter {
 			rivalDataAccessor = new bms.player.beatoraja.RivalDataAccessor(this);
 		}
 		return rivalDataAccessor;
+	}
+
+
+	public MessageRenderer getMessageRenderer() {
+		return messageRenderer;
 	}
 
 	public TimerManager getTimerManager() {
