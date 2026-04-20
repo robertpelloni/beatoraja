@@ -16,7 +16,7 @@
   - *Details*: Abstract the existing TCP packet structure to support a `TYPE_SPECTATE` connection. Send real-time gauge and score updates from active players to spectators.
 
 ## Low Priority: Quality of Life & Polish
-- [ ] **In-Game Theme/Skin Editor**:
+- [x] **In-Game Theme/Skin Editor**:
   - *Target Classes*: `SkinConfigurationView.java`, `JsonSkinObjectLoader.java`
   - *Details*: Build a WYSIWYG editor using JavaFX or Scene2D to manipulate `dstX`, `dstY`, and `scale` properties of `SkinObject` arrays, saving directly back to `result.json` or `play7.json`.
 - [ ] **Android/Mobile Port (LibGDX)**:

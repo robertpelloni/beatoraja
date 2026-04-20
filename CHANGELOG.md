@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.10.8] - 2026-04-16
+- Implemented the foundational JavaFX GUI scaffolding for the **In-Game Theme/Skin Editor** (`ThemeEditorView.java`, `ThemeEditorView.fxml`). This sets the stage for a WYSIWYG skin editing experience by mapping JSON coordinates (`dstX`, `dstY`, `scale`) directly to frontend fields and reserving space for a live LibGDX preview canvas.
+
 ## [0.10.7] - 2026-04-16
 - Implemented foundational scaffolding for highly anticipated features from the roadmap:
   - **Rewind/Fast-Forward Mode**: Added `setTime()` scrubbing control infrastructure to `BMSPlayer.java` and `TimerManager`.
