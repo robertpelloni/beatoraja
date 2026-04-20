@@ -117,6 +117,28 @@ public class Config {
 	 */
 	private int fixhispeed = FIX_HISPEED_MAINBPM;
 
+	private boolean enableHispeedAutoAdjust = false;
+
+	private boolean enablehidden = false;
+	private String judgetype = "0";
+	private boolean enableConstant = false;
+
+	public boolean isEnablehidden() { return enablehidden; }
+	public void setEnablehidden(boolean enablehidden) { this.enablehidden = enablehidden; }
+	public String getJudgetype() { return judgetype; }
+	public void setJudgetype(String judgetype) { this.judgetype = judgetype; }
+	public boolean isEnableConstant() { return enableConstant; }
+	public void setEnableConstant(boolean enableConstant) { this.enableConstant = enableConstant; }
+
+	public boolean isEnableHispeedAutoAdjust() { return enableHispeedAutoAdjust; }
+	public void setHispeedAutoAdjust(boolean enable) { this.enableHispeedAutoAdjust = enable; }
+
+
+	private float hispeedMargin = 0.25f;
+	public float getHispeedMargin() { return hispeedMargin; }
+	public void setHispeedMargin(float hispeedMargin) { this.hispeedMargin = hispeedMargin; }
+
+
 	public static final int FIX_HISPEED_OFF = 0;
 	public static final int FIX_HISPEED_STARTBPM = 1;
 	public static final int FIX_HISPEED_MAXBPM = 2;

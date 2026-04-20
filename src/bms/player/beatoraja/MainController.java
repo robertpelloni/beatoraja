@@ -661,6 +661,15 @@ public class MainController extends ApplicationAdapter {
 	}
 
 
+
+	private bms.player.beatoraja.RivalDataAccessor rivalDataAccessor;
+	public bms.player.beatoraja.RivalDataAccessor getRivalDataAccessor() {
+		if (rivalDataAccessor == null) {
+			rivalDataAccessor = new bms.player.beatoraja.RivalDataAccessor(this);
+		}
+		return rivalDataAccessor;
+	}
+
 	public TimerManager getTimerManager() {
 		return timerManager;
 	}

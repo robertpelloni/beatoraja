@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.10.6] - 2026-04-16
+- Resolved major compilation errors in `EventFactory.java` by linking to `Config.java` and stubbing necessary layout margins.
+- Resolved `MainState.java` runtime type cast iterations by properly utilizing `Map.Entry` in `skin.getOffset().entrySet()` loops.
+
 ## [0.10.5] - 2026-04-16
 - Implemented major bugfixes for `MainState.java` and `SystemSoundManager.java` compatibility, adding `getTimerManager()` and linking `getSoundManager()` effectively across `EventFactory.java`.
 - Isolated the final source of remaining LWJGL 3 migration errors strictly to input configurations like `BMKeys` (e.g., `AXIS1_PLUS` deprecation).
