@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.10.7] - 2026-04-16
+- Implemented foundational scaffolding for highly anticipated features from the roadmap:
+  - **Rewind/Fast-Forward Mode**: Added `setTime()` scrubbing control infrastructure to `BMSPlayer.java` and `TimerManager`.
+  - **Dynamic Chart Generator**: Scaffolded `AutoChartGenerator.java` mapping out audio FFT to BMSModel capabilities.
+  - **Arena Spectator Mode**: Introduced the `TYPE_SPECTATE` packet definition into `ArenaManager.java` to support live audience viewing.
+
 ## [0.10.6] - 2026-04-16
 - Resolved major compilation errors in `EventFactory.java` by linking to `Config.java` and stubbing necessary layout margins.
 - Resolved `MainState.java` runtime type cast iterations by properly utilizing `Map.Entry` in `skin.getOffset().entrySet()` loops.
