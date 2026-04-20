@@ -661,6 +661,10 @@ public class MainController extends ApplicationAdapter {
 	}
 
 
+	public TimerManager getTimerManager() {
+		return timerManager;
+	}
+
 	public long[] getTimer() {
 		return timerManager.getTimer();
 	}

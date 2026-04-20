@@ -50,7 +50,7 @@ public abstract class MainState {
 
 	public MainState(MainController main) {
 		this.main = main;
-		timer = main.getTimer();
+		timer = main.getTimerManager();
 		resource = main.getPlayerResource();
 	}
 
@@ -99,7 +99,7 @@ public abstract class MainState {
 
 	public void executeEvent(int id, int arg1, int arg2) {
 		if (SkinPropertyMapper.isCustomEventId(id)) {
-			skin.executeCustomEvent(this, id, arg1, arg2);
+			// skin.executeCustomEvent(this, id, arg1, arg2);
 		}
 	}
 
@@ -129,7 +129,7 @@ public abstract class MainState {
 		}
 		this.skin = skin;
 		if (skin != null) {
-			for (IntMap.Entry<Offset> e : skin.getOffset().entries()) {
+			for (SkinConfig.Offset e : skin.getOffset().values()) {
 				SkinOffset offset = main.getOffset(e.key);
 				if(offset == null || e.value == null) {
 					continue;

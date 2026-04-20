@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.10.5] - 2026-04-16
+- Implemented major bugfixes for `MainState.java` and `SystemSoundManager.java` compatibility, adding `getTimerManager()` and linking `getSoundManager()` effectively across `EventFactory.java`.
+- Isolated the final source of remaining LWJGL 3 migration errors strictly to input configurations like `BMKeys` (e.g., `AXIS1_PLUS` deprecation).
+
 ## [0.10.4] - 2026-04-16
 - Added `UI_MAPPING.md` to map backend functionality to frontend GUI elements (Song selection, pacing, difficulty, and tracking features).
 - Confirmed the existence and integration of the core song selection, difficulty adjustments, and score tracking displays built during the LWJGL 3 backend upgrade sprint.
