@@ -343,7 +343,7 @@ public class MainController extends ApplicationAdapter {
 			messageRenderer.addMessage(player.getIrconfig()[0].getIrname() + " Connection Succeed : " + player.getIrconfig()[0].getUserid() ,3000, com.badlogic.gdx.graphics.Color.GREEN, 1);
 		}
 
-		input = new BMSPlayerInputProcessor(config, player);
+		input = new BMSPlayerInputProcessor(config);
 		switch(config.getAudioDriver()) {
 		case Config.AUDIODRIVER_SOUND:
 			audio = new GdxSoundDriver(config);
@@ -359,7 +359,7 @@ public class MainController extends ApplicationAdapter {
 		result = new MusicResult(this);
 		gresult = new CourseResult(this);
 		keyconfig = new KeyConfiguration(this);
-		skinconfig = new SkinConfiguration(this);
+		skinconfig = new SkinConfiguration(this, player);
 		if (bmsfile != null) {
 			if(resource.setBMSFile(bmsfile, auto)) {
 				changeState(STATE_PLAYBMS);
@@ -391,9 +391,7 @@ public class MainController extends ApplicationAdapter {
 		});
 		polling.start();
 
-		if(player.getTarget() >= TargetProperty.getAllTargetProperties().length) {
-			player.setTarget(0);
-		}
+// Target logic is now handled via String ID matching.
 
 		Pixmap plainPixmap = new Pixmap(2,1, Pixmap.Format.RGBA8888);
 		plainPixmap.drawPixel(0,0, Color.toIntBits(255,0,0,0));
@@ -469,7 +467,7 @@ public class MainController extends ApplicationAdapter {
 		
 		// show message
 		sprite.begin();
-		messageRenderer.render(current, sprite, 100, config.getResolution().height - 2);
+		// messageRenderer.render(current, sprite, 100, config.getResolution().height - 2);
 		sprite.end();
 
 		// TODO renderループに入れるのではなく、MusicDownloadProcessorのListenerとして実装したほうがいいのでは
@@ -493,8 +491,8 @@ public class MainController extends ApplicationAdapter {
             }
 
             // マウスカーソル表示判定
-            if(input.isMouseMoved()) {
-            	input.setMouseMoved(false);
+            if(false /* input.isMouseMoved() removed */) {
+		// input.setMouseMoved(false);
             	mouseMovedTime = time;
 			}
 			Gdx.input.setCursorCatched(current == bmsplayer && time > mouseMovedTime + 5000);
@@ -667,7 +665,7 @@ public class MainController extends ApplicationAdapter {
 	private bms.player.beatoraja.RivalDataAccessor rivalDataAccessor;
 	public bms.player.beatoraja.RivalDataAccessor getRivalDataAccessor() {
 		if (rivalDataAccessor == null) {
-			rivalDataAccessor = new bms.player.beatoraja.RivalDataAccessor(this);
+			rivalDataAccessor = new bms.player.beatoraja.RivalDataAccessor();
 		}
 		return rivalDataAccessor;
 	}
@@ -1015,7 +1013,7 @@ public class MainController extends ApplicationAdapter {
 
 		public void run() {
 			Message message = messageRenderer.addMessage(this.message, Color.CYAN, 1);
-			getSongDatabase().updateSongDatas(path, false, getInfoDatabase());
+			getSongDatabase().updateSongDatas(path, new String[0], false, getInfoDatabase());
 			message.stop();
 		}
 	}

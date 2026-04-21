@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.10.10] - 2026-04-16
+- Resolved another massive chunk of LWJGL 3 migration compilation errors within `MainController.java`.
+- Rewired constructor arguments for `SkinConfiguration`, `BMSPlayerInputProcessor`, and `RivalDataAccessor` to match new backend signatures.
+- Removed defunct IPFS configuration references.
+- Fixed redundant packaging names inside `MainState.java` resulting from previous refactoring sweeps.
+
 ## [0.10.9] - 2026-04-16
 - Resolved remaining `EventFactory` missing symbol compilation errors related to `Config.java` and `MainState.java`.
 - Repaired `MainController` initialization parameters (`PlayerConfig`, `PlayDataAccessor`, `IRConnection`) broken by global refactoring.

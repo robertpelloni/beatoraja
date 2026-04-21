@@ -181,19 +181,19 @@ public abstract class MainState {
 		this.stage = stage;
 	}
 
-	public String getSound(bms.player.beatoraja.bms.player.beatoraja.SystemSoundManager.SoundType sound) {
+	public String getSound(SystemSoundManager.SoundType sound) {
 		return main.getSoundManager().getSound(sound);
 	}
 	
-	public void play(bms.player.beatoraja.SystemSoundManager.SoundType sound) {
+	public void play(SystemSoundManager.SoundType sound) {
 		play(sound, false);
 	}
 	
-	public void play(bms.player.beatoraja.bms.player.beatoraja.SystemSoundManager.SoundType sound, boolean loop) {
+	public void play(SystemSoundManager.SoundType sound, boolean loop) {
 		main.getSoundManager().play(sound, loop);
 	}
 	
-	public void stop(bms.player.beatoraja.bms.player.beatoraja.SystemSoundManager.SoundType sound) {
+	public void stop(SystemSoundManager.SoundType sound) {
 		main.getSoundManager().stop(sound);
 	}
 	
