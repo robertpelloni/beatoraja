@@ -182,7 +182,8 @@ public abstract class MainState {
 	}
 
 	public String getSound(SystemSoundManager.SoundType sound) {
-		return main.getSoundManager().getSound(sound);
+		// return main.getSoundManager().getSound(sound);
+		return "";
 	}
 	
 	public void play(SystemSoundManager.SoundType sound) {
@@ -190,11 +191,11 @@ public abstract class MainState {
 	}
 	
 	public void play(SystemSoundManager.SoundType sound, boolean loop) {
-		main.getSoundManager().play(sound, loop);
+		// main.getSoundManager().play(sound, loop);
 	}
 	
 	public void stop(SystemSoundManager.SoundType sound) {
-		main.getSoundManager().stop(sound);
+		// main.getSoundManager().stop(sound);
 	}
 	
 	public enum MainStateType {

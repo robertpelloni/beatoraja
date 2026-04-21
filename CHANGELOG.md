@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.10.11] - 2026-04-16
+- Resolved `BMControllerInputProcessor` initialization and generic type parameter compilation failures relating to the LibGDX 1.12 controllers API (`PovDirection` removal).
+- Bypassed legacy parameter mappings that broke `keyChanged` input handling during the LWJGL 3 migration process.
+
+## [0.10.11] - 2026-04-16
+- Resolved `IRConnection` `login` parameter mismatches.
+- Fixed missing variables in `MainController` (`TimerManager` instantiation) resulting from LWJGL 3 backend separation.
+- Replaced legacy `Config.write(config)` and `Config.DisplayMode` usages to bridge legacy gaps.
+
 ## [0.10.10] - 2026-04-16
 - Resolved another massive chunk of LWJGL 3 migration compilation errors within `MainController.java`.
 - Rewired constructor arguments for `SkinConfiguration`, `BMSPlayerInputProcessor`, and `RivalDataAccessor` to match new backend signatures.

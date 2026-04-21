@@ -20,6 +20,15 @@ public class Skin {
 
 
 	public static class SkinObjectRenderer extends SpriteBatch {
+
+		public SkinObjectRenderer() {
+			super();
+		}
+
+		public SkinObjectRenderer(int size, com.badlogic.gdx.graphics.glutils.ShaderProgram defaultShader) {
+			super(size, defaultShader);
+		}
+
 		public static final int TYPE_NORMAL = 0;
 		public static final int TYPE_BILINEAR = 1;
 		public static final int TYPE_LINEAR = 2;

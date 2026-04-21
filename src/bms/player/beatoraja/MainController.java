@@ -105,6 +105,9 @@ public class MainController extends ApplicationAdapter {
 
 	private FreeTypeFontGenerator generator;
 	private BitmapFont systemfont;
+
+	private TimerManager timerManager = new TimerManager();
+
 	private MessageRenderer messageRenderer;
 
 	private MainState current;
@@ -125,7 +128,7 @@ public class MainController extends ApplicationAdapter {
 
 	private IRConnection ir;
 
-	private SpriteBatch sprite;
+	private bms.player.beatoraja.skin.Skin.SkinObjectRenderer sprite;
 	/**
 	 * 1曲プレイで指定したBMSファイル
 	 */
@@ -206,7 +209,8 @@ public class MainController extends ApplicationAdapter {
 			if(player.getUserid().length() == 0 || player.getPassword().length() == 0) {
 
 			} else {
-				bms.player.beatoraja.ir.IRResponse response = ir.login(player.getIrconfig()[0].getUserid(), player.getIrconfig()[0].getPassword());
+				bms.player.beatoraja.ir.IRAccount account = new bms.player.beatoraja.ir.IRAccount("", player.getIrconfig()[0].getUserid(), player.getIrconfig()[0].getPassword());
+			bms.player.beatoraja.ir.IRResponse response = ir.login(account);
 				if(!response.isSuccessed()) {
 					Logger.getGlobal().warning("IRへのログイン失敗 : " + response.getMessage());
 
@@ -614,7 +618,7 @@ public class MainController extends ApplicationAdapter {
 	}
 
 	public void saveConfig(){
-		Config.write(config);
+		config.save();
 		PlayerConfig.write(config.getPlayerpath(), player);
 		Logger.getGlobal().info("設定情報を保存");
 	}

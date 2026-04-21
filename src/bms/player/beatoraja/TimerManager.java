@@ -70,7 +70,7 @@ public class TimerManager {
 		if (id >= 0 && id < timerCount) {
 			return timer[id];
 		} else {
-			return current.getSkin().getMicroCustomTimer(id);
+			return 0; // current.getSkin().getMicroCustomTimer(id);
 		}
 	}
 
