@@ -1,8 +1,16 @@
 # Changelog
 
+## [0.10.12] - 2026-04-16
+- Resolved remaining missing dependencies for LWJGL 3 backend upgrade: `SpriteBatch` to `SkinObjectRenderer` conversion in `MainController.java`, missing `TimerManager.java` custom skin routines, and `PlayerResource` missing configurations.
+- Eradicated deprecated controller bindings (`BMKeys.AXIS1_PLUS` -> `BMKeys.RIGHT`) in `PlayModeConfig.java` to support modern generic Gamepad configurations.
+
 ## [0.10.11] - 2026-04-16
 - Resolved `BMControllerInputProcessor` initialization and generic type parameter compilation failures relating to the LibGDX 1.12 controllers API (`PovDirection` removal).
 - Bypassed legacy parameter mappings that broke `keyChanged` input handling during the LWJGL 3 migration process.
+
+## [0.10.12] - 2026-04-16
+- Resolved remaining missing dependencies for LWJGL 3 backend upgrade: `SpriteBatch` to `SkinObjectRenderer` conversion in `MainController.java`, missing `TimerManager.java` custom skin routines, and `PlayerResource` missing configurations.
+- Eradicated deprecated controller bindings (`BMKeys.AXIS1_PLUS` -> `BMKeys.RIGHT`) in `PlayModeConfig.java` to support modern generic Gamepad configurations.
 
 ## [0.10.11] - 2026-04-16
 - Resolved `IRConnection` `login` parameter mismatches.

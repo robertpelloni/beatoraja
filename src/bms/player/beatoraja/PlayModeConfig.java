@@ -84,7 +84,7 @@ public final class PlayModeConfig {
             playconfig = new PlayConfig();
         }
 
-        playconfig.validate();
+        // playconfig.validate();
 
         if (keyboard.keys == null) {
             keyboard.keys = new int[] { Keys.Z, Keys.S, Keys.X, Keys.D, Keys.C, Keys.F, Keys.V, Keys.SHIFT_LEFT,

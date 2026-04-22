@@ -33,6 +33,11 @@ public class Config {
 	}
 
 
+
+	private String tablepath = "table";
+	public String getTablepath() { return tablepath; }
+	public void setTablepath(String tablepath) { this.tablepath = tablepath; }
+
 	private String playerpath = "player";
 	public String getPlayerpath() { return playerpath; }
 	public void setPlayerpath(String playerpath) { this.playerpath = playerpath; }
