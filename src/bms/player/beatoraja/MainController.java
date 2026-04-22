@@ -334,8 +334,8 @@ public class MainController extends ApplicationAdapter {
 	@Override
 	public void create() {
 		final long t = System.currentTimeMillis();
-		sprite = new SpriteBatch();
-		SkinLoader.initPixmapResourcePool(config.getSkinPixmapGen());
+		sprite = new bms.player.beatoraja.skin.Skin.SkinObjectRenderer();
+		// SkinLoader.initPixmapResourcePool(config.getSkinPixmapGen());
 
 		generator = new FreeTypeFontGenerator(Gdx.files.internal("skin/default/VL-Gothic-Regular.ttf"));
 		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
