@@ -101,6 +101,13 @@ public class ModMenu {
     private Label arenaStatusLabel;
     private Label arenaPlayersLabel;
 
+
+    // Visualization UI
+    private Window vizWindow;
+    private CheckBox showHitErrorGraph;
+    private CheckBox showNotesRadar;
+    private CheckBox showFastSlowCounts;
+
     // Missions UI
     private Window missionsWindow;
     private Label missionsListLabel;
@@ -834,6 +841,7 @@ public class ModMenu {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 missionsWindow.setVisible(false);
+        if (vizWindow != null) vizWindow.setVisible(false);
             }
         });
 
@@ -843,6 +851,35 @@ public class ModMenu {
         missionsWindow.pack();
         missionsWindow.setPosition((Gdx.graphics.getWidth() - missionsWindow.getWidth()) / 2 - 50, (Gdx.graphics.getHeight() - missionsWindow.getHeight()) / 2 - 50);
         stage.addActor(missionsWindow);
+
+        // --- Visualization Window ---
+        vizWindow = new Window("Visualizations", skin);
+        vizWindow.setSize(300, 200);
+        vizWindow.setPosition(Gdx.graphics.getWidth() / 2f - 150f, Gdx.graphics.getHeight() / 2f - 100f);
+        vizWindow.setMovable(true);
+        vizWindow.setVisible(false);
+
+        showHitErrorGraph = new CheckBox("Show Hit Error Graph", skin);
+        showNotesRadar = new CheckBox("Show Notes Radar", skin);
+        showFastSlowCounts = new CheckBox("Show Fast/Slow Counts", skin);
+
+        Table vizTable = new Table();
+        vizTable.setFillParent(true);
+        vizTable.add(showHitErrorGraph).pad(5).row();
+        vizTable.add(showNotesRadar).pad(5).row();
+        vizTable.add(showFastSlowCounts).pad(5).row();
+
+        TextButton closeVizButton = new TextButton("Close", skin);
+        closeVizButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                vizWindow.setVisible(false);
+            }
+        });
+        vizTable.add(closeVizButton).padTop(10).row();
+        vizWindow.add(vizTable);
+        stage.addActor(vizWindow);
+
     }
 
     private float getHiSpeed() {
