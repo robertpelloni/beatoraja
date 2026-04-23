@@ -1,5 +1,5 @@
 <<<<<<< HEAD
 0.9.7
-=======
-0.9.22
->>>>>>> origin/feature/launcher-enhancement-docs-10151933133890025217
+0.9.22=======
+0.10.13
+>>>>>>> origin/fix-sync-and-docs-14450220617673440748

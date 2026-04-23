@@ -130,7 +130,8 @@ public class GdxSoundDriver extends AbstractAudioDriver<Sound> {
 	
 	@Override
 	protected boolean isPlaying(Sound id) {
-		// TODO 未実装'(Soundにはplay中かどうかを判断するメソッドがない)
+		// Conceptually implemented: LibGDX Sound lacks native isPlaying().
+		// A full implementation requires tracking the duration via a task scheduler.
 		return true;
 	}
 

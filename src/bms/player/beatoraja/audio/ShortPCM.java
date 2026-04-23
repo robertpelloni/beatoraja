@@ -8,7 +8,7 @@ import java.nio.ByteBuffer;
  * 
  * @author exch
  */
-public class ShortPCM extends PCM<short[]> {
+public class ShortPCM extends PCM {
 
 	ShortPCM(int channels, int sampleRate, int start, int len, short[] sample) {
 		super(channels, sampleRate, start, len, sample);

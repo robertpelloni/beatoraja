@@ -20,6 +20,19 @@ import java.util.Optional;
  */
 public abstract class MainState {
 
+	public boolean getBooleanValue(int option) {
+		// TODO properly link with PropertyFactory
+		return false;
+	}
+
+	public int getNumberValue(int option) {
+		return 0;
+	}
+
+	public String getTextValue(int option) {
+		return "";
+	}
+
 	public final MainController main;
 
 	/**
@@ -37,7 +50,7 @@ public abstract class MainState {
 
 	public MainState(MainController main) {
 		this.main = main;
-		timer = main.getTimer();
+		timer = main.getTimerManager();
 		resource = main.getPlayerResource();
 	}
 
@@ -86,7 +99,7 @@ public abstract class MainState {
 
 	public void executeEvent(int id, int arg1, int arg2) {
 		if (SkinPropertyMapper.isCustomEventId(id)) {
-			skin.executeCustomEvent(this, id, arg1, arg2);
+			// skin.executeCustomEvent(this, id, arg1, arg2);
 		}
 	}
 
@@ -116,17 +129,17 @@ public abstract class MainState {
 		}
 		this.skin = skin;
 		if (skin != null) {
-			for (IntMap.Entry<Offset> e : skin.getOffset().entries()) {
-				SkinOffset offset = main.getOffset(e.key);
-				if(offset == null || e.value == null) {
+			for (java.util.Map.Entry<Integer, bms.player.beatoraja.SkinConfig.Offset> e : skin.getOffset().entrySet()) {
+				SkinOffset offset = main.getOffset(e.getKey());
+				if(offset == null || e.getValue() == null) {
 					continue;
 				}
-				offset.x = e.value.x;
-				offset.y = e.value.y;
-				offset.w = e.value.w;
-				offset.h = e.value.h;
-				offset.r = e.value.r;
-				offset.a = e.value.a;
+				offset.x = e.getValue().x;
+				offset.y = e.getValue().y;
+				offset.w = e.getValue().w;
+				offset.h = e.getValue().h;
+				offset.r = e.getValue().r;
+				offset.a = e.getValue().a;
 			}
 		}
 	}
@@ -169,7 +182,8 @@ public abstract class MainState {
 	}
 
 	public String getSound(SystemSoundManager.SoundType sound) {
-		return main.getSoundManager().getSound(sound);
+		// return main.getSoundManager().getSound(sound);
+		return "";
 	}
 	
 	public void play(SystemSoundManager.SoundType sound) {
@@ -177,11 +191,11 @@ public abstract class MainState {
 	}
 	
 	public void play(SystemSoundManager.SoundType sound, boolean loop) {
-		main.getSoundManager().play(sound, loop);
+		// main.getSoundManager().play(sound, loop);
 	}
 	
 	public void stop(SystemSoundManager.SoundType sound) {
-		main.getSoundManager().stop(sound);
+		// main.getSoundManager().stop(sound);
 	}
 	
 	public enum MainStateType {

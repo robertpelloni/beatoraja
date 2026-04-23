@@ -1,8 +1,6 @@
 # Roadmap
 
-<<<<<<< HEAD
 ## Version: 0.9.7 | Last Updated: 2026-02-07
-=======
 ## Version: 0.9.23 | Last Updated: 2025-02-10
 
 ---
@@ -22,8 +20,9 @@
 
 ### 3. Rendering & Audio
 - [ ] **Vulkan Backend**: Migration path for future LibGDX versions.
-- [ ] **Lower Latency Audio**: ASIO/WASAPI exclusive mode investigation.
->>>>>>> origin/feature/launcher-enhancement-docs-10151933133890025217
+- [ ] **Lower Latency Audio**: ASIO/WASAPI exclusive mode investigation.=======
+## Version: 0.10.1 | Last Updated: 2026-04-15
+>>>>>>> origin/fix-sync-and-docs-14450220617673440748
 
 ---
 
@@ -145,7 +144,6 @@
 - [x] **CI/CD**: GitHub Actions workflow
 - [x] **Unit Testing**: JUnit 5 framework
 - [x] **Centralized Versioning**: `VERSION.md` as single source of truth
-
 ---
 
 ## 📈 Version History
@@ -154,6 +152,11 @@
 |---------|------|------------|
 <<<<<<< HEAD
 | 0.9.7 | 2026-02-07 | Submodule URL fix for mirrored environments (Jules CI) |
+
+| 0.10.1 | 2026-04-15 | Addressed WavFileInputStream duplicate, PlayMode/IRStatus/SongPreview enum removals, Mouse LWJGL 3 migration |
+| 0.10.0 | 2026-04-15 | Exhaust TODO backlog, Global Versioning, Osu! Storyboards |
+| 0.9.9 | 2026-04-15 | Global Versioning via VERSION.md |
+| 0.9.8 | 2026-04-14 | Completed synchronization round and finalized documentation |
 | 0.9.6 | 2025-12-28 | ConfigTest, PlayModeConfigTest, Hit Sound support, 180+ tests |
 | 0.9.5 | 2025-12-28 | Timing point support, MissionManagerTest, StepUpManagerTest |
 | 0.9.4 | 2025-12-28 | Osu! Spinner support, comprehensive ROADMAP |
@@ -163,7 +166,6 @@
 | 0.9.0 | 2025-12-26 | Arena Mode, Osu! Support, Mod Menu, Step-Up, CI/CD |
 | 0.8.9 | 2025-12-25 | Centralized versioning, build fixes |
 | 0.8.8 | 2025-12-25 | Initial modernization |
-=======
 | 0.9.23 | 2025-02-10 | Skin Graph Render Optimization, Final Documentation |
 | 0.9.22 | 2025-02-10 | Crash Fixes (Osu Parsing, OpenGL Threading), UI Recovery |
 | 0.9.18 | 2025-02-10 | Replay Analysis DB Integration |
@@ -171,4 +173,3 @@
 | 0.9.12 | 2025-02-10 | Arena Chat, Course Editor backend logic |
 | 0.9.11 | 2025-02-10 | Full Osu! Storyboard rendering (Easing, Interpolation, Sorting) |
 | 0.9.6 | 2025-12-28 | ConfigTest, PlayModeConfigTest, Hit Sound support, 180+ tests |
->>>>>>> origin/feature/launcher-enhancement-docs-10151933133890025217

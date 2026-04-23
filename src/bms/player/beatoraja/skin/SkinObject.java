@@ -520,9 +520,9 @@ public abstract class SkinObject extends DisposableObject {
 		prepareAngle();
 	}
 
-	public abstract void draw(SkinObjectRenderer sprite);
+	public abstract void draw(Skin.SkinObjectRenderer sprite);
 
-	protected void draw(SkinObjectRenderer sprite, TextureRegion image) {
+	protected void draw(Skin.SkinObjectRenderer sprite, TextureRegion image) {
 		if (color.a == 0f || image == null) {
 			return;
 		}
@@ -533,22 +533,22 @@ public abstract class SkinObject extends DisposableObject {
 		}
 		sprite.setColor(color);
 		sprite.setBlend(dstblend);
-		sprite.setType(dstfilter != 0 && imageType == SkinObjectRenderer.TYPE_NORMAL ? 
+		sprite.setType(dstfilter != 0 && imageType == Skin.SkinObjectRenderer.TYPE_NORMAL ?
 				(tmpRect.width == tmpImage.getRegionWidth() && tmpRect.height == tmpImage.getRegionHeight() ?
-				SkinObjectRenderer.TYPE_NORMAL : SkinObjectRenderer.TYPE_BILINEAR) : imageType);
+				Skin.SkinObjectRenderer.TYPE_NORMAL : Skin.SkinObjectRenderer.TYPE_BILINEAR) : imageType);
 		
 		if (angle != 0) {
-			sprite.draw(tmpImage, tmpRect.x, tmpRect.y, tmpRect.width, tmpRect.height, centerx , centery, angle);
+			sprite.draw(tmpImage, tmpRect.x, tmpRect.y, centerx, centery, tmpRect.width, tmpRect.height, 1.0f, 1.0f, angle);
 		} else {
 			sprite.draw(tmpImage, tmpRect.x, tmpRect.y, tmpRect.width, tmpRect.height);
 		}
 	}
 
-	protected void draw(SkinObjectRenderer sprite, TextureRegion image, float x, float y, float width, float height) {
+	protected void draw(Skin.SkinObjectRenderer sprite, TextureRegion image, float x, float y, float width, float height) {
 		draw(sprite, image, x, y, width, height, color, angle);
 	}
 
-	protected void draw(SkinObjectRenderer sprite, TextureRegion image, float x, float y, float width, float height,
+	protected void draw(Skin.SkinObjectRenderer sprite, TextureRegion image, float x, float y, float width, float height,
 			Color color, int angle) {
 		if (color == null || color.a == 0f || image == null) {
 			return;
@@ -559,12 +559,12 @@ public abstract class SkinObject extends DisposableObject {
 		}
 		sprite.setColor(color);
 		sprite.setBlend(dstblend);
-		sprite.setType(dstfilter != 0 && imageType == SkinObjectRenderer.TYPE_NORMAL ? 
+		sprite.setType(dstfilter != 0 && imageType == Skin.SkinObjectRenderer.TYPE_NORMAL ?
 				(tmpRect.width == tmpImage.getRegionWidth() && tmpRect.height == tmpImage.getRegionHeight() ?
-				SkinObjectRenderer.TYPE_NORMAL : SkinObjectRenderer.TYPE_BILINEAR) : imageType);
+				Skin.SkinObjectRenderer.TYPE_NORMAL : Skin.SkinObjectRenderer.TYPE_BILINEAR) : imageType);
 		
 		if (angle != 0) {
-			sprite.draw(tmpImage, tmpRect.x, tmpRect.y, tmpRect.width, tmpRect.height, centerx , centery, angle);
+			sprite.draw(tmpImage, tmpRect.x, tmpRect.y, centerx, centery, tmpRect.width, tmpRect.height, 1.0f, 1.0f, angle);
 		} else {
 			sprite.draw(tmpImage, tmpRect.x, tmpRect.y, tmpRect.width, tmpRect.height);
 		}

@@ -295,8 +295,21 @@
                                              <RowConstraints maxHeight="24.0" minHeight="24.0" prefHeight="24.0" />
                                              <RowConstraints maxHeight="24.0" minHeight="24.0" prefHeight="24.0" />
                                          </rowConstraints>
+
                                          <Label text="%TARGET_SCORE" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                                         <ComboBox fx:id="target" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                                         <ComboBox fx:id="target" GridPane.columnIndex="1" GridPane.rowIndex="0" >
+<tooltip><Tooltip text="%TARGET_SCORE_TOOLTIP"/></tooltip>
+</ComboBox>
+
+                                         <Label text="%TARGET2_SCORE" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                                         <ComboBox fx:id="target2" GridPane.columnIndex="1" GridPane.rowIndex="1" >
+<tooltip><Tooltip text="%TARGET2_SCORE_TOOLTIP"/></tooltip>
+</ComboBox>
+
+                                         <Label text="%TARGET3_SCORE" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                                         <ComboBox fx:id="target3" GridPane.columnIndex="1" GridPane.rowIndex="2" >
+<tooltip><Tooltip text="%TARGET3_SCORE_TOOLTIP"/></tooltip>
+</ComboBox>
                                          <Label prefHeight="18.0" prefWidth="127.0" text="%JUDGE_ALGORITHM" GridPane.columnIndex="2" GridPane.rowIndex="0" />
                                          <ComboBox fx:id="judgealgorithm" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="0" />
                                          <Label text="Gauge Auto Shift" GridPane.columnIndex="0" GridPane.rowIndex="1" />

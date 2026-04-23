@@ -210,6 +210,11 @@ public class PlayConfigurationView implements Initializable {
 	private CheckBox showhiddennote;
 	@FXML
 	private ComboBox<String> target;
+	@FXML
+	private ComboBox<String> target2;
+	@FXML
+	private ComboBox<String> target3;
+
 
 	@FXML
 	private ComboBox<Integer> judgealgorithm;
@@ -618,6 +623,10 @@ public class PlayConfigurationView implements Initializable {
 		String[] targets = player.getTargetlist();
 		target.getItems().setAll(targets);
 		target.setValue(player.getTargetid());
+		target2.getItems().setAll(targets);
+		target2.setValue(player.getTarget2id());
+		target3.getItems().setAll(targets);
+		target3.setValue(player.getTarget3id());
 		showhiddennote.setSelected(player.isShowhiddennote());
 
 		irController.update(player);
@@ -727,6 +736,8 @@ public class PlayConfigurationView implements Initializable {
 
 		player.setShowjudgearea(judgeregion.isSelected());
 		player.setTargetid(target.getValue());
+		player.setTarget2id(target2.getValue());
+		player.setTarget3id(target3.getValue());
 
 		player.setShowhiddennote(showhiddennote.isSelected());
 

@@ -30,3 +30,4 @@
 *   Verify the version number in the title bar matches `VERSION.md`.
 *   Check that the "Arena", "Osu!", and "Course Editor" tabs appear in the Launcher.
 *   Verify documentation is accessible.
+Use `./gradlew build` to compile the project. Target Java is 21.

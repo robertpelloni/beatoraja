@@ -1,7 +1,6 @@
 package bms.player.beatoraja.skin.property;
 
 import bms.player.beatoraja.*;
-import bms.player.beatoraja.MainController.IRStatus;
 import bms.player.beatoraja.config.KeyConfiguration;
 import bms.player.beatoraja.config.SkinConfiguration;
 import bms.player.beatoraja.decide.MusicDecide;

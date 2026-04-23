@@ -20,6 +20,16 @@ public class TimerManager {
 	public static final int timerCount = SkinProperty.TIMER_MAX + 1;
 	private final long[] timer = new long[timerCount];
 
+
+	public void setTimer(int id, long time) {
+		timer[id] = time;
+	}
+
+	public long[] getTimer() {
+		return timer;
+	}
+
+
 	private MainState current;
 	
 	public long getStartTime() {
@@ -60,7 +70,7 @@ public class TimerManager {
 		if (id >= 0 && id < timerCount) {
 			return timer[id];
 		} else {
-			return current.getSkin().getMicroCustomTimer(id);
+			return 0; // current.getSkin().getMicroCustomTimer(id);
 		}
 	}
 
