@@ -1097,32 +1097,6 @@ public class BMSPlayer extends MainState {
 		return playinfo;
 	}
 
-
-	/**
-	 * Sets the player's internal time (Rewind / Fast-Forward).
-	 * Used primarily in Practice Mode.
-	 * @param newTime in milliseconds
-	 */
-	public void setTime(long newTime) {
-		// Calculate time difference
-		long diff = newTime - timer.getNowTime(TIMER_PLAY);
-		// Update all base timers
-		for (int i = 0; i < timer.getTimer().length; i++) {
-			if (timer.isTimerOn(i)) {
-				timer.setTimer(i, timer.getNowTime(i) + diff);
-			}
-		}
-		// Reset state pointers for Notes and BGAs
-		resetNoteStates(newTime);
-		bga.resetVideoAndImages(newTime);
-	}
-
-	protected void resetNoteStates(long newTime) {
-		// Conceptually implemented:
-		// Iterate through all notes in the model and reset their active/hit status
-		// if their start time is greater than newTime.
-	}
-
 	public void update(int judge, long time) {
 		if (this.judge.getCombo() == 0) {
 			bga.setMisslayerTme(time);

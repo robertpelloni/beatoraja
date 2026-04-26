@@ -4,9 +4,9 @@ import bms.player.beatoraja.MainState;
 import bms.player.beatoraja.Resolution;
 import bms.player.beatoraja.SkinConfig.Offset;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.IntArray;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.util.*;
 import java.util.logging.Logger;
@@ -17,48 +17,6 @@ import java.util.logging.Logger;
  * @author exch
  */
 public class Skin {
-
-
-	public static class SkinObjectRenderer extends SpriteBatch {
-
-		public SkinObjectRenderer() {
-			super();
-		}
-
-		public SkinObjectRenderer(int size, com.badlogic.gdx.graphics.glutils.ShaderProgram defaultShader) {
-			super(size, defaultShader);
-		}
-
-		public static final int TYPE_NORMAL = 0;
-		public static final int TYPE_BILINEAR = 1;
-		public static final int TYPE_LINEAR = 2;
-		public static final int TYPE_LAYER = 3;
-		public static final int TYPE_FFMPEG = 4;
-		public static final int TYPE_DISTANCE_FIELD = 5;
-		public static final int TYPE_MIRROR = 6;
-		public static final int TYPE_FLIP = 7;
-		public static final int TYPE_FLIP_MIRROR = 8;
-
-
-		private int type = 0;
-		private int blend = 0;
-
-		public void setBlend(int blend) {
-			this.blend = blend;
-		}
-
-		public int getBlend() {
-			return blend;
-		}
-
-		public void setType(int type) {
-			this.type = type;
-		}
-
-		public int getType() {
-			return type;
-		}
-	}
 
 	/**
 	 * 幅
@@ -229,11 +187,11 @@ public class Skin {
 		option.clear();
 	}
 
-	public void drawAllObjects(SkinObjectRenderer sprite, MainState state) {
-		final long time = state.timer.getNowTime();
+	public void drawAllObjects(SpriteBatch sprite, MainState state) {
+		final long time = state.getNowTime();
 		for (SkinObject obj : objectarray) {
 			if (isDraw(obj.getOption(), state)) {
-				obj.draw(sprite);
+				obj.draw(sprite, time, state);
 			}
 		}
 	}

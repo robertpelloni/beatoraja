@@ -63,15 +63,6 @@ public final class PlayerConfig {
 	/**
 	 * スコアターゲット
 	 */
-
-	private String target2id = "RATE_AA";
-	private String target3id = "RATE_A";
-
-	public String getTarget2id() { return target2id; }
-	public void setTarget2id(String target2id) { this.target2id = target2id; }
-	public String getTarget3id() { return target3id; }
-	public void setTarget3id(String target3id) { this.target3id = target3id; }
-
 	private String targetid = "MAX";
 	
 	private String[] targetlist = new String[] {"RATE_A-","RATE_A", "RATE_A+","RATE_AA-","RATE_AA", "RATE_AA+", "RATE_AAA-", "RATE_AAA", "RATE_AAA+", "RATE_MAX-", "MAX"
@@ -260,18 +251,6 @@ public final class PlayerConfig {
 	private boolean lr2LN = false;
 	private boolean lr2Total = false;
 	private boolean autoScratch = false;
-
-	// Arena Mode
-	private String arenaServerIP = "localhost";
-	private int arenaPort = 12345;
-	private String arenaPlayerName = "Player";
-
-	// Osu! Mode
-	private float osuHitSoundVolume = 1.0f;
-	private float osuBackgroundDim = 0.5f;
-
-	// Mission Mode
-	private boolean missionAutoAccept = true;
 
 	public PlayerConfig() {
 		validate();
@@ -852,54 +831,6 @@ public final class PlayerConfig {
 		this.autoScratch = autoScratch;
 	}
 
-	public String getArenaServerIP() {
-		return arenaServerIP;
-	}
-
-	public void setArenaServerIP(String arenaServerIP) {
-		this.arenaServerIP = arenaServerIP;
-	}
-
-	public int getArenaPort() {
-		return arenaPort;
-	}
-
-	public void setArenaPort(int arenaPort) {
-		this.arenaPort = arenaPort;
-	}
-
-	public String getArenaPlayerName() {
-		return arenaPlayerName;
-	}
-
-	public void setArenaPlayerName(String arenaPlayerName) {
-		this.arenaPlayerName = arenaPlayerName;
-	}
-
-	public float getOsuHitSoundVolume() {
-		return osuHitSoundVolume;
-	}
-
-	public void setOsuHitSoundVolume(float osuHitSoundVolume) {
-		this.osuHitSoundVolume = osuHitSoundVolume;
-	}
-
-	public float getOsuBackgroundDim() {
-		return osuBackgroundDim;
-	}
-
-	public void setOsuBackgroundDim(float osuBackgroundDim) {
-		this.osuBackgroundDim = osuBackgroundDim;
-	}
-
-	public boolean isMissionAutoAccept() {
-		return missionAutoAccept;
-	}
-
-	public void setMissionAutoAccept(boolean missionAutoAccept) {
-		this.missionAutoAccept = missionAutoAccept;
-	}
-
 	public void validate() {
 		if(skin == null) {
 			skin = new SkinConfig[SkinType.getMaxSkinTypeID() + 1];
@@ -958,8 +889,6 @@ public final class PlayerConfig {
 		doubleoption = MathUtils.clamp(doubleoption, 0, 3);
 		chartReplicationMode = chartReplicationMode != null ? chartReplicationMode : "NONE";
 		targetid = targetid!= null ? targetid : "MAX";
-		target2id = target2id!= null ? target2id : "RATE_AA";
-		target3id = target3id!= null ? target3id : "RATE_A";
 		targetlist = targetlist != null ? targetlist : new String[0];
 		judgetiming = MathUtils.clamp(judgetiming, JUDGETIMING_MIN, JUDGETIMING_MAX);
 		misslayerDuration = MathUtils.clamp(misslayerDuration, 0, 5000);
@@ -1013,15 +942,6 @@ public final class PlayerConfig {
 
 		// --Stream
 		maxRequestCount = MathUtils.clamp(maxRequestCount, 0, 100);
-
-		// Arena
-		if (arenaServerIP == null) arenaServerIP = "localhost";
-		arenaPort = MathUtils.clamp(arenaPort, 1, 65535);
-		if (arenaPlayerName == null) arenaPlayerName = "Player";
-
-		// Osu!
-		osuHitSoundVolume = MathUtils.clamp(osuHitSoundVolume, 0.0f, 1.0f);
-		osuBackgroundDim = MathUtils.clamp(osuBackgroundDim, 0.0f, 1.0f);
 	}
 
 	public static void init(Config config) {

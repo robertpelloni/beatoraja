@@ -2,6 +2,7 @@ package bms.player.beatoraja.skin.property;
 
 import bms.player.beatoraja.*;
 import bms.player.beatoraja.config.KeyConfiguration;
+import bms.player.beatoraja.MainState.MainStateType;
 import bms.player.beatoraja.ir.*;
 import bms.player.beatoraja.play.JudgeAlgorithm;
 import bms.player.beatoraja.play.TargetProperty;
@@ -112,7 +113,7 @@ public class EventFactory {
 		 */
 		keyconfig(13, (state) -> {
 			if(state instanceof MusicSelector) {
-				state.main.changeState(bms.player.beatoraja.MainController.STATE_CONFIG);
+				state.main.changeState(MainStateType.CONFIG);
 			}
 		}),
 		/**
@@ -120,7 +121,7 @@ public class EventFactory {
 		 */
 		skinconfig(14, (state) -> {
 			if(state instanceof MusicSelector) {
-				state.main.changeState(bms.player.beatoraja.MainController.STATE_SKIN_SELECT);
+				state.main.changeState(MainStateType.SKINCONFIG);
 			}			
 		}),
 		play(15, (state) -> {
@@ -207,7 +208,7 @@ public class EventFactory {
 			if(state instanceof MusicSelector selector) {
 	            PlayConfig pc = selector.getSelectedBarPlayConfig();
 	            if (pc != null) {
-	                state.main.getConfig().setFixhispeed((state.main.getConfig().getFixhispeed() + (arg1 >= 0 ? 1 : 4)) % 5);
+	                pc.setFixhispeed((pc.getFixhispeed() + (arg1 >= 0 ? 1 : 4)) % 5);
 	                state.play(OPTION_CHANGE);
 	            }				
 			}
@@ -218,8 +219,8 @@ public class EventFactory {
 		hispeed1p(57, (state, arg1) -> {
 			if(state instanceof MusicSelector selector) {
 	            PlayConfig pc = selector.getSelectedBarPlayConfig();	            
-		float hispeed = pc.getHispeed() + (arg1 >= 0 ? state.main.getConfig().getHispeedMargin() : -state.main.getConfig().getHispeedMargin());
-		hispeed = MathUtils.clamp(hispeed, 0.25f, 10.0f);
+            	float hispeed = pc.getHispeed() + (arg1 >= 0 ? pc.getHispeedMargin() : -pc.getHispeedMargin());
+            	hispeed = MathUtils.clamp(hispeed, PlayConfig.HISPEED_MIN, PlayConfig.HISPEED_MAX);
             	if(hispeed != pc.getHispeed()) {
             		pc.setHispeed(hispeed);
 	                state.play(OPTION_CHANGE);		        	
@@ -234,7 +235,7 @@ public class EventFactory {
 	            PlayConfig pc = selector.getSelectedBarPlayConfig();	            
             	final int inc = arg2 > 0 ? arg2 : 1;
             	int duration = pc.getDuration() + (arg1 >= 0 ? inc : -inc);
-			duration = MathUtils.clamp(duration, 100, 1000);
+        		duration = MathUtils.clamp(duration, PlayConfig.DURATION_MIN, PlayConfig.DURATION_MAX);
 		        if(duration != pc.getDuration()) {
 		        	pc.setDuration(duration);
 	                state.play(OPTION_CHANGE);		        	
@@ -245,7 +246,7 @@ public class EventFactory {
 			if(state instanceof MusicSelector selector) {
 				PlayConfig pc = selector.getSelectedBarPlayConfig();
 				if (pc != null) {
-					state.main.getConfig().setHispeedAutoAdjust(!state.main.getConfig().isEnableHispeedAutoAdjust());
+					pc.setHispeedAutoAdjust(!pc.isEnableHispeedAutoAdjust());
 					state.play(OPTION_CHANGE);
 				}
 			}
@@ -264,7 +265,7 @@ public class EventFactory {
 		 * 楽曲ファイルのIRサイトをOS既定のブラウザーで開く
 		 */
 		open_ir(210, (state) -> {
-			IRConnection ir = state.main.getIRConnection();
+			IRConnection ir = state.main.getIRStatus().length > 0 ? state.main.getIRStatus()[0].connection : null;
 			if(ir == null) {
 				return;
 			}
@@ -656,7 +657,7 @@ public class EventFactory {
 			if(state instanceof MusicSelector selector) {
 				PlayConfig pc = selector.getSelectedBarPlayConfig();
 				if (pc != null) {
-					state.main.getConfig().setEnablehidden(!state.main.getConfig().isEnablehidden());
+					pc.setEnablehidden(!pc.isEnablehidden());
 					state.play(OPTION_CHANGE);
 				}
 			}
@@ -668,10 +669,10 @@ public class EventFactory {
 					return;
 				}
 				final JudgeAlgorithm[] algorithms = JudgeAlgorithm.defaultAlgorithm;
-				final String jt = state.main.getConfig().getJudgetype();
+				final String jt = pc.getJudgetype();
 				for (int i = 0; i < algorithms.length; i++) {
 					if (jt.equals(algorithms[i].name())) {
-						state.main.getConfig().setJudgetype(algorithms[(arg1 >= 0 ? i + 1 : i + algorithms.length - 1) % algorithms.length].name());
+						pc.setJudgetype(algorithms[(arg1 >= 0 ? i + 1 : i + algorithms.length - 1) % algorithms.length].name());
 						state.play(OPTION_CHANGE);
 					}
 				}
@@ -749,7 +750,7 @@ public class EventFactory {
 			if(state instanceof MusicSelector selector) {
 				PlayConfig pc = selector.getSelectedBarPlayConfig();
 				if (pc != null) {
-					state.main.getConfig().setEnableConstant(!state.main.getConfig().isEnableConstant());
+					pc.setEnableConstant(!pc.isEnableConstant());
 					state.play(OPTION_CHANGE);
 				}
 			}

@@ -95,7 +95,6 @@ public class PreviewMusicProcessor {
                     audio.stop(playing);
                     audio.dispose(playing);
                 } else if(pause) {
-<<<<<<< HEAD
                 	for(int i = 10;i >= 0;i--) {
                 		float vol = i * 0.1f * config.getSystemvolume();
                         audio.setVolume(playing, vol);
@@ -105,13 +104,6 @@ public class PreviewMusicProcessor {
 						} catch (InterruptedException e) {
 						}
                 	}
-=======
-                    audio.fadeOutAndStop(playing, 150);
-                    try {
-                        sleep(150);
-                    } catch (InterruptedException e) {
-                    }
->>>>>>> origin/feature/launcher-enhancement-docs-10151933133890025217
                 } else {
                     audio.stop(playing);
                 }

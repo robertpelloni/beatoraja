@@ -210,11 +210,6 @@ public class PlayConfigurationView implements Initializable {
 	private CheckBox showhiddennote;
 	@FXML
 	private ComboBox<String> target;
-	@FXML
-	private ComboBox<String> target2;
-	@FXML
-	private ComboBox<String> target3;
-
 
 	@FXML
 	private ComboBox<Integer> judgealgorithm;
@@ -270,25 +265,6 @@ public class PlayConfigurationView implements Initializable {
 	private TableEditorView tableController;
 	@FXML
     private StreamEditorView streamController;
-	@FXML
-	private ArenaConfigurationView arenaController;
-	@FXML
-	private MissionConfigurationView missionController;
-	@FXML
-	private OsuConfigurationView osuController;
-    @FXML
-    private CourseEditorView courseController;
-    @FXML
-    private ReplayAnalysisView replayController;
-
-	@FXML
-	private Tab arenaTab;
-	@FXML
-	private Tab missionTab;
-	@FXML
-	private Tab osuTab;
-    @FXML
-    private Tab replayTab;
 
 	private Config config;
 	private PlayerConfig player;
@@ -350,99 +326,6 @@ public class PlayConfigurationView implements Initializable {
 
 		notesdisplaytiming.setValueFactoryValues(PlayerConfig.JUDGETIMING_MIN, PlayerConfig.JUDGETIMING_MAX, 0, 1);
 		resourceController.init(this);
-
-		// Add Tooltips
-		players.setTooltip(new Tooltip("Select the player profile to configure."));
-		playername.setTooltip(new Tooltip("Change the name of the current player profile."));
-		playconfig.setTooltip(new Tooltip("Select the key mode to configure (e.g., 7KEYS, 14KEYS)."));
-		hispeed.setTooltip(new Tooltip("Set the default Hi-Speed (scroll speed multiplier)."));
-		fixhispeed.setTooltip(new Tooltip("Automatically adjust Hi-Speed based on BPM (Start/Main/Max/Min)."));
-		gvalue.setTooltip(new Tooltip("Green Number: Visible duration of notes in ms. Lower = Faster."));
-		enableConstant.setTooltip(new Tooltip("Enable constant scroll speed regardless of BPM changes (Assist)."));
-		constFadeinTime.setTooltip(new Tooltip("Fade-in time for Sud+ when using constant speed."));
-		hispeedmargin.setTooltip(new Tooltip("Margin for Hi-Speed adjustments."));
-		hispeedautoadjust.setTooltip(new Tooltip("Automatically adjust Hi-Speed during play."));
-
-		lr2Gauge.setTooltip(new Tooltip("Use LR2-style gauge behavior (affects recovery/damage)."));
-		lr2Judge.setTooltip(new Tooltip("Use LR2-style judgment timing windows."));
-		lr2LN.setTooltip(new Tooltip("Use LR2-style Long Note mechanics (no release timing)."));
-		lr2Total.setTooltip(new Tooltip("Use LR2-style Total value calculation for gauge increase."));
-
-		scoreop.setTooltip(new Tooltip("Random options for 1P side (Mirror, Random, S-Random, etc)."));
-		scoreop2.setTooltip(new Tooltip("Random options for 2P side (for Double Play)."));
-		doubleop.setTooltip(new Tooltip("Double Play options (Flip, Battle)."));
-		gaugeop.setTooltip(new Tooltip("Select the gauge type (Groove, Hard, Ex-Hard, etc)."));
-		lntype.setTooltip(new Tooltip("Long Note Type: LN (Hold), CN (Charge), HCN (Hell Charge)."));
-
-		enableLanecover.setTooltip(new Tooltip("Enable Sudden+ (Lane Cover) to hide top part of the lane."));
-		lanecover.setTooltip(new Tooltip("Height of the Lane Cover."));
-		lanecovermarginlow.setTooltip(new Tooltip("Lower margin for Lane Cover floating."));
-		lanecovermarginhigh.setTooltip(new Tooltip("Upper margin for Lane Cover floating."));
-		lanecoverswitchduration.setTooltip(new Tooltip("Duration of Lane Cover animation when switching."));
-
-		enableLift.setTooltip(new Tooltip("Enable Lift to raise the judgment line."));
-		lift.setTooltip(new Tooltip("Height of the Lift."));
-		enableHidden.setTooltip(new Tooltip("Enable Hidden (notes disappear before judgment line)."));
-		hidden.setTooltip(new Tooltip("Height of the Hidden effect."));
-
-		bgmpath.setTooltip(new Tooltip("Path to custom BGM folder (LR2 compatible)."));
-		soundpath.setTooltip(new Tooltip("Path to custom Sound folder (LR2 compatible)."));
-
-		notesdisplaytiming.setTooltip(new Tooltip("Global offset in ms. + = Late, - = Early."));
-		notesdisplaytimingautoadjust.setTooltip(new Tooltip("Automatically adjust offset based on your play."));
-		bpmguide.setTooltip(new Tooltip("Show BPM changes on the lane (Assist)."));
-
-		gaugeautoshift.setTooltip(new Tooltip("Automatically switch to easier gauge if failed (e.g. Hard -> Normal)."));
-		bottomshiftablegauge.setTooltip(new Tooltip("Lowest gauge allowed for Auto Shift."));
-
-		customjudge.setTooltip(new Tooltip("Enable custom judgment windows (Assist)."));
-		njudgepg.setTooltip(new Tooltip("Perfect Great window size (%)."));
-		njudgegr.setTooltip(new Tooltip("Great window size (%)."));
-		njudgegd.setTooltip(new Tooltip("Good window size (%)."));
-		sjudgepg.setTooltip(new Tooltip("Scratch Perfect Great window size (%)."));
-		sjudgegr.setTooltip(new Tooltip("Scratch Great window size (%)."));
-		sjudgegd.setTooltip(new Tooltip("Scratch Good window size (%)."));
-
-		minemode.setTooltip(new Tooltip("Add or remove Mines (Landmines) from the chart."));
-		scrollmode.setTooltip(new Tooltip("Add or remove Scroll Speed changes from the chart."));
-		longnotemode.setTooltip(new Tooltip("Convert notes to Long Notes (LN/CN/HCN)."));
-		longnoterate.setTooltip(new Tooltip("Percentage of notes to convert to Long Notes."));
-
-		hranthresholdbpm.setTooltip(new Tooltip("BPM threshold for H-Random to avoid jacks."));
-		seventoninepattern.setTooltip(new Tooltip("Pattern for 9-Key conversion (Pop'n Music)."));
-		seventoninetype.setTooltip(new Tooltip("Type of 9-Key conversion."));
-		exitpressduration.setTooltip(new Tooltip("Time in ms to hold Start+Select to exit a song."));
-
-		chartpreview.setTooltip(new Tooltip("Show chart preview in Music Select."));
-		guidese.setTooltip(new Tooltip("Play a guide sound (clap) on every note (Assist)."));
-		windowhold.setTooltip(new Tooltip("Simulate holding Start button (Hi-Speed adjustment mode)."));
-		extranotedepth.setTooltip(new Tooltip("Density of Extra Notes (if enabled)."));
-
-		judgeregion.setTooltip(new Tooltip("Show visual judgment area on the lane."));
-		markprocessednote.setTooltip(new Tooltip("Keep note image visible after hitting it."));
-		showhiddennote.setTooltip(new Tooltip("Show hidden notes (invisible notes with sound)."));
-		target.setTooltip(new Tooltip("Select target score for Pacemaker graph (e.g., AAA, Rival Best)."));
-
-		judgealgorithm.setTooltip(new Tooltip("Algorithm for judgment processing (LR2 / AC / Bottom Priority)."));
-
-		autosavereplay1.setTooltip(new Tooltip("Condition to save Replay Slot 1 (e.g., Always, High Score)."));
-		autosavereplay2.setTooltip(new Tooltip("Condition to save Replay Slot 2."));
-		autosavereplay3.setTooltip(new Tooltip("Condition to save Replay Slot 3."));
-		autosavereplay4.setTooltip(new Tooltip("Condition to save Replay Slot 4."));
-
-		usecim.setTooltip(new Tooltip("Cache skin images for faster loading."));
-
-		txtTwitterConsumerKey.setTooltip(new Tooltip("Twitter API Consumer Key."));
-		txtTwitterConsumerSecret.setTooltip(new Tooltip("Twitter API Consumer Secret."));
-		twitterAuthButton.setTooltip(new Tooltip("Start Twitter OAuth authentication."));
-		txtTwitterPIN.setTooltip(new Tooltip("Enter PIN from Twitter."));
-		twitterPINButton.setTooltip(new Tooltip("Complete authentication."));
-
-		enableIpfs.setTooltip(new Tooltip("Enable IPFS for decentralized song downloading."));
-		ipfsurl.setTooltip(new Tooltip("URL of the IPFS gateway."));
-
-		discord.setTooltip(new Tooltip("Enable Discord Rich Presence integration."));
-		clipboardScreenshot.setTooltip(new Tooltip("Copy screenshots to clipboard automatically."));
 
 		checkNewVersion();
 		Logger.getGlobal().info("初期化時間(ms) : " + (System.currentTimeMillis() - t));
@@ -517,28 +400,6 @@ public class PlayConfigurationView implements Initializable {
 			Class.forName("org.sqlite.JDBC");
 			tableController.init(MainLoader.getScoreDatabaseAccessor());
 			tableController.update(Paths.get(config.getTablepath() + "/" + "default.json"));
-            if (courseController != null) {
-                courseController.init(MainLoader.getScoreDatabaseAccessor());
-            }
-            if (replayController != null && replayTab != null) {
-                replayTab.setOnSelectionChanged(e -> {
-                    if (replayTab.isSelected()) {
-                        try {
-                            // Load recent scores (last 50)
-                            // We need to cast to ScoreDatabaseAccessor to access getScoreDatas,
-                            // however MainLoader.getScoreDatabaseAccessor returns a SongDatabaseAccessor (SQLiteSongDatabaseAccessor).
-                            // Wait, SQLiteDatabaseAccessor implements both.
-                            // But SongDatabaseAccessor does not have getScoreDatas(String sql).
-                            // Actually we should access ScoreDatabaseAccessor.
-                            bms.player.beatoraja.ScoreDatabaseAccessor scoreDb = new bms.player.beatoraja.ScoreDatabaseAccessor(config.getPlayerpath() + "/" + player.getId() + "/score.db");
-                            List<ScoreData> scores = scoreDb.getScoreDatas("1 ORDER BY date DESC LIMIT 50");
-                            replayController.setScoreData(scores);
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
-                        }
-                    }
-                });
-            }
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -623,18 +484,10 @@ public class PlayConfigurationView implements Initializable {
 		String[] targets = player.getTargetlist();
 		target.getItems().setAll(targets);
 		target.setValue(player.getTargetid());
-		target2.getItems().setAll(targets);
-		target2.setValue(player.getTarget2id());
-		target3.getItems().setAll(targets);
-		target3.setValue(player.getTarget3id());
 		showhiddennote.setSelected(player.isShowhiddennote());
 
 		irController.update(player);
 		streamController.update(player);
-		arenaController.update(player);
-		missionController.update(player);
-		osuController.update(player);
-		// courseController.init(MainLoader.getScoreDatabaseAccessor()); // Deferred initialization
 
 		txtTwitterPIN.setDisable(true);
 		twitterPINButton.setDisable(true);
@@ -736,17 +589,12 @@ public class PlayConfigurationView implements Initializable {
 
 		player.setShowjudgearea(judgeregion.isSelected());
 		player.setTargetid(target.getValue());
-		player.setTarget2id(target2.getValue());
-		player.setTarget3id(target3.getValue());
 
 		player.setShowhiddennote(showhiddennote.isSelected());
 
 		inputController.commit();
 		irController.commit();
 		streamController.commit();
-		arenaController.commit(player);
-		missionController.commit(player);
-		osuController.commit(player);
 
 		updatePlayConfig();
 		skinController.commit();
@@ -847,10 +695,6 @@ public class PlayConfigurationView implements Initializable {
 		otherTab.setDisable(true);
 		irTab.setDisable(true);
 		streamTab.setDisable(true);
-		arenaTab.setDisable(true);
-		missionTab.setDisable(true);
-		osuTab.setDisable(true);
-		courseTab.setDisable(true);
 		controlPanel.setDisable(true);
 
 		MainLoader.play(null, bms.player.beatoraja.BMSPlayerMode.PLAY, true, config, player, songUpdated);

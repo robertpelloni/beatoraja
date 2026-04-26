@@ -205,13 +205,6 @@ public class IntegerPropertyFactory {
 				}
 				return Integer.MIN_VALUE;
 			};
-		case NUMBER_STEPUP_LEVEL:
-			return (state) -> {
-				if(state.main.getStepUpManager() != null) {
-					return state.main.getStepUpManager().getCurrentLevel();
-				}
-				return Integer.MIN_VALUE;
-			};
 		case NUMBER_ARENA_PLAYERS:
 			return (state) -> {
 				if (state.main.getArenaManager() != null) {
@@ -1148,11 +1141,7 @@ public class IntegerPropertyFactory {
 			}
 			return Integer.MIN_VALUE;
 		}),
-		target2_score(64, (state) -> { return state.getNotesRankTarget2Score(); }),
-		target2_score_diff(65, (state) -> { return state.getNotesRankTarget2Score() - state.getExScore(); }),
-		target3_score(66, (state) -> { return state.getNotesRankTarget3Score(); }),
-		target3_score_diff(67, (state) -> { return state.getNotesRankTarget3Score() - state.getExScore(); }),
-
+		// TODO 64-69はtarget2, target3に割り当てたい
 
 		hispeedautoadjust(342, (state) -> {
 			PlayConfig pc = null;

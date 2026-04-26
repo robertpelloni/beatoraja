@@ -10,11 +10,9 @@ public class ArenaMessage {
     public static final int TYPE_READY = 5;
     public static final int TYPE_START_GAME = 6;
     public static final int TYPE_RULES = 7;
-    public static final int TYPE_CHAT = 8;
 
     public int type;
     public String playerName;
-    public String message;
     public int score;
     public String songHash;
     public boolean isReady;

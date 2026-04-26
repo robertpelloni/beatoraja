@@ -84,7 +84,7 @@ public final class PlayModeConfig {
             playconfig = new PlayConfig();
         }
 
-        // playconfig.validate();
+        playconfig.validate();
 
         if (keyboard.keys == null) {
             keyboard.keys = new int[] { Keys.Z, Keys.S, Keys.X, Keys.D, Keys.C, Keys.F, Keys.V, Keys.SHIFT_LEFT,
@@ -107,7 +107,7 @@ public final class PlayModeConfig {
         for (ControllerConfig c : controller) {
             if (c.keys == null) {
                 c.keys = new int[] { BMKeys.BUTTON_4, BMKeys.BUTTON_7, BMKeys.BUTTON_3, BMKeys.BUTTON_8,
-                        BMKeys.BUTTON_2, BMKeys.BUTTON_5, BMKeys.DOWN, BMKeys.RIGHT, BMKeys.LEFT };
+                        BMKeys.BUTTON_2, BMKeys.BUTTON_5, BMKeys.AXIS2_PLUS, BMKeys.AXIS1_PLUS, BMKeys.AXIS1_MINUS };
             }
             if (c.keys.length != keys) {
                 int[] newkeys = new int[keys];
@@ -124,8 +124,8 @@ public final class PlayModeConfig {
 		if(version == 0) {
 	        for (ControllerConfig c : controller) {
 				for(int i = 0;i < c.keys.length;i++) {
-					if(c.keys[i] >= BMKeys.UP && c.keys[i] <= BMKeys.RIGHT) {
-						c.keys[i] += BMKeys.RIGHT - BMKeys.UP;
+					if(c.keys[i] >= BMKeys.BUTTON_17 && c.keys[i] <= BMKeys.BUTTON_20) {
+						c.keys[i] += BMKeys.AXIS1_PLUS - BMKeys.BUTTON_17;
 					}
 				}	        	
 	        }
@@ -435,13 +435,13 @@ public final class PlayModeConfig {
         private int analogScratchThreshold = 100;
 
         private static final ControllerConfig IIDX_PS2 = new ControllerConfig(new int[] { BMKeys.BUTTON_4, BMKeys.BUTTON_7, BMKeys.BUTTON_3, BMKeys.BUTTON_8,
-				BMKeys.BUTTON_2, BMKeys.BUTTON_5, BMKeys.LEFT, BMKeys.DOWN, BMKeys.UP },
+				BMKeys.BUTTON_2, BMKeys.BUTTON_5, BMKeys.AXIS4_MINUS, BMKeys.AXIS3_MINUS, BMKeys.AXIS3_PLUS }, 
 					BMKeys.BUTTON_9, BMKeys.BUTTON_10);
         private static final ControllerConfig DAO = new ControllerConfig(new int[] { BMKeys.BUTTON_1, BMKeys.BUTTON_2, BMKeys.BUTTON_3, BMKeys.BUTTON_4,
-					BMKeys.BUTTON_5, BMKeys.BUTTON_6, BMKeys.BUTTON_7, BMKeys.RIGHT, BMKeys.LEFT },
+					BMKeys.BUTTON_5, BMKeys.BUTTON_6, BMKeys.BUTTON_7, BMKeys.AXIS1_PLUS, BMKeys.AXIS1_MINUS }, 
 						BMKeys.BUTTON_9, BMKeys.BUTTON_10);
         private static final ControllerConfig IIDX_PREMIUM = new ControllerConfig(new int[] { BMKeys.BUTTON_1, BMKeys.BUTTON_2, BMKeys.BUTTON_3, BMKeys.BUTTON_4,
-					BMKeys.BUTTON_5, BMKeys.BUTTON_6, BMKeys.BUTTON_7, BMKeys.LEFT, BMKeys.RIGHT },
+					BMKeys.BUTTON_5, BMKeys.BUTTON_6, BMKeys.BUTTON_7, BMKeys.AXIS1_MINUS, BMKeys.AXIS1_PLUS }, 
 						BMKeys.BUTTON_9, BMKeys.BUTTON_10);
 
         public ControllerConfig() {

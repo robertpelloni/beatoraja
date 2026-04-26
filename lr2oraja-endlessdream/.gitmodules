@@ -1,0 +1,6 @@
+[submodule "core/dependencies/jbms-parser"]
+	path = core/dependencies/jbms-parser
+	url = ../../jbms-parser
+[submodule "core/dependencies/jbmstable-parser"]
+	path = core/dependencies/jbmstable-parser
+	url = ../../jbmstable-parser

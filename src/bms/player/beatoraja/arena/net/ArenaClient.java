@@ -67,9 +67,6 @@ public class ArenaClient {
                         manager.onRemoteSongSelected(msg.songHash);
                     }
                     break;
-                case ArenaMessage.TYPE_CHAT:
-                    manager.onChatMessage(msg.playerName, msg.message);
-                    break;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -95,14 +92,6 @@ public class ArenaClient {
     public void sendRules(int gauge) {
         ArenaMessage msg = new ArenaMessage(ArenaMessage.TYPE_RULES, playerName, 0);
         msg.ruleGauge = gauge;
-        sendMessage(msg);
-    }
-
-    public void sendChat(String message) {
-        ArenaMessage msg = new ArenaMessage();
-        msg.type = ArenaMessage.TYPE_CHAT;
-        msg.playerName = playerName;
-        msg.message = message;
         sendMessage(msg);
     }
 

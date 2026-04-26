@@ -92,10 +92,6 @@ public class ModMenu {
     private Slider bgmVolumeSlider;
     private Label bgmVolumeLabel;
     private TextButton guideSEButton;
-    private Slider osuVolumeSlider;
-    private Label osuVolumeLabel;
-    private Slider osuDimSlider;
-    private Label osuDimLabel;
 
     // Arena UI
     private Window arenaWindow;
@@ -104,15 +100,6 @@ public class ModMenu {
     private TextField nameField;
     private Label arenaStatusLabel;
     private Label arenaPlayersLabel;
-    private Label chatLogLabel;
-    private TextField chatInputField;
-
-
-    // Visualization UI
-    private Window vizWindow;
-    private CheckBox showHitErrorGraph;
-    private CheckBox showNotesRadar;
-    private CheckBox showFastSlowCounts;
 
     // Missions UI
     private Window missionsWindow;
@@ -689,39 +676,6 @@ public class ModMenu {
         content.add(guideSEButton).pad(5);
         content.row();
 
-        // Osu Settings
-        osuVolumeLabel = new Label("Osu Vol: " + (int)(player.resource.getPlayerConfig().getOsuHitSoundVolume() * 100) + "%", skin);
-        osuVolumeSlider = new Slider(0f, 1f, 0.05f, false, skin);
-        osuVolumeSlider.setValue(player.resource.getPlayerConfig().getOsuHitSoundVolume());
-        osuVolumeSlider.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                float val = osuVolumeSlider.getValue();
-                player.resource.getPlayerConfig().setOsuHitSoundVolume(val);
-                osuVolumeLabel.setText("Osu Vol: " + (int)(val * 100) + "%");
-            }
-        });
-        content.add(osuVolumeLabel).pad(2);
-        content.row();
-        content.add(osuVolumeSlider).width(200).pad(2);
-        content.row();
-
-        osuDimLabel = new Label("BG Dim: " + (int)(player.resource.getPlayerConfig().getOsuBackgroundDim() * 100) + "%", skin);
-        osuDimSlider = new Slider(0f, 1f, 0.05f, false, skin);
-        osuDimSlider.setValue(player.resource.getPlayerConfig().getOsuBackgroundDim());
-        osuDimSlider.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                float val = osuDimSlider.getValue();
-                player.resource.getPlayerConfig().setOsuBackgroundDim(val);
-                osuDimLabel.setText("BG Dim: " + (int)(val * 100) + "%");
-            }
-        });
-        content.add(osuDimLabel).pad(2);
-        content.row();
-        content.add(osuDimSlider).width(200).pad(2);
-        content.row();
-
         TextButton closeButton = new TextButton("Close", skin);
         closeButton.addListener(new ClickListener() {
             @Override
@@ -740,42 +694,17 @@ public class ModMenu {
         arenaWindow = new Window("Arena Mode", skin);
         arenaWindow.getTitleLabel().setAlignment(1);
 
-        // Add Listener to receive chat
-        player.main.getArenaManager().addListener(new ArenaManager.ArenaListener() {
-            @Override
-            public void onSongSelected(String songHash) {}
-            @Override
-            public void onStartGame() {}
-            @Override
-            public void onChatMessage(String sender, String message) {
-                if (chatLogLabel != null) {
-                    Gdx.app.postRunnable(() -> {
-                        String current = chatLogLabel.getText().toString();
-                        String line = sender + ": " + message + "\n";
-                        // Keep last 10 lines
-                        String[] lines = (current + line).split("\n");
-                        StringBuilder sb = new StringBuilder();
-                        int start = Math.max(0, lines.length - 10);
-                        for (int i = start; i < lines.length; i++) {
-                            sb.append(lines[i]).append("\n");
-                        }
-                        chatLogLabel.setText(sb.toString());
-                    });
-                }
-            }
-        });
-
         Table content = new Table();
         arenaWindow.add(content).pad(10);
 
         Label nameLabel = new Label("Name:", skin);
-        nameField = new TextField(player.resource.getPlayerConfig().getArenaPlayerName(), skin);
+        nameField = new TextField("Player", skin);
 
         Label hostLabel = new Label("Host:", skin);
-        hostField = new TextField(player.resource.getPlayerConfig().getArenaServerIP(), skin);
+        hostField = new TextField("localhost", skin);
 
         Label portLabel = new Label("Port:", skin);
-        portField = new TextField(String.valueOf(player.resource.getPlayerConfig().getArenaPort()), skin);
+        portField = new TextField("5073", skin);
 
         content.add(nameLabel);
         content.add(nameField).width(150);
@@ -884,31 +813,6 @@ public class ModMenu {
         content.row();
         content.add(arenaPlayersLabel).colspan(2).padTop(10);
 
-        // Chat UI
-        chatLogLabel = new Label("Chat Log:\n\n\n\n\n", skin);
-        chatLogLabel.setWrap(true);
-        content.row();
-        content.add(chatLogLabel).colspan(2).width(300).height(100).padTop(10);
-
-        chatInputField = new TextField("", skin);
-        TextButton sendChatButton = new TextButton("Send", skin);
-        sendChatButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                String msg = chatInputField.getText();
-                if (msg != null && !msg.isEmpty()) {
-                    player.main.getArenaManager().sendChat(msg);
-                    chatInputField.setText("");
-                }
-            }
-        });
-
-        Table chatInputTable = new Table();
-        chatInputTable.add(chatInputField).width(230);
-        chatInputTable.add(sendChatButton).width(60);
-        content.row();
-        content.add(chatInputTable).colspan(2).padTop(5);
-
         arenaWindow.pack();
         arenaWindow.setPosition((Gdx.graphics.getWidth() - arenaWindow.getWidth()) / 2 + 50, (Gdx.graphics.getHeight() - arenaWindow.getHeight()) / 2 - 50);
 
@@ -930,7 +834,6 @@ public class ModMenu {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 missionsWindow.setVisible(false);
-        if (vizWindow != null) vizWindow.setVisible(false);
             }
         });
 
@@ -940,35 +843,6 @@ public class ModMenu {
         missionsWindow.pack();
         missionsWindow.setPosition((Gdx.graphics.getWidth() - missionsWindow.getWidth()) / 2 - 50, (Gdx.graphics.getHeight() - missionsWindow.getHeight()) / 2 - 50);
         stage.addActor(missionsWindow);
-
-        // --- Visualization Window ---
-        vizWindow = new Window("Visualizations", skin);
-        vizWindow.setSize(300, 200);
-        vizWindow.setPosition(Gdx.graphics.getWidth() / 2f - 150f, Gdx.graphics.getHeight() / 2f - 100f);
-        vizWindow.setMovable(true);
-        vizWindow.setVisible(false);
-
-        showHitErrorGraph = new CheckBox("Show Hit Error Graph", skin);
-        showNotesRadar = new CheckBox("Show Notes Radar", skin);
-        showFastSlowCounts = new CheckBox("Show Fast/Slow Counts", skin);
-
-        Table vizTable = new Table();
-        vizTable.setFillParent(true);
-        vizTable.add(showHitErrorGraph).pad(5).row();
-        vizTable.add(showNotesRadar).pad(5).row();
-        vizTable.add(showFastSlowCounts).pad(5).row();
-
-        TextButton closeVizButton = new TextButton("Close", skin);
-        closeVizButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                vizWindow.setVisible(false);
-            }
-        });
-        vizTable.add(closeVizButton).padTop(10).row();
-        vizWindow.add(vizTable);
-        stage.addActor(vizWindow);
-
     }
 
     private float getHiSpeed() {
@@ -1300,17 +1174,6 @@ public class ModMenu {
 
             // Refresh values
             hispeedSlider.setValue(getHiSpeed());
-
-            // Refresh Audio Window if created
-            if (keyVolumeSlider != null) keyVolumeSlider.setValue(player.main.getConfig().getAudioConfig().getKeyvolume());
-            if (bgmVolumeSlider != null) bgmVolumeSlider.setValue(player.main.getConfig().getAudioConfig().getBgvolume());
-            if (osuVolumeSlider != null) osuVolumeSlider.setValue(player.resource.getPlayerConfig().getOsuHitSoundVolume());
-            if (osuDimSlider != null) osuDimSlider.setValue(player.resource.getPlayerConfig().getOsuBackgroundDim());
-
-            // Refresh Arena Window if created
-            if (nameField != null) nameField.setText(player.resource.getPlayerConfig().getArenaPlayerName());
-            if (hostField != null) hostField.setText(player.resource.getPlayerConfig().getArenaServerIP());
-            if (portField != null) portField.setText(String.valueOf(player.resource.getPlayerConfig().getArenaPort()));
 
             laneCoverSlider.setValue(getLaneCover() * 1000);
             laneCoverLabel.setText("Lane Cover: " + (int)laneCoverSlider.getValue());

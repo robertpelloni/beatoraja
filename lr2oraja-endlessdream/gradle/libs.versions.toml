@@ -1,0 +1,94 @@
+[versions]
+beatoraja = "0.8.8-endlessdream"
+endlessdream = "pre0.3.2"
+kotlin = "1.9.20"
+gdx = "1.13.1"
+gdx-controllers = "2.2.3"
+lwjgl = "3.3.3"
+imgui = "1.89.0"
+javacv = "1.5.9"
+ffmpeg = "6.0-1.5.9"
+jflac = "1.5.2"
+commons-codec = "1.15"
+commons-compress = "1.26.1"
+commons-csv = "1.14.1"
+commons-dbutils = "1.6"
+sqlite = "3.42.0.0"
+jackson = "2.13.4"
+twitter4j = "4.0.4"
+xz = "1.10"
+shapedrawer = "2.5.0"
+guacamole = "0.3.5"
+ebur128java = "1.2.6-2"
+jna = "5.13.0"
+websocket = "1.6.0"
+slf4j = "2.0.17"
+
+
+[libraries]
+kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+kotlin-serialization-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-serialization", version.ref = "kotlin" }
+
+gdx-core = { group = "com.badlogicgames.gdx", name = "gdx", version.ref = "gdx" }
+gdx-backend = { group = "com.badlogicgames.gdx", name = "gdx-backend-lwjgl3", version.ref = "gdx" }
+gdx-freetype = { group = "com.badlogicgames.gdx", name = "gdx-freetype", version.ref = "gdx" }
+gdx-platform = { group = "com.badlogicgames.gdx", name = "gdx-platform", version.ref = "gdx" }
+gdx-freetype-platform = { group = "com.badlogicgames.gdx", name = "gdx-freetype-platform", version.ref = "gdx" }
+gdx-controllers = { group = "com.badlogicgames.gdx", name = "gdx-", version.ref = "gdx" }
+
+gdx-controllers-core = { group = "com.badlogicgames.gdx-controllers", name = "gdx-controllers-core", version.ref = "gdx-controllers" }
+gdx-controllers-desktop = { group = "com.badlogicgames.gdx-controllers", name = "gdx-controllers-desktop", version.ref = "gdx-controllers" }
+
+shapedrawer = { group = "space.earlygrey", name = "shapedrawer", version.ref = "shapedrawer" }
+guacamole = { group = "com.github.crykn.guacamole", name = "gdx", version.ref = "guacamole" }
+
+lwjgl = { group = "org.lwjgl", name = "lwjgl", version.ref = "lwjgl" }
+lwjgl-glfw = { group = "org.lwjgl", name = "lwjgl-glfw", version.ref = "lwjgl" }
+lwjgl-jemalloc = { group = "org.lwjgl", name = "lwjgl-jemalloc", version.ref = "lwjgl" }
+lwjgl-openal = { group = "org.lwjgl", name = "lwjgl-openal", version.ref = "lwjgl" }
+lwjgl-opengl = { group = "org.lwjgl", name = "lwjgl-opengl", version.ref = "lwjgl" }
+lwjgl-stb = { group = "org.lwjgl", name = "lwjgl-stb", version.ref = "lwjgl" }
+
+imgui = { group = "io.github.spair", name = "imgui-java-binding", version.ref = "imgui" }
+imgui-lwjgl3 = { group = "io.github.spair", name = "imgui-java-lwjgl3", version.ref = "imgui" }
+imgui-linux = { group = "io.github.spair", name = "imgui-java-natives-linux", version.ref = "imgui" }
+imgui-windows = { group = "io.github.spair", name = "imgui-java-natives-windows", version.ref = "imgui" }
+imgui-macos = { group = "io.github.spair", name = "imgui-java-natives-macos", version.ref = "imgui" }
+
+javacv = { group = "org.bytedeco", name = "javacv", version.ref = "javacv" }
+javacpp = { group = "org.bytedeco", name = "javacpp", version.ref = "javacv" }
+ffmpeg = { group = "org.bytedeco", name = "ffmpeg", version.ref = "ffmpeg" }
+
+jflac = { group = "org.jflac", name = "jflac-codec", version.ref = "jflac" }
+commons-codec = { group = "commons-codec", name = "commons-codec", version.ref = "commons-codec" }
+
+commons-compress = { group = "org.apache.commons", name = "commons-compress", version.ref = "commons-compress" }
+commons-csv = { group = "org.apache.commons", name = "commons-csv", version.ref = "commons-csv" }
+commons-dbutils = { group = "commons-dbutils", name = "commons-dbutils", version.ref = "commons-dbutils" }
+xz = { group = "org.tukaani", name = "xz", version.ref = "xz" }
+sqlite = { group = "org.xerial", name = "sqlite-jdbc", version.ref = "sqlite" }
+
+jackson-core = { group = "com.fasterxml.jackson.core", name = "jackson-core", version.ref = "jackson" }
+jackson-databind = { group = "com.fasterxml.jackson.core", name = "jackson-databind", version.ref = "jackson" }
+jackson-annotations = { group = "com.fasterxml.jackson.core", name = "jackson-annotations", version.ref = "jackson" }
+jackson-xml = { group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-xml", version.ref = "jackson" }
+
+twitter4j = { group = "org.twitter4j" , name = "twitter4j-core", version.ref = "twitter4j" }
+ebur128java = { group = "io.github.llm96", name = "ebur128java", version.ref = "ebur128java" }
+
+jna = { group = "net.java.dev.jna", name = "jna", version.ref = "jna" }
+jna-platform = { group = "net.java.dev.jna", name = "jna-platform", version.ref = "jna" }
+
+javawebsocket = { group = "org.java-websocket", name = "Java-WebSocket", version.ref = "websocket" }
+slf4j = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j" }
+slf4j-jul = { group = "org.slf4j", name = "slf4j-jdk14", version.ref = "slf4j" }
+
+[bundles]
+libgdx = ["gdx-core", "gdx-backend", "gdx-freetype",  "gdx-controllers-core", "gdx-controllers-desktop"]
+lwjgl3 = ["lwjgl", "lwjgl-jemalloc", "lwjgl-glfw", "lwjgl-openal", "lwjgl-opengl", "lwjgl-stb"]
+imgui = ["imgui", "imgui-lwjgl3", "imgui-linux", "imgui-windows", "imgui-macos"]
+ffmpeg = ["javacv", "javacpp", "ffmpeg"]
+codecs = ["commons-codec", "jflac"]
+jackson = ["jackson-core", "jackson-databind", "jackson-annotations", "jackson-xml"]
+jna = ["jna", "jna-platform"]
+slf4j = ["slf4j", "slf4j-jul"]

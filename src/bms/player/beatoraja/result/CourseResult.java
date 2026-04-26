@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.FloatArray;
 
 import bms.model.BMSModel;
 import bms.player.beatoraja.*;
+import bms.player.beatoraja.MainController.IRStatus;
 import bms.player.beatoraja.input.BMSPlayerInputProcessor;
 import bms.player.beatoraja.input.KeyBoardInputProcesseor.ControlKeys;
 import bms.player.beatoraja.ir.*;

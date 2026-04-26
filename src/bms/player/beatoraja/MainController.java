@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
-
+import org.lwjgl.input.Mouse;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -26,7 +26,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.*;
 import com.badlogic.gdx.utils.StringBuilder;
 
-import bms.player.beatoraja.BMSPlayerMode;
+import bms.player.beatoraja.PlayerResource.PlayMode;
 import bms.player.beatoraja.audio.*;
 import bms.player.beatoraja.config.KeyConfiguration;
 import bms.player.beatoraja.config.SkinConfiguration;
@@ -55,32 +55,7 @@ import twitter4j.conf.ConfigurationBuilder;
  */
 public class MainController extends ApplicationAdapter {
 
-	private static String VERSION = "beatoraja (unknown version)";
-
-	static {
-		try {
-			java.io.InputStream is = MainController.class.getResourceAsStream("/VERSION.md");
-			if (is != null) {
-				java.util.Scanner scanner = new java.util.Scanner(is, "UTF-8").useDelimiter("\\A");
-				if (scanner.hasNext()) {
-					VERSION = "beatoraja " + scanner.next().trim();
-				}
-				scanner.close();
-			} else {
-				java.io.File versionFile = new java.io.File("VERSION.md");
-				if (versionFile.exists()) {
-					java.nio.file.Path path = versionFile.toPath();
-					VERSION = "beatoraja " + java.nio.file.Files.readString(path).trim();
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public static String getVersion() {
-		return VERSION;
-	}
+	public static final String VERSION = "beatoraja 0.6";
 
 	private static final boolean debug = false;
 
@@ -105,9 +80,6 @@ public class MainController extends ApplicationAdapter {
 
 	private FreeTypeFontGenerator generator;
 	private BitmapFont systemfont;
-
-	private TimerManager timerManager = new TimerManager();
-
 	private MessageRenderer messageRenderer;
 
 	private MainState current;
@@ -120,7 +92,7 @@ public class MainController extends ApplicationAdapter {
 
 	private Config config;
 	private PlayerConfig player;
-	private BMSPlayerMode auto;
+	private PlayMode auto;
 	private boolean songUpdated;
 
 	private SongDatabaseAccessor songdb;
@@ -128,7 +100,7 @@ public class MainController extends ApplicationAdapter {
 
 	private IRConnection ir;
 
-	private bms.player.beatoraja.skin.Skin.SkinObjectRenderer sprite;
+	private SpriteBatch sprite;
 	/**
 	 * 1曲プレイで指定したBMSファイル
 	 */
@@ -164,7 +136,7 @@ public class MainController extends ApplicationAdapter {
 	protected TextureRegion black;
 	protected TextureRegion white;
 
-	public MainController(Path f, Config config, PlayerConfig player, BMSPlayerMode auto, boolean songUpdated) {
+	public MainController(Path f, Config config, PlayerConfig player, PlayMode auto, boolean songUpdated) {
 		this.auto = auto;
 		this.config = config;
 		this.songUpdated = songUpdated;
@@ -174,7 +146,7 @@ public class MainController extends ApplicationAdapter {
 		}
 
 		if(player == null) {
-			player = PlayerConfig.readPlayerConfig(config.getPlayerpath(), config.getPlayername());
+			player = PlayerConfig.readPlayerConfig(config.getPlayername());
 		}
 		this.player = player;
 
@@ -200,20 +172,17 @@ public class MainController extends ApplicationAdapter {
 			e.printStackTrace();
 		}
 
-		playdata = new PlayDataAccessor(config);
+		playdata = new PlayDataAccessor(config.getPlayername());
 
-		if (player.getIrconfig().length > 0) {
-			ir = bms.player.beatoraja.ir.IRConnection.getIRConnection(player.getIrconfig()[0].getIrname());
-		}
+		ir = IRConnection.getIRConnection(player.getIrname());
 		if(ir != null) {
 			if(player.getUserid().length() == 0 || player.getPassword().length() == 0) {
-
+				ir = null;
 			} else {
-				bms.player.beatoraja.ir.IRAccount account = new bms.player.beatoraja.ir.IRAccount("", player.getIrconfig()[0].getUserid(), player.getIrconfig()[0].getPassword());
-			bms.player.beatoraja.ir.IRResponse response = ir.login(account);
+				IRResponse response = ir.login(player.getUserid(), player.getPassword());
 				if(!response.isSuccessed()) {
 					Logger.getGlobal().warning("IRへのログイン失敗 : " + response.getMessage());
-
+					ir = null;
 				}
 			}
 		}
@@ -326,7 +295,7 @@ public class MainController extends ApplicationAdapter {
 		}
 	}
 
-	public void setPlayMode(BMSPlayerMode auto) {
+	public void setPlayMode(PlayMode auto) {
 		this.auto = auto;
 
 	}
@@ -334,8 +303,8 @@ public class MainController extends ApplicationAdapter {
 	@Override
 	public void create() {
 		final long t = System.currentTimeMillis();
-		sprite = new bms.player.beatoraja.skin.Skin.SkinObjectRenderer();
-		// SkinLoader.initPixmapResourcePool(config.getSkinPixmapGen());
+		sprite = new SpriteBatch();
+		SkinLoader.initPixmapResourcePool(config.getSkinPixmapGen());
 
 		generator = new FreeTypeFontGenerator(Gdx.files.internal("skin/default/VL-Gothic-Regular.ttf"));
 		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
@@ -344,10 +313,10 @@ public class MainController extends ApplicationAdapter {
 		messageRenderer = new MessageRenderer();
 		
 		if(ir != null) {
-			messageRenderer.addMessage(player.getIrconfig()[0].getIrname() + " Connection Succeed : " + player.getIrconfig()[0].getUserid() ,3000, com.badlogic.gdx.graphics.Color.GREEN, 1);
+			messageRenderer.addMessage(player.getIrname() + " Connection Succeed : " + player.getUserid() ,3000, Color.GREEN, 1);
 		}
 
-		input = new BMSPlayerInputProcessor(config);
+		input = new BMSPlayerInputProcessor(config, player);
 		switch(config.getAudioDriver()) {
 		case Config.AUDIODRIVER_SOUND:
 			audio = new GdxSoundDriver(config);
@@ -363,7 +332,7 @@ public class MainController extends ApplicationAdapter {
 		result = new MusicResult(this);
 		gresult = new CourseResult(this);
 		keyconfig = new KeyConfiguration(this);
-		skinconfig = new SkinConfiguration(this, player);
+		skinconfig = new SkinConfiguration(this);
 		if (bmsfile != null) {
 			if(resource.setBMSFile(bmsfile, auto)) {
 				changeState(STATE_PLAYBMS);
@@ -395,7 +364,9 @@ public class MainController extends ApplicationAdapter {
 		});
 		polling.start();
 
-// Target logic is now handled via String ID matching.
+		if(player.getTarget() >= TargetProperty.getAllTargetProperties().length) {
+			player.setTarget(0);
+		}
 
 		Pixmap plainPixmap = new Pixmap(2,1, Pixmap.Format.RGBA8888);
 		plainPixmap.drawPixel(0,0, Color.toIntBits(255,0,0,0));
@@ -471,7 +442,7 @@ public class MainController extends ApplicationAdapter {
 		
 		// show message
 		sprite.begin();
-		// messageRenderer.render(current, sprite, 100, config.getResolution().height - 2);
+		messageRenderer.render(current, sprite, 100, config.getResolution().height - 2);
 		sprite.end();
 
 		// TODO renderループに入れるのではなく、MusicDownloadProcessorのListenerとして実装したほうがいいのでは
@@ -495,11 +466,11 @@ public class MainController extends ApplicationAdapter {
             }
 
             // マウスカーソル表示判定
-            if(false /* input.isMouseMoved() removed */) {
-		// input.setMouseMoved(false);
+            if(input.isMouseMoved()) {
+            	input.setMouseMoved(false);
             	mouseMovedTime = time;
 			}
-			Gdx.input.setCursorCatched(current == bmsplayer && time > mouseMovedTime + 5000);
+			Mouse.setGrabbed(current == bmsplayer && time > mouseMovedTime + 5000 && Mouse.isInsideWindow());
 
 			// FPS表示切替
             if (input.getFunctionstate()[0] && input.getFunctiontime()[0] != 0) {
@@ -618,8 +589,8 @@ public class MainController extends ApplicationAdapter {
 	}
 
 	public void saveConfig(){
-		config.save();
-		PlayerConfig.write(config.getPlayerpath(), player);
+		Config.write(config);
+		PlayerConfig.write(player);
 		Logger.getGlobal().info("設定情報を保存");
 	}
 
@@ -662,29 +633,6 @@ public class MainController extends ApplicationAdapter {
 
 	public long getStartMicroTime() {
 		return starttime / 1000;
-	}
-
-
-
-	private bms.player.beatoraja.RivalDataAccessor rivalDataAccessor;
-	public bms.player.beatoraja.RivalDataAccessor getRivalDataAccessor() {
-		if (rivalDataAccessor == null) {
-			rivalDataAccessor = new bms.player.beatoraja.RivalDataAccessor();
-		}
-		return rivalDataAccessor;
-	}
-
-
-	public MessageRenderer getMessageRenderer() {
-		return messageRenderer;
-	}
-
-	public TimerManager getTimerManager() {
-		return timerManager;
-	}
-
-	public long[] getTimer() {
-		return timerManager.getTimer();
 	}
 
 	public long getNowTime() {
@@ -1017,7 +965,7 @@ public class MainController extends ApplicationAdapter {
 
 		public void run() {
 			Message message = messageRenderer.addMessage(this.message, Color.CYAN, 1);
-			getSongDatabase().updateSongDatas(path, new String[0], false, getInfoDatabase());
+			getSongDatabase().updateSongDatas(path, false, getInfoDatabase());
 			message.stop();
 		}
 	}

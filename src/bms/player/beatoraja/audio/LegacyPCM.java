@@ -14,7 +14,7 @@ import com.badlogic.gdx.utils.StreamUtils;
  * 
  * @author exch
  */
-public class LegacyPCM extends PCM {
+public class LegacyPCM extends PCM<short[]> {
 
 	/**
 	 * PCMのタイプ
@@ -238,7 +238,7 @@ public class LegacyPCM extends PCM {
     }
 
 	public InputStream getInputStream() {
-		return new LegacyWavFileInputStream(this);
+		return new WavFileInputStream(this);
 	}
 
 	/** @author Nathan Sweet */
@@ -313,14 +313,14 @@ public class LegacyPCM extends PCM {
 	}
 }
 
-class LegacyWavFileInputStream extends InputStream {
+class WavFileInputStream extends InputStream {
 
 	private int pos = 0;
 	private int mark = 0;
 	private final byte[] header;
 	private final short[] sample;
 
-	public LegacyWavFileInputStream(LegacyPCM pcm) {
+	public WavFileInputStream(LegacyPCM pcm) {
 		header = new byte[44];
 
 		final int sampleRate = pcm.getSampleRate();

@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.FloatArray;
 
 import bms.model.*;
 import bms.player.beatoraja.*;
+import bms.player.beatoraja.MainController.IRStatus;
 import bms.player.beatoraja.input.BMSPlayerInputProcessor;
 import bms.player.beatoraja.ir.*;
 import bms.player.beatoraja.play.GrooveGauge;

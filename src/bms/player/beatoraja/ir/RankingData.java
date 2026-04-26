@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import bms.player.beatoraja.*;
+import bms.player.beatoraja.MainController.IRStatus;
 import bms.player.beatoraja.song.SongData;
 
 /**
