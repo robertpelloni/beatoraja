@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.FloatArray;
 
 import bms.model.*;
 import bms.player.beatoraja.*;
+import bms.player.beatoraja.audio.AudioDriver;
 import bms.player.beatoraja.AudioConfig.FrequencyType;
 import bms.player.beatoraja.input.*;
 import bms.player.beatoraja.pattern.*;
@@ -109,6 +110,9 @@ public class BMSPlayer extends MainState {
 			playinfo.randomoption2seed = chartOption.randomoption2seed;
 			playinfo.doubleoption = chartOption.doubleoption;
 			playinfo.rand = chartOption.rand;
+			Logger.getGlobal().info("譜面再現 : op1 - " + playinfo.randomoption + " seed1 - " + playinfo.randomoptionseed
+					 + " op2 - " + playinfo.randomoption2 + " seed2 - " + playinfo.randomoption2seed + " opdp - "+ playinfo.doubleoption
+					 + " random - " + Arrays.toString(playinfo.rand));
 		}
 
 		if (autoplay.mode == BMSPlayerMode.Mode.REPLAY) {
@@ -612,7 +616,14 @@ public class BMSPlayer extends MainState {
 						timer.setTimerOff(141);
 						lanerender.init(model);					
 					} else if(!timer.isTimerOn(141) && micronow == startpressedtime){
-						timer.setMicroTimer(141, micronow - starttimeoffset * 1000);				
+						long  starttime = 0;
+						for(TimeLine tl : model.getAllTimeLines()) {
+							if(tl.existNote()) {
+								starttime = tl.getMicroTime();
+								break;
+							}
+						}
+						timer.setMicroTimer(141, micronow - starttime + 1000000);				
 					}				
 				}
 				
@@ -667,11 +678,17 @@ public class BMSPlayer extends MainState {
 					PracticeProperty property = practice.getPracticeProperty();
 					control.setEnableControl(true);
 					control.setEnableCursor(true);
+					final FrequencyType freqOption = main.getConfig().getAudioConfig().getFreqOption();
+					final AudioDriver audio = main.getAudioProcessor();
+					final float freqRate = property.freq / 100f;
 					if (property.freq != 100) {
-						BMSModelUtils.changeFrequency(model, property.freq / 100f);
-						if (main.getConfig().getAudioConfig().getFreqOption() == FrequencyType.FREQUENCY) {
-							main.getAudioProcessor().setGlobalPitch(property.freq / 100f);
-						}
+						BMSModelUtils.changeFrequency(model, freqRate);
+					}
+					if (freqOption == FrequencyType.SPEED) {
+						audio.setGlobalPitch(1f);
+						audio.setModel(model, freqRate);
+					} else if (freqOption == FrequencyType.FREQUENCY) {
+						audio.setGlobalPitch(freqRate);
 					}
 					model.setTotal(property.total);
 					PracticeModifier pm = new PracticeModifier(property.starttime * 100 / property.freq,
@@ -694,6 +711,8 @@ public class BMSPlayer extends MainState {
 					playtime = (property.endtime + 1000) * 100 / property.freq + TIME_MARGIN;
 					bga.prepare(this);
 					state = STATE_READY;
+					// setModel等の同期処理で時間が経過しているため、タイマーを更新してからREADYタイマーを設定
+					timer.update();
 					timer.setTimerOn(TIMER_READY);
 					play(PLAY_READY);
 					Logger.getGlobal().info("STATE_READYに移行");
