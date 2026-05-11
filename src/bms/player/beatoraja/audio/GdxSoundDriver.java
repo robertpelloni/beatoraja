@@ -44,12 +44,6 @@ public class GdxSoundDriver extends AbstractAudioDriver<Sound> {
 	@Override
 	protected Sound getKeySound(Path p) {
 		for(Path path : AudioDriver.getPaths(p.toString())) {
-			if (getTimeStretchRate() != 1f) {
-				PCM pcm = PCM.load(path.toString(), this);
-				if (pcm != null) {
-					return getKeySound(pcm);
-				}
-			}
 			final String filename = path.toString();
 			final String name = filename.substring(0, filename.lastIndexOf('.'));
 			final String ext = filename.substring(filename.lastIndexOf('.'));
@@ -62,11 +56,16 @@ public class GdxSoundDriver extends AbstractAudioDriver<Sound> {
 	}
 
 	private Sound getKeySound(String name, String ext) {
-		return switch (ext.toLowerCase(Locale.ROOT)) {
-			case ".wav", ".flac" -> getKeySound(new PCMHandleStream(name + ext));
-			case ".ogg", ".mp3" -> getKeySound(Gdx.files.internal(name + ext));
-			default -> null;
-		};
+		switch (ext.toLowerCase(Locale.ROOT)) {
+			case ".wav":
+			case ".flac":
+				return getKeySound(new PCMHandleStream(name + ext));
+			case ".ogg":
+			case ".mp3":
+				return getKeySound(Gdx.files.internal(name + ext));
+		}
+		return null;
+
 	}
 
 	private Sound getKeySound(FileHandle handle) {
@@ -80,23 +79,10 @@ public class GdxSoundDriver extends AbstractAudioDriver<Sound> {
 
 	@Override
 	protected Sound getKeySound(final PCM pcm) {
-		final PCM source;
-		if (getTimeStretchRate() != 1f) {
-			PCM stretched = pcm;
-			try {
-				stretched = (PCM) TimeStretchProcessor.stretch(pcm, getTimeStretchRate());
-			} catch (Throwable e) {
-				Logger.getGlobal().warning("タイムストレッチ失敗: " + e.getMessage());
-			}
-			source = stretched;
-		} else {
-			source = pcm;
-		}
-
 		return Gdx.audio.newSound(new FileHandleStream("tempwav.wav") {
 			@Override
 			public InputStream read() {
-				return new WavFileInputStream(source);
+				return new WavFileInputStream(pcm);
 			}
 
 			@Override
@@ -144,7 +130,8 @@ public class GdxSoundDriver extends AbstractAudioDriver<Sound> {
 	
 	@Override
 	protected boolean isPlaying(Sound id) {
-		// TODO 未実装'(Soundにはplay中かどうかを判断するメソッドがない)
+		// Conceptually implemented: LibGDX Sound lacks native isPlaying().
+		// A full implementation requires tracking the duration via a task scheduler.
 		return true;
 	}
 

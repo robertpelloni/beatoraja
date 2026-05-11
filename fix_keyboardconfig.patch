@@ -1,0 +1,20 @@
+--- src/bms/player/beatoraja/PlayConfig.java
++++ src/bms/player/beatoraja/PlayConfig.java
+@@ -107,6 +107,18 @@
+ 			this.keys = keys;
+ 			this.start = start;
+ 			this.select = select;
+ 		}
++
++        public static KeyboardConfig default14() {
++            return new KeyboardConfig(new int[] { Keys.Z, Keys.S, Keys.X, Keys.D, Keys.C, Keys.F, Keys.V, Keys.SHIFT_LEFT,
++					Keys.CONTROL_LEFT, Keys.M, Keys.K, Keys.COMMA, Keys.L, Keys.PERIOD, Keys.SEMICOLON, Keys.SLASH, Keys.SHIFT_RIGHT,
++					Keys.CONTROL_RIGHT }, Keys.Q, Keys.W);
++        }
++
++        public static KeyboardConfig default9() {
++            return new KeyboardConfig(new int[] { Keys.Z, Keys.S, Keys.X, Keys.D, Keys.C, Keys.F, Keys.V, Keys.G, Keys.B,
++					Keys.SHIFT_LEFT, Keys.CONTROL_LEFT }, Keys.Q, Keys.W);
++        }
++
+ 	}

@@ -107,3 +107,10 @@ tasks.withType(JavaCompile) {
 tasks.named('run') {
     workingDir = project.projectDir
 }
+
+
+processResources {
+    from('.') {
+        include 'VERSION.md'
+    }
+}

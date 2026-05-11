@@ -6,9 +6,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
-import bms.player.beatoraja.PlayConfig.KeyboardConfig;
-import bms.player.beatoraja.PlayConfig.ControllerConfig;
-import bms.player.beatoraja.PlayConfig.MidiConfig;
+import bms.player.beatoraja.PlayModeConfig.KeyboardConfig;
+import bms.player.beatoraja.PlayModeConfig.ControllerConfig;
+import bms.player.beatoraja.PlayModeConfig.MidiConfig;
 import bms.player.beatoraja.Resolution;
 import bms.player.beatoraja.input.BMControllerInputProcessor.BMKeys;
 
@@ -32,7 +32,7 @@ public class BMSPlayerInputProcessor {
 
 	public BMSPlayerInputProcessor(Config config) {
 	    	Resolution resolution = config.getResolution();
-		kbinput = new KeyBoardInputProcesseor(this, KeyboardConfig.default14(), resolution);
+		kbinput = new KeyBoardInputProcesseor(this, new KeyboardConfig(bms.player.beatoraja.Mode.BEAT_14K, true), resolution);
 		// Gdx.input.setInputProcessor(kbinput);
 		List<BMControllerInputProcessor> bminput = new ArrayList<BMControllerInputProcessor>();
 		for (Controller controller : Controllers.getControllers()) {
@@ -45,7 +45,7 @@ public class BMSPlayerInputProcessor {
 		this.bminput = bminput.toArray(new BMControllerInputProcessor[0]);
 		midiinput = new MidiInputProcessor(this);
 		midiinput.open();
-		midiinput.setConfig(MidiConfig.default7());
+		midiinput.setConfig(new MidiConfig(bms.player.beatoraja.Mode.BEAT_7K, true));
 
 		devices = new ArrayList<BMSPlayerInputDevice>();
 		devices.add(kbinput);

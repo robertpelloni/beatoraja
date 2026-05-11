@@ -1,0 +1,497 @@
+Starting a Gradle Daemon (subsequent builds will be faster)
+
+> Task :compileJava
+/app/src/bms/player/beatoraja/skin/property/EventFactory.java:116: error: incompatible types: MainStateType cannot be converted to int
+				state.main.changeState(MainStateType.CONFIG);
+				                                    ^
+/app/src/bms/player/beatoraja/skin/property/EventFactory.java:124: error: incompatible types: MainStateType cannot be converted to int
+				state.main.changeState(MainStateType.SKINCONFIG);
+				                                    ^
+/app/src/bms/player/beatoraja/skin/property/EventFactory.java:211: error: cannot find symbol
+	                pc.setFixhispeed((pc.getFixhispeed() + (arg1 >= 0 ? 1 : 4)) % 5);
+	                                    ^
+  symbol:   method getFixhispeed()
+  location: variable pc of type PlayConfig
+/app/src/bms/player/beatoraja/skin/property/EventFactory.java:222: error: cannot find symbol
+            	float hispeed = pc.getHispeed() + (arg1 >= 0 ? pc.getHispeedMargin() : -pc.getHispeedMargin());
+            	                                                 ^
+  symbol:   method getHispeedMargin()
+  location: variable pc of type PlayConfig
+/app/src/bms/player/beatoraja/skin/property/EventFactory.java:222: error: cannot find symbol
+            	float hispeed = pc.getHispeed() + (arg1 >= 0 ? pc.getHispeedMargin() : -pc.getHispeedMargin());
+            	                                                                          ^
+  symbol:   method getHispeedMargin()
+  location: variable pc of type PlayConfig
+/app/src/bms/player/beatoraja/skin/property/EventFactory.java:223: error: cannot find symbol
+            	hispeed = MathUtils.clamp(hispeed, PlayConfig.HISPEED_MIN, PlayConfig.HISPEED_MAX);
+            	                                             ^
+  symbol:   variable HISPEED_MIN
+  location: class PlayConfig
+/app/src/bms/player/beatoraja/skin/property/EventFactory.java:223: error: cannot find symbol
+            	hispeed = MathUtils.clamp(hispeed, PlayConfig.HISPEED_MIN, PlayConfig.HISPEED_MAX);
+            	                                                                     ^
+  symbol:   variable HISPEED_MAX
+  location: class PlayConfig
+/app/src/bms/player/beatoraja/skin/property/EventFactory.java:238: error: cannot find symbol
+        		duration = MathUtils.clamp(duration, PlayConfig.DURATION_MIN, PlayConfig.DURATION_MAX);
+        		                                               ^
+  symbol:   variable DURATION_MIN
+  location: class PlayConfig
+/app/src/bms/player/beatoraja/skin/property/EventFactory.java:238: error: cannot find symbol
+        		duration = MathUtils.clamp(duration, PlayConfig.DURATION_MIN, PlayConfig.DURATION_MAX);
+        		                                                                        ^
+  symbol:   variable DURATION_MAX
+  location: class PlayConfig
+/app/src/bms/player/beatoraja/skin/property/EventFactory.java:249: error: cannot find symbol
+					pc.setHispeedAutoAdjust(!pc.isEnableHispeedAutoAdjust());
+					                           ^
+  symbol:   method isEnableHispeedAutoAdjust()
+  location: variable pc of type PlayConfig
+/app/src/bms/player/beatoraja/skin/property/EventFactory.java:263: error: cannot find symbol
+			IRConnection ir = state.main.getIRStatus().length > 0 ? state.main.getIRStatus()[0].connection : null;
+			                            ^
+  symbol:   method getIRStatus()
+  location: variable main of type MainController
+/app/src/bms/player/beatoraja/skin/property/EventFactory.java:263: error: cannot find symbol
+			IRConnection ir = state.main.getIRStatus().length > 0 ? state.main.getIRStatus()[0].connection : null;
+			                                                                  ^
+  symbol:   method getIRStatus()
+  location: variable main of type MainController
+/app/src/bms/player/beatoraja/skin/property/EventFactory.java:655: error: cannot find symbol
+					pc.setEnablehidden(!pc.isEnablehidden());
+					                      ^
+  symbol:   method isEnablehidden()
+  location: variable pc of type PlayConfig
+/app/src/bms/player/beatoraja/skin/property/EventFactory.java:667: error: cannot find symbol
+				final String jt = pc.getJudgetype();
+				                    ^
+  symbol:   method getJudgetype()
+  location: variable pc of type PlayConfig
+/app/src/bms/player/beatoraja/skin/property/EventFactory.java:670: error: cannot find symbol
+						pc.setJudgetype(algorithms[(arg1 >= 0 ? i + 1 : i + algorithms.length - 1) % algorithms.length].name());
+						  ^
+  symbol:   method setJudgetype(String)
+  location: variable pc of type PlayConfig
+/app/src/bms/player/beatoraja/skin/property/EventFactory.java:748: error: cannot find symbol
+					pc.setEnableConstant(!pc.isEnableConstant());
+					                        ^
+  symbol:   method isEnableConstant()
+  location: variable pc of type PlayConfig
+/app/src/bms/player/beatoraja/MainController.java:621: error: cannot find symbol
+		Config.write(config);
+		      ^
+  symbol:   method write(Config)
+  location: class Config
+/app/src/bms/player/beatoraja/TimerManager.java:93: error: cannot find symbol
+			current.getSkin().setMicroCustomTimer(id, microtime);
+			                 ^
+  symbol:   method setMicroCustomTimer(int,long)
+  location: class Skin
+/app/src/bms/player/beatoraja/Config.java:311: error: cannot find symbol
+		for (Map.Entry<SkinType, String> entry : SkinConfig.defaultSkinPathMap.entrySet()) {
+		                                                   ^
+  symbol:   variable defaultSkinPathMap
+  location: class SkinConfig
+/app/src/bms/player/beatoraja/input/BMSPlayerInputProcessor.java:35: error: cannot find symbol
+		kbinput = new KeyBoardInputProcesseor(this, KeyboardConfig.default14(), resolution);
+		                                                          ^
+  symbol:   method default14()
+  location: class KeyboardConfig
+/app/src/bms/player/beatoraja/input/BMSPlayerInputProcessor.java:40: error: incompatible types: bms.player.beatoraja.PlayModeConfig.ControllerConfig cannot be converted to bms.player.beatoraja.PlayConfig.ControllerConfig
+			BMControllerInputProcessor bm = new BMControllerInputProcessor(this, controller, new ControllerConfig(), config);
+			                                                                                 ^
+/app/src/bms/player/beatoraja/input/BMSPlayerInputProcessor.java:48: error: cannot find symbol
+		midiinput.setConfig(MidiConfig.default7());
+		                              ^
+  symbol:   method default7()
+  location: class MidiConfig
+/app/src/bms/player/beatoraja/input/BMSPlayerInputProcessor.java:108: error: cannot find symbol
+		kbinput.setMinimumDuration(minduration);
+		       ^
+  symbol:   method setMinimumDuration(int)
+  location: variable kbinput of type KeyBoardInputProcesseor
+/app/src/bms/player/beatoraja/input/BMSPlayerInputProcessor.java:131: error: incompatible types: bms.player.beatoraja.PlayModeConfig.ControllerConfig cannot be converted to bms.player.beatoraja.PlayConfig.ControllerConfig
+					controller.setConfig(configs[i]);
+					                            ^
+/app/src/bms/player/beatoraja/input/BMSPlayerInputProcessor.java:137: error: cannot find symbol
+				controller.setPlayer(player);
+				          ^
+  symbol:   method setPlayer(int)
+  location: variable controller of type BMControllerInputProcessor
+/app/src/bms/player/beatoraja/input/BMSPlayerInputProcessor.java:139: error: cannot find symbol
+				controller.setPlayer(0);
+				          ^
+  symbol:   method setPlayer(int)
+  location: variable controller of type BMControllerInputProcessor
+/app/src/bms/player/beatoraja/input/BMSPlayerInputProcessor.java:194: error: cannot find symbol
+			if (device.getType() == type) {
+			          ^
+  symbol:   method getType()
+  location: variable device of type BMSPlayerInputDevice
+/app/src/bms/player/beatoraja/input/BMSPlayerInputProcessor.java:195: error: cannot find symbol
+				device.setEnabled(true);
+				      ^
+  symbol:   method setEnabled(boolean)
+  location: variable device of type BMSPlayerInputDevice
+/app/src/bms/player/beatoraja/input/BMSPlayerInputProcessor.java:197: error: cannot find symbol
+				device.setEnabled(false);
+				      ^
+  symbol:   method setEnabled(boolean)
+  location: variable device of type BMSPlayerInputDevice
+/app/src/bms/player/beatoraja/input/BMSPlayerInputProcessor.java:205: error: cannot find symbol
+			device.setEnabled(true);
+			      ^
+  symbol:   method setEnabled(boolean)
+  location: variable device of type BMSPlayerInputDevice
+/app/src/bms/player/beatoraja/input/BMSPlayerInputProcessor.java:213: error: cannot find symbol
+			device.setEnabled(false);
+			      ^
+  symbol:   method setEnabled(boolean)
+  location: variable device of type BMSPlayerInputDevice
+/app/src/bms/player/beatoraja/input/BMSPlayerInputProcessor.java:227: error: cannot find symbol
+		if (!device.isEnabled()) {
+		           ^
+  symbol:   method isEnabled()
+  location: variable device of type BMSPlayerInputDevice
+/app/src/bms/player/beatoraja/input/KeyBoardInputProcesseor.java:110: error: cannot find symbol
+					this.bmsPlayerInputProcessor.setAnalogState(i, false, 0);
+					                            ^
+  symbol:   method setAnalogState(int,boolean,int)
+  location: variable bmsPlayerInputProcessor of type BMSPlayerInputProcessor
+/app/src/bms/player/beatoraja/input/KeyBoardInputProcesseor.java:176: error: cannot find symbol
+		this.bmsPlayerInputProcessor.setMouseMoved(true);
+		                            ^
+  symbol:   method setMouseMoved(boolean)
+  location: variable bmsPlayerInputProcessor of type BMSPlayerInputProcessor
+/app/src/bms/player/beatoraja/input/KeyBoardInputProcesseor.java:191: error: cannot find symbol
+		this.bmsPlayerInputProcessor.scrollX += amountX;
+		                            ^
+  symbol:   variable scrollX
+  location: variable bmsPlayerInputProcessor of type BMSPlayerInputProcessor
+/app/src/bms/player/beatoraja/input/KeyBoardInputProcesseor.java:192: error: cannot find symbol
+		this.bmsPlayerInputProcessor.scrollY += amountY;
+		                            ^
+  symbol:   variable scrollY
+  location: variable bmsPlayerInputProcessor of type BMSPlayerInputProcessor
+/app/src/bms/player/beatoraja/input/MidiInputProcessor.java:75: error: cannot find symbol
+				bmsPlayerInputProcessor.setAnalogState(key, false, 0);
+				                       ^
+  symbol:   method setAnalogState(int,boolean,int)
+  location: variable bmsPlayerInputProcessor of type BMSPlayerInputProcessor
+/app/src/bms/player/beatoraja/input/MouseScratchInput.java:93: error: cannot find symbol
+                    this.bmsPlayerInputProcessor.setAnalogState(i, true, getMouseAnalogValue(keys[i]));
+                                                ^
+  symbol:   method setAnalogState(int,boolean,float)
+  location: variable bmsPlayerInputProcessor of type BMSPlayerInputProcessor
+/app/src/bms/player/beatoraja/ir/RankingData.java:76: error: cannot find symbol
+			final IRStatus[] ir = mainstate.main.getIRStatus();
+			      ^
+  symbol:   class IRStatus
+  location: class RankingData
+/app/src/bms/player/beatoraja/ir/RankingData.java:76: error: cannot find symbol
+			final IRStatus[] ir = mainstate.main.getIRStatus();
+			                                    ^
+  symbol:   method getIRStatus()
+  location: variable main of type MainController
+/app/src/bms/player/beatoraja/play/bga/BGAProcessor.java:82: error: cannot find symbol
+		mpgresource = new ResourcePool<String, MovieProcessor>(Math.max(config.getSongResourceGen(), 1)) {
+		                                                                      ^
+  symbol:   method getSongResourceGen()
+  location: variable config of type Config
+/app/src/bms/player/beatoraja/play/bga/BGAProcessor.java:95: error: cannot find symbol
+		cache = new BGImageProcessor(256, Math.max(config.getSongResourceGen(), 1));
+		                                                 ^
+  symbol:   method getSongResourceGen()
+  location: variable config of type Config
+/app/src/bms/player/beatoraja/play/PracticeConfiguration.java:89: error: cannot find symbol
+					Gdx.files.internal(config.getSystemfontpath()));
+					                         ^
+  symbol:   method getSystemfontpath()
+  location: variable config of type Config
+/app/src/bms/player/beatoraja/play/PracticeConfiguration.java:128: error: cannot find symbol
+		if (input.isControlKeyPressed(ControlKeys.UP)) {
+		         ^
+  symbol:   method isControlKeyPressed(ControlKeys)
+  location: variable input of type BMSPlayerInputProcessor
+/app/src/bms/player/beatoraja/play/PracticeConfiguration.java:133: error: cannot find symbol
+		if (input.isControlKeyPressed(ControlKeys.DOWN)) {
+		         ^
+  symbol:   method isControlKeyPressed(ControlKeys)
+  location: variable input of type BMSPlayerInputProcessor
+/app/src/bms/player/beatoraja/play/PracticeConfiguration.java:138: error: cannot find symbol
+		if (input.getControlKeyState(ControlKeys.LEFT) && (presscount == 0 || presscount + 10 < System.currentTimeMillis())) {
+		         ^
+  symbol:   method getControlKeyState(ControlKeys)
+  location: variable input of type BMSPlayerInputProcessor
+/app/src/bms/player/beatoraja/play/PracticeConfiguration.java:145: error: cannot find symbol
+		} else if (input.getControlKeyState(ControlKeys.RIGHT) && (presscount == 0 || presscount + 10 < System.currentTimeMillis())) {
+		                ^
+  symbol:   method getControlKeyState(ControlKeys)
+  location: variable input of type BMSPlayerInputProcessor
+/app/src/bms/player/beatoraja/play/PracticeConfiguration.java:152: error: cannot find symbol
+		} else if (!(input.getControlKeyState(ControlKeys.LEFT) || input.getControlKeyState(ControlKeys.RIGHT))) {
+		                  ^
+  symbol:   method getControlKeyState(ControlKeys)
+  location: variable input of type BMSPlayerInputProcessor
+/app/src/bms/player/beatoraja/play/PracticeConfiguration.java:152: error: cannot find symbol
+		} else if (!(input.getControlKeyState(ControlKeys.LEFT) || input.getControlKeyState(ControlKeys.RIGHT))) {
+		                                                                ^
+  symbol:   method getControlKeyState(ControlKeys)
+  location: variable input of type BMSPlayerInputProcessor
+/app/src/bms/player/beatoraja/play/PracticeConfiguration.java:163: error: no suitable method found for draw(BitmapFont,String,float,float,cursorpos [...].CYAN)
+					sprite.draw(titlefont, elements[i].text.apply(property), x, y - 22 * i, cursorpos == i ? Color.YELLOW : Color.CYAN);
+					      ^
+    method SpriteBatch.draw(Texture,float,float,float,float) is not applicable
+      (argument mismatch; BitmapFont cannot be converted to Texture)
+    method SpriteBatch.draw(TextureRegion,float,float,float,float) is not applicable
+      (argument mismatch; BitmapFont cannot be converted to TextureRegion)
+/app/src/bms/player/beatoraja/play/PracticeConfiguration.java:168: error: no suitable method found for draw(BitmapFont,String,float,float,Color)
+				sprite.draw(titlefont, "PRESS 1KEY TO PLAY", x, y - 276, Color.ORANGE);
+				      ^
+    method SpriteBatch.draw(Texture,float,float,float,float) is not applicable
+      (argument mismatch; BitmapFont cannot be converted to Texture)
+    method SpriteBatch.draw(TextureRegion,float,float,float,float) is not applicable
+      (argument mismatch; BitmapFont cannot be converted to TextureRegion)
+/app/src/bms/player/beatoraja/play/PracticeConfiguration.java:173: error: no suitable method found for draw(BitmapFont,String,float,float,Color)
+				sprite.draw(titlefont, String.format("%s %d %d %d",judge[i], state.getJudgeCount(i, true) + state.getJudgeCount(i, false), state.getJudgeCount(i, true), state.getJudgeCount(i, false)), x + 250, y - (i * 22), Color.WHITE);
+				      ^
+    method SpriteBatch.draw(Texture,float,float,float,float) is not applicable
+      (argument mismatch; BitmapFont cannot be converted to Texture)
+    method SpriteBatch.draw(TextureRegion,float,float,float,float) is not applicable
+      (argument mismatch; BitmapFont cannot be converted to TextureRegion)
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:144: error: cannot find symbol
+					if(main.getInputProcessor().getKeyState(1)) {
+					                           ^
+  symbol:   method getKeyState(int)
+  location: class BMSPlayerInputProcessor
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:154: error: cannot find symbol
+					} else if(main.getInputProcessor().getKeyState(2)) {
+					                                  ^
+  symbol:   method getKeyState(int)
+  location: class BMSPlayerInputProcessor
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:162: error: cannot find symbol
+					if(main.getInputProcessor().getKeyState(4)) {
+					                           ^
+  symbol:   method getKeyState(int)
+  location: class BMSPlayerInputProcessor
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:418: error: cannot find symbol
+			for(int count = (main.getInputProcessor().getKeyState(5) ? 1 : 0) + (main.getInputProcessor().getKeyState(3) ? 2 : 0);count > 0; count--) {
+			                                         ^
+  symbol:   method getKeyState(int)
+  location: class BMSPlayerInputProcessor
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:418: error: cannot find symbol
+			for(int count = (main.getInputProcessor().getKeyState(5) ? 1 : 0) + (main.getInputProcessor().getKeyState(3) ? 2 : 0);count > 0; count--) {
+			                                                                                             ^
+  symbol:   method getKeyState(int)
+  location: class BMSPlayerInputProcessor
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:424: error: cannot find symbol
+		if(replay != null && main.getInputProcessor().getKeyState(5)) {
+		                                             ^
+  symbol:   method getKeyState(int)
+  location: class BMSPlayerInputProcessor
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:430: error: cannot find symbol
+		if (main.getArenaManager() != null && main.getArenaManager().getRuleGauge() != -1) {
+		        ^
+  symbol:   method getArenaManager()
+  location: variable main of type MainController
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:430: error: cannot find symbol
+		if (main.getArenaManager() != null && main.getArenaManager().getRuleGauge() != -1) {
+		                                          ^
+  symbol:   method getArenaManager()
+  location: variable main of type MainController
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:431: error: cannot find symbol
+			gaugeType = main.getArenaManager().getRuleGauge();
+			                ^
+  symbol:   method getArenaManager()
+  location: variable main of type MainController
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:463: error: cannot find symbol
+			main.getArenaManager().addPlayer("2P");
+			    ^
+  symbol:   method getArenaManager()
+  location: variable main of type MainController
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:505: error: cannot find symbol
+				Path[] paths = main.getSoundManager().getSoundPaths(guideses[i]);
+				                                     ^
+  symbol:   method getSoundPaths(SoundType)
+  location: class SystemSoundManager
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:518: error: cannot find symbol
+			input.setPlayConfig(config.getPlayConfig(model.getMode()));
+			     ^
+  symbol:   method setPlayConfig(PlayModeConfig)
+  location: variable input of type BMSPlayerInputProcessor
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:520: error: cannot find symbol
+			input.setEnable(false);
+			     ^
+  symbol:   method setEnable(boolean)
+  location: variable input of type BMSPlayerInputProcessor
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:548: error: cannot find symbol
+			main.getArenaManager().resetScores();
+			    ^
+  symbol:   method getArenaManager()
+  location: variable main of type MainController
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:550: error: cannot find symbol
+			int pacemakerType = config.getPlayConfig(model.getMode()).getPlayconfig().getPacemakerType();
+			                                                                         ^
+  symbol:   method getPacemakerType()
+  location: class PlayConfig
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:554: error: cannot find symbol
+			if (pacemakerType == PlayConfig.PACEMAKER_RIVAL) {
+			                               ^
+  symbol:   variable PACEMAKER_RIVAL
+  location: class PlayConfig
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:565: error: cannot find symbol
+			} else if (pacemakerType == PlayConfig.PACEMAKER_BEST) {
+			                                      ^
+  symbol:   variable PACEMAKER_BEST
+  location: class PlayConfig
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:571: error: cannot find symbol
+				if (pacemakerType == PlayConfig.PACEMAKER_AAA) {
+				                               ^
+  symbol:   variable PACEMAKER_AAA
+  location: class PlayConfig
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:573: error: cannot find symbol
+				} else if (pacemakerType == PlayConfig.PACEMAKER_AA) {
+				                                      ^
+  symbol:   variable PACEMAKER_AA
+  location: class PlayConfig
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:575: error: cannot find symbol
+				} else if (pacemakerType == PlayConfig.PACEMAKER_A) {
+				                                      ^
+  symbol:   variable PACEMAKER_A
+  location: class PlayConfig
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:590: error: incompatible types: MainStateType cannot be converted to int
+			main.changeState(MainStateType.MUSICSELECT);
+			                              ^
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:665: error: cannot find symbol
+				if (input.getKeyState(0) && resource.mediaLoadFinished() &&  micronow > (skin.getLoadstart() + skin.getLoadend()) * 1000
+				         ^
+  symbol:   method getKeyState(int)
+  location: variable input of type BMSPlayerInputProcessor
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:705: error: cannot find symbol
+					input.setEnable(true);
+					     ^
+  symbol:   method setEnable(boolean)
+  location: variable input of type BMSPlayerInputProcessor
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:707: error: incompatible types: MainStateType cannot be converted to int
+					main.changeState(MainStateType.MUSICSELECT);
+					                              ^
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:713: error: clone() has protected access in Object
+					replayConfig = lanerender.getPlayConfig().clone();
+					                                         ^
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:713: error: incompatible types: Object cannot be converted to PlayConfig
+					replayConfig = lanerender.getPlayConfig().clone();
+					                                               ^
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:719: error: cannot find symbol
+					input.setKeyLogMarginTime(resource.getMarginTime());
+					     ^
+  symbol:   method setKeyLogMarginTime(long)
+  location: variable input of type BMSPlayerInputProcessor
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:812: error: incompatible types: MainStateType cannot be converted to int
+					main.changeState(MainStateType.PLAY);
+					                              ^
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:834: error: cannot find symbol
+					input.setEnable(true);
+					     ^
+  symbol:   method setEnable(boolean)
+  location: variable input of type BMSPlayerInputProcessor
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:839: error: incompatible types: MainStateType cannot be converted to int
+						main.changeState(MainStateType.RESULT);
+						                              ^
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:841: error: incompatible types: MainStateType cannot be converted to int
+						main.changeState(MainStateType.MUSICSELECT);
+						                              ^
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:865: error: cannot find symbol
+					input.setEnable(true);
+					     ^
+  symbol:   method setEnable(boolean)
+  location: variable input of type BMSPlayerInputProcessor
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:871: error: incompatible types: MainStateType cannot be converted to int
+						main.changeState(MainStateType.RESULT);
+						                              ^
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:877: error: incompatible types: MainStateType cannot be converted to int
+							main.changeState(MainStateType.PLAY);
+							                              ^
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:879: error: incompatible types: MainStateType cannot be converted to int
+							main.changeState(MainStateType.DECIDE);
+							                              ^
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:881: error: incompatible types: MainStateType cannot be converted to int
+							main.changeState(MainStateType.MUSICSELECT);
+							                              ^
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:946: error: cannot find symbol
+		if (pc.getFixhispeed() != PlayConfig.FIX_HISPEED_OFF) {
+		      ^
+  symbol:   method getFixhispeed()
+  location: variable pc of type PlayConfig
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:946: error: cannot find symbol
+		if (pc.getFixhispeed() != PlayConfig.FIX_HISPEED_OFF) {
+		                                    ^
+  symbol:   variable FIX_HISPEED_OFF
+  location: class PlayConfig
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:953: error: cannot find symbol
+		pc.setHidden(lanerender.getHiddenCover());
+		  ^
+  symbol:   method setHidden(float)
+  location: variable pc of type PlayConfig
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:996: error: incompatible types: List<KeyInputLog> cannot be converted to KeyInputLog[]
+		replay.keylog = main.getInputProcessor().getKeyInputLog();
+		                                                       ^
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:1034: error: cannot find symbol
+		score.setDeviceType(main.getInputProcessor().getDeviceType());
+		                                            ^
+  symbol:   method getDeviceType()
+  location: class BMSPlayerInputProcessor
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:1035: error: cannot find symbol
+		score.setSkin(getSkin().header.getName());
+		                       ^
+  symbol:   variable header
+  location: class Skin
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:1117: error: cannot find symbol
+		bga.resetVideoAndImages(newTime);
+		   ^
+  symbol:   method resetVideoAndImages(long)
+  location: variable bga of type BGAProcessor
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:1146: error: cannot find symbol
+		if (main.getArenaManager() != null) {
+		        ^
+  symbol:   method getArenaManager()
+  location: variable main of type MainController
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:1147: error: cannot find symbol
+			main.getArenaManager().updateScore("1P", this.judge.getScoreData().getExscore());
+			    ^
+  symbol:   method getArenaManager()
+  location: variable main of type MainController
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:1149: error: cannot find symbol
+				main.getArenaManager().updateScore("2P", this.judge.getScoreData2().getExscore());
+				    ^
+  symbol:   method getArenaManager()
+  location: variable main of type MainController
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:1188: error: incompatible types: MainStateType cannot be converted to int
+		main.changeState(MainStateType.PLAY);
+		                              ^
+/app/src/bms/player/beatoraja/play/BMSPlayer.java:1193: error: cannot find symbol
+		int pacemakerType = config.getPlayConfig(model.getMode()).getPlayconfig().getPacemakerType();
+		                                                                         ^
+  symbol:   method getPacemakerType()
+  location: class PlayConfig
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+Note: Some input files use unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+Note: Some messages have been simplified; recompile with -Xdiags:verbose to get full output
+100 errors
+only showing the first 100 errors, of 1008 total; use -Xmaxerrs if you would like to see more
+
+> Task :compileJava FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':compileJava'.
+> Compilation failed; see the compiler error output for details.
+
+* Try:
+> Run with --info option to get more log output.
+> Run with --scan to get full insights.
+
+BUILD FAILED in 20s
+1 actionable task: 1 executed

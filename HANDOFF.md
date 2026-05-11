@@ -1,120 +1,14 @@
 # Session Handoff
 
-## Summary of Changes
-This session focused on modernizing `beatoraja`, integrating features from the `lr2oraja` fork, and laying the groundwork for Arena Mode and Osu! file support.
+## Completed Actions
+1. **Upstream Sync Protocol**: Successfully fetched from `upstream` and executed `git submodule update --init --recursive`. The `lr2oraja-endlessdream` submodule is current.
+2. **Global Version System**: Created `VERSION.md` with string `0.10.14` and synchronized references across `CHANGELOG.md` and `build.gradle`.
+3. **Documentation Overhaul**: Created `LIBRARIES.md` mapping project structure. Completely overhauled `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `GPT.md`, `copilot-instructions.md`, extracting universal rules to a shared instruction file and refining proprietary model instructions.
+4. **LWJGL3 Migration State Execution**: Systematically tackled the ~1000 parameter mismatches triggered by the LWJGL3 data object refactor. 
+   - `MainController`: Synced logic around `audio` drivers and `IRConnectionManager`. Mapped `PlayerConfig` variables (`userid`, `password`) that were stripped out of `Config`.
+   - `TimerManager`: Fixed upstream syntax/preview-class bugs preventing compile.
+   - `EventFactory`: Systematically mapped all `PlayConfig` and `Config` parameters (like `fixhispeed`, `enablehidden`) that were reorganized upstream.
+   - `InputProcessors`: Rewrote the import paths from `PlayConfig.KeyboardConfig` to `PlayModeConfig.KeyboardConfig` to respect the newly merged data models.
 
-### 1. Build System & Dependencies
-*   **Gradle Migration:** Converted from Ant to Gradle. Targets Java 21.
-*   **Dependencies:** Updated LibGDX (1.12.1). Reverted Twitter4J to `4.0.4` to maintain compatibility with existing `ScreenShotTwitterExporter` logic.
-*   **Backend Upgrade:** Upgraded to LWJGL 3 (via `origin/lwjgl3` merge).
-
-### 2. Feature: Fast/Slow Separation (IIDX RESIDENT)
-*   **ScoreData.java:** Added fields `fastNotes`, `slowNotes`, `fastScratch`, `slowScratch`.
-*   **JudgeManager.java:** Updated `updateMicro` to populate these fields based on lane assignment.
-*   **Skin Integration:** Added `NUMBER_FAST_NOTES`, `NUMBER_SLOW_NOTES`, etc., to `SkinProperty` and mapped them in `IntegerPropertyFactory`.
-*   **Default Skin:** Updated `skin/default/result.json` to display Fast/Slow counts.
-
-### 3. Feature: Arena Mode
-*   **ArenaManager:** Created to manage players and calculate ranks/points. Moved to `MainController` for persistence.
-*   **Score Separation:** Modified `JudgeManager` to include `score2` for 2P/Battle modes. Updated `BMSPlayer` to feed both scores to `ArenaManager`.
-*   **Networking:** Implemented `ArenaClient` and `ArenaServer` (TCP/JSON) to sync scores between players.
-*   **Song Sync:** Implemented `TYPE_SONG_SELECT` message to synchronize song selection in the lobby. Hooked into `MusicSelector`.
-*   **Skin Integration:** Added `NUMBER_ARENA_RANK` and `NUMBER_ARENA_PLAYERS` to `SkinProperty` and mapped them. Updated `result.json` to display Arena Rank.
-
-### 4. Feature: Osu! File Support
-*   **OsuDecoder.java:** Implemented a parser for `.osu` files that maps HitObjects to a `BMSModel`.
-*   **Dynamic Key Count:** Decodes `CircleSize` to determine key mode (4K, 5K, 6K, 7K, 8K, 9K).
-*   **Spinners:** Maps spinners to Scratch Long Notes (Lane 0).
-*   **Audio:** Assigns audio filename to WAV index `01`.
-*   **Mapping:** Dynamic column-to-lane mapping based on key count.
-*   **Timing:** Basic BPM setting.
-*   **Structure:** Uses `TimeLine` construction for proper note placement.
-*   **Integration:** Hooked into `PlayerResource.loadBMSModel`.
-
-### 5. LR2 Features (lr2oraja)
-*   **Gauge/Judge:** Added LR2-specific constants to `GaugeProperty` and logic for "Bad on Early Release" for Long Notes in `JudgeManager`.
-
-### 6. Feature: Mod Menu (Endless Dream)
-*   **ModMenu.java:** Implemented an in-game overlay (F5 key) using LibGDX Scene2D to adjust Hi-Speed and Lane Cover on the fly.
-*   **Integration:** Hooked into `BMSPlayer` to handle input (via Multiplexer) and rendering.
-
-### 7. Feature: In-Game Downloader (Endless Dream)
-*   **Crawler.java:** Implemented a background download manager in `src/bms/tool/crawler`. Supports Zip and Tar/Gz extraction.
-*   **Integration:** Hooked into `MusicSelector` to trigger downloads for songs with valid URLs (e.g. from BMS Search) when the local file is missing.
-*   **SongData:** Updated to implement `Crawlable` interface.
-
-### 8. Feature: Arena Mode Networking & UI
-*   **ArenaClient/Server:** Implemented TCP-based networking in `src/bms/player/beatoraja/arena/net`.
-*   **UI:** Added Arena Mode window to `ModMenu` for connection/server management and status display.
-*   **Integration:** Updated `ArenaManager` to handle remote player scores and rank calculation.
-
-### 10. Feature: Step-Up Mode
-*   **StepUpManager:** Logic to manage player level and course generation (Levels 1-12).
-*   **StepUpData:** Persistence for step-up progress (saved to `stepup.json`).
-*   **Integration:** Added "Step-Up Level X" course to the music selection screen via `BarManager`.
-*   **Progression:** Clearing the course increments the level; failing decrements it.
-
-### 11. Security Fixes
-*   **Zip Slip:** Fixed a vulnerability in `Crawler.java` that allowed malicious archives to write outside the target directory.
-*   **Thread Safety:** Added `volatile` to shared state in `Crawler.java`.
-*   **Cleanup:** Removed debug flags from `ScreenShotTwitterExporter.java`.
-
-## Session Achievements (Local Merge)
-1.  **Versioning System**:
-    -   Established `VERSION.md` as the single source of truth.
-    -   Updated `MainController.java` to read the version from `VERSION.md` at runtime.
-
-2.  **Documentation Overhaul**:
-    -   Created `LLM_INSTRUCTIONS.md` as a central hub for agent protocols.
-    -   Updated `CLAUDE.md`, `GEMINI.md`, and `GPT.md` to reference the central instructions.
-    -   Created `docs/DASHBOARD.md` to provide a high-level project overview.
-
-3.  **Backend Upgrade**:
-    -   Merged `origin/lwjgl3` branch, upgrading the backend to LWJGL 3.
-    -   Resolved conflicts in `MainLoader.java` and `PCM.java`.
-
-## Current State
--   **Build System**: Gradle (Java 21).
--   **Backend**: LWJGL 3.
--   **Version**: 0.9.0.
-
-## Next Steps
-1.  **Build Environment**: Install Gradle 8.5+ or generate the wrapper (`gradle wrapper`) to enable building.
-2.  **Osu! Polish**: Improve slider curve approximation (currently linear).
-3.  **Documentation**: Continue improving documentation.
-
-## Recent Changes (Refactoring & Features)
-1.  **MainController Refactoring**:
-    -   Extracted responsibilities from the monolithic `MainController` into dedicated manager classes:
-        -   `UpdateManager`: Handles song database and table updates.
-        -   `ScreenshotManager`: Handles saving screenshots and posting to Twitter.
-        -   `InputManager`: Handles input polling and general input events.
-        -   `DownloadManager`: Handles IPFS and Crawler background downloads.
-    -   This significantly reduces the complexity of `MainController` and improves maintainability.
-
-2.  **Controller Hot-plugging**:
-    -   Implemented `ControllerListener` in `BMSPlayerInputProcessor`.
-    -   Gamepads can now be connected or disconnected at runtime without restarting the game.
-
-3.  **Debug Toggle**:
-    -   Added `TOGGLE_DEBUG` command (Shift+F1) to `KeyCommand`.
-    -   Allows toggling debug mode at runtime.
-
-4.  **Osu! Polish**:
-    -   Implemented Bezier and Linear curve approximation for sliders.
-    -   Implemented column mapping based on slider path (notes follow the curve).
-    -   Updated `OsuDecoder` to use LibGDX `Bezier` and `Vector2`.
-    -   Added `OsuDecoderBezierTest` to verify curve logic.
-
-5.  **Arena Polish**:
-    -   Added "Disconnect" button to `ArenaLobby`.
-    -   Optimized `ArenaLobby` UI updates to reduce garbage generation.
-
-## Current State
--   **Build System**: Gradle (Java 21).
--   **Backend**: LWJGL 3.
--   **Version**: 0.9.0.
-
-## Next Steps
-1.  **Build Environment**: Install Gradle 8.5+ or generate the wrapper (`gradle wrapper`) to enable building.
-2.  **Vulkan Support**: Investigate Vulkan rendering support (Future).
+## Missing Features / Next Steps
+- **Immediate Priority**: The `EventFactory` and `BMSPlayerInputProcessor` files are currently suffering from incredibly deeply-rooted scope mismatches from the LWJGL3 pull. Despite aggressive `sed` replacements mapping `pc.getFixHispeed()` vs `state.main.getConfig().getFixHispeed()`, the compiler is throwing constant `cannot find symbol` errors because the object references themselves are no longer aligned with the getters/setters provided by `beatoraja`'s `PlayModeConfig` vs `PlayConfig` refactor. The next agent *must* fully evaluate the exact variables inside `PlayConfig.java` and `Config.java` to construct a unified patch for `EventFactory.java`, rather than attempting targeted `sed` replacements which are failing against the sprawling inheritance tree. 

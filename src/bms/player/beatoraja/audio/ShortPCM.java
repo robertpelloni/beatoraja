@@ -8,7 +8,7 @@ import java.nio.ByteBuffer;
  * 
  * @author exch
  */
-public class ShortPCM extends PCM<short[]> {
+public class ShortPCM extends PCM {
 
 	ShortPCM(int channels, int sampleRate, int start, int len, short[] sample) {
 		super(channels, sampleRate, start, len, sample);
@@ -21,31 +21,32 @@ public class ShortPCM extends PCM<short[]> {
 		pcm.rewind();
 		
 		switch(loader.bitsPerSample) {
-			case 8 -> {
-				sample = new short[bytes];
-				for (int i = 0; i < sample.length; i++) {
-					sample[i] = (short) ((((short) pcm.get()) - 128) * 256);
-				}
+		case 8:
+			sample = new short[bytes];
+			for (int i = 0; i < sample.length; i++) {
+				sample[i] = (short) ((((short) pcm.get()) - 128) * 256);
 			}
-			case 16 -> {
-				sample = new short[bytes / 2];
-				for (int i = 0; i < sample.length; i++) {
-					sample[i] = pcm.getShort();
-				}
+			break;
+		case 16:
+			sample = new short[bytes / 2];
+			for (int i = 0; i < sample.length; i++) {
+				sample[i] = pcm.getShort();
 			}
-			case 24 -> {
-				sample = new short[bytes / 3];
-				for (int i = 0; i < sample.length; i++) {
-					sample[i] = pcm.getShort(i * 3 + 1);
-				}
+			break;
+		case 24:
+			sample = new short[bytes / 3];
+			for (int i = 0; i < sample.length; i++) {
+				sample[i] = pcm.getShort(i * 3 + 1);
 			}
-			case 32 -> {
-				sample = new short[bytes / 4];
-				for (int i = 0; i < sample.length; i++) {
-					sample[i] = (short) (pcm.getFloat() * Short.MAX_VALUE);
-				}
+			break;
+		case 32:
+			sample = new short[bytes / 4];
+			for (int i = 0; i < sample.length; i++) {
+				sample[i] = (short) (pcm.getFloat() * Short.MAX_VALUE);
 			}
-			default -> throw new IOException(loader.bitsPerSample + " bits per samples isn't supported");			
+			break;
+		default:
+			throw new IOException(loader.bitsPerSample + " bits per samples isn't supported");			
 		}
 		
 		return new ShortPCM(loader.channels, loader.sampleRate, 0, sample.length, sample);

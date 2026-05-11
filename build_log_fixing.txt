@@ -1,0 +1,124 @@
+Starting a Gradle Daemon (subsequent builds will be faster)
+
+> Task :compileJava
+/app/src/bms/player/beatoraja/play/ui/ModMenu.java:2: error: class, interface, enum, or record expected
+package bms.player.beatoraja.play.ui;
+^
+/app/src/bms/player/beatoraja/play/ui/ModMenu.java:4: error: class, interface, enum, or record expected
+import com.badlogic.gdx.Gdx;
+^
+/app/src/bms/player/beatoraja/play/ui/ModMenu.java:5: error: class, interface, enum, or record expected
+import com.badlogic.gdx.Input;
+^
+/app/src/bms/player/beatoraja/play/ui/ModMenu.java:6: error: class, interface, enum, or record expected
+import com.badlogic.gdx.InputMultiplexer;
+^
+/app/src/bms/player/beatoraja/play/ui/ModMenu.java:7: error: class, interface, enum, or record expected
+import com.badlogic.gdx.InputProcessor;
+^
+/app/src/bms/player/beatoraja/play/ui/ModMenu.java:8: error: class, interface, enum, or record expected
+import com.badlogic.gdx.graphics.Color;
+^
+/app/src/bms/player/beatoraja/play/ui/ModMenu.java:9: error: class, interface, enum, or record expected
+import com.badlogic.gdx.graphics.Pixmap;
+^
+/app/src/bms/player/beatoraja/play/ui/ModMenu.java:10: error: class, interface, enum, or record expected
+import com.badlogic.gdx.graphics.Texture;
+^
+/app/src/bms/player/beatoraja/play/ui/ModMenu.java:11: error: class, interface, enum, or record expected
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+^
+/app/src/bms/player/beatoraja/play/ui/ModMenu.java:12: error: class, interface, enum, or record expected
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+^
+/app/src/bms/player/beatoraja/play/ui/ModMenu.java:13: error: class, interface, enum, or record expected
+import com.badlogic.gdx.scenes.scene2d.Actor;
+^
+/app/src/bms/player/beatoraja/play/ui/ModMenu.java:14: error: class, interface, enum, or record expected
+import com.badlogic.gdx.scenes.scene2d.Stage;
+^
+/app/src/bms/player/beatoraja/play/ui/ModMenu.java:15: error: class, interface, enum, or record expected
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+^
+/app/src/bms/player/beatoraja/play/ui/ModMenu.java:16: error: class, interface, enum, or record expected
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+^
+/app/src/bms/player/beatoraja/play/ui/ModMenu.java:17: error: class, interface, enum, or record expected
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
+^
+/app/src/bms/player/beatoraja/play/ui/ModMenu.java:18: error: class, interface, enum, or record expected
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+^
+/app/src/bms/player/beatoraja/play/ui/ModMenu.java:19: error: class, interface, enum, or record expected
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
+^
+/app/src/bms/player/beatoraja/play/ui/ModMenu.java:20: error: class, interface, enum, or record expected
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+^
+/app/src/bms/player/beatoraja/play/ui/ModMenu.java:21: error: class, interface, enum, or record expected
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+^
+/app/src/bms/player/beatoraja/play/ui/ModMenu.java:22: error: class, interface, enum, or record expected
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+^
+/app/src/bms/player/beatoraja/play/ui/ModMenu.java:23: error: class, interface, enum, or record expected
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+^
+/app/src/bms/player/beatoraja/play/ui/ModMenu.java:24: error: class, interface, enum, or record expected
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+^
+/app/src/bms/player/beatoraja/play/ui/ModMenu.java:25: error: class, interface, enum, or record expected
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+^
+/app/src/bms/player/beatoraja/play/ui/ModMenu.java:27: error: class, interface, enum, or record expected
+import java.nio.file.Path;
+^
+/app/src/bms/player/beatoraja/play/ui/ModMenu.java:29: error: class, interface, enum, or record expected
+import bms.player.beatoraja.Config;
+^
+/app/src/bms/player/beatoraja/play/ui/ModMenu.java:30: error: class, interface, enum, or record expected
+import bms.player.beatoraja.PlayConfig;
+^
+/app/src/bms/player/beatoraja/play/ui/ModMenu.java:31: error: class, interface, enum, or record expected
+import bms.player.beatoraja.SystemSoundManager;
+^
+/app/src/bms/player/beatoraja/play/ui/ModMenu.java:32: error: class, interface, enum, or record expected
+import bms.player.beatoraja.play.BMSPlayer;
+^
+/app/src/bms/player/beatoraja/play/ui/ModMenu.java:33: error: class, interface, enum, or record expected
+import bms.player.beatoraja.play.GrooveGauge;
+^
+/app/src/bms/player/beatoraja/play/ui/ModMenu.java:34: error: class, interface, enum, or record expected
+import bms.player.beatoraja.pattern.Random;
+^
+/app/src/bms/player/beatoraja/play/ui/ModMenu.java:35: error: class, interface, enum, or record expected
+import bms.player.beatoraja.arena.ArenaManager;
+^
+/app/src/bms/player/beatoraja/play/ui/ModMenu.java:36: error: class, interface, enum, or record expected
+import bms.player.beatoraja.arena.ArenaData;
+^
+/app/src/bms/player/beatoraja/play/ui/ModMenu.java:37: error: class, interface, enum, or record expected
+import bms.player.beatoraja.mission.MissionManager;
+^
+/app/src/bms/player/beatoraja/play/ui/ModMenu.java:38: error: class, interface, enum, or record expected
+import bms.player.beatoraja.mission.MissionData;
+^
+/app/src/bms/player/beatoraja/MainController.java:638: error: <identifier> expected
+	public IRConnectionManager.getIRConnection() {
+	                                          ^
+35 errors
+
+> Task :compileJava FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':compileJava'.
+> Compilation failed; see the compiler error output for details.
+
+* Try:
+> Run with --info option to get more log output.
+> Run with --scan to get full insights.
+
+BUILD FAILED in 16s
+1 actionable task: 1 executed

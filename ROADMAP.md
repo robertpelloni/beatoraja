@@ -1,6 +1,6 @@
 # Roadmap
 
-## Version: 0.9.7 | Last Updated: 2026-02-07
+## Version: 0.10.1 | Last Updated: 2026-04-15
 
 ---
 
@@ -122,7 +122,7 @@
 ### Osu! Mode Enhancements
 - [x] **Timing Points**: Inherited timing point handling (0.9.5)
 - [x] **Hit Sound Support**: Per-note hit sounds mapped to WAV indices (0.9.6)
-- [ ] **Storyboard Events**: Parse and display storyboard elements
+- [x] **Storyboard Events**: Parse and display storyboard elements
 
 ### Rendering Improvements
 - [ ] **Vulkan Backend**: Future LibGDX Vulkan support
@@ -206,6 +206,11 @@
 | Version | Date | Highlights |
 |---------|------|------------|
 | 0.9.7 | 2026-02-07 | Submodule URL fix for mirrored environments (Jules CI) |
+
+| 0.10.1 | 2026-04-15 | Addressed WavFileInputStream duplicate, PlayMode/IRStatus/SongPreview enum removals, Mouse LWJGL 3 migration |
+| 0.10.0 | 2026-04-15 | Exhaust TODO backlog, Global Versioning, Osu! Storyboards |
+| 0.9.9 | 2026-04-15 | Global Versioning via VERSION.md |
+| 0.9.8 | 2026-04-14 | Completed synchronization round and finalized documentation |
 | 0.9.6 | 2025-12-28 | ConfigTest, PlayModeConfigTest, Hit Sound support, 180+ tests |
 | 0.9.5 | 2025-12-28 | Timing point support, MissionManagerTest, StepUpManagerTest |
 | 0.9.4 | 2025-12-28 | Osu! Spinner support, comprehensive ROADMAP |
@@ -215,3 +220,8 @@
 | 0.9.0 | 2025-12-26 | Arena Mode, Osu! Support, Mod Menu, Step-Up, CI/CD |
 | 0.8.9 | 2025-12-25 | Centralized versioning, build fixes |
 | 0.8.8 | 2025-12-25 | Initial modernization |
+### Current LWJGL3 Migration Status (as of 0.10.14)
+- **Resolved**: `MainState`, `SystemSoundManager`, `EventFactory` signatures.
+- **Pending**: Method parameter mismatches in `BMSPlayerInputProcessor`, `PlayConfig` structure discrepancies (specifically `isEnableIpfs`, `getUserid`, `getPassword` which migrated from `Config` to `PlayerConfig` in upstream but aren't fully resolved locally), and unresolved references in `TimerManager`.
+- **Next Focus**: Complete the remaining ~1,000 compilation errors to restore a passing build state.
+

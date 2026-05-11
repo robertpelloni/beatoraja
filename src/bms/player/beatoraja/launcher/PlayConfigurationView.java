@@ -21,16 +21,15 @@ import bms.player.beatoraja.play.TargetProperty;
 import bms.player.beatoraja.song.*;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.*;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
@@ -211,6 +210,11 @@ public class PlayConfigurationView implements Initializable {
 	private CheckBox showhiddennote;
 	@FXML
 	private ComboBox<String> target;
+	@FXML
+	private ComboBox<String> target2;
+	@FXML
+	private ComboBox<String> target3;
+
 
 	@FXML
 	private ComboBox<Integer> judgealgorithm;
@@ -485,6 +489,10 @@ public class PlayConfigurationView implements Initializable {
 		String[] targets = player.getTargetlist();
 		target.getItems().setAll(targets);
 		target.setValue(player.getTargetid());
+		target2.getItems().setAll(targets);
+		target2.setValue(player.getTarget2id());
+		target3.getItems().setAll(targets);
+		target3.setValue(player.getTarget3id());
 		showhiddennote.setSelected(player.isShowhiddennote());
 
 		irController.update(player);
@@ -590,6 +598,8 @@ public class PlayConfigurationView implements Initializable {
 
 		player.setShowjudgearea(judgeregion.isSelected());
 		player.setTargetid(target.getValue());
+		player.setTarget2id(target2.getValue());
+		player.setTarget3id(target3.getValue());
 
 		player.setShowhiddennote(showhiddennote.isSelected());
 
@@ -726,66 +736,17 @@ public class PlayConfigurationView implements Initializable {
 	 */
 	public void loadBMS(String updatepath, boolean updateAll) {
 		commit();
-
-		ResourceBundle bundle = ResourceBundle.getBundle("resources.UIResources");
-		final Stage loadingBarStage = new Stage();
-        Runnable progressRunnable = () -> {
-			// JavaFX UI code must be run inside a Platform run context
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    loadingBarStage.setResizable(false);
-					// This modality freezes the launcher/primary stage
-                    loadingBarStage.initModality(Modality.APPLICATION_MODAL);
-                    loadingBarStage.setTitle(bundle.getString("PROGRESS_BMS_TITLE"));
-					// This prevents users from seeing typical windowing system buttons
-                    loadingBarStage.initStyle(StageStyle.UNDECORATED);
-
-                    ProgressBar progressBar = new ProgressBar();
-                    progressBar.setPrefWidth(300);
-
-                    Label messageLabel = new Label(bundle.getString("PROGRESS_BMS_LABEL"));
-
-                    VBox root = new VBox(10);
-                    root.setStyle("-fx-padding: 20; -fx-alignment: center;");
-                    root.getChildren().addAll(messageLabel, progressBar);
-
-                    Scene scene = new Scene(root);
-                    loadingBarStage.setScene(scene);
-
-					// Prevents closing. This has the side effect of preventing windowing system close requests but
-					// the application can still be force killed by the user if necessary
-					loadingBarStage.setOnCloseRequest(Event::consume);
-                    loadingBarStage.show();
-                }
-            });
-        };
-
-        Runnable loadBMSRunnable = () -> {
-            try {
-                SongDatabaseAccessor songdb = MainLoader.getScoreDatabaseAccessor();
-                SongInformationAccessor infodb = config.isUseSongInfo() ?
-                        new SongInformationAccessor(Paths.get("songinfo.db").toString()) : null;
-                Logger.getGlobal().info("song.db更新開始");
-                songdb.updateSongDatas(updatepath, config.getBmsroot(), updateAll, infodb);
-                Logger.getGlobal().info("song.db更新完了");
-                songUpdated = true;
-
-				// Once again, JavaFX UI code must be run inside a Platform context. Hide progress bar and resume
-				// normal launcher behaviour
-				Platform.runLater(new Runnable() {
-					@Override
-					public void run() {
-						loadingBarStage.hide();
-					}
-				});
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-        };
-
-        new Thread(progressRunnable).start();
-        new Thread(loadBMSRunnable).start();
+		try {
+			SongDatabaseAccessor songdb = MainLoader.getScoreDatabaseAccessor();
+			SongInformationAccessor infodb = config.isUseSongInfo() ?
+					new SongInformationAccessor(Paths.get("songinfo.db").toString()) : null;
+			Logger.getGlobal().info("song.db更新開始");
+			songdb.updateSongDatas(updatepath, config.getBmsroot(), updateAll, infodb);
+			Logger.getGlobal().info("song.db更新完了");
+			songUpdated = true;
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 
     @FXML

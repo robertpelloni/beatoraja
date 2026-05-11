@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-public class BytePCM extends PCM<byte[]> {
+public class BytePCM extends PCM {
 
 	BytePCM(int channels, int sampleRate, int start, int len, byte[] sample) {
 		super(channels, sampleRate, start, len, sample);

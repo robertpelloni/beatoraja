@@ -1,0 +1,26 @@
+
+> Task :compileJava FAILED
+/app/src/bms/player/beatoraja/Config.java:316: error: unnamed classes are a preview feature and are disabled by default.
+	public String getPlayername() {
+	       ^
+  (use --enable-preview to enable unnamed classes)
+/app/src/bms/player/beatoraja/Config.java:820: error: class, interface, enum, or record expected
+}
+^
+/app/src/bms/player/beatoraja/Config.java:1: error: unnamed class should not have package declaration
+package bms.player.beatoraja;
+^
+3 errors
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':compileJava'.
+> Compilation failed; see the compiler error output for details.
+
+* Try:
+> Run with --info option to get more log output.
+> Run with --scan to get full insights.
+
+BUILD FAILED in 2s
+1 actionable task: 1 executed

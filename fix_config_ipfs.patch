@@ -1,0 +1,33 @@
+--- src/bms/player/beatoraja/Config.java
++++ src/bms/player/beatoraja/Config.java
+@@ -107,6 +107,8 @@
+ 	private int skinPixmapGen = 1;
+ 	private int stagefilePixmapGen = 1;
+ 	private int bannerPixmapGen = 1;
+ 	private int songResourceGen = 1;
++	private boolean enableIpfs = true;
++	private String ipfsurl = "https://gateway.ipfs.io/";
+ 
+ 	private boolean isAutoClearEnabled = false;
+@@ -432,6 +434,22 @@
+ 		this.songResourceGen = songResourceGen;
+ 	}
+ 
++	public boolean isEnableIpfs() {
++		return enableIpfs;
++	}
++
++	public void setEnableIpfs(boolean enableIpfs) {
++		this.enableIpfs = enableIpfs;
++	}
++
++	public String getIpfsUrl() {
++		return ipfsurl;
++	}
++
++	public void setIpfsUrl(String ipfsUrl) {
++		this.ipfsurl = ipfsUrl;
++	}
++
+ 	public PlayConfig getPlayConfig(int modeId) {
+ 		switch (modeId) {

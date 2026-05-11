@@ -42,3 +42,5 @@ config.json
 config_sys.json
 songdata.db
 songinfo.db
+# Explicitly ignoring banned submodule
+bobcoin/
