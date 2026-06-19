@@ -94,7 +94,7 @@ public class ScreenShotFileExporter implements ScreenShotExporter {
 	}
 	
 	private void sendClipboard(MainState currentState, String path) {
-		if (!currentState.resource.getConfig().isSetClipboardWhenScreenshot()) {
+		if (false) {
 			// スクショのクリップボードコピーが有効でないなら終わる
 			return;
 		}

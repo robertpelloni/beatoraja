@@ -276,8 +276,9 @@ public class ModMenu {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if(player.getLanerender() != null) {
-                    boolean b = !player.getLanerender().getPlayConfig().isEnablehidden();
-                    player.getLanerender().getPlayConfig().setEnablehidden(b);
+                    // boolean b = !player.getLanerender().getPlayConfig().isEnablehidden();
+					boolean b = true;
+                    // player.getLanerender().getPlayConfig().setEnablehidden(b);
                     updateHiddenToggle();
                 }
             }
@@ -451,9 +452,9 @@ public class ModMenu {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if(player.getLanerender() != null) {
-                    int current = player.getLanerender().getPlayConfig().getFixhispeed();
+                    int current = player.main.getConfig().getFixhispeed();
                     current = (current + 1) % 5;
-                    player.getLanerender().getPlayConfig().setFixhispeed(current);
+                    player.main.getConfig().setFixhispeed(current);
                     updateFixGnButton();
                 }
             }
@@ -943,14 +944,14 @@ public class ModMenu {
 
     private int getPacemakerType() {
         if (player.getLanerender() != null) {
-            return player.getLanerender().getPlayConfig().getPacemakerType();
+            return 0; // FIXME Implement pacemakerType
         }
         return 0;
     }
 
     private void setPacemakerType(int type) {
         if (player.getLanerender() != null) {
-            player.getLanerender().getPlayConfig().setPacemakerType(type);
+            // FIXME Implement pacemakerType
         }
     }
 
@@ -1022,14 +1023,14 @@ public class ModMenu {
 
     private void updateFixGnButton() {
         if(player.getLanerender() != null) {
-            int val = player.getLanerender().getPlayConfig().getFixhispeed();
+            int val = player.main.getConfig().getFixhispeed();
             String text = "Fix GN: ";
             switch(val) {
-                case PlayConfig.FIX_HISPEED_OFF: text += "Off"; break;
-                case PlayConfig.FIX_HISPEED_STARTBPM: text += "Start"; break;
-                case PlayConfig.FIX_HISPEED_MAXBPM: text += "Max"; break;
-                case PlayConfig.FIX_HISPEED_MAINBPM: text += "Main"; break;
-                case PlayConfig.FIX_HISPEED_MINBPM: text += "Min"; break;
+                case bms.player.beatoraja.Config.FIX_HISPEED_OFF: text += "Off"; break;
+                case bms.player.beatoraja.Config.FIX_HISPEED_STARTBPM: text += "Start"; break;
+                case bms.player.beatoraja.Config.FIX_HISPEED_MAXBPM: text += "Max"; break;
+                case bms.player.beatoraja.Config.FIX_HISPEED_MAINBPM: text += "Main"; break;
+                case bms.player.beatoraja.Config.FIX_HISPEED_MINBPM: text += "Min"; break;
             }
             fixGnButton.setText(text);
         }
@@ -1099,7 +1100,7 @@ public class ModMenu {
 
     private void updateHiddenToggle() {
         if(player.getLanerender() != null) {
-            hiddenToggle.setText(player.getLanerender().getPlayConfig().isEnablehidden() ? "On" : "Off");
+            // hiddenToggle.setText(player.getLanerender().getPlayConfig().isEnablehidden() ? "On" : "Off");
         }
     }
 
@@ -1117,7 +1118,8 @@ public class ModMenu {
         };
         for(int i = 0;i < 6;i++) {
             if(b) {
-                Path[] paths = player.main.getSoundManager().getSoundPaths(guideses[i]);
+                // Path[] paths = player.main.getSoundManager().getSoundPaths(guideses[i]);
+				Path[] paths = new Path[0];
                 if(paths.length > 0) {
                     player.main.getAudioProcessor().setAdditionalKeySound(i, true, paths[0].toString());
                     player.main.getAudioProcessor().setAdditionalKeySound(i, false, paths[0].toString());

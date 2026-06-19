@@ -73,15 +73,15 @@ public class RankingData {
 		}		
 		state = ACCESS;
 		Thread irprocess = new Thread(() -> {
-			final IRStatus[] ir = mainstate.main.getIRStatus();
+			final bms.player.beatoraja.ir.IRConnection ir = mainstate.main.getIRConnection();
 	        IRResponse<IRScoreData[]> response = null;
 	        if(song instanceof SongData) {
-	        	 response = ir[0].connection.getPlayData(null, new IRChartData((SongData) song));
+			 response = ir.getPlayData(null, new IRChartData((SongData) song));
 	        } else if(song instanceof CourseData) {
-		        response = ir[0].connection.getCoursePlayData(null, new IRCourseData((CourseData) song, mainstate.main.getPlayerConfig().getLnmode()));
+		        response = ir.getCoursePlayData(null, new IRCourseData((CourseData) song, mainstate.main.getPlayerConfig().getLnmode()));
 	        }
 	        if(response.isSucceeded()) {
-	        	updateScore(ir[0].player, mainstate.main.getRivalDataAccessor(), response.getData(), mainstate.getScoreDataProperty().getScoreData());
+			// updateScore(mainstate.main.getPlayerConfig().getIrconfig()[0].getIrname(), mainstate.main.getRivalDataAccessor(), response.getData(), mainstate.getScoreDataProperty().getScoreData());
 	            Logger.getGlobal().fine("IRからのスコア取得成功 : " + response.getMessage());
 				state = FINISH;
 	        } else {

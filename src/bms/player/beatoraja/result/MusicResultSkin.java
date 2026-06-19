@@ -10,7 +10,7 @@ public class MusicResultSkin extends Skin {
 	private int ranktime;
 
 	public MusicResultSkin(SkinHeader header) {
-		super(header);
+		super(bms.player.beatoraja.Resolution.FULLHD, bms.player.beatoraja.Resolution.FULLHD);
 	}
 
 	public int getRankTime() {

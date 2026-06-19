@@ -163,7 +163,9 @@ public class JudgeManager {
 		this.lntype = model.getLntype();
 		Lane[] lanes = model.getLanes();
 
-		algorithm = JudgeAlgorithm.valueOf(resource.getPlayerConfig().getPlayConfig(orgmode).getPlayconfig().getJudgetype());
+		// algorithm = JudgeAlgorithm.valueOf(resource.getPlayerConfig().getPlayConfig(orgmode).getPlayconfig().getJudgetype());
+		// algorithm = JudgeAlgorithm.valueOf(main.getConfig().getJudgetype());
+		algorithm = JudgeAlgorithm.valueOf("default"); // FIXME
 		JudgeProperty rule = BMSPlayerRule.getBMSPlayerRule(orgmode).judge;
 		score.setJudgeAlgorithm(algorithm);
 		score.setRule(BMSPlayerRule.getBMSPlayerRule(orgmode));
@@ -243,7 +245,7 @@ public class JudgeManager {
 			boolean next_inclease = false;
 			boolean pressed = false;
 			for (int key : state.laneassign) {
-				if (input.getKeyState(key)) {
+				if (input.getNumberState()[key]) {
 					pressed = true;
 					break;
 				}
@@ -368,7 +370,7 @@ public class JudgeManager {
 			if (lane == -1) {
 				continue;
 			}
-			final long pmtime = input.getKeyChangedTime(key);
+			final long pmtime = input.getTime()[key];
 			if (pmtime == Long.MIN_VALUE) {
 				continue;
 			}
@@ -379,7 +381,7 @@ public class JudgeManager {
 			// LR2 LN Logic: Bad on early release
 			boolean lr2LN = playerConfig.isLr2LN();
 
-			if (input.getKeyState(key)) {
+			if (input.getNumberState()[key]) {
 				// キーが押されたときの処理
 				if (state.processing != null) {
 					if (((lntype != BMSModel.LNTYPE_LONGNOTE && state.processing.getType() == LongNote.TYPE_UNDEFINED)
@@ -628,7 +630,7 @@ public class JudgeManager {
 					}
 				}
 			}
-			input.resetKeyChangedTime(key);
+			input.getTime()[key] = Long.MIN_VALUE;
 		}
 
 		for (LaneState state : states) {

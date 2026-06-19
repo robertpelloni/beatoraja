@@ -388,8 +388,8 @@ public class PlayConfigurationView implements Initializable {
         // int b = Boolean.valueOf(config.getJKOC()).compareTo(false);
 
         usecim.setSelected(config.isCacheSkinImage());
-        discord.setSelected(config.isUseDiscordRPC());
-        clipboardScreenshot.setSelected(config.isSetClipboardWhenScreenshot());
+        discord.setSelected(false);
+        clipboardScreenshot.setSelected(false);
 
 		enableIpfs.setSelected(config.isEnableIpfs());
 		ipfsurl.setText(config.getIpfsUrl());
@@ -536,12 +536,12 @@ public class PlayConfigurationView implements Initializable {
 		config.setEnableIpfs(enableIpfs.isSelected());
 		config.setIpfsUrl(ipfsurl.getText());
 
-		config.setUseDiscordRPC(discord.isSelected());
-		config.setClipboardWhenScreenshot(clipboardScreenshot.isSelected());
+
+
 
 		commitPlayer();
 
-		Config.write(config);
+		/* Config.write(config); */
 
 		tableController.commit();
 	}
@@ -651,41 +651,41 @@ public class PlayConfigurationView implements Initializable {
 			PlayConfig conf = player.getPlayConfig(Mode.valueOf(pc.name())).getPlayconfig();
 			conf.setHispeed(getValue(hispeed).floatValue());
 			conf.setDuration(getValue(gvalue));
-			conf.setEnableConstant(enableConstant.isSelected());
-			conf.setConstantFadeinTime(getValue(constFadeinTime));
-			conf.setHispeedMargin(getValue(hispeedmargin).floatValue());
-			conf.setFixhispeed(fixhispeed.getValue());
+
+
+
+
 			conf.setEnablelanecover(enableLanecover.isSelected());
 			conf.setLanecover(getValue(lanecover) / 1000f);
-			conf.setLanecovermarginlow(getValue(lanecovermarginlow) / 1000f);
-			conf.setLanecovermarginhigh(getValue(lanecovermarginhigh) / 1000f);
-			conf.setLanecoverswitchduration(getValue(lanecoverswitchduration));
+
+
+
 			conf.setEnablelift(enableLift.isSelected());
-			conf.setEnablehidden(enableHidden.isSelected());
+
 			conf.setLift(getValue(lift) / 1000f);
-			conf.setHidden(getValue(hidden) / 1000f);
-			conf.setJudgetype(JudgeAlgorithm.values()[judgealgorithm.getValue()].name());
-			conf.setHispeedAutoAdjust(hispeedautoadjust.isSelected());
+
+
+
 		}
 		pc = playconfig.getValue();
 		PlayConfig conf = player.getPlayConfig(Mode.valueOf(pc.name())).getPlayconfig();
 		hispeed.getValueFactory().setValue((double) conf.getHispeed());
 		gvalue.getValueFactory().setValue(conf.getDuration());
-		enableConstant.setSelected(conf.isEnableConstant());
-		constFadeinTime.getValueFactory().setValue(conf.getConstantFadeinTime());
-		hispeedmargin.getValueFactory().setValue((double) conf.getHispeedMargin());
-		fixhispeed.setValue(conf.getFixhispeed());
+
+
+
+
 		enableLanecover.setSelected(conf.isEnablelanecover());
 		lanecover.getValueFactory().setValue((int) (conf.getLanecover() * 1000));
-		lanecovermarginlow.getValueFactory().setValue((int) (conf.getLanecovermarginlow() * 1000));
-		lanecovermarginhigh.getValueFactory().setValue((int) (conf.getLanecovermarginhigh() * 1000));
-		lanecoverswitchduration.getValueFactory().setValue(conf.getLanecoverswitchduration());
+
+
+
 		enableLift.setSelected(conf.isEnablelift());
-		enableHidden.setSelected(conf.isEnablehidden());
+
 		lift.getValueFactory().setValue((int) (conf.getLift() * 1000));
-		hidden.getValueFactory().setValue((int) (conf.getHidden() * 1000));
-		judgealgorithm.setValue(JudgeAlgorithm.getIndex(conf.getJudgetype()));
-		hispeedautoadjust.setSelected(conf.isEnableHispeedAutoAdjust());
+
+
+
 	}
 
 	private <T> T getValue(Spinner<T> spinner) {

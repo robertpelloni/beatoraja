@@ -18,6 +18,14 @@ public abstract class BMSPlayerInputDevice {
 	 */
 	public abstract void clear();
 
+	private boolean enabled = true;
+	public boolean isEnabled() {
+		return enabled;
+	}
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
 	protected BMSPlayerInputDevice(BMSPlayerInputProcessor bmsPlayerInputProcessor, Type type) {
 		this.bmsPlayerInputProcessor = bmsPlayerInputProcessor;
 		this.type = type;

@@ -107,7 +107,7 @@ public class LR2PlaySkinLoader extends LR2SkinCSVLoader<PlaySkin> {
 				if (bga != null) {
 					skin.setDestination(bga, 0, values[3], srch - values[4] - values[6], values[5], values[6],
 							values[7], values[8], values[9], values[10], values[11], values[12], values[13], values[14],
-							values[15], values[16], values[17], values[18], values[19], values[20], readOffset(str, 21));
+							values[15], values[16], values[17], values[18], values[19], values[20], 0 /* readOffset */);
 					bga.setStretch(stretch);
 				}
 			}
@@ -141,7 +141,7 @@ public class LR2PlaySkinLoader extends LR2SkinCSVLoader<PlaySkin> {
 					lines[values[1]].setDestination(values[2], values[3] * dstw / srcw, dsth - (values[4] + values[6]) * dsth / srch,
 							values[5] * dstw / srcw, values[6] * dsth / srch, values[7], values[8], values[9],
 							values[10], values[11], values[12], values[13], values[14], values[15], values[16],
-							values[17], values[18], values[19], values[20], readOffset(str, 21, new int[]{OFFSET_LIFT}));
+							values[17], values[18], values[19], values[20], 0 /* readOffset */);
 					if(playerr[values[1] % 2] != null) {
 						playerr[values[1] % 2] = new Rectangle(values[3] * dstw / srcw,
 								dsth - (values[4] + values[6]) * dsth / srch, values[5] * dstw / srcw,
@@ -291,7 +291,7 @@ public class LR2PlaySkinLoader extends LR2SkinCSVLoader<PlaySkin> {
 						}
 					}
 					lanerender = new SkinNote(note, lnss, mine);
-					lanerender.setOffsetID(readOffset(str, 21, new int[]{OFFSET_NOTES_1P}));
+					lanerender.setOffsetID(0 /* readOffset */);
 					skin.add(lanerender);
 				}
 			}
@@ -351,7 +351,7 @@ public class LR2PlaySkinLoader extends LR2SkinCSVLoader<PlaySkin> {
 								dsth - (values[4] + values[6]) * dsth / srch, values[5] * dstw / srcw,
 								values[6] * dsth / srch, values[7], values[8], values[9], values[10], values[11],
 								values[12], values[13], values[14], values[15], values[16], values[17], values[18],
-								values[19], values[20], readOffset(str, 21, new int[]{OFFSET_JUDGE_1P, OFFSET_LIFT}));
+								values[19], values[20], 0 /* readOffset */);
 
 						if (!detail) {
 							detail = true;
@@ -403,7 +403,7 @@ public class LR2PlaySkinLoader extends LR2SkinCSVLoader<PlaySkin> {
 								dsth - (values[4] + values[6]) * dsth / srch, values[5] * dstw / srcw,
 								values[6] * dsth / srch, values[7], values[8], values[9], values[10], values[11],
 								values[12], values[13], values[14], values[15], values[16], values[17], values[18],
-								values[19], values[20], readOffset(str, 21, new int[]{OFFSET_JUDGE_2P, OFFSET_LIFT}));
+								values[19], values[20], 0 /* readOffset */);
 
 						if (!detail) {
 							detail = true;
@@ -454,7 +454,7 @@ public class LR2PlaySkinLoader extends LR2SkinCSVLoader<PlaySkin> {
 								dsth - (values[4] + values[6]) * dsth / srch, values[5] * dstw / srcw,
 								values[6] * dsth / srch, values[7], values[8], values[9], values[10], values[11],
 								values[12], values[13], values[14], values[15], values[16], values[17], values[18],
-								values[19], values[20], readOffset(str, 21, new int[]{OFFSET_JUDGE_3P, OFFSET_LIFT}));
+								values[19], values[20], 0 /* readOffset */);
 
 						if (!detail) {
 							detail = true;
@@ -478,7 +478,7 @@ public class LR2PlaySkinLoader extends LR2SkinCSVLoader<PlaySkin> {
 		addCommandWord(new CommandWord("DST_NOWCOMBO_1P") {
 			@Override
 			public void execute(String[] str) {
-				setDstNowCombo(0, str, readOffset(str, 21, new int[]{OFFSET_JUDGE_1P, OFFSET_LIFT}));
+				setDstNowCombo(0, str, new int[]{0});
 			}
 		});
 
@@ -492,7 +492,7 @@ public class LR2PlaySkinLoader extends LR2SkinCSVLoader<PlaySkin> {
 		addCommandWord(new CommandWord("DST_NOWCOMBO_2P") {
 			@Override
 			public void execute(String[] str) {
-				setDstNowCombo(1, str, readOffset(str, 21, new int[]{OFFSET_JUDGE_2P, OFFSET_LIFT}));
+				setDstNowCombo(1, str, new int[]{0});
 			}
 		});
 
@@ -506,7 +506,7 @@ public class LR2PlaySkinLoader extends LR2SkinCSVLoader<PlaySkin> {
 		addCommandWord(new CommandWord("DST_NOWCOMBO_3P") {
 			@Override
 			public void execute(String[] str) {
-				setDstNowCombo(2, str, readOffset(str, 21, new int[]{OFFSET_JUDGE_3P, OFFSET_LIFT}));
+				setDstNowCombo(2, str, new int[]{0});
 			}
 		});
 
@@ -543,7 +543,7 @@ public class LR2PlaySkinLoader extends LR2SkinCSVLoader<PlaySkin> {
 							dsth - (values[4] + values[6]) * dsth / srch, values[5] * dstw / srcw,
 							values[6] * dsth / srch, values[7], values[8], values[9], values[10], values[11],
 							values[12], values[13], values[14], values[15], values[16], values[17], values[18],
-							values[19], values[20], readOffset(str, 21, new int[]{OFFSET_LIFT}));
+							values[19], values[20], 0 /* readOffset */);
 				}
 			}
 		});
@@ -565,7 +565,7 @@ public class LR2PlaySkinLoader extends LR2SkinCSVLoader<PlaySkin> {
 				gauge.y = src.height - values[4];
 				skin.setDestination(noteobj, values[2], gauge.x, gauge.y, gauge.width, gauge.height, values[7], values[8],
 						values[9], values[10], values[11], values[12], values[13], values[14], values[15],
-						values[16], values[17], values[18], values[19], values[20], readOffset(str, 21));
+						values[16], values[17], values[18], values[19], values[20], 0 /* readOffset */);
 			}
 		});
 
@@ -587,7 +587,7 @@ public class LR2PlaySkinLoader extends LR2SkinCSVLoader<PlaySkin> {
 				gauge.y = src.height - values[4];
 				skin.setDestination(bpmgraphobj, values[2], gauge.x, gauge.y, gauge.width, gauge.height, values[7], values[8],
 						values[9], values[10], values[11], values[12], values[13], values[14], values[15],
-						values[16], values[17], values[18], values[19], values[20], readOffset(str, 21));
+						values[16], values[17], values[18], values[19], values[20], 0 /* readOffset */);
 			}
 		});
 		addCommandWord(new CommandWord("SRC_TIMING_1P") {
@@ -609,7 +609,7 @@ public class LR2PlaySkinLoader extends LR2SkinCSVLoader<PlaySkin> {
 				gauge.y = src.height - values[4];
 				skin.setDestination(timingobj, values[2], gauge.x, gauge.y, gauge.width, gauge.height, values[7], values[8],
 						values[9], values[10], values[11], values[12], values[13], values[14], values[15],
-						values[16], values[17], values[18], values[19], values[20], readOffset(str, 21));
+						values[16], values[17], values[18], values[19], values[20], 0 /* readOffset */);
 			}
 		});
 
@@ -743,7 +743,7 @@ public class LR2PlaySkinLoader extends LR2SkinCSVLoader<PlaySkin> {
 							dsth - (values[4] + values[6]) * dsth / srch, values[5] * dstw / srcw,
 							values[6] * dsth / srch, values[7], values[8], values[9], values[10], values[11],
 							values[12], values[13], values[14], values[15], values[16], values[17], values[18],
-							values[19], values[20], readOffset(str, 21));
+							values[19], values[20], 0 /* readOffset */);
 				}
 			}
 		});
@@ -891,7 +891,7 @@ public class LR2PlaySkinLoader extends LR2SkinCSVLoader<PlaySkin> {
 				dsth - (values[4] + values[6]) * dsth / srch, values[5] * dstw / srcw,
 				values[6] * dsth / srch, values[7], values[8], values[9], values[10], values[11],
 				values[12], values[13], values[14], values[15], values[16], values[17], values[18],
-				values[19], values[20], readOffset(str, 21, offset));
+				values[19], values[20], 0 /* readOffset */);
 	}
 
 	public PlaySkin loadSkin(MainState player, SkinHeader header, IntIntMap option) throws IOException {
@@ -982,7 +982,7 @@ public class LR2PlaySkinLoader extends LR2SkinCSVLoader<PlaySkin> {
 		lines[index].setDestination(values[2], values[3] * dstw / srcw, dsth - (values[4] + values[6]) * dsth / srch,
 				values[5] * dstw / srcw, values[6] * dsth / srch * h, values[7], 255, r, g,
 				b, values[12], values[13], values[14], values[15], values[16],
-				values[17], values[18], values[19], values[20], readOffset(linevalues[index % 2], 21, new int[]{OFFSET_LIFT}));
+				values[17], values[18], values[19], values[20], 0 /* readOffset */);
 	}
 
 	/*

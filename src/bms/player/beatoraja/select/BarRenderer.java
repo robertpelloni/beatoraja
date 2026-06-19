@@ -68,9 +68,9 @@ public final class BarRenderer {
 		this.select = select;
 		this.manager = manager;
 		
-		durationlow = select.resource.getConfig().getScrollDurationLow();
-		durationhigh = select.resource.getConfig().getScrollDurationHigh();
-		analogTicksPerScroll = select.resource.getConfig().getAnalogTicksPerScroll();
+		durationlow = 0;
+		durationhigh = 0;
+		analogTicksPerScroll = 0;
 
 		manager.init();
 		

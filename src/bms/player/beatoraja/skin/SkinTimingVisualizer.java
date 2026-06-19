@@ -39,10 +39,10 @@ public final class SkinTimingVisualizer extends SkinObject {
 	private final int center;
 	private final float judgeWidthRate;
 	private final boolean drawDecay;
-	
+
 	private BMSModel model;
 	private int[][] judgeArea;
-	
+
 	private int index;
 	private long[] recent;
 	/**
@@ -85,7 +85,7 @@ public final class SkinTimingVisualizer extends SkinObject {
 
 		if(resource.getBMSModel() != model) {
 			model = resource.getBMSModel();
-			judgeArea = getJudgeArea(resource);	
+			judgeArea = getJudgeArea(resource);
 
 			// BMSModel毎に背景テクスチャ生成
 			int pwidth = center * 2 + 1;
@@ -133,7 +133,7 @@ public final class SkinTimingVisualizer extends SkinObject {
 			pix.dispose();
 		}
 	}
-	
+
 	public void draw(SkinObjectRenderer sprite) {
 
 		draw(sprite, backtex);
@@ -158,7 +158,7 @@ public final class SkinTimingVisualizer extends SkinObject {
 		final int[] judgeWindowRate = config.isCustomJudge()
 				? new int[]{config.getKeyJudgeWindowRatePerfectGreat(), config.getKeyJudgeWindowRateGreat(), config.getKeyJudgeWindowRateGood()}
 				: new int[]{100, 100, 100};
-				
+
 		for (CourseData.CourseDataConstraint mode : resource.getConstraint()) {
 			if (mode == CourseData.CourseDataConstraint.NO_GREAT) {
 				judgeWindowRate[1] = judgeWindowRate[2] = 0;

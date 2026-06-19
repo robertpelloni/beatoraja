@@ -141,7 +141,7 @@ public class BMSPlayer extends MainState {
 				replay = main.getPlayDataAccessor().readReplayData(model, config.getLnmode(), autoplay.id);
 				if (replay != null) {
 					boolean isReplayPatternPlay = false;
-					if(main.getInputProcessor().getKeyState(1)) {
+					if(main.getInputProcessor().getNumberState()[1]) {
 						//保存された譜面オプション/Random Seedから譜面再現
 						Logger.getGlobal().info("リプレイ再現モード : 譜面");
 						playinfo.randomoption = replay.randomoption;
@@ -151,7 +151,7 @@ public class BMSPlayer extends MainState {
 						playinfo.doubleoption = replay.doubleoption;
 						playinfo.rand = replay.rand;
 						isReplayPatternPlay = true;
-					} else if(main.getInputProcessor().getKeyState(2)) {
+					} else if(main.getInputProcessor().getNumberState()[2]) {
 						//保存された譜面オプションログから譜面オプション再現
 						Logger.getGlobal().info("リプレイ再現モード : オプション");
 						playinfo.randomoption = replay.randomoption;
@@ -159,7 +159,7 @@ public class BMSPlayer extends MainState {
 						playinfo.doubleoption = replay.doubleoption;
 						isReplayPatternPlay = true;
 					}
-					if(main.getInputProcessor().getKeyState(4)) {
+					if(main.getInputProcessor().getNumberState()[4]) {
 						//保存されたHSオプションログからHSオプション再現
 						Logger.getGlobal().info("リプレイ再現モード : ハイスピード");
 						HSReplay = replay;
@@ -415,13 +415,13 @@ public class BMSPlayer extends MainState {
 
 		Logger.getGlobal().info("ゲージ設定");
 		if(replay != null) {
-			for(int count = (main.getInputProcessor().getKeyState(5) ? 1 : 0) + (main.getInputProcessor().getKeyState(3) ? 2 : 0);count > 0; count--) {
+			for(int count = (main.getInputProcessor().getNumberState()[5] ? 1 : 0) + (main.getInputProcessor().getNumberState()[3] ? 2 : 0);count > 0; count--) {
 				if (replay.gauge != GrooveGauge.HAZARD || replay.gauge != GrooveGauge.EXHARDCLASS) {
 					replay.gauge++;
 				}
 			}
 		}
-		if(replay != null && main.getInputProcessor().getKeyState(5)) {
+		if(replay != null && main.getInputProcessor().getNumberState()[5]) {
 		}
 		// プレイゲージ、初期値設定
 		int gaugeType = replay != null ? replay.gauge : config.getGauge();
@@ -502,7 +502,8 @@ public class BMSPlayer extends MainState {
 		final SystemSoundManager.SoundType[] guideses = {GUIDESE_PG,GUIDESE_GR,GUIDESE_GD,GUIDESE_BD,GUIDESE_PR,GUIDESE_MS};
 		for(int i = 0;i < 6;i++) {
 			if(config.isGuideSE()) {
-				Path[] paths = main.getSoundManager().getSoundPaths(guideses[i]);
+				// Path[] paths = main.getSoundManager().getSoundPaths(guideses[i]);
+				Path[] paths = new Path[0];
 				if(paths.length > 0) {
 					main.getAudioProcessor().setAdditionalKeySound(i, true, paths[0].toString());
 					main.getAudioProcessor().setAdditionalKeySound(i, false, paths[0].toString());
@@ -547,11 +548,12 @@ public class BMSPlayer extends MainState {
 		} else {
 			main.getArenaManager().resetScores();
 			
-			int pacemakerType = config.getPlayConfig(model.getMode()).getPlayconfig().getPacemakerType();
+			// int pacemakerType = config.getPlayConfig(model.getMode()).getPlayconfig().getPacemakerType();
+			int pacemakerType = 0; // FIXME
 			int targetExScore = 0;
 			int[] targetGhost = null;
 
-			if (pacemakerType == PlayConfig.PACEMAKER_RIVAL) {
+			if (pacemakerType == 0) {
 				if(resource.getRivalScoreData() == null || resource.getCourseBMSModels() != null) {
 					ScoreData targetScore = TargetProperty.getTargetProperty(config.getTargetid()).getTarget(main);
 					resource.setTargetScoreData(targetScore);
@@ -562,17 +564,17 @@ public class BMSPlayer extends MainState {
 					targetExScore = resource.getTargetScoreData().getExscore();
 					targetGhost = resource.getTargetScoreData().decodeGhost(); // Decode ghost if available (not actually stored in ScoreData usually, but logic exists)
 				}
-			} else if (pacemakerType == PlayConfig.PACEMAKER_BEST) {
+			} else if (pacemakerType == 1) {
 				targetExScore = score.getExscore();
 				targetGhost = score.decodeGhost();
 			} else {
 				// Artificial
 				int maxScore = model.getTotalNotes() * 2;
-				if (pacemakerType == PlayConfig.PACEMAKER_AAA) {
+				if (pacemakerType == 2) {
 					targetExScore = (int)Math.ceil(maxScore * 8.0 / 9.0);
-				} else if (pacemakerType == PlayConfig.PACEMAKER_AA) {
+				} else if (pacemakerType == 3) {
 					targetExScore = (int)Math.ceil(maxScore * 7.0 / 9.0);
-				} else if (pacemakerType == PlayConfig.PACEMAKER_A) {
+				} else if (pacemakerType == 4) {
 					targetExScore = (int)Math.ceil(maxScore * 6.0 / 9.0);
 				}
 			}
@@ -587,7 +589,7 @@ public class BMSPlayer extends MainState {
 	public void render() {
 		final PlaySkin skin = (PlaySkin) getSkin();
 		if(skin == null) {
-			main.changeState(MainStateType.MUSICSELECT);
+			main.changeState(bms.player.beatoraja.MainController.STATE_SELECTMUSIC);
 			return;
 		}
 		final BMSPlayerMode autoplay = resource.getPlayMode();
@@ -662,7 +664,7 @@ public class BMSPlayer extends MainState {
 				control.setEnableCursor(false);
 				practice.processInput(input);
 
-				if (input.getKeyState(0) && resource.mediaLoadFinished() &&  micronow > (skin.getLoadstart() + skin.getLoadend()) * 1000
+				if (input.getNumberState()[0] && resource.mediaLoadFinished() &&  micronow > (skin.getLoadstart() + skin.getLoadend()) * 1000
 						&& micronow - startpressedtime > 1000000) {
 					PracticeProperty property = practice.getPracticeProperty();
 					control.setEnableControl(true);
@@ -704,19 +706,20 @@ public class BMSPlayer extends MainState {
 				if (timer.getNowTime(TIMER_FADEOUT) > skin.getFadeout()) {
 					input.setEnable(true);
 					input.setStartTime(0);
-					main.changeState(MainStateType.MUSICSELECT);
+					main.changeState(bms.player.beatoraja.MainController.STATE_SELECTMUSIC);
 				}
 			}
 			// GET READY
 			case STATE_READY -> {
 				if (timer.getNowTime(TIMER_READY) > skin.getPlaystart()) {
-					replayConfig = lanerender.getPlayConfig().clone();
+					// replayConfig = lanerender.getPlayConfig().clone();
+					replayConfig = lanerender.getPlayConfig();
 					state = STATE_PLAY;
 					timer.setMicroTimer(TIMER_PLAY, micronow - starttimeoffset * 1000);
 					timer.setMicroTimer(TIMER_RHYTHM, micronow - starttimeoffset * 1000);
 
 					input.setStartTime(micronow + timer.getStartMicroTime() - starttimeoffset * 1000);
-					input.setKeyLogMarginTime(resource.getMarginTime());
+					// input.setKeyLogMarginTime(resource.getMarginTime());
 					keyinput.startJudge(model, replay != null ? replay.keylog : null, resource.getMarginTime());
 					keysound.startBGPlay(model, starttimeoffset * 1000);
 					Logger.getGlobal().info("STATE_PLAYに移行");
@@ -809,7 +812,7 @@ public class BMSPlayer extends MainState {
 					}
 					saveConfig();
 					resource.reloadBMSFile();
-					main.changeState(MainStateType.PLAY);
+					main.changeState(bms.player.beatoraja.MainController.STATE_PLAYBMS);
 				} else if (timer.getNowTime(TIMER_FAILED) > skin.getClose()) {
 					main.getAudioProcessor().setGlobalPitch(1f);
 					if (resource.mediaLoadFinished()) {
@@ -836,9 +839,9 @@ public class BMSPlayer extends MainState {
 					if (autoplay.mode == BMSPlayerMode.Mode.PRACTICE) {
 						state = STATE_PRACTICE;
 					} else if (resource.getScoreData() != null) {
-						main.changeState(MainStateType.RESULT);
+						main.changeState(bms.player.beatoraja.MainController.STATE_RESULT);
 					} else {
-						main.changeState(MainStateType.MUSICSELECT);
+						main.changeState(bms.player.beatoraja.MainController.STATE_SELECTMUSIC);
 					}
 				}
 			}
@@ -868,17 +871,17 @@ public class BMSPlayer extends MainState {
 						state = STATE_PRACTICE;
 					} else if (resource.getScoreData() != null) {
 						Logger.getGlobal().info("\"score\": " + resource.getScoreData());
-						main.changeState(MainStateType.RESULT);
+						main.changeState(bms.player.beatoraja.MainController.STATE_RESULT);
 					} else {
 						if (resource.mediaLoadFinished()) {
 							main.getAudioProcessor().stop((Note) null);
 						}
 						if (resource.getCourseBMSModels() != null && resource.nextCourse()) {
-							main.changeState(MainStateType.PLAY);
+							main.changeState(bms.player.beatoraja.MainController.STATE_PLAYBMS);
 						} else if(resource.nextSong()){
-							main.changeState(MainStateType.DECIDE);
+							main.changeState(bms.player.beatoraja.MainController.STATE_DECIDE);
 						} else {
-							main.changeState(MainStateType.MUSICSELECT);
+							main.changeState(bms.player.beatoraja.MainController.STATE_SELECTMUSIC);
 						}
 					}
 				}
@@ -943,14 +946,14 @@ public class BMSPlayer extends MainState {
 			}
 		}
 		PlayConfig pc = resource.getPlayerConfig().getPlayConfig(model.getMode()).getPlayconfig();
-		if (pc.getFixhispeed() != PlayConfig.FIX_HISPEED_OFF) {
+		if (main.getConfig().getFixhispeed() != bms.player.beatoraja.Config.FIX_HISPEED_OFF) {
 			pc.setDuration(lanerender.getDuration());
 		} else {
 			pc.setHispeed(lanerender.getHispeed());
 		}
 		pc.setLanecover(lanerender.getLanecover());
 		pc.setLift(lanerender.getLiftRegion());
-		pc.setHidden(lanerender.getHiddenCover());
+		// pc.setHidden(lanerender.getHiddenCover());
 	}
 
 	public ScoreData createScoreData() {
@@ -993,7 +996,7 @@ public class BMSPlayer extends MainState {
 		replay.sha256 = model.getSHA256();
 		replay.mode = config.getLnmode();
 		replay.date = Calendar.getInstance().getTimeInMillis() / 1000;
-		replay.keylog = main.getInputProcessor().getKeyInputLog();
+		replay.keylog = main.getInputProcessor().getKeyInputLog().toArray(new bms.player.beatoraja.input.KeyInputLog[0]);
 //		replay.pattern = playinfo.pattern;
 		replay.laneShufflePattern = playinfo.laneShufflePattern;
 		replay.rand = playinfo.rand;
@@ -1032,7 +1035,7 @@ public class BMSPlayer extends MainState {
 //		System.out.println(avgduration + " / " + count + " = " + score.getAvgjudge());
 
 		score.setDeviceType(main.getInputProcessor().getDeviceType());
-		score.setSkin(getSkin().header.getName());
+		// score.setSkin(getSkin().header.getName());
 		return score;
 	}
 
@@ -1114,7 +1117,7 @@ public class BMSPlayer extends MainState {
 		}
 		// Reset state pointers for Notes and BGAs
 		resetNoteStates(newTime);
-		bga.resetVideoAndImages(newTime);
+		// bga.seek(newTime);
 	}
 
 	protected void resetNoteStates(long newTime) {
@@ -1185,16 +1188,17 @@ public class BMSPlayer extends MainState {
 			resource.getReplayData().randomoptionseed = -1;
 		}
 		resource.reloadBMSFile();
-		main.changeState(MainStateType.PLAY);
+		main.changeState(bms.player.beatoraja.MainController.STATE_PLAYBMS);
 	}
 
 	public void updateTargetScore() {
 		PlayerConfig config = resource.getPlayerConfig();
-		int pacemakerType = config.getPlayConfig(model.getMode()).getPlayconfig().getPacemakerType();
+		// int pacemakerType = config.getPlayConfig(model.getMode()).getPlayconfig().getPacemakerType();
+			int pacemakerType = 0; // FIXME
 		int targetExScore = 0;
 		int[] targetGhost = null;
 
-		if (pacemakerType == PlayConfig.PACEMAKER_RIVAL) {
+		if (pacemakerType == 0) {
 			if(resource.getRivalScoreData() == null || resource.getCourseBMSModels() != null) {
 				ScoreData targetScore = TargetProperty.getTargetProperty(config.getTargetid()).getTarget(main);
 				resource.setTargetScoreData(targetScore);
@@ -1205,17 +1209,17 @@ public class BMSPlayer extends MainState {
 				targetExScore = resource.getTargetScoreData().getExscore();
 				targetGhost = resource.getTargetScoreData().decodeGhost();
 			}
-		} else if (pacemakerType == PlayConfig.PACEMAKER_BEST) {
+		} else if (pacemakerType == 1) {
 			targetExScore = getScoreDataProperty().getBestScore();
 			targetGhost = getScoreDataProperty().getBestGhost();
 		} else {
 			// Artificial
 			int maxScore = model.getTotalNotes() * 2;
-			if (pacemakerType == PlayConfig.PACEMAKER_AAA) {
+			if (pacemakerType == 2) {
 				targetExScore = (int)Math.ceil(maxScore * 8.0 / 9.0);
-			} else if (pacemakerType == PlayConfig.PACEMAKER_AA) {
+			} else if (pacemakerType == 3) {
 				targetExScore = (int)Math.ceil(maxScore * 7.0 / 9.0);
-			} else if (pacemakerType == PlayConfig.PACEMAKER_A) {
+			} else if (pacemakerType == 4) {
 				targetExScore = (int)Math.ceil(maxScore * 6.0 / 9.0);
 			}
 		}

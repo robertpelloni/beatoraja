@@ -112,6 +112,7 @@ public class SystemSoundManager {
 		return soundmap.get(sound);
 	}
 
+
 	public void play(SoundType sound, boolean loop) {
 		final String path = soundmap.get(sound);
 		if (path != null) {

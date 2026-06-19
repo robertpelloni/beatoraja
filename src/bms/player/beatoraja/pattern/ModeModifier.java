@@ -25,12 +25,12 @@ public class ModeModifier extends PatternModifier {
 	 * 連打しきい値(ms)(H-RANDOM用)
 	 */
 	private int hranThreshold = 125;
-	
+
 	private final Mode beforeMode;
 	private final Mode afterMode;
 
 	public ModeModifier(Mode beforeMode, Mode afterMode, PlayerConfig config) {
-		super(AssistLevel.LIGHT_ASSIST);		
+		super(AssistLevel.LIGHT_ASSIST);
 		this.beforeMode = beforeMode;
 		this.afterMode = afterMode;
 		this.config = config;
@@ -93,7 +93,7 @@ public class ModeModifier extends PatternModifier {
 			}
 		}
 	}
-	
+
 	enum Algorithm {
 		SEVEN_TO_NINE(Mode.BEAT_7K, Mode.POPN_9K) {
 			@Override
@@ -185,7 +185,7 @@ public class ModeModifier extends PatternModifier {
 				return result;
 			}
 		};
-		
+
 		/**
 		 * 変更前モード
 		 */
@@ -194,9 +194,9 @@ public class ModeModifier extends PatternModifier {
 		 * 変更後モード
 		 */
 		private final Mode afterMode;
-		
+
 		public abstract int[] modify(int[] keys, int[] activeln, Note[] notes, int[] lastNoteTime, int now, int duration, PlayerConfig config);
-		
+
 		private Algorithm(Mode beforeMode, Mode afterMode) {
 			this.beforeMode = beforeMode;
 			this.afterMode = afterMode;

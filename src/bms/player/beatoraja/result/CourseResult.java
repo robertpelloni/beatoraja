@@ -78,8 +78,8 @@ public class CourseResult extends AbstractResult {
 
 		ranking = resource.getRankingData() != null && resource.getCourseBMSModels() != null ? resource.getRankingData() : new RankingData();
 		rankingOffset = 0;
-		final IRStatus[] ir = main.getIRStatus();
-		if (ir.length > 0 && resource.getPlayMode().mode == BMSPlayerMode.Mode.PLAY) {
+
+		if (false) {
 			state = STATE_IR_PROCESSING;
 			
 			boolean uln = false;
@@ -91,22 +91,22 @@ public class CourseResult extends AbstractResult {
 			}
 			final int lnmode = uln ? config.getLnmode() : 0;
 			
-        	for(IRStatus irc : ir) {
+		if(false) { /* for(IRStatus irc : ir) { */
     			boolean send = resource.isUpdateCourseScore() && resource.getCourseData().isRelease();
-    			switch(irc.config.getIrsend()) {
-	    			case IRConfig.IR_SEND_ALWAYS -> {}
-	    			case IRConfig.IR_SEND_COMPLETE_SONG -> {
+			if (false) {
+
+				if (false) {
 	//    				FloatArray gauge = resource.getGauge()[resource.getGrooveGauge().getType()];
 	//    				send &= gauge.get(gauge.size - 1) > 0.0;
 	    			}
-	    			case IRConfig.IR_SEND_UPDATE_SCORE -> {
+				if (false) {
 	//    				send &= (newscore.getExscore() > oldscore.getExscore() || newscore.getClear() > oldscore.getClear()
 	//					|| newscore.getCombo() > oldscore.getCombo() || newscore.getMinbp() < oldscore.getMinbp());    				
 	    			}
     			}
     			
     			if(send) {
-    				irSendStatus.add(new IRSendStatus(irc.connection, resource.getCourseData(), lnmode, newscore));
+
     			}
         	}
 
@@ -122,7 +122,7 @@ public class CourseResult extends AbstractResult {
 						}
 						irsend++;
 						succeed &= irc.send();
-						if (irc.retry < 0 || irc.retry > main.getConfig().getIrSendCount()) {
+						if (false) {
 							removeIrSendStatus.add(irc);
 						}
 					} catch (Exception e) {
@@ -137,13 +137,13 @@ public class CourseResult extends AbstractResult {
 				if (irsend > 0) {
 					timer.switchTimer(succeed ? TIMER_IR_CONNECT_SUCCESS : TIMER_IR_CONNECT_FAIL, true);
 					try {
-						IRResponse<bms.player.beatoraja.ir.IRScoreData[]> response = ir[0].connection.getCoursePlayData(null, new IRCourseData(resource.getCourseData(), lnmode));
-						if (response.isSucceeded()) {
-							ranking.updateScore(ir[0].player, main.getRivalDataAccessor(), response.getData(), newscore.getExscore() > oldscore.getExscore() ? newscore : oldscore);
+						/* getCoursePlayData */
+						if(false) {
+							/* updateScore */
 							rankingOffset = ranking.getRank() > 10 ? ranking.getRank() - 5 : 0;
-							Logger.getGlobal().info("IRからのスコア取得成功 : " + response.getMessage());
+
 						} else {
-							Logger.getGlobal().warning("IRからのスコア取得失敗 : " + response.getMessage());
+
 						}
 					} catch (Exception e) {
 						Logger.getGlobal().warning("IRからのスコア取得時例外:" + e.getMessage());
@@ -178,7 +178,7 @@ public class CourseResult extends AbstractResult {
 		if (timer.isTimerOn(TIMER_FADEOUT)) {
 			if (timer.getNowTime(TIMER_FADEOUT) > getSkin().getFadeout()) {
 				resource.getPlayerConfig().setGauge(resource.getOrgGaugeOption());
-				main.changeState(MainStateType.MUSICSELECT);
+				main.changeState(MainController.STATE_SELECTMUSIC);
 			}
 		} else if (time > getSkin().getScene()) {
 			timer.switchTimer(TIMER_FADEOUT, true);
@@ -232,7 +232,7 @@ public class CourseResult extends AbstractResult {
 				saveReplayData(3);				
 			}
 
-			if(inputProcessor.isActivated(KeyCommand.OPEN_IR)) {
+			if(false) {
 				this.executeEvent(EventType.open_ir);
 			}
 		}
@@ -271,9 +271,9 @@ public class CourseResult extends AbstractResult {
 		main.getPlayDataAccessor().writeScoreData(newscore, models, config.getLnmode(),
 				random, resource.getConstraint(), resource.isUpdateCourseScore());
 
-		if (main.getStepUpManager() != null && resource.getCourseData().getName() != null && resource.getCourseData().getName().startsWith("Step-Up Level")) {
+		if (null /*main.getStepUpManager()*/ != null && resource.getCourseData().getName() != null && resource.getCourseData().getName().startsWith("Step-Up Level")) {
             boolean clear = newscore.getClear() > ClearType.Failed.id;
-            main.getStepUpManager().onResult(clear);
+
             Logger.getGlobal().info("Step-Up Result processed: " + (clear ? "Cleared" : "Failed"));
         }
 

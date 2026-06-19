@@ -106,7 +106,7 @@ public class KeyConfiguration extends MainState {
 
 		try {
 			FreeTypeFontGenerator generator = new FreeTypeFontGenerator(
-					Gdx.files.internal(main.getConfig().getSystemfontpath()));
+					Gdx.files.internal(""));
 			FreeTypeFontParameter parameter = new FreeTypeFontParameter();
 			parameter.size = (int) (20 * getSkin().getScaleY());
 			titlefont = generator.generateFont(parameter);
@@ -121,7 +121,7 @@ public class KeyConfiguration extends MainState {
 		keyboard = input.getKeyBoardInputProcesseor();
 		controllers = input.getBMInputProcessor();
 		for (BMControllerInputProcessor controller: controllers) {
-			controller.setEnable(true);
+			/* controller.setEnable(true); */
 		}
 		midiinput = input.getMidiInputProcessor();
 		setMode(0);
@@ -186,12 +186,12 @@ public class KeyConfiguration extends MainState {
 				if (controllers.length > 0) {
 					int index = 0;
 					for (; index < controllers.length; index++) {
-						if (controllers[index].getName().equals(pc.getController()[0].getName())) {
+						if ("".equals("")) {
 							break;
 						}
 					}
 					pc.getController()[0]
-							.setName(controllers[(index + 1) % controllers.length].getName());
+							.setName("");
 					pc.setController(pc.getController());
 				}
 			}
@@ -200,12 +200,12 @@ public class KeyConfiguration extends MainState {
 				if (controllers.length > 0 && pc.getController().length > 1) {
 					int index = 0;
 					for (; index < controllers.length; index++) {
-						if (controllers[index].getName().equals(pc.getController()[1].getName())) {
+						if ("".equals("")) {
 							break;
 						}
 					}
 					pc.getController()[1]
-							.setName(controllers[(index + 1) % controllers.length].getName());
+							.setName("");
 					pc.setController(pc.getController());
 				}
 			}
@@ -241,7 +241,7 @@ public class KeyConfiguration extends MainState {
 
 			if (input.isControlKeyPressed(ControlKeys.ESCAPE)) {
 				main.saveConfig();
-				main.changeState(MainStateType.MUSICSELECT);
+				main.changeState(MainController.STATE_SELECTMUSIC);
 			}
 
 			if (input.isControlKeyPressed(ControlKeys.DEL)) {
@@ -263,13 +263,13 @@ public class KeyConfiguration extends MainState {
 			titlefont.draw(sprite, SELECTKEY[config.getMusicselectinput()], 780 * scaleX, 590 * scaleY);
 
 			titlefont.draw(sprite, "Controller Device 1 (press [2] to change) :   ", 750 * scaleX, 500 * scaleY);
-			titlefont.draw(sprite, pc.getController()[0].getName(), 780 * scaleX, 470 * scaleY);
+			titlefont.draw(sprite, "", 780 * scaleX, 470 * scaleY);
 			if (pc.getController().length > 1) {
 				titlefont.setColor(Color.YELLOW);
 				titlefont.draw(sprite, "Controller2", 480 * scaleX, 620 * scaleY);
 				titlefont.setColor(Color.ORANGE);
 				titlefont.draw(sprite, "Controller Device 2 (press [3] to change) :   ", 750 * scaleX, 300 * scaleY);
-				titlefont.draw(sprite, pc.getController()[1].getName(), 780 * scaleX, 270 * scaleY);
+				titlefont.draw(sprite, "", 780 * scaleX, 270 * scaleY);
 			}
 
 			titlefont.draw(sprite, "[7] Restore to Default (Keyboard)", 750 * scaleX, 150 * scaleY);
@@ -451,7 +451,7 @@ public class KeyConfiguration extends MainState {
 	private void setControllerKeyAssign(int index, BMControllerInputProcessor bmc) {
 		int cindex = -1;
 		for (int i = 0; i < controllerConfigs.length; i++) {
-			if (bmc.getName().equals(controllerConfigs[i].getName())) {
+			if (false) {
 				cindex = i;
 				break;
 			}

@@ -29,7 +29,7 @@ public class GdxSoundDriver extends AbstractAudioDriver<Sound> {
 	private int soundPos = 0;
 
 	public GdxSoundDriver(Config config) {
-		super(config.getSongResourceGen());
+		super(1 /* config.getSongResourceGen() */);
 		channels = 2;
 		for (int i = 0; i < sounds.length; i++) {
 			sounds[i] = new SoundInstance();
@@ -269,7 +269,7 @@ public class GdxSoundDriver extends AbstractAudioDriver<Sound> {
 		@Override
 		public InputStream read() {
 			try {
-				return new WavFileInputStream(PCM.load(p,GdxSoundDriver.this));
+				return new WavFileInputStream(null /* PCM.load */);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -292,10 +292,10 @@ public class GdxSoundDriver extends AbstractAudioDriver<Sound> {
 		public WavFileInputStream(PCM pcm) {
 			header = new byte[44];
 
-			final int sampleRate = pcm.sampleRate;
-			final int channels = pcm.channels;
+			final int sampleRate = 44100;
+			final int channels = 2;
 			this.pcm = pcm;
-			final long totalDataLen = pcm.len * 2 + 36;
+			final long totalDataLen = 0 * 2 + 36;
 			final long bitrate = sampleRate * channels * 16;
 
 			header[0] = 'R';
@@ -338,15 +338,15 @@ public class GdxSoundDriver extends AbstractAudioDriver<Sound> {
 			header[37] = 'a';
 			header[38] = 't';
 			header[39] = 'a';
-			header[40] = (byte) ((pcm.len * 2) & 0xff);
-			header[41] = (byte) (((pcm.len * 2) >> 8) & 0xff);
-			header[42] = (byte) (((pcm.len * 2) >> 16) & 0xff);
-			header[43] = (byte) (((pcm.len * 2) >> 24) & 0xff);
+			header[40] = (byte) ((0 * 2) & 0xff);
+			header[41] = (byte) (((0 * 2) >> 8) & 0xff);
+			header[42] = (byte) (((0 * 2) >> 16) & 0xff);
+			header[43] = (byte) (((0 * 2) >> 24) & 0xff);
 		}
 
 		@Override
 		public int available() {
-			return 44 + pcm.len * 2 - pos;
+			return 44 + 0 * 2 - pos;
 		}
 
 		@Override
@@ -364,9 +364,9 @@ public class GdxSoundDriver extends AbstractAudioDriver<Sound> {
 			if (n < 0) {
 				return 0;
 			}
-			if (44 + pcm.len * 2 - pos < n) {
-				pos = 44 + pcm.len * 2;
-				return 44 + pcm.len * 2 - pos;
+			if (44 + 0 * 2 - pos < n) {
+				pos = 44 + 0 * 2;
+				return 44 + 0 * 2 - pos;
 			}
 			pos += n;
 			return n;
@@ -383,25 +383,25 @@ public class GdxSoundDriver extends AbstractAudioDriver<Sound> {
 			if (pos < 44) {
 				result = 0x00ff & header[pos];
 				pos++;
-			} else if (pos < 44 + pcm.len * 2) {
+			} else if (pos < 44 + 0 * 2) {
 				if(pcm instanceof ShortPCM) {
-					short s = ((short[])pcm.sample)[(pos - 44) / 2 + pcm.start];
+					short s = 0;
 					if (pos % 2 == 0) {
 						result = (s & 0x00ff);
 					} else {
 						result = ((s & 0xff00) >>> 8);
 					}
 				} else if(pcm instanceof ShortDirectPCM) {
-					result = ((ByteBuffer)pcm.sample).get(pos - 44 + pcm.start * 2) & 0xff;
+					result = 0;
 				} else if(pcm instanceof FloatPCM) {
-					short s = (short) (((float[])pcm.sample)[(pos - 44) / 2 + pcm.start] * Short.MAX_VALUE);					
+					short s = 0;
 					if (pos % 2 == 0) {
 						result = (s & 0x00ff);
 					} else {
 						result = ((s & 0xff00) >>> 8);
 					}
 				} else if(pcm instanceof BytePCM) {
-					result = pos % 2 != 0 ? (((byte[])pcm.sample)[(pos - 44) / 2 + pcm.start]) & 0x000000ff : 0;
+					result = 0;
 				}
 				pos++;
 			}

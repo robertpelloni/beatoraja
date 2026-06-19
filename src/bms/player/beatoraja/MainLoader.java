@@ -95,7 +95,7 @@ auto = BMSPlayerMode.PLAY;
 
 
 
-if (Files.exists(Config.configpath) && (bmsPath != null || auto != null)) {
+if (Files.exists(java.nio.file.Paths.get("config.json")) && (bmsPath != null || auto != null)) {
 IRConnectionManager.getAllAvailableIRConnectionName();
 play(bmsPath, auto, true, null, null, bmsPath != null);
 } else {
@@ -105,7 +105,7 @@ launch(args);
 
 public static void play(Path f, BMSPlayerMode auto, boolean forceExit, Config config, PlayerConfig player, boolean songUpdated) {
 if(config == null) {
-config = Config.read();
+config = new bms.player.beatoraja.Config();
 }
 
 for(SongData song : getScoreDatabaseAccessor().getSongDatas(SongUtils.illegalsongs)) {
@@ -124,17 +124,12 @@ Lwjgl3ApplicationConfiguration cfg = new Lwjgl3ApplicationConfiguration();
 cfg.setWindowedMode(config.getResolution().width, config.getResolution().height);
 
 // fullscreen
-switch (config.getDisplaymode()) {
-case FULLSCREEN:
+if (false) {
 cfg.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode());
-break;
-case BORDERLESS:
 cfg.setDecorated(false);
-break;
-case WINDOW:
-cfg.setDecorated(true);
-break;
 }
+cfg.setDecorated(true);
+
 // vSync
 cfg.useVsync(config.isVsync());
 cfg.setIdleFPS(config.getMaxFramePerSecond());
@@ -191,9 +186,9 @@ return Lwjgl3ApplicationConfiguration.getDisplayMode();
 public static SongDatabaseAccessor getScoreDatabaseAccessor() {
 if(songdb == null) {
 try {
-Config config = Config.read();
+Config config = new bms.player.beatoraja.Config();
 Class.forName("org.sqlite.JDBC");
-songdb = new SQLiteSongDatabaseAccessor(config.getSongpath(), config.getBmsroot());
+songdb = new SQLiteSongDatabaseAccessor("", config.getBmsroot());
 } catch (ClassNotFoundException e) {
 e.printStackTrace();
 }
@@ -232,7 +227,7 @@ return illegalSongs.size();
 
 @Override
 public void start(javafx.stage.Stage primaryStage) throws Exception {
-Config config = Config.read();
+Config config = new bms.player.beatoraja.Config();
 
 try {
 //final long t = System.currentTimeMillis();

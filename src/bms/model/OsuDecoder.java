@@ -109,7 +109,7 @@ public class OsuDecoder {
                                  for (int i = 1; i <= 1295; i++) {
                                      if (wavList[i] == null) {
                                          wavList[i] = filename;
-                                         bgaList[i] = new BGA(i, filename);
+                                         /* bgaList[i] = new BGA(i, filename); */
                                          bgaIndex = i;
                                          break;
                                      }
@@ -137,14 +137,14 @@ public class OsuDecoder {
                                  for (int i = 1; i <= 1295; i++) {
                                      if (wavList[i] == null) {
                                          wavList[i] = filename;
-                                         bgaList[i] = new BGA(i, filename);
+                                         /* bgaList[i] = new BGA(i, filename); */
                                          bgaIndex = i;
                                          break;
                                      }
                                  }
                             }
                             if (bgaIndex != -1) {
-                                 bgaEvents.add(new BGAEvent(startTime, bgaIndex));
+                                 /* bgaEvents.add */
                             }
                         }
                     }

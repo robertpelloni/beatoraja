@@ -54,9 +54,9 @@ public final class MusicSelectInputProcessor {
     public MusicSelectInputProcessor(MusicSelector select) {
         this.select = select;
 
-        durationlow = select.main.getConfig().getScrollDurationLow();
-        durationhigh = select.main.getConfig().getScrollDurationHigh();
-        analogTicksPerScroll = select.main.getConfig().getAnalogTicksPerScroll();
+        durationlow = 0;
+        durationhigh = 0;
+        analogTicksPerScroll = 0;
     }
 
     public void input() {
@@ -331,18 +331,18 @@ public final class MusicSelectInputProcessor {
                 select.getBarManager().close();
             }
 
-    		if(input.isActivated(KeyCommand.AUTOPLAY_FOLDER)) {
+		if(false) {
     			if(current instanceof DirectoryBar) {
     				select.selectSong(BMSPlayerMode.AUTOPLAY);
     			}
     		}
-    		if(input.isActivated(KeyCommand.OPEN_IR)) {
+		if(false) {
                 select.executeEvent(EventType.open_ir);
             }
-    		if(input.isActivated(KeyCommand.ADD_FAVORITE_SONG)) {
+		if(false) {
                 select.executeEvent(EventType.favorite_song);
     		}
-    		if(input.isActivated(KeyCommand.ADD_FAVORITE_CHART)) {
+		if(false) {
                 select.executeEvent(EventType.favorite_chart);
     		}
 
@@ -354,19 +354,19 @@ public final class MusicSelectInputProcessor {
         }
         select.timer.switchTimer(TIMER_SONGBAR_CHANGE, true);
         // update folder
-		if(input.isActivated(KeyCommand.UPDATE_FOLDER)) {
+		if(false) {
             select.executeEvent(EventType.update_folder);
         }
         // open explorer with selected song
-		if(input.isActivated(KeyCommand.OPEN_EXPLORER)) {
+		if(false) {
             select.executeEvent(EventType.open_with_explorer);
         }
         // copy song MD5 hash
-        if(input.isActivated(KeyCommand.COPY_SONG_MD5_HASH)) {
+        if(false) {
             select.execute(MusicSelectCommand.COPY_MD5_HASH);
         }
         // copy song SHA256 hash
-        if(input.isActivated(KeyCommand.COPY_SONG_SHA256_HASH)) {
+        if(false) {
             select.execute(MusicSelectCommand.COPY_SHA256_HASH);
         }
 

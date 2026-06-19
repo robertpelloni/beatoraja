@@ -62,7 +62,7 @@ class KeyInputProccessor {
 			boolean scratch = false;
 			if(!keyBeamStop) {
 				for (int key : laneProperty.getLaneKeyAssign()[lane]) {
-					if (input.getKeyState(key) || auto_presstime[key] != Long.MIN_VALUE) {
+					if (input.getNumberState()[key] || auto_presstime[key] != Long.MIN_VALUE) {
 						pressed = true;
 						if(laneProperty.getLaneScratchAssign()[lane] != -1
 								&& scratchKey[laneProperty.getLaneScratchAssign()[lane]] != key) {
@@ -95,9 +95,9 @@ class KeyInputProccessor {
 				scratch[s] += s % 2 == 0 ? 2160 - deltatime : deltatime;
 				final int key0 = laneProperty.getScratchKeyAssign()[s][1];
 				final int key1 = laneProperty.getScratchKeyAssign()[s][0];
-				if (input.getKeyState(key0) || auto_presstime[key0] != Long.MIN_VALUE) {
+				if (input.getNumberState()[key0] || auto_presstime[key0] != Long.MIN_VALUE) {
 					scratch[s] += deltatime * 2;
-				} else if (input.getKeyState(key1) || auto_presstime[key1] != Long.MIN_VALUE) {
+				} else if (input.getNumberState()[key1] || auto_presstime[key1] != Long.MIN_VALUE) {
 					scratch[s] += 2160 - deltatime * 2;
 				}
 				scratch[s] %= 2160;

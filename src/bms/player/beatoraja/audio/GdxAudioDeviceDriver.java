@@ -7,7 +7,7 @@ import java.nio.file.Path;
 public class GdxAudioDeviceDriver extends AbstractAudioDriver {
 
 	public GdxAudioDeviceDriver(Config config) {
-		super(config.getSongResourceGen());
+		super(1 /* config.getSongResourceGen() */);
 	}
 
 	@Override

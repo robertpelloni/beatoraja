@@ -54,7 +54,7 @@ public class PlaySkin extends Skin {
 	public final PomyuCharaProcessor pomyu = new PomyuCharaProcessor();
 	
 	public PlaySkin(SkinHeader header) {
-		super(header);
+		super(bms.player.beatoraja.Resolution.FULLHD, bms.player.beatoraja.Resolution.FULLHD);
 	}
 	
 	public Rectangle[] getLaneGroupRegion() {

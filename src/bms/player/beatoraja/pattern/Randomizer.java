@@ -9,7 +9,7 @@ import bms.player.beatoraja.pattern.PatternModifier.AssistLevel;
 
 /**
  * TimeLine毎にレーンを置換するクラス
- * 
+ *
  * @author KEH
  */
 public abstract class Randomizer {
@@ -24,7 +24,7 @@ public abstract class Randomizer {
 	 * 変更対象レーン
 	 */
 	protected int[] modifyLanes;
-	
+
 	protected java.util.Random random = new java.util.Random((long) (Math.random() * 65536 * 65536 * 65536));
 
 	/**
@@ -171,7 +171,7 @@ public abstract class Randomizer {
 
 /**
  * 時間に依存するランダムに必要な機能を実装する抽象クラス
- * 
+ *
  * @author KEH
  */
 abstract class TimeBasedRandomizer extends Randomizer {
@@ -266,7 +266,7 @@ abstract class TimeBasedRandomizer extends Randomizer {
 
 /**
  * S-RANDOM、H-RANDOMランダマイザ
- * 
+ *
  * @author KEH
  */
 class SRandomizer extends TimeBasedRandomizer {
@@ -293,7 +293,7 @@ class SRandomizer extends TimeBasedRandomizer {
 
 /**
  * SPIRALランダマイザ
- * 
+ *
  * @author KEH
  */
 class SpiralRandomizer extends Randomizer {
@@ -338,7 +338,7 @@ class SpiralRandomizer extends Randomizer {
 
 /**
  * ALL-SCRランダマイザ
- * 
+ *
  * @author KEH
  */
 class AllScratchRandomizer extends TimeBasedRandomizer {
@@ -427,7 +427,7 @@ class AllScratchRandomizer extends TimeBasedRandomizer {
 							max = lane.get(i);
 							index = i;
 						}
-					}					
+					}
 				}
 			}
 			return index;
@@ -438,7 +438,7 @@ class AllScratchRandomizer extends TimeBasedRandomizer {
 
 /**
  * PMSでの無理押し防止S-RANDOMランダマイザ
- * 
+ *
  * @author KEH
  */
 class NoMurioshiRandomizer extends TimeBasedRandomizer {
@@ -559,7 +559,7 @@ class NoMurioshiRandomizer extends TimeBasedRandomizer {
 
 /**
  * threshold1以上threshold2以下の間隔の連打ができるだけ長く発生するように配置する
- * 
+ *
  * @author KEH
  */
 class ConvergeRandomizer extends TimeBasedRandomizer {

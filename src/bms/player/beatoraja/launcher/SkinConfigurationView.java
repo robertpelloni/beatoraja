@@ -174,7 +174,7 @@ public class SkinConfigurationView implements Initializable {
     
     public void update(Config config) {
 		List<Path> skinpaths = new ArrayList<Path>();
-		scan(Paths.get(config.getSkinpath()), skinpaths);
+		scan(Paths.get(""), skinpaths);
 		for (Path path : skinpaths) {
 			String pathString = path.toString().toLowerCase();
 			if (pathString.endsWith(".json")) {

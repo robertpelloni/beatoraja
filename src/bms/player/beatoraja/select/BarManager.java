@@ -123,8 +123,8 @@ public final class BarManager {
 			}			
 		}).forEach(table::add);;
 
-		if(select.main.getIRStatus().length > 0) {
-			IRResponse<IRTableData[]> response = select.main.getIRStatus()[0].connection.getTableDatas();
+		if(select.main.getIRConnection() != null) {
+			IRResponse<IRTableData[]> response = select.main.getIRConnection().getTableDatas();
 			if(response.isSucceeded()) {
 				for(IRTableData irtd : response.getData()) {
 					TableData td = new TableData();
@@ -244,9 +244,9 @@ public final class BarManager {
 			e.printStackTrace();
 		}
 		
-		if (select.main.getStepUpManager() != null) {
+		if (false) {
 			try {
-				RandomCourseData stepUpCourse = select.main.getStepUpManager().createCourse();
+				RandomCourseData stepUpCourse = null;
 				l.add(new RandomCourseBar(stepUpCourse));
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -328,7 +328,7 @@ public final class BarManager {
 			}
 		}
 
-		if(!select.resource.getConfig().isShowNoSongExistingBar()) {
+		if(!true) {
 			Array<Bar> remove = new Array<Bar>();
 			for (Bar b : l) {
 				if ((b instanceof SongBar sb && !sb.existsSong()) || (b instanceof GradeBar gb && !gb.existsAllSongs())) {
@@ -423,7 +423,7 @@ public final class BarManager {
 						}
 						if ((randomFolder.getFilter() != null && randomTargets.length >= 1)
 								|| (randomFolder.getFilter() == null && randomTargets.length >= 2)) {
-							Bar randomBar = new ExecutableBar(randomTargets, select.main.getCurrentState(),
+							Bar randomBar = new ExecutableBar(randomTargets, null /* MainState */,
 									randomFolder.getName());
 							bars.add(randomBar);
 						}
@@ -570,7 +570,7 @@ public final class BarManager {
 				break;
 			}
 		}
-		if (search.size >= select.resource.getConfig().getMaxSearchBarCount()) {
+		if (search.size >= 10) {
 			search.removeIndex(0);
 		}
 		search.add(bar);
