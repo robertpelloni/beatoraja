@@ -23,11 +23,11 @@ public class PCM {
 	/**
 	 * チャンネル数
 	 */
-	private int channels;
+	public int channels;
 	/**
 	 * 音源のサンプリングレート(Hz)
 	 */
-	private int sampleRate;
+	public int sampleRate;
 	/**
 	 * PCMのタイプ
 	 */
@@ -35,13 +35,13 @@ public class PCM {
 	/**
 	 * サンプル当たりのビット数
 	 */
-	private int bitsPerSample;
+	public int bitsPerSample;
 	/**
 	 * PCMデータ
 	 */
 	private short[] sample;
 
-	private PCM() {
+	public PCM() {
 
 	}
 

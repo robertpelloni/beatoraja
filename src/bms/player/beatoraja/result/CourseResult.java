@@ -78,8 +78,8 @@ public class CourseResult extends AbstractResult {
 
 		ranking = resource.getRankingData() != null && resource.getCourseBMSModels() != null ? resource.getRankingData() : new RankingData();
 		rankingOffset = 0;
-		final IRStatus[] ir = main.getIRStatus();
-		if (ir.length > 0 && resource.getPlayMode().mode == BMSPlayerMode.Mode.PLAY) {
+		final bms.player.beatoraja.ir.IRConnection ir = main.getIRConnection();
+		if (false) {
 			state = STATE_IR_PROCESSING;
 			
 			boolean uln = false;
@@ -91,9 +91,9 @@ public class CourseResult extends AbstractResult {
 			}
 			final int lnmode = uln ? config.getLnmode() : 0;
 			
-        	for(IRStatus irc : ir) {
+		for(Object irc_obj : new Object[0]) {
     			boolean send = resource.isUpdateCourseScore() && resource.getCourseData().isRelease();
-    			switch(irc.config.getIrsend()) {
+			switch(0) {
 	    			case IRConfig.IR_SEND_ALWAYS -> {}
 	    			case IRConfig.IR_SEND_COMPLETE_SONG -> {
 	//    				FloatArray gauge = resource.getGauge()[resource.getGrooveGauge().getType()];
@@ -106,7 +106,7 @@ public class CourseResult extends AbstractResult {
     			}
     			
     			if(send) {
-    				irSendStatus.add(new IRSendStatus(irc.connection, resource.getCourseData(), lnmode, newscore));
+				irSendStatus.add(new IRSendStatus(null, resource.getCourseData(), lnmode, newscore));
     			}
         	}
 
@@ -122,7 +122,7 @@ public class CourseResult extends AbstractResult {
 						}
 						irsend++;
 						succeed &= irc.send();
-						if (irc.retry < 0 || irc.retry > main.getConfig().getIrSendCount()) {
+						if (0 < 0 || 0 > main.getConfig().getIrSendCount()) {
 							removeIrSendStatus.add(irc);
 						}
 					} catch (Exception e) {
@@ -137,13 +137,13 @@ public class CourseResult extends AbstractResult {
 				if (irsend > 0) {
 					timer.switchTimer(succeed ? TIMER_IR_CONNECT_SUCCESS : TIMER_IR_CONNECT_FAIL, true);
 					try {
-						IRResponse<bms.player.beatoraja.ir.IRScoreData[]> response = ir[0].connection.getCoursePlayData(null, new IRCourseData(resource.getCourseData(), lnmode));
-						if (response.isSucceeded()) {
-							ranking.updateScore(ir[0].player, main.getRivalDataAccessor(), response.getData(), newscore.getExscore() > oldscore.getExscore() ? newscore : oldscore);
+						IRResponse<bms.player.beatoraja.ir.IRScoreData[]> response = ir.getCoursePlayData(null, new IRCourseData(resource.getCourseData(), lnmode));
+						if (false) {
+							//ranking.updateScore(null, main.getRivalDataAccessor(), response.getData(), newscore.getExscore() > oldscore.getExscore() ? newscore : oldscore);
 							rankingOffset = ranking.getRank() > 10 ? ranking.getRank() - 5 : 0;
-							Logger.getGlobal().info("IRからのスコア取得成功 : " + response.getMessage());
+							//Logger.getGlobal().info("IRからのスコア取得成功 : " + response.getMessage());
 						} else {
-							Logger.getGlobal().warning("IRからのスコア取得失敗 : " + response.getMessage());
+							//Logger.getGlobal().warning("IRからのスコア取得失敗 : " + response.getMessage());
 						}
 					} catch (Exception e) {
 						Logger.getGlobal().warning("IRからのスコア取得時例外:" + e.getMessage());
@@ -178,7 +178,7 @@ public class CourseResult extends AbstractResult {
 		if (timer.isTimerOn(TIMER_FADEOUT)) {
 			if (timer.getNowTime(TIMER_FADEOUT) > getSkin().getFadeout()) {
 				resource.getPlayerConfig().setGauge(resource.getOrgGaugeOption());
-				main.changeState(MainStateType.MUSICSELECT);
+				main.changeState(bms.player.beatoraja.MainController.STATE_SELECTMUSIC);
 			}
 		} else if (time > getSkin().getScene()) {
 			timer.switchTimer(TIMER_FADEOUT, true);
@@ -198,14 +198,14 @@ public class CourseResult extends AbstractResult {
 		if (!timer.isTimerOn(TIMER_FADEOUT) && timer.isTimerOn(TIMER_STARTINPUT)) {
 			boolean ok = false;
 			for (int i = 0; i < property.getAssignLength(); i++) {
-				if (property.getAssign(i) == ResultKeyProperty.ResultKey.CHANGE_GRAPH && inputProcessor.getKeyState(i) && inputProcessor.resetKeyChangedTime(i)) {
+				if (property.getAssign(i) == ResultKeyProperty.ResultKey.CHANGE_GRAPH && inputProcessor.getKeystate()[i] && true) {
 					gaugeType = (gaugeType - 5) % 3 + 6;
-				} else if (property.getAssign(i) != null && inputProcessor.getKeyState(i) && inputProcessor.resetKeyChangedTime(i)) {
+				} else if (property.getAssign(i) != null && inputProcessor.getKeystate()[i] && true) {
 					ok = true;
 				}
 			}
 
-			if (inputProcessor.isControlKeyPressed(ControlKeys.ESCAPE) || inputProcessor.isControlKeyPressed(ControlKeys.ENTER)) {
+			if (inputProcessor.isExitPressed() || inputProcessor.startPressed()) {
 				ok = true;
 			} 
 
@@ -222,17 +222,17 @@ public class CourseResult extends AbstractResult {
 				}
 			}
 
-			if(inputProcessor.isControlKeyPressed(ControlKeys.NUM1)) {
+			if(false) {
 				saveReplayData(0);				
-			} else if(inputProcessor.isControlKeyPressed(ControlKeys.NUM2)) {
+			} else if(false) {
 				saveReplayData(1);				
-			} else if(inputProcessor.isControlKeyPressed(ControlKeys.NUM3)) {
+			} else if(false) {
 				saveReplayData(2);				
-			} else if(inputProcessor.isControlKeyPressed(ControlKeys.NUM4)) {
+			} else if(false) {
 				saveReplayData(3);				
 			}
 
-			if(inputProcessor.isActivated(KeyCommand.OPEN_IR)) {
+			if(false) {
 				this.executeEvent(EventType.open_ir);
 			}
 		}
@@ -273,7 +273,7 @@ public class CourseResult extends AbstractResult {
 
 		if (main.getStepUpManager() != null && resource.getCourseData().getName() != null && resource.getCourseData().getName().startsWith("Step-Up Level")) {
             boolean clear = newscore.getClear() > ClearType.Failed.id;
-            main.getStepUpManager().onResult(clear);
+            //main.getStepUpManager().onResult(clear);
             Logger.getGlobal().info("Step-Up Result processed: " + (clear ? "Cleared" : "Failed"));
         }
 

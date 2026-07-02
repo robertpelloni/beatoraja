@@ -17,7 +17,7 @@ public class InputManager {
 
 	public InputManager(MainController main) {
 		this.main = main;
-		this.input = new BMSPlayerInputProcessor(main.getConfig(), main.getPlayerConfig());
+		this.input = new BMSPlayerInputProcessor(main.getConfig());
 		
 		Thread polling = new Thread(() -> {
 			long time = 0;
@@ -61,7 +61,7 @@ public class InputManager {
 		}
 
 		// マウスカーソル表示判定
-		if(input.isMouseMoved()) {
+		if(input.getMouseMoved()) {
 			input.setMouseMoved(false);
 			mouseMovedTime = time;
 		}
@@ -70,15 +70,15 @@ public class InputManager {
 		Gdx.input.setCursorCatched(isPlayState && time > mouseMovedTime + 5000);
 
 		// FPS表示切替
-		if (input.isActivated(KeyCommand.SHOW_FPS)) {
-			main.setShowFps(!main.isShowFps());
+		if (input.isPressed(KeyCommand.SHOW_FPS)) {
+			main.showFps = (!main.showFps);
 		}
 		// Debug表示切替
-		if (input.isActivated(KeyCommand.TOGGLE_DEBUG)) {
-			MainController.debug = !MainController.debug;
+		if (input.isPressed(KeyCommand.TOGGLE_DEBUG)) {
+			//MainController.debug = !MainController.debug;
 		}
 		// fullscrees - windowed
-		if (input.isActivated(KeyCommand.SWITCH_SCREEN_MODE)) {
+		if (input.isPressed(KeyCommand.SWITCH_SCREEN_MODE)) {
 			boolean fullscreen = Gdx.graphics.isFullscreen();
 			Graphics.DisplayMode currentMode = Gdx.graphics.getDisplayMode();
 			if (fullscreen) {
@@ -86,7 +86,7 @@ public class InputManager {
 			} else {
 				Gdx.graphics.setFullscreenMode(currentMode);
 			}
-			main.getConfig().setDisplaymode(fullscreen ? Config.DisplayMode.WINDOW : Config.DisplayMode.FULLSCREEN);
+			//main.getConfig().setDisplaymode(fullscreen ? Config.DisplayMode.WINDOW : Config.DisplayMode.FULLSCREEN);
 		}
 	}
 	

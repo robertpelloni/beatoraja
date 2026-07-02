@@ -86,7 +86,7 @@ public final class PracticeConfiguration {
 		}
 		try {
 			FreeTypeFontGenerator generator = new FreeTypeFontGenerator(
-					Gdx.files.internal(config.getSystemfontpath()));
+					Gdx.files.internal("font/VL-Gothic-Regular.ttf"));
 			FreeTypeFontParameter parameter = new FreeTypeFontParameter();
 			parameter.size = 18;
 			titlefont = generator.generateFont(parameter);
@@ -125,31 +125,31 @@ public final class PracticeConfiguration {
 	}
 	
 	public void processInput(BMSPlayerInputProcessor input) {
-		if (input.isControlKeyPressed(ControlKeys.UP)) {
+		if (input.getCursorState()[0]) {
 			do {
 				cursorpos = (cursorpos + elements.length - 1) % elements.length;
 			} while(!elements[cursorpos].predicate.test(this));
 		}
-		if (input.isControlKeyPressed(ControlKeys.DOWN)) {
+		if (input.getCursorState()[1]) {
 			do {
 				cursorpos = (cursorpos + 1) % elements.length;
 			} while(!elements[cursorpos].predicate.test(this));
 		}
-		if (input.getControlKeyState(ControlKeys.LEFT) && (presscount == 0 || presscount + 10 < System.currentTimeMillis())) {
+		if (input.getCursorState()[2] && (presscount == 0 || presscount + 10 < System.currentTimeMillis())) {
 			if (presscount == 0) {
 				presscount = System.currentTimeMillis() + 500;
 			} else {
 				presscount = System.currentTimeMillis();
 			}
 			elements[cursorpos].action.accept(this, false);
-		} else if (input.getControlKeyState(ControlKeys.RIGHT) && (presscount == 0 || presscount + 10 < System.currentTimeMillis())) {
+		} else if (input.getCursorState()[3] && (presscount == 0 || presscount + 10 < System.currentTimeMillis())) {
 			if (presscount == 0) {
 				presscount = System.currentTimeMillis() + 500;
 			} else {
 				presscount = System.currentTimeMillis();
 			}
 			elements[cursorpos].action.accept(this, true);
-		} else if (!(input.getControlKeyState(ControlKeys.LEFT) || input.getControlKeyState(ControlKeys.RIGHT))) {
+		} else if (!(input.getCursorState()[2] || input.getCursorState()[3])) {
 			presscount = 0;
 		}
 	}
@@ -160,17 +160,20 @@ public final class PracticeConfiguration {
 		if(titlefont != null) {
 			for(int i = 0;i < elements.length;i++) {
 				if(elements[i].predicate.test(this)) {
-					sprite.draw(titlefont, elements[i].text.apply(property), x, y - 22 * i, cursorpos == i ? Color.YELLOW : Color.CYAN);
+					titlefont.setColor(cursorpos == i ? Color.YELLOW : Color.CYAN);
+				titlefont.draw(sprite, elements[i].text.apply(property), x, y - 22 * i);
 				}
 			}
 
 			if (state.resource.mediaLoadFinished()) {
-				sprite.draw(titlefont, "PRESS 1KEY TO PLAY", x, y - 276, Color.ORANGE);
+				titlefont.setColor(Color.ORANGE);
+				titlefont.draw(sprite, "PRESS 1KEY TO PLAY", x, y - 276);
 			}
 			
 			String[] judge = {"PGREAT :","GREAT  :","GOOD   :", "BAD    :", "POOR   :", "KPOOR  :"};
 			for(int i = 0; i < 6; i++) {
-				sprite.draw(titlefont, String.format("%s %d %d %d",judge[i], state.getJudgeCount(i, true) + state.getJudgeCount(i, false), state.getJudgeCount(i, true), state.getJudgeCount(i, false)), x + 250, y - (i * 22), Color.WHITE);
+				titlefont.setColor(Color.WHITE);
+				titlefont.draw(sprite, String.format("%s %d %d %d",judge[i], state.getJudgeCount(i, true) + state.getJudgeCount(i, false), state.getJudgeCount(i, true), state.getJudgeCount(i, false)), x + 250, y - (i * 22));
 			}			
 		}
 

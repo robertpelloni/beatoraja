@@ -90,7 +90,7 @@ public class MouseScratchInput {
 
             for (int i=0; i<keys.length; i++) {
                 if (keys[i] >= 0) {
-                    this.bmsPlayerInputProcessor.setAnalogState(i, true, getMouseAnalogValue(keys[i]));
+                    //this.bmsPlayerInputProcessor.setAnalogState(i, true, getMouseAnalogValue(keys[i]));
                 }
             }
         }

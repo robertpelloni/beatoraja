@@ -618,7 +618,7 @@ public class MainController extends ApplicationAdapter {
 	}
 
 	public void saveConfig(){
-		Config.write(config);
+		bms.player.beatoraja.Config.write(config);
 		PlayerConfig.write(config.getPlayerpath(), player);
 		Logger.getGlobal().info("設定情報を保存");
 	}
@@ -635,6 +635,8 @@ public class MainController extends ApplicationAdapter {
 		return audio;
 	}
 
+	private bms.player.beatoraja.ir.RankingDataCache rankingDataCache = new bms.player.beatoraja.ir.RankingDataCache();
+	public bms.player.beatoraja.ir.RankingDataCache getRankingDataCache() { return rankingDataCache; }
 	public IRConnection getIRConnection() {
 		return ir;
 	}
@@ -1216,4 +1218,18 @@ public class MainController extends ApplicationAdapter {
 			font.dispose();
 		}
 	}
+
+	// TODO: Stub methods added for compilation
+	public Object getArenaManager() { return null; }
+	public bms.player.beatoraja.select.MusicSelector getSelector() { return null; }
+	public bms.player.beatoraja.MessageRenderer getMessageRenderer() { return null; }
+	public void changeState(int state) {}
+	public static final int STATE_MUSICSELECT = 0;
+	public MainState getCurrentState() { return currentState; }
+	public MainState getState() { return currentState; }
+	public boolean showFps = false;
+	public static boolean debug = false;
+	public Object getStepUpManager() { return null; }
+	public Object getRankingDataCache() { return null; }
+
 }

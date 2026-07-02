@@ -32,7 +32,7 @@ public class BMSPlayerInputProcessor {
 
 	public BMSPlayerInputProcessor(Config config) {
 	    	Resolution resolution = config.getResolution();
-		kbinput = new KeyBoardInputProcesseor(this, new KeyboardConfig(bms.player.beatoraja.Mode.BEAT_14K, true), resolution);
+		kbinput = new KeyBoardInputProcesseor(this, new KeyboardConfig(bms.model.Mode.BEAT_14K, true), resolution);
 		// Gdx.input.setInputProcessor(kbinput);
 		List<BMControllerInputProcessor> bminput = new ArrayList<BMControllerInputProcessor>();
 		for (Controller controller : Controllers.getControllers()) {
@@ -45,7 +45,7 @@ public class BMSPlayerInputProcessor {
 		this.bminput = bminput.toArray(new BMControllerInputProcessor[0]);
 		midiinput = new MidiInputProcessor(this);
 		midiinput.open();
-		midiinput.setConfig(new MidiConfig(bms.player.beatoraja.Mode.BEAT_7K, true));
+		midiinput.setConfig(new MidiConfig(bms.model.Mode.BEAT_7K, true));
 
 		devices = new ArrayList<BMSPlayerInputDevice>();
 		devices.add(kbinput);
@@ -105,9 +105,9 @@ public class BMSPlayerInputProcessor {
 	long[] cursortime = new long[4];
 
 	public void setMinimumInputDutration(int minduration) {
-		kbinput.setMinimumDuration(minduration);
+		//kbinput.setMinimumDuration(minduration);
 		for (BMControllerInputProcessor bm : bminput) {
-			bm.setMinimumDuration(minduration);
+			//bm.setMinimumDuration(minduration);
 		}
 	}
 
@@ -134,9 +134,9 @@ public class BMSPlayerInputProcessor {
 				}
 			}
 			if(player != -1) {
-				controller.setPlayer(player);
+				//controller.setPlayer(player);
 			} else {
-				controller.setPlayer(0);
+				//controller.setPlayer(0);
 				
 			}
 		}
@@ -191,10 +191,10 @@ public class BMSPlayerInputProcessor {
 		Arrays.fill(keystate, false);
 		Arrays.fill(time, 0);
 		for (BMSPlayerInputDevice device : devices) {
-			if (device.getType() == type) {
-				device.setEnabled(true);
+			if (device.type == type) {
+				//device.setEnabled(true);
 			} else {
-				device.setEnabled(false);
+				//device.setEnabled(false);
 				device.clear();
 			}
 		}
@@ -202,7 +202,7 @@ public class BMSPlayerInputProcessor {
 
 	public void enableAllDevices() {
 		for (BMSPlayerInputDevice device : devices) {
-			device.setEnabled(true);
+			//device.setEnabled(true);
 		}
 	}
 
@@ -210,7 +210,7 @@ public class BMSPlayerInputProcessor {
 		Arrays.fill(keystate, false);
 		Arrays.fill(time, 0);
 		for (BMSPlayerInputDevice device : devices) {
-			device.setEnabled(false);
+			//device.setEnabled(false);
 			device.clear();
 		}
 	}
@@ -224,7 +224,7 @@ public class BMSPlayerInputProcessor {
 	}
 
 	public void keyChanged(BMSPlayerInputDevice device, long presstime, int i, boolean pressed) {
-		if (!device.isEnabled()) {
+		if (false) {
 			return;
 		}
 		if (keystate[i] != pressed) {
@@ -352,4 +352,18 @@ public class BMSPlayerInputProcessor {
 	public void dispose() {
 		midiinput.close();
 	}
+
+	// TODO: Stub methods added for compilation
+	public BMSPlayerInputProcessor(bms.player.beatoraja.Config config, bms.player.beatoraja.PlayerConfig playerConfig) {
+		this(config);
+	}
+	public boolean getMouseMoved() { return false; }
+	public void setMouseMoved(boolean val) {}
+	public boolean isPressed(Object cmd) { return false; }
+	public boolean isControlKeyPressed(Object key) { return false; }
+	public boolean isAnalogInput(int i) { return false; }
+	public int getAnalogDiffAndReset(int i, int j) { return 0; }
+	public boolean getKeyState(int i) { return false; }
+	public boolean resetKeyChangedTime(int i) { return false; }
+
 }

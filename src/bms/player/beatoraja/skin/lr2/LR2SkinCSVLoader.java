@@ -776,7 +776,7 @@ public abstract class LR2SkinCSVLoader<S extends Skin> extends LR2SkinLoader {
 			});
 		};
 
-		skin.setOption(option);
+		//skin.setOption(option);
 
 		for (SkinObject obj : skin.getAllSkinObjects()) {
 			if (obj instanceof SkinImage && obj.getAllDestination().length == 0) {

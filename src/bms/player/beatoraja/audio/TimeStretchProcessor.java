@@ -12,14 +12,14 @@ import java.util.List;
 
 /**
  * TarsosDSP WSOLA を使ったオフラインの PCM タイムストレッチ処理。
- * 
+ *
  * @author souki202
  */
 public final class TimeStretchProcessor {
 
 	private TimeStretchProcessor() {}
 
-	public static PCM<?> stretch(PCM<?> pcm, float rate) {
+	public static PCM stretch(PCM pcm, float rate) {
 		if (pcm == null || rate <= 0f || rate == 1f) {
 			return pcm;
 		}
@@ -65,7 +65,7 @@ public final class TimeStretchProcessor {
 		return toPCM(pcm, stretched);
 	}
 
-	private static float[] toFloatArray(PCM<?> pcm) {
+	private static float[] toFloatArray(PCM pcm) {
 		if (pcm instanceof FloatPCM f) {
 			float[] src = f.sample;
 			float[] out = new float[f.len];
@@ -96,7 +96,7 @@ public final class TimeStretchProcessor {
 		return new float[0];
 	}
 
-	private static PCM<?> toPCM(PCM<?> src, float[] stretched) {
+	private static PCM toPCM(PCM src, float[] stretched) {
 		// チャンネル数とサンプルレートを維持し、クリッピング回避のため FloatPCM で保持する。
 		int channels = src.channels;
 		int len = (stretched.length / channels) * channels;

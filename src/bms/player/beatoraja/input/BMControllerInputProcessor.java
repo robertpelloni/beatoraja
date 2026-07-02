@@ -327,4 +327,9 @@ public class BMControllerInputProcessor extends BMSPlayerInputDevice implements 
 		}
 	}
 
+
+	// TODO: Stubs
+	public void setEnable(boolean b) {}
+	public String getName() { return ""; }
+
 }

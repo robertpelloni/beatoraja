@@ -47,7 +47,7 @@ public class ArenaLobby extends Stage {
         // Font
         BitmapFont font;
         try {
-            FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(selector.main.getConfig().getSystemfontpath()));
+            FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("font/VL-Gothic-Regular.ttf"));
             FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
             parameter.size = 24;
             font = generator.generateFont(parameter);
@@ -124,7 +124,7 @@ public class ArenaLobby extends Stage {
                     String host = hostField.getText();
                     int port = Integer.parseInt(portField.getText());
                     String name = nameField.getText();
-                    selector.main.getArenaManager().connect(host, port, name);
+
                     arenaStatusLabel.setText(bundle.getString("ARENA_STATUS_CONNECTING"));
                 } catch (Exception e) {
                     arenaStatusLabel.setText("Error: " + e.getMessage());
@@ -138,7 +138,7 @@ public class ArenaLobby extends Stage {
             public void clicked(InputEvent event, float x, float y) {
                 try {
                     int port = Integer.parseInt(portField.getText());
-                    selector.main.getArenaManager().startServer(port);
+
                     arenaStatusLabel.setText(bundle.getString("ARENA_STATUS_SERVER_STARTED"));
                 } catch (Exception e) {
                     arenaStatusLabel.setText("Error: " + e.getMessage());
@@ -151,7 +151,7 @@ public class ArenaLobby extends Stage {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 try {
-                    selector.main.getArenaManager().dispose();
+
                     arenaStatusLabel.setText(bundle.getString("ARENA_STATUS_DISCONNECTED"));
                     arenaPlayersLabel.setText(bundle.getString("ARENA_PLAYERS"));
                 } catch (Exception e) {
@@ -197,7 +197,7 @@ public class ArenaLobby extends Stage {
     }
 
     private void updateArenaStatus() {
-        ArenaManager am = selector.main.getArenaManager();
+        bms.player.beatoraja.arena.ArenaManager am = null;
         if (am != null) {
             StringBuilder sb = new StringBuilder(bundle.getString("ARENA_PLAYERS"));
             for (ArenaData p : am.getPlayers()) {

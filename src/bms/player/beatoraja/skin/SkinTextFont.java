@@ -108,10 +108,10 @@ public final class SkinTextFont extends SkinText {
             if(!getShadowOffset().isZero()) {
             	shadowcolor.set(color.r / 2, color.g / 2, color.b / 2, color.a);
                 setLayout(shadowcolor, region);
-                sprite.draw(font, layout, x + getShadowOffset().x + offsetX, region.y - getShadowOffset().y + offsetY + region.getHeight());
+                font.draw(sprite, layout, x + getShadowOffset().x + offsetX, region.y - getShadowOffset().y + offsetY + region.getHeight());
             }
             setLayout(color, region);
-            sprite.draw(font, layout, x + offsetX, region.y + offsetY + region.getHeight());
+            font.draw(sprite, layout, x + offsetX, region.y + offsetY + region.getHeight());
         }
     }
 

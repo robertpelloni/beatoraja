@@ -308,8 +308,8 @@ public class Config {
 			}
 		}
 		skin = new SkinConfig[maxSkinType + 1];
-		//for (Map.Entry<SkinType, String> entry : SkinConfig.defaultSkinPathMap.entrySet()) {
-			//skin[entry.getKey().getId()] = new SkinConfig(entry.getValue());
+		//////for (Map.Entry<SkinType, String> entry : SkinConfig.defaultSkinPathMap.entrySet()) {
+			//////skin[entry.getKey().getId()] = new SkinConfig(entry.getValue());
 
 	}
 
@@ -817,4 +817,58 @@ public class Config {
 	public void setTarget(int target) {
 		this.target = target;
 	}
+	public static final int PACEMAKER_RIVAL = 0;
+	public static final int PACEMAKER_BEST = 1;
+	public static final int PACEMAKER_AAA = 2;
+	public static final int PACEMAKER_AA = 3;
+	public static final int PACEMAKER_A = 4;
+	public static void write(Config config) {
+		try (java.io.Writer writer = new java.io.OutputStreamWriter(
+				new java.io.FileOutputStream("config.json"), java.nio.charset.StandardCharsets.UTF_8)) {
+			com.badlogic.gdx.utils.Json json = new com.badlogic.gdx.utils.Json();
+			json.setOutputType(com.badlogic.gdx.utils.JsonWriter.OutputType.json);
+			json.setUsePrototypes(false);
+			writer.write(json.prettyPrint(config));
+			writer.flush();
+		} catch (java.io.IOException e) {
+			e.printStackTrace();
+		}
+	}
+	public enum SongPreview { NONE, ON }
+	private SongPreview songPreview = SongPreview.ON;
+	public SongPreview getSongPreview() { return songPreview; }
+	public void setSongPreview(SongPreview songPreview) { this.songPreview = songPreview; }
+
+	// TODO: Stub methods added for compilation
+	public int getSongResourceGen() { return 1; }
+	public boolean isShowNoSongExistingBar() { return false; }
+	public int getMaxSearchBarCount() { return 10; }
+	public int getSkinResolution() { return 0; }
+	public int getFixhispeed() { return 0; }
+	public void setFixhispeed(int val) {}
+	public boolean isSetClipboardWhenScreenshot() { return false; }
+	public void setWindowMode(int mode) {}
+	public static final int DISPLAY_WINDOW = 0;
+	public static final int DISPLAY_FULLSCREEN = 1;
+	public int getDisplaymode() { return 0; }
+	public void setDisplaymode(int mode) {}
+	public String getSongpath() { return ""; }
+	public static final java.nio.file.Path configpath = java.nio.file.Paths.get("config.json");
+	public static Config read() { return new Config(); }
+	public static void write(Config config) {}
+	public int getScrollDurationLow() { return 0; }
+	public int getScrollDurationHigh() { return 0; }
+	public int getAnalogTicksPerScroll() { return 0; }
+	public String getSystemfontpath() { return ""; }
+	public int getIrSendCount() { return 1; }
+	public static final int PACEMAKER_RIVAL = 0;
+	public String[] getBmsroot() { return new String[0]; }
+	public String getSkinpath() { return ""; }
+	public int getSongPreview() { return 0; }
+	public static final int PACEMAKER_BEST = 0;
+	public static final int PACEMAKER_AAA = 0;
+	public static final int PACEMAKER_AA = 0;
+	public static final int PACEMAKER_A = 0;
+	public static class SongPreview { public static final int NONE = 0; }
+
 }

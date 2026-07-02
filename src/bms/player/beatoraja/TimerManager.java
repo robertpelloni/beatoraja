@@ -90,7 +90,7 @@ public class TimerManager {
 		if (id >= 0 && id < timerCount) {
 			timer[id] = microtime;
 		} else {
-			//current.getSkin().setMicroCustomTimer(id, microtime);
+			//////current.getSkin().setMicroCustomTimer(id, microtime);
 		}
 	}
 

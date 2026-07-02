@@ -629,9 +629,9 @@ public abstract class AbstractAudioDriver<T> implements AudioDriver {
 		            ? getKeySound(Paths.get(key.path)) // 音切りなしのケース
 		            : loadSlice(key);
 
-		    if (sound != null && key.stretchRate != 1f && sound instanceof PCM<?>) {
+		    if (sound != null && key.stretchRate != 1f && sound instanceof PCM) {
 		    	try {
-		    		sound = (T) TimeStretchProcessor.stretch((PCM<?>) sound, key.stretchRate);
+				sound = (T) TimeStretchProcessor.stretch((PCM) sound, key.stretchRate);
 		    	} catch (Throwable e) {
 		    		Logger.getGlobal().warning("タイムストレッチ失敗: " + e.getMessage());
 		    	}

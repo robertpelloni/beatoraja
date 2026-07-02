@@ -59,7 +59,6 @@ public class FFmpegProcessor implements MovieProcessor {
 		this.player = player;
 	}
 
-	@Override
 	public void create(String filepath) {
 		try {
 			RandomAccessFile file = new RandomAccessFile(filepath, "r");
@@ -93,8 +92,7 @@ public class FFmpegProcessor implements MovieProcessor {
 		}
 	}
 
-	@Override
-	public Texture getFrame() {
+	public Texture getFrame(long time) {
 		return showingtex;
 	}
 
@@ -115,7 +113,6 @@ public class FFmpegProcessor implements MovieProcessor {
 				Gdx2DPixmap.GDX2D_FORMAT_RGB888 };
 
 		private final Runnable updateTexture = new Runnable() {
-			@Override
 			public void run() {
 				if(!stop){
 					if (showingtex != null) {
@@ -234,7 +231,6 @@ public class FFmpegProcessor implements MovieProcessor {
 		return shader;
 	}
 
-	@Override
 	public void dispose() {
 		stop();
 		try {
@@ -258,7 +254,7 @@ public class FFmpegProcessor implements MovieProcessor {
 		}
 	}
 
-	public void play(boolean loop) {
+	public void play(long time, boolean loop) {
 		if (movieseek != null) {
 			synchronized (movieseek) {
 				// 再生中

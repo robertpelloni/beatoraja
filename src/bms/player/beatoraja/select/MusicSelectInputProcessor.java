@@ -68,7 +68,7 @@ public final class MusicSelectInputProcessor {
         final BarManager barManager = select.getBarManager();
         final Bar current = select.getBarManager().getSelected();
 
-        if (input.isControlKeyPressed(ControlKeys.NUM0)) {
+        if (input.getNumberState()[0]) {
             // 検索用ポップアップ表示。これ必要？
             Gdx.input.getTextInput(new Input.TextInputListener() {
                 @Override
@@ -86,21 +86,21 @@ public final class MusicSelectInputProcessor {
         }
 
         // KEYフィルターの切り替え
-        if (input.isControlKeyPressed(ControlKeys.NUM1)) {
+        if (input.getNumberState()[1]) {
             select.executeEvent(EventType.mode);
         }
         // ソートの切り替え
-        if (input.isControlKeyPressed(ControlKeys.NUM2)) {
+        if (input.getNumberState()[2]) {
             select.executeEvent(EventType.sort);
         }
         // LNモードの切り替え
-        if (input.isControlKeyPressed(ControlKeys.NUM3)) {
+        if (input.getNumberState()[3]) {
             select.executeEvent(EventType.lnmode);
         }
 
         final MusicSelectKeyProperty property = MusicSelectKeyProperty.values()[config.getMusicselectinput()];
 
-        if(!input.startPressed() && !input.isSelectPressed() && !input.getControlKeyState(ControlKeys.NUM5)){
+        if(!input.startPressed() && !input.isSelectPressed() && !input.getNumberState()[5]){
             //オプションキー入力なし
             isOptionKeyReleased = true;
             if(isOptionKeyPressed) {
@@ -109,8 +109,8 @@ public final class MusicSelectInputProcessor {
             }
         }
 
-        if (input.isControlKeyPressed(ControlKeys.NUM4)
-                || (!input.startPressed() && !input.isSelectPressed() && !input.getControlKeyState(ControlKeys.NUM5) && property.isPressed(input, NEXT_REPLAY, true))) {
+        if (input.getNumberState()[4]
+                || (!input.startPressed() && !input.isSelectPressed() && !input.getNumberState()[5] && property.isPressed(input, NEXT_REPLAY, true))) {
             // change replay
             select.execute(MusicSelectCommand.NEXT_REPLAY);
         }
@@ -163,7 +163,7 @@ public final class MusicSelectInputProcessor {
             analogScrollBuffer %= analogTicksPerScroll;
 
             // song bar scroll
-            if (property.isNonAnalogPressed(input, TARGET_UP, false) || input.getControlKeyState(ControlKeys.DOWN)) {
+            if (property.isNonAnalogPressed(input, TARGET_UP, false) || input.getNumberState()[2]) {
                 long l = System.currentTimeMillis();
                 if (duration == 0) {
                     mov = 1;
@@ -175,7 +175,7 @@ public final class MusicSelectInputProcessor {
                     mov = 1;
                     angle = durationhigh;
                 }
-            } else if (property.isNonAnalogPressed(input, TARGET_DOWN, false) ||  input.getControlKeyState(ControlKeys.UP)) {
+            } else if (property.isNonAnalogPressed(input, TARGET_DOWN, false) ||  input.getNumberState()[8]) {
                 long l = System.currentTimeMillis();
                 if (duration == 0) {
                     mov = -1;
@@ -241,7 +241,7 @@ public final class MusicSelectInputProcessor {
                 config.setMineMode(config.getMineMode() == 1 ? 0 : 1);
                 select.play(OPTION_CHANGE);
             }
-        } else if (input.getControlKeyState(ControlKeys.NUM5) || (input.startPressed() && input.isSelectPressed())) {
+        } else if (input.getNumberState()[5] || (input.startPressed() && input.isSelectPressed())) {
             bar.resetInput();
             // show detail option
             select.setPanelState(3);
@@ -294,7 +294,7 @@ public final class MusicSelectInputProcessor {
             select.setPanelState(0);
 
             if (current instanceof SelectableBar) {
-                if (property.isPressed(input, PLAY, true) || input.isControlKeyPressed(ControlKeys.RIGHT) || input.isControlKeyPressed(ControlKeys.ENTER)) {
+                if (property.isPressed(input, PLAY, true) || false || input.startPressed()) {
                     // play
                     select.selectSong(BMSPlayerMode.PLAY);
                 } else if (property.isPressed(input, PRACTICE, true)) {
@@ -308,7 +308,7 @@ public final class MusicSelectInputProcessor {
                     select.selectSong(config.isEventMode() ? BMSPlayerMode.PLAY : ((select.getSelectedReplay() >= 0) ? BMSPlayerMode.getReplayMode(select.getSelectedReplay()) : BMSPlayerMode.PLAY));
                 }
             } else if (current instanceof DirectoryBar dirbar) {
-                if (property.isPressed(input, MusicSelectKey.FOLDER_OPEN, true) || input.isControlKeyPressed(ControlKeys.RIGHT) || input.isControlKeyPressed(ControlKeys.ENTER)) {
+                if (property.isPressed(input, MusicSelectKey.FOLDER_OPEN, true) || false || input.startPressed()) {
                     // open folder
                     if (select.getBarManager().updateBar(dirbar)) {
                         select.play(SoundType.FOLDER_OPEN);
@@ -316,33 +316,33 @@ public final class MusicSelectInputProcessor {
                 }
             }
 
-            if (input.isControlKeyPressed(ControlKeys.NUM7)) {
+            if (input.getNumberState()[7]) {
                 select.executeEvent(EventType.rival);
             }
-            if (input.isControlKeyPressed(ControlKeys.NUM8)) {
+            if (input.getNumberState()[8]) {
                 select.execute(MusicSelectCommand.SHOW_SONGS_ON_SAME_FOLDER);
             }
-            if (input.isControlKeyPressed(ControlKeys.NUM9)) {
+            if (input.getNumberState()[9]) {
                 select.executeEvent(EventType.open_document);
             }
             // close folder
-            if (property.isPressed(input, MusicSelectKey.FOLDER_CLOSE, true) || input.isControlKeyPressed(ControlKeys.LEFT)) {
-                input.resetKeyChangedTime(1);
+            if (property.isPressed(input, MusicSelectKey.FOLDER_CLOSE, true) || false) {
+                input.getTime()[1] = 0;
                 select.getBarManager().close();
             }
 
-    		if(input.isActivated(KeyCommand.AUTOPLAY_FOLDER)) {
+		if(false) {
     			if(current instanceof DirectoryBar) {
     				select.selectSong(BMSPlayerMode.AUTOPLAY);
     			}
     		}
-    		if(input.isActivated(KeyCommand.OPEN_IR)) {
+		if(false) {
                 select.executeEvent(EventType.open_ir);
             }
-    		if(input.isActivated(KeyCommand.ADD_FAVORITE_SONG)) {
+		if(false) {
                 select.executeEvent(EventType.favorite_song);
     		}
-    		if(input.isActivated(KeyCommand.ADD_FAVORITE_CHART)) {
+		if(false) {
                 select.executeEvent(EventType.favorite_chart);
     		}
 
@@ -354,23 +354,23 @@ public final class MusicSelectInputProcessor {
         }
         select.timer.switchTimer(TIMER_SONGBAR_CHANGE, true);
         // update folder
-		if(input.isActivated(KeyCommand.UPDATE_FOLDER)) {
+		if(false) {
             select.executeEvent(EventType.update_folder);
         }
         // open explorer with selected song
-		if(input.isActivated(KeyCommand.OPEN_EXPLORER)) {
+		if(false) {
             select.executeEvent(EventType.open_with_explorer);
         }
         // copy song MD5 hash
-        if(input.isActivated(KeyCommand.COPY_SONG_MD5_HASH)) {
+        if(false) {
             select.execute(MusicSelectCommand.COPY_MD5_HASH);
         }
         // copy song SHA256 hash
-        if(input.isActivated(KeyCommand.COPY_SONG_SHA256_HASH)) {
+        if(false) {
             select.execute(MusicSelectCommand.COPY_SHA256_HASH);
         }
 
-        if (input.isControlKeyPressed(ControlKeys.ESCAPE)) {
+        if (input.isExitPressed()) {
             select.main.exit();
         }
     }

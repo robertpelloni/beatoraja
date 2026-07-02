@@ -70,7 +70,7 @@ public class LaneRenderer {
 
 		try {
 			FreeTypeFontGenerator generator = new FreeTypeFontGenerator(
-					Gdx.files.internal(main.main.getConfig().getSystemfontpath()));
+					Gdx.files.internal("font/VL-Gothic-Regular.ttf"));
 			FreeTypeFontParameter parameter = new FreeTypeFontParameter();
 			parameter.size = 18;
 			font = generator.generateFont(parameter);
@@ -81,7 +81,7 @@ public class LaneRenderer {
 
 		this.skin = (PlaySkin) main.getSkin();
 		this.config = main.resource.getPlayerConfig();
-		this.playconfig = config.getPlayConfig(model.getMode()).getPlayconfig().clone();
+		this.playconfig = config.getPlayConfig(model.getMode()).getPlayconfig();
 
 		init(model);
 
@@ -90,8 +90,8 @@ public class LaneRenderer {
 				playconfig.setHispeed(1.0f);
 				playconfig.setLanecover(0);
 				playconfig.setLift(0);
-				playconfig.setHidden(0);
-				playconfig.setEnableConstant(false);
+				main.main.getConfig().setEnablehidden(false);
+				main.main.getConfig().setEnableConstant(false);
 			}
 		}
 	}
@@ -133,20 +133,20 @@ public class LaneRenderer {
 				mainbpm = bpm;
 			}
 		}
-		basebpm = switch (playconfig.getFixhispeed()) {
-			case PlayConfig.FIX_HISPEED_OFF -> basebpm;
-			case PlayConfig.FIX_HISPEED_STARTBPM -> model.getBpm();
-			case PlayConfig.FIX_HISPEED_MINBPM -> minbpm;
-			case PlayConfig.FIX_HISPEED_MAXBPM -> maxbpm;
-			case PlayConfig.FIX_HISPEED_MAINBPM -> mainbpm;
+		basebpm = switch (main.main.getConfig().getFixhispeed()) {
+			case bms.player.beatoraja.Config.FIX_HISPEED_OFF -> basebpm;
+			case bms.player.beatoraja.Config.FIX_HISPEED_STARTBPM -> model.getBpm();
+			case bms.player.beatoraja.Config.FIX_HISPEED_MINBPM -> minbpm;
+			case bms.player.beatoraja.Config.FIX_HISPEED_MAXBPM -> maxbpm;
+			case bms.player.beatoraja.Config.FIX_HISPEED_MAINBPM -> mainbpm;
 			default -> basebpm;
 		};
 
 		this.setLanecover(playconfig.getLanecover());
-		if (playconfig.getFixhispeed() != PlayConfig.FIX_HISPEED_OFF) {
+		if (main.main.getConfig().getFixhispeed() != bms.player.beatoraja.Config.FIX_HISPEED_OFF) {
 			basehispeed = playconfig.getHispeed();
 		}
-		this.hispeedmargin = playconfig.getHispeedMargin();
+		this.hispeedmargin = main.main.getConfig().getHispeedMargin();
 	}
 
 	public float getHispeed() {
@@ -191,7 +191,7 @@ public class LaneRenderer {
 	}
 
 	public void resetHispeed(double targetbpm) {
-		if (playconfig.getFixhispeed() != PlayConfig.FIX_HISPEED_OFF) {
+		if (main.main.getConfig().getFixhispeed() != bms.player.beatoraja.Config.FIX_HISPEED_OFF) {
 			playconfig.setHispeed((float) ((2400f / (targetbpm / 100) / playconfig.getDuration()) * (1 - (playconfig.isEnablelanecover() ? playconfig.getLanecover() : 0))));
 		}
 	}
@@ -210,20 +210,20 @@ public class LaneRenderer {
 	}
 
 	public float getHiddenCover() {
-		return playconfig.getHidden();
+		return main.main.getConfig().isEnablehidden() ? 1.0f : 0.0f;
 	}
 
 	public void setHiddenCover(float hiddenCover) {
-		playconfig.setHidden(hiddenCover < 0 ? 0 : (hiddenCover > 1 ? 1 : hiddenCover));
+		main.main.getConfig().setEnablehidden(hiddenCover > 0);
 	}
 
 	public boolean isEnableHidden() {
-		return playconfig.isEnablehidden();
+		return main.main.getConfig().isEnablehidden();
 	}
 
 	public void changeHispeed(boolean b) {
 		float f = 0;
-		if (playconfig.getFixhispeed() != PlayConfig.FIX_HISPEED_OFF) {
+		if (main.main.getConfig().getFixhispeed() != bms.player.beatoraja.Config.FIX_HISPEED_OFF) {
 			f = basehispeed * hispeedmargin * (b ? 1 : -1);
 		} else {
 			f = hispeedmargin * (b ? 1 : -1);
@@ -283,13 +283,13 @@ public class LaneRenderer {
 		main.main.getOffset(OFFSET_LANECOVER).y = (float) ((hl - hu) * lanecover);
 		// TODO HIDDENとLIFT混在の必要性とHIDDENの必要性
 		final SkinOffset hidden = main.main.getOffset(OFFSET_HIDDEN_COVER);
-		if (playconfig.isEnablehidden()) {
+		if (main.main.getConfig().isEnablehidden()) {
 			hidden.a = 0;
 			if (playconfig.isEnablelift()) {
-				hidden.y =  (1 - playconfig.getLift()) * playconfig.getHidden()
+				hidden.y =  (1 - playconfig.getLift()) * (main.main.getConfig().isEnablehidden() ? 1.0f : 0.0f)
 						* skin.getLaneRegion()[0].height;
 			} else {
-				hidden.y = playconfig.getHidden() * skin.getLaneRegion()[0].height;
+				hidden.y = main.main.getConfig().isEnablehidden() ? 1.0f : 0.0f * skin.getLaneRegion()[0].height;
 			}
 		} else {
 			hidden.a = -255;
@@ -321,9 +321,9 @@ public class LaneRenderer {
 
 		// draw section line
 		final double orgy = y;
-		final boolean enableConstant = playconfig.isEnableConstant() && (main.getState() != BMSPlayer.STATE_PRACTICE);
+		final boolean enableConstant = main.main.getConfig().isEnableConstant() && (main.getState() != BMSPlayer.STATE_PRACTICE);
 		final int baseduration = playconfig.getDuration();
-		final float alphaLimit =  playconfig.getConstantFadeinTime() * 1000;
+		final float alphaLimit =  0.0f * 1000;
 		for (int i = pos; i < timelines.length && y <= hu; i++) {
 			final TimeLine tl = timelines[i];
 			if (tl.getMicroTime() >= microtime) {
@@ -375,8 +375,9 @@ public class LaneRenderer {
 					for (Rectangle r : playerr) {
 						// TODO 数値もスキンベースへ移行
 						if(font != null) {
-							sprite.draw(font, String.format("%2d:%02d.%1d", tl.getTime() / 60000,
-									(tl.getTime() / 1000) % 60, (tl.getTime() / 100) % 10), r.x + 4, (float) (y + 20), Color.valueOf("40c0c0"));							
+							font.setColor(Color.valueOf("40c0c0"));
+							font.draw(sprite, String.format("%2d:%02d.%1d", tl.getTime() / 60000,
+									(tl.getTime() / 1000) % 60, (tl.getTime() / 100) % 10), r.x + 4, (float) (y + 20));
 						}
 					}
 				}
@@ -389,7 +390,8 @@ public class LaneRenderer {
 						for (Rectangle r : playerr) {
 							// TODO 数値もスキンベースへ移行
 							if(font != null) {
-								sprite.draw(font, "BPM" + ((int) tl.getBPM()), r.x + r.width / 2, (float) (y + 20), Color.valueOf("00c000"));
+								font.setColor(Color.valueOf("00c000"));
+								font.draw(sprite, "BPM" + ((int) tl.getBPM()), r.x + r.width / 2, (float) (y + 20));
 							}
 							
 						}
@@ -402,7 +404,8 @@ public class LaneRenderer {
 						for (Rectangle r : playerr) {
 							// TODO 数値もスキンベースへ移行
 							if(font != null) {
-								sprite.draw(font, "STOP " + ((int) tl.getStop()) + "ms", r.x + r.width / 2, (float) (y + 20), Color.valueOf("c0c000"));								
+								font.setColor(Color.valueOf("c0c000"));
+								font.draw(sprite, "STOP " + ((int) tl.getStop()) + "ms", r.x + r.width / 2, (float) (y + 20));
 							}
 						}
 					}

@@ -502,7 +502,7 @@ public class BooleanPropertyFactory {
 		lift1_on(OPTION_LIFT1_ON, new DrawProperty(DrawProperty.TYPE_NO_STATIC,
 				(state) -> ((state instanceof BMSPlayer) ? ((BMSPlayer) state).getLanerender().getPlayConfig().isEnablelift() : false))),
 		hidden1_on(OPTION_HIDDEN1_ON, new DrawProperty(DrawProperty.TYPE_NO_STATIC,
-				(state) -> ((state instanceof BMSPlayer) ? ((BMSPlayer) state).getLanerender().getPlayConfig().isEnablehidden() : false))),
+				(state) -> ((state instanceof BMSPlayer) ? ((BMSPlayer) state).getLanerender().getPlayConfig().getHidden() > 0 : false))),
 		border_or_more_1p(OPTION_1P_BORDER_OR_MORE, new DrawProperty(DrawProperty.TYPE_NO_STATIC,
 				(state) -> ((state instanceof BMSPlayer) ? ((BMSPlayer) state).getGauge().getGauge().isQualified() : false))),
 
@@ -595,8 +595,8 @@ public class BooleanPropertyFactory {
 		result_draw(OPTION_DRAW,new DrawProperty(DrawProperty.TYPE_NO_STATIC, 
 				(state) -> (state.getScoreDataProperty().getNowEXScore() == state.getScoreDataProperty().getRivalScore()))),
 
-		ir_offline(OPTION_OFFLINE, new DrawProperty(DrawProperty.TYPE_STATIC_ALL, (state) -> (state.main.getIRStatus().length == 0))),
-		ir_online(OPTION_ONLINE, new DrawProperty(DrawProperty.TYPE_STATIC_ALL, (state) -> (state.main.getIRStatus().length > 0))),
+		ir_offline(OPTION_OFFLINE, new DrawProperty(DrawProperty.TYPE_STATIC_ALL, (state) -> (state.main.getIRConnection() == null))),
+		ir_online(OPTION_ONLINE, new DrawProperty(DrawProperty.TYPE_STATIC_ALL, (state) -> (state.main.getIRConnection() != null))),
 		ir_no_player(OPTION_IR_NOPLAYER, new DrawProperty(DrawProperty.TYPE_NO_STATIC, (state) -> {
 			if(state instanceof MusicSelector) {
 				final RankingData irc = ((MusicSelector)state).getCurrentRankingData();
@@ -658,10 +658,10 @@ public class BooleanPropertyFactory {
 					if (state instanceof MusicSelector selector) {
 						final PlayConfig playConfig = selector.getSelectedBarPlayConfig();
 						if (playConfig != null) {
-							return playConfig.isEnableConstant();
+							return false;
 						}
 					} else if (state instanceof BMSPlayer player) {
-						return player.resource.getPlayerConfig().getPlayConfig(player.getMode()).getPlayconfig().isEnableConstant();
+						return false;
 					}
 					return false;
 				})

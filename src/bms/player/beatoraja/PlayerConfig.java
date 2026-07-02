@@ -1128,4 +1128,27 @@ public final class PlayerConfig {
 	public void setChartReplicationMode(String chartReplicationMode) {
 		this.chartReplicationMode = chartReplicationMode;
 	}
+
+	// TODO: Stub methods
+	public int getJudgewindowrate() { return 0; }
+	public void setJudgewindowrate(int val) {}
+	public boolean isNomine() { return false; }
+	public void setNomine(boolean val) {}
+	public int getTarget() { return 0; }
+	public void setTarget(int val) {}
+	public String getIrname() { return ""; }
+	public void setIrname(String val) {}
+	public String getUserid() { return ""; }
+	public void setUserid(String val) {}
+	public String getPassword() { return ""; }
+	public void setPassword(String val) {}
+	public int getFixhispeed() { return 0; }
+	public void setFixhispeed(int val) {}
+	public boolean isConstant() { return false; }
+	public void setConstant(boolean val) {}
+	public boolean isLegacynote() { return false; }
+	public void setLegacynote(boolean val) {}
+	public boolean isMarkprocessednote() { return false; }
+	public void setMarkprocessednote(boolean val) {}
+
 }

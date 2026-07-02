@@ -114,3 +114,6 @@ processResources {
         include 'VERSION.md'
     }
 }
+dependencies {
+    implementation files('lib/tarsosdsp-latest.jar')
+}

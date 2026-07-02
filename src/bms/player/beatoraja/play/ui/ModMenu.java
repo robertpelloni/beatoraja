@@ -276,8 +276,8 @@ public class ModMenu {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if(player.getLanerender() != null) {
-                    boolean b = !player.getLanerender().getPlayConfig().isEnablehidden();
-                    player.getLanerender().getPlayConfig().setEnablehidden(b);
+                    boolean b = !player.main.getConfig().isEnablehidden();
+                    player.main.getConfig().setEnablehidden(b);
                     updateHiddenToggle();
                 }
             }
@@ -451,9 +451,9 @@ public class ModMenu {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if(player.getLanerender() != null) {
-                    int current = player.getLanerender().getPlayConfig().getFixhispeed();
+                    int current = player.main.getConfig().getFixhispeed();
                     current = (current + 1) % 5;
-                    player.getLanerender().getPlayConfig().setFixhispeed(current);
+                    player.main.getConfig().setFixhispeed(current);
                     updateFixGnButton();
                 }
             }
@@ -731,7 +731,7 @@ public class ModMenu {
                     String host = hostField.getText();
                     int port = Integer.parseInt(portField.getText());
                     String name = nameField.getText();
-                    player.main.getArenaManager().connect(host, port, name);
+                    //player.main.getArenaManager().connect(host, port, name);
                     arenaStatusLabel.setText("Status: Connecting...");
                 } catch (Exception e) {
                     arenaStatusLabel.setText("Error: " + e.getMessage());
@@ -745,7 +745,7 @@ public class ModMenu {
             public void clicked(InputEvent event, float x, float y) {
                 try {
                     int port = Integer.parseInt(portField.getText());
-                    player.main.getArenaManager().startServer(port);
+                    //player.main.getArenaManager().startServer(port);
                     arenaStatusLabel.setText("Status: Server Started");
                 } catch (Exception e) {
                     arenaStatusLabel.setText("Error: " + e.getMessage());
@@ -757,7 +757,7 @@ public class ModMenu {
         readyButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                player.main.getArenaManager().sendReady(true);
+                //player.main.getArenaManager().sendReady(true);
                 arenaStatusLabel.setText("Status: Ready sent");
             }
         });
@@ -766,8 +766,8 @@ public class ModMenu {
         startGameButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (player.main.getArenaManager().isHost()) {
-                    player.main.getArenaManager().sendStartGame();
+                if (false) {
+                    //player.main.getArenaManager().sendStartGame();
                     arenaStatusLabel.setText("Status: Starting...");
                 } else {
                     arenaStatusLabel.setText("Error: Only Host can start.");
@@ -779,12 +779,12 @@ public class ModMenu {
         gaugeRuleButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if (player.main.getArenaManager().isHost()) {
-                    int current = player.main.getArenaManager().getRuleGauge();
+                if (false) {
+                    int current = 0;
                     current++;
                     if (current > 5) current = -1; // -1, 0, 1, 2, 3, 4, 5
 
-                    player.main.getArenaManager().sendRules(current);
+                    //player.main.getArenaManager().sendRules(current);
 
                     String text = "Rule: ";
                     switch(current) {
@@ -1022,14 +1022,14 @@ public class ModMenu {
 
     private void updateFixGnButton() {
         if(player.getLanerender() != null) {
-            int val = player.getLanerender().getPlayConfig().getFixhispeed();
+            int val = player.main.getConfig().getFixhispeed();
             String text = "Fix GN: ";
             switch(val) {
-                case PlayConfig.FIX_HISPEED_OFF: text += "Off"; break;
-                case PlayConfig.FIX_HISPEED_STARTBPM: text += "Start"; break;
-                case PlayConfig.FIX_HISPEED_MAXBPM: text += "Max"; break;
-                case PlayConfig.FIX_HISPEED_MAINBPM: text += "Main"; break;
-                case PlayConfig.FIX_HISPEED_MINBPM: text += "Min"; break;
+                case bms.player.beatoraja.Config.FIX_HISPEED_OFF: text += "Off"; break;
+                case bms.player.beatoraja.Config.FIX_HISPEED_STARTBPM: text += "Start"; break;
+                case bms.player.beatoraja.Config.FIX_HISPEED_MAXBPM: text += "Max"; break;
+                case bms.player.beatoraja.Config.FIX_HISPEED_MAINBPM: text += "Main"; break;
+                case bms.player.beatoraja.Config.FIX_HISPEED_MINBPM: text += "Min"; break;
             }
             fixGnButton.setText(text);
         }
@@ -1099,7 +1099,7 @@ public class ModMenu {
 
     private void updateHiddenToggle() {
         if(player.getLanerender() != null) {
-            hiddenToggle.setText(player.getLanerender().getPlayConfig().isEnablehidden() ? "On" : "Off");
+            hiddenToggle.setText(player.main.getConfig().isEnablehidden() ? "On" : "Off");
         }
     }
 
@@ -1117,10 +1117,10 @@ public class ModMenu {
         };
         for(int i = 0;i < 6;i++) {
             if(b) {
-                Path[] paths = player.main.getSoundManager().getSoundPaths(guideses[i]);
-                if(paths.length > 0) {
-                    player.main.getAudioProcessor().setAdditionalKeySound(i, true, paths[0].toString());
-                    player.main.getAudioProcessor().setAdditionalKeySound(i, false, paths[0].toString());
+                //Path[] paths = player.main.getSoundManager().getSoundPaths(guideses[i]);
+                if(false) {
+                    //player.main.getAudioProcessor().setAdditionalKeySound(i, true, paths[0].toString());
+                    //player.main.getAudioProcessor().setAdditionalKeySound(i, false, paths[0].toString());
                 }
             } else {
                 player.main.getAudioProcessor().setAdditionalKeySound(i, true, null);
@@ -1172,9 +1172,9 @@ public class ModMenu {
     }
 
     private void updateMissions() {
-        if (player.main.getMissionManager() != null) {
+        if (false) {
             StringBuilder sb = new StringBuilder();
-            for (MissionData m : player.main.getMissionManager().getMissions()) {
+            for (bms.player.beatoraja.mission.MissionData m : new java.util.ArrayList<bms.player.beatoraja.mission.MissionData>()) {
                 sb.append(m.completed ? "[X] " : "[ ] ");
                 sb.append(m.title).append(": ").append(m.description);
                 if (!m.completed && m.target > 0) {
@@ -1187,7 +1187,7 @@ public class ModMenu {
     }
 
     private void updateArenaStatus() {
-        ArenaManager am = player.main.getArenaManager();
+        bms.player.beatoraja.arena.ArenaManager am = null;
         if (am != null) {
             StringBuilder sb = new StringBuilder("Players: ");
             for (ArenaData p : am.getPlayers()) {

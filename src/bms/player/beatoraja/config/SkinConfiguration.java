@@ -57,7 +57,7 @@ public class SkinConfiguration extends MainState {
 
 		if (main.getInputProcessor().isControlKeyPressed(ControlKeys.ESCAPE)) {
 			main.saveConfig();
-			main.changeState(MainStateType.MUSICSELECT);
+			main.changeState(MainController.STATE_SELECTMUSIC);
 		}
 	}
 

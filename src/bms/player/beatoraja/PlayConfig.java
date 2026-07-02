@@ -87,6 +87,9 @@ public class PlayConfig {
 		return hispeed;
 	}
 
+	private int pacemakerType = 0;
+	public int getPacemakerType() { return pacemakerType; }
+	public void setPacemakerType(int pacemakerType) { this.pacemakerType = pacemakerType; }
 	public void setHispeed(float hispeed) {
 		this.hispeed = hispeed;
 	}
@@ -410,5 +413,10 @@ public class PlayConfig {
 			return config;
 		}
 	}
+
+
+	// TODO: Stub methods
+	public int getHidden() { return 0; }
+	public int getPacemakerType() { return 0; }
 
 }

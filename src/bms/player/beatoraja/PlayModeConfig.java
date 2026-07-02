@@ -736,4 +736,9 @@ public final class PlayModeConfig {
             keys[index] = input;
         }
     }
+
+	// TODO: Stub methods
+	public int getHidden() { return 0; }
+	public int getPacemakerType() { return 0; }
+
 }

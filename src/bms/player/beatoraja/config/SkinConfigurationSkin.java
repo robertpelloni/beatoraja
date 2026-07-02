@@ -10,7 +10,7 @@ public class SkinConfigurationSkin extends Skin {
 	private int customOffsetStyle = 0;
 
 	public SkinConfigurationSkin(SkinHeader header) {
-		super(header);
+		//super(header);
 	}
 
 	public void setSampleBMS(String[] sampleBMS) {

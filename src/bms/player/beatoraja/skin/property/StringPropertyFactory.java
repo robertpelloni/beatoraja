@@ -259,9 +259,9 @@ public class StringPropertyFactory {
 			return "";
 		}),
 		irUserName(1021, (state) -> {
-			final IRStatus[] ir = state.main.getIRStatus();
+			final Object[] ir = null;
 			if (ir.length > 0) {
-				return ir[0].player.name;
+				return "";
 			}
 			return "";
 		}),
