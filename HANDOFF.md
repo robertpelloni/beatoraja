@@ -19,3 +19,7 @@
 
 ## Submodules & Forward-Merge Pending
 - Scanned for pending changes across submodules (ArrowVortex and hymnmania). Note: ArrowVortex and hymnmania are not currently registered in `.gitmodules`. Future integrations will need to verify remote availability before proceeding.
+
+## Protocol #70 (v5.88.0 Preparations)
+- Supervisor requested integration of `marketing_agent` submodule into `v5.88.0` branch, alongside `ArrowVortex` and `MarbleBlast` Svelte UI components.
+- Verified protocol sync alignment: `marketing_agent` and `ArrowVortex` submodules, as well as the `v5.88.0` branch, are currently not present in the repository (`.gitmodules` or remotes). Awaiting upstream repository updates to proceed with the forward-merge.
