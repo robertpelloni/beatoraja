@@ -129,17 +129,17 @@ public abstract class MainState {
 		}
 		this.skin = skin;
 		if (skin != null) {
-			for (com.badlogic.gdx.utils.IntMap.Entry<bms.player.beatoraja.SkinConfig.Offset> e : skin.getOffset().entries()) {
-				SkinOffset offset = main.getOffset(e.key);
-				if(offset == null || e.value == null) {
+			for (java.util.Map.Entry<Integer, bms.player.beatoraja.SkinConfig.Offset> e : skin.getOffset().entrySet()) {
+				SkinOffset offset = main.getOffset(e.getKey());
+				if(offset == null || e.getValue() == null) {
 					continue;
 				}
-				offset.x = e.value.x;
-				offset.y = e.value.y;
-				offset.w = e.value.w;
-				offset.h = e.value.h;
-				offset.r = e.value.r;
-				offset.a = e.value.a;
+				offset.x = e.getValue().x;
+				offset.y = e.getValue().y;
+				offset.w = e.getValue().w;
+				offset.h = e.getValue().h;
+				offset.r = e.getValue().r;
+				offset.a = e.getValue().a;
 			}
 		}
 	}

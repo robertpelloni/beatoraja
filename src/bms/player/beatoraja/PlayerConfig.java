@@ -1142,13 +1142,9 @@ public final class PlayerConfig {
 	public void setUserid(String val) {}
 	public String getPassword() { return ""; }
 	public void setPassword(String val) {}
-	public int getFixhispeed() { return 0; }
-	public void setFixhispeed(int val) {}
 	public boolean isConstant() { return false; }
 	public void setConstant(boolean val) {}
 	public boolean isLegacynote() { return false; }
 	public void setLegacynote(boolean val) {}
-	public boolean isMarkprocessednote() { return false; }
-	public void setMarkprocessednote(boolean val) {}
 
 }

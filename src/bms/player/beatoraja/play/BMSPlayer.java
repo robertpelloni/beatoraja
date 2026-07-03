@@ -1032,7 +1032,7 @@ public class BMSPlayer extends MainState {
 //		System.out.println(avgduration + " / " + count + " = " + score.getAvgjudge());
 
 		score.setDeviceType(main.getInputProcessor().getLastKeyChangedDevice() != null ? main.getInputProcessor().getLastKeyChangedDevice().type : bms.player.beatoraja.input.BMSPlayerInputDevice.Type.KEYBOARD);
-		//score.setSkin(getSkin().header.getName());
+		//////score.setSkin(getSkin().header.getName());
 		return score;
 	}
 

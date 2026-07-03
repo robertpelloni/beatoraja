@@ -46,7 +46,7 @@ public class UpdateManager {
     
     public void poll() {
         if (updateSong != null && !updateSong.isAlive()) {
-            //main.getSelector().getBarManager().updateBar();
+            //////main.getSelector().getBarManager().updateBar();
             updateSong = null;
         }
     }
@@ -73,9 +73,9 @@ public class UpdateManager {
         }
 
         public void run() {
-            //Message message = main.getMessageRenderer().addMessage(this.message, Color.CYAN, 1);
+            //////Message message = main.getMessageRenderer().addMessage(this.message, Color.CYAN, 1);
             main.getSongDatabase().updateSongDatas(path, main.getConfig().getBmsroot(), false, main.getInfoDatabase());
-            //message.stop();
+            //////message.stop();
         }
     }
 
@@ -92,13 +92,13 @@ public class UpdateManager {
         }
 
         public void run() {
-            //Message message = main.getMessageRenderer().addMessage(this.message, Color.CYAN, 1);
+            //////Message message = main.getMessageRenderer().addMessage(this.message, Color.CYAN, 1);
             TableData td = accessor.getAccessor().read();
             if (td != null) {
                 accessor.getAccessor().write(td);
                 accessor.setTableData(td);
             }
-            //message.stop();
+            //////message.stop();
         }
     }
 
@@ -108,16 +108,16 @@ public class UpdateManager {
         }
 
         public void run() {
-            //Message message = main.getMessageRenderer().addMessage(this.message, Color.LIME, 1);
+            //////Message message = main.getMessageRenderer().addMessage(this.message, Color.LIME, 1);
             while (main.getMusicDownloadProcessor() != null && main.getMusicDownloadProcessor().isDownload() && main.getMusicDownloadProcessor().getMessage() != null) {
-                //message.setText(main.getMusicDownloadProcessor().getMessage());
+                //////message.setText(main.getMusicDownloadProcessor().getMessage());
                 try {
                     sleep(100);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
-            //message.stop();
+            //////message.stop();
         }
     }
 }

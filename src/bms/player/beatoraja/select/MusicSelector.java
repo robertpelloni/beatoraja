@@ -260,7 +260,7 @@ public final class MusicSelector extends MainState  {
 				RankingData irc = null;
 				if(irc == null) {
 					irc = new RankingData();
-					//main.getRankingDataCache().put(course, config.getLnmode(), irc);
+					//////main.getRankingDataCache().put(course, config.getLnmode(), irc);
 				}
 				irc.load(this, course);
 	            currentir = irc;
@@ -406,7 +406,7 @@ public final class MusicSelector extends MainState  {
 			
 			if(main.getIRConnection() != null && currentir == null) {
 				currentir = new RankingData();
-				//main.getRankingDataCache().put(song, config.getLnmode(), currentir);
+				//////main.getRankingDataCache().put(song, config.getLnmode(), currentir);
 			}
 			resource.setRankingData(currentir);
 			ScoreData rival = current.getRivalScore();
@@ -557,13 +557,13 @@ public final class MusicSelector extends MainState  {
 
 			if(main.getIRConnection() != null && currentir == null) {
 				currentir = new RankingData();
-				//main.getRankingDataCache().put(gradeBar.getCourseData(), config.getLnmode(), currentir);
+				//////main.getRankingDataCache().put(gradeBar.getCourseData(), config.getLnmode(), currentir);
 			}
 			
 			RankingData songrank = null;
 			if(main.getIRConnection() != null && songrank == null) {
 				songrank = new RankingData();
-				//main.getRankingDataCache().put(songs[0], config.getLnmode(), songrank);
+				//////main.getRankingDataCache().put(songs[0], config.getLnmode(), songrank);
 			}
 			resource.setRankingData(songrank);
 			resource.setRivalScoreData(null);

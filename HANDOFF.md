@@ -12,3 +12,7 @@
 
 ## Missing Features / Next Steps
 - **Immediate Priority**: The `EventFactory` and `BMSPlayerInputProcessor` files are currently suffering from incredibly deeply-rooted scope mismatches from the LWJGL3 pull. Despite aggressive `sed` replacements mapping `pc.getFixHispeed()` vs `state.main.getConfig().getFixHispeed()`, the compiler is throwing constant `cannot find symbol` errors because the object references themselves are no longer aligned with the getters/setters provided by `beatoraja`'s `PlayModeConfig` vs `PlayConfig` refactor. The next agent *must* fully evaluate the exact variables inside `PlayConfig.java` and `Config.java` to construct a unified patch for `EventFactory.java`, rather than attempting targeted `sed` replacements which are failing against the sprawling inheritance tree. 
+
+## Protocol #68 (v5.87.0)
+1. **MarbleBlast Svelte UI Forward Merge**: Verified submodule integrations and updated documentation for the v5.87.0 forward-merge.
+2. **Compile Stubs**: Attempted to resolve API drift in Config, PlayConfig, PlayerConfig, and MainController by injecting stub getters/setters. Partially resolved audio DSP compilation and TimerProperty access.

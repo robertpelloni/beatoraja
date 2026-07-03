@@ -75,7 +75,7 @@ public class InputManager {
 		}
 		// Debug表示切替
 		if (input.isPressed(KeyCommand.TOGGLE_DEBUG)) {
-			//MainController.debug = !MainController.debug;
+			//////MainController.debug = !MainController.debug;
 		}
 		// fullscrees - windowed
 		if (input.isPressed(KeyCommand.SWITCH_SCREEN_MODE)) {
@@ -86,7 +86,7 @@ public class InputManager {
 			} else {
 				Gdx.graphics.setFullscreenMode(currentMode);
 			}
-			//main.getConfig().setDisplaymode(fullscreen ? Config.DisplayMode.WINDOW : Config.DisplayMode.FULLSCREEN);
+			//////main.getConfig().setDisplaymode(fullscreen ? Config.DisplayMode.WINDOW : Config.DisplayMode.FULLSCREEN);
 		}
 	}
 	

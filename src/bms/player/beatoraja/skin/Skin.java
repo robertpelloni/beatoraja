@@ -17,7 +17,6 @@ import java.util.logging.Logger;
  * @author exch
  */
 public class Skin {
-	public SkinHeader header;
 
 
 	public static class SkinObjectRenderer extends SpriteBatch {
@@ -109,10 +108,6 @@ public class Skin {
 	 */
 	private int[] fixopt;
 
-	public Skin(SkinHeader header) {
-		this(header.getSourceResolution(), header.getDestinationResolution());
-		this.header = header;
-	}
 	public Skin(Resolution org, Resolution dst) {
 		this(org, dst, new int[0]);
 	}
@@ -176,7 +171,7 @@ public class Skin {
 				for(int op : obj.getOption()) {
 					if(op > 0) {
 						if(option.containsKey(op)) {
-							if(option.get(op, 0) == 0) {
+							if(!option.get(op)) {
 								removes.add(obj);						
 							}
 						} else {
@@ -196,7 +191,7 @@ public class Skin {
 						}					
 					} else {
 						if(option.containsKey(-op)) {
-							if(option.get(-op, 0) != 0) {
+							if(option.get(-op)) {
 								removes.add(obj);						
 							}
 						} else {

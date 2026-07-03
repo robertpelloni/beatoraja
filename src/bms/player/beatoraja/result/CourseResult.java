@@ -139,11 +139,11 @@ public class CourseResult extends AbstractResult {
 					try {
 						IRResponse<bms.player.beatoraja.ir.IRScoreData[]> response = ir.getCoursePlayData(null, new IRCourseData(resource.getCourseData(), lnmode));
 						if (false) {
-							//ranking.updateScore(null, main.getRivalDataAccessor(), response.getData(), newscore.getExscore() > oldscore.getExscore() ? newscore : oldscore);
+							//////ranking.updateScore(null, main.getRivalDataAccessor(), response.getData(), newscore.getExscore() > oldscore.getExscore() ? newscore : oldscore);
 							rankingOffset = ranking.getRank() > 10 ? ranking.getRank() - 5 : 0;
-							//Logger.getGlobal().info("IRからのスコア取得成功 : " + response.getMessage());
+							//////Logger.getGlobal().info("IRからのスコア取得成功 : " + response.getMessage());
 						} else {
-							//Logger.getGlobal().warning("IRからのスコア取得失敗 : " + response.getMessage());
+							//////Logger.getGlobal().warning("IRからのスコア取得失敗 : " + response.getMessage());
 						}
 					} catch (Exception e) {
 						Logger.getGlobal().warning("IRからのスコア取得時例外:" + e.getMessage());
@@ -273,7 +273,7 @@ public class CourseResult extends AbstractResult {
 
 		if (main.getStepUpManager() != null && resource.getCourseData().getName() != null && resource.getCourseData().getName().startsWith("Step-Up Level")) {
             boolean clear = newscore.getClear() > ClearType.Failed.id;
-            //main.getStepUpManager().onResult(clear);
+            //////main.getStepUpManager().onResult(clear);
             Logger.getGlobal().info("Step-Up Result processed: " + (clear ? "Cleared" : "Failed"));
         }
 

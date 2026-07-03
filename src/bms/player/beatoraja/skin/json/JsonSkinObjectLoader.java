@@ -728,7 +728,7 @@ public abstract class JsonSkinObjectLoader<S extends Skin> {
 						a.angle, dst.center, dst.loop, dst.timer != null ? dst.timer.getTimerId() : 0, new int[0]);
 			}
 			if (dst.mouseRect != null) {
-				//skin.setMouseRect(obj, dst.mouseRect.x, dst.mouseRect.y, dst.mouseRect.w, dst.mouseRect.h);
+				//////skin.setMouseRect(obj, dst.mouseRect.x, dst.mouseRect.y, dst.mouseRect.w, dst.mouseRect.h);
 			}
 			prev = a;
 		}

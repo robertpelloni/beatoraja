@@ -107,7 +107,7 @@ public class LR2PlaySkinLoader extends LR2SkinCSVLoader<PlaySkin> {
 				if (bga != null) {
 					skin.setDestination(bga, 0, values[3], srch - values[4] - values[6], values[5], values[6],
 							values[7], values[8], values[9], values[10], values[11], values[12], values[13], values[14],
-							values[15], values[16], values[17], values[18], values[19], values[20], readOffset(str, 21)[0]);
+							values[15], values[16], values[17], values[18], values[19], values[20], readOffset(str, 21)[0][0][0]);
 					bga.setStretch(stretch);
 				}
 			}
@@ -565,7 +565,7 @@ public class LR2PlaySkinLoader extends LR2SkinCSVLoader<PlaySkin> {
 				gauge.y = src.height - values[4];
 				skin.setDestination(noteobj, values[2], gauge.x, gauge.y, gauge.width, gauge.height, values[7], values[8],
 						values[9], values[10], values[11], values[12], values[13], values[14], values[15],
-						values[16], values[17], values[18], values[19], values[20], readOffset(str, 21)[0]);
+						values[16], values[17], values[18], values[19], values[20], readOffset(str, 21)[0][0][0]);
 			}
 		});
 
@@ -587,7 +587,7 @@ public class LR2PlaySkinLoader extends LR2SkinCSVLoader<PlaySkin> {
 				gauge.y = src.height - values[4];
 				skin.setDestination(bpmgraphobj, values[2], gauge.x, gauge.y, gauge.width, gauge.height, values[7], values[8],
 						values[9], values[10], values[11], values[12], values[13], values[14], values[15],
-						values[16], values[17], values[18], values[19], values[20], readOffset(str, 21)[0]);
+						values[16], values[17], values[18], values[19], values[20], readOffset(str, 21)[0][0][0]);
 			}
 		});
 		addCommandWord(new CommandWord("SRC_TIMING_1P") {
@@ -609,7 +609,7 @@ public class LR2PlaySkinLoader extends LR2SkinCSVLoader<PlaySkin> {
 				gauge.y = src.height - values[4];
 				skin.setDestination(timingobj, values[2], gauge.x, gauge.y, gauge.width, gauge.height, values[7], values[8],
 						values[9], values[10], values[11], values[12], values[13], values[14], values[15],
-						values[16], values[17], values[18], values[19], values[20], readOffset(str, 21)[0]);
+						values[16], values[17], values[18], values[19], values[20], readOffset(str, 21)[0][0][0]);
 			}
 		});
 
@@ -743,7 +743,7 @@ public class LR2PlaySkinLoader extends LR2SkinCSVLoader<PlaySkin> {
 							dsth - (values[4] + values[6]) * dsth / srch, values[5] * dstw / srcw,
 							values[6] * dsth / srch, values[7], values[8], values[9], values[10], values[11],
 							values[12], values[13], values[14], values[15], values[16], values[17], values[18],
-							values[19], values[20], readOffset(str, 21)[0]);
+							values[19], values[20], readOffset(str, 21)[0][0][0]);
 				}
 			}
 		});
