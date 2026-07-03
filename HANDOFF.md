@@ -16,3 +16,6 @@
 ## Protocol #68 (v5.87.0)
 1. **MarbleBlast Svelte UI Forward Merge**: Verified submodule integrations and updated documentation for the v5.87.0 forward-merge.
 2. **Compile Stubs**: Attempted to resolve API drift in Config, PlayConfig, PlayerConfig, and MainController by injecting stub getters/setters. Partially resolved audio DSP compilation and TimerProperty access.
+
+## Submodules & Forward-Merge Pending
+- Scanned for pending changes across submodules (ArrowVortex and hymnmania). Note: ArrowVortex and hymnmania are not currently registered in `.gitmodules`. Future integrations will need to verify remote availability before proceeding.
