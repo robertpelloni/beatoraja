@@ -56,3 +56,8 @@
 - Workspace synced to v5.95.0 with latest instruction-watcher, depth-restriction, and client-config installer changes applied.
 - Ran full test suite to verify new watcher behavior. Compilation failed due to persistent API drift errors in `PlayConfigurationView` and `MainLoader`.
 - Initiated fixes for residual `FloatPCM` syntax errors to progress towards autonomous compilation stability.
+
+## Protocol #78 (v5.95.0 TormentNexus Integration)
+- Supervisor requested integration of latest v5.95.0 workspace sync into `tormentnexus`, focusing on new mandates or tool-locking features.
+- Verified requirement for backward compatibility with `zed` editor and session scanner updates.
+- Note: Local `tormentnexus` submodule is still awaiting upstream synchronization; recorded requirements for immediate implementation once remotes are updated.
