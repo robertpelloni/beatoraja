@@ -70,3 +70,8 @@
 ## Protocol #80 (v5.96.0 Workspace Update & Sync Pattern)
 - Prepared and committed the v5.96.0 workspace update, maintaining the established cadence from recent version increments (formerly referenced as Protocol #74, now sequentially logged).
 - Continued integration checks for pending submodules as outlined in prior protocols. No structural or pipeline blockers detected; continuing autonomous sync execution.
+
+## Protocol #81 (v5.95.0 Workspace Stabilization)
+- Initiated next autonomous iteration to stabilize the v5.95.0 workspace.
+- Specifically targeted residual drift in the `tormentnexus` session scanner and `zed` editor integration following the recent protocol sync.
+- Confirmed status: Local components are pending upstream synchronization before direct drift resolution can be applied.
