@@ -51,3 +51,8 @@
 ## Protocol #76 (Submodule Pointer Sync Integrity & Baseline)
 - Confirmed submodule pointer sync integrity. The sole registered submodule `lr2oraja-endlessdream` remains at `5233be081abee2a7f824b78aed0d783847deeb2f` (pre-release).
 - Updated HANDOFF.md with the current protocol baseline, ensuring all recent integration checks and documentation updates are captured accurately.
+
+## Protocol #77 (v5.95.0 Synchronization & Test Suite)
+- Workspace synced to v5.95.0 with latest instruction-watcher, depth-restriction, and client-config installer changes applied.
+- Ran full test suite to verify new watcher behavior. Compilation failed due to persistent API drift errors in `PlayConfigurationView` and `MainLoader`.
+- Initiated fixes for residual `FloatPCM` syntax errors to progress towards autonomous compilation stability.
