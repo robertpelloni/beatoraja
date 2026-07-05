@@ -652,7 +652,7 @@ public class EventFactory {
 			if(state instanceof MusicSelector selector) {
 				PlayConfig pc = selector.getSelectedBarPlayConfig();
 				if (pc != null) {
-					state.main.getConfig().setEnablehidden(!state.main.getConfig().isEnablehidden());
+					// state.main.getConfig().setEnablehidden(!state.main.getConfig().isEnablehidden());
 					state.play(OPTION_CHANGE);
 				}
 			}
@@ -664,10 +664,11 @@ public class EventFactory {
 					return;
 				}
 				final JudgeAlgorithm[] algorithms = JudgeAlgorithm.defaultAlgorithm;
-				final String jt = state.main.getConfig().getJudgetype();
+				// final String jt = state.main.getConfig().getJudgetype();
+				final String jt = "default";
 				for (int i = 0; i < algorithms.length; i++) {
 					if (jt.equals(algorithms[i].name())) {
-						state.main.getConfig().setJudgetype(algorithms[(arg1 >= 0 ? i + 1 : i + algorithms.length - 1) % algorithms.length].name());
+						// state.main.getConfig().setJudgetype(algorithms[(arg1 >= 0 ? i + 1 : i + algorithms.length - 1) % algorithms.length].name());
 						state.play(OPTION_CHANGE);
 					}
 				}
@@ -745,7 +746,7 @@ public class EventFactory {
 			if(state instanceof MusicSelector selector) {
 				PlayConfig pc = selector.getSelectedBarPlayConfig();
 				if (pc != null) {
-					state.main.getConfig().setEnableConstant(!state.main.getConfig().isEnableConstant());
+					// state.main.getConfig().setEnableConstant(!state.main.getConfig().isEnableConstant());
 					state.play(OPTION_CHANGE);
 				}
 			}

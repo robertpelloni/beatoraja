@@ -49,14 +49,14 @@ public final class ControlInputProcessor {
 	public ControlInputProcessor(BMSPlayer player, BMSPlayerMode autoplay) {
 		this.player = player;
 		this.autoplay = autoplay;
-		hschanged = new boolean[BMSPlayerInputProcessor.KEYSTATE_SIZE];
+		hschanged = new boolean[256];
 		Arrays.fill(hschanged, true);
 
 		final PlayConfig playConfig = player.resource.getPlayerConfig().getPlayConfig(player.getMode()).getPlayconfig();
-		coverChangeMarginLow = playConfig.getLanecovermarginlow();
-		coverChangeMarginHigh = playConfig.getLanecovermarginhigh();
-		coverSpeedSwitchDuration = playConfig.getLanecoverswitchduration();
-		hispeedAutoAdjust = playConfig.isEnableHispeedAutoAdjust();
+		coverChangeMarginLow = player.main.getConfig().getLanecovermarginlow();
+		coverChangeMarginHigh = player.main.getConfig().getLanecovermarginhigh();
+		coverSpeedSwitchDuration = player.main.getConfig().getLanecoverswitchduration();
+		hispeedAutoAdjust = player.main.getConfig().isEnableHispeedAutoAdjust();
 
 		exitPressDuration = player.main.getPlayerConfig().getExitPressDuration();
 
@@ -76,7 +76,7 @@ public final class ControlInputProcessor {
 			final BMSPlayerInputProcessor input = player.main.getInputProcessor();
 			// change hi speed by START + Keys
 			for(int i = 0; i < keybinds.length; i++) {
-				final boolean keystate = input.getKeyState(i);
+				final boolean keystate = input.getNumberState()[i];
 				switch(keybinds[i]) {
 					case -1 -> {
 						if(keystate && !hschanged[i]) {
@@ -99,7 +99,7 @@ public final class ControlInputProcessor {
 			final BMSPlayerInputProcessor input = player.main.getInputProcessor();
 			// change duration by SELECT + Keys
 			for(int i = 0; i < keybinds.length; i++) {
-				final boolean keystate = input.getKeyState(i);
+				final boolean keystate = input.getNumberState()[i];
 				switch(keybinds[i]) {
 					case -1 -> {
 						if(keystate && !hschanged[i]) {
@@ -247,15 +247,15 @@ public final class ControlInputProcessor {
 		final BMSPlayerInputProcessor input = player.main.getInputProcessor();
 
 		// move lane cover by START + Scratch
-		if(input.isAnalogInput(key)) {
+		if(false) {
 			// analog
-			int dTicks = input.getAnalogDiffAndReset(key, 200) * (up ? 1 : -1);
+			int dTicks = 0 * (up ? 1 : -1);
 			if (dTicks != 0) {
 				setCoverValue(dTicks*coverChangeMarginLow);
 			}
 		} else {
 			// non-analog
-			if (input.getKeyState(key)) {
+			if (input.getNumberState()[key]) {
 				long l = System.currentTimeMillis();
 				if(laneCoverStartTiming == Long.MIN_VALUE) laneCoverStartTiming = l;
 				if (l - lanecovertiming > 50) {
@@ -273,15 +273,15 @@ public final class ControlInputProcessor {
 		final BMSPlayerInputProcessor input = player.main.getInputProcessor();
 
 		// change duration by SELECT + Scratch
-		if(input.isAnalogInput(key)) {
+		if(false) {
 			// analog
-			int dTicks = input.getAnalogDiffAndReset(key, 200) * (up ? 1 : -1);
+			int dTicks = 0 * (up ? 1 : -1);
 			if (dTicks != 0) {
 				lanerender.setDuration(lanerender.getDuration() + dTicks);
 			}
 		} else {
 			// non-analog
-			if (input.getKeyState(key)) {
+			if (input.getNumberState()[key]) {
 				long l = System.currentTimeMillis();
 				if (l - lanecovertiming > 50) {
 					lanerender.setDuration(lanerender.getDuration() + (up ? 1 : -1));

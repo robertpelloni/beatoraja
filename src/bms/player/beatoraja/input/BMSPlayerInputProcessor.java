@@ -1,5 +1,7 @@
 package bms.player.beatoraja.input;
 
+import bms.player.beatoraja.input.KeyBoardInputProcesseor.ControlKeys;
+
 import bms.player.beatoraja.Config;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,7 +34,7 @@ public class BMSPlayerInputProcessor {
 
 	public BMSPlayerInputProcessor(Config config) {
 	    	Resolution resolution = config.getResolution();
-		kbinput = new KeyBoardInputProcesseor(this, new KeyboardConfig(bms.player.beatoraja.Mode.BEAT_14K, true), resolution);
+		kbinput = new KeyBoardInputProcesseor(this, new KeyboardConfig(bms.model.Mode.BEAT_14K, true), resolution);
 		// Gdx.input.setInputProcessor(kbinput);
 		List<BMControllerInputProcessor> bminput = new ArrayList<BMControllerInputProcessor>();
 		for (Controller controller : Controllers.getControllers()) {
@@ -45,7 +47,7 @@ public class BMSPlayerInputProcessor {
 		this.bminput = bminput.toArray(new BMControllerInputProcessor[0]);
 		midiinput = new MidiInputProcessor(this);
 		midiinput.open();
-		midiinput.setConfig(new MidiConfig(bms.player.beatoraja.Mode.BEAT_7K, true));
+		midiinput.setConfig(new MidiConfig(bms.model.Mode.BEAT_7K, true));
 
 		devices = new ArrayList<BMSPlayerInputDevice>();
 		devices.add(kbinput);
@@ -105,7 +107,7 @@ public class BMSPlayerInputProcessor {
 	long[] cursortime = new long[4];
 
 	public void setMinimumInputDutration(int minduration) {
-		kbinput.setMinimumDuration(minduration);
+		kbinput.setDuration(minduration);
 		for (BMControllerInputProcessor bm : bminput) {
 			bm.setMinimumDuration(minduration);
 		}
@@ -134,9 +136,9 @@ public class BMSPlayerInputProcessor {
 				}
 			}
 			if(player != -1) {
-				controller.setPlayer(player);
+				// // // controller.setPlayer(player);
 			} else {
-				controller.setPlayer(0);
+				// // // controller.setPlayer(0);
 				
 			}
 		}
@@ -163,6 +165,8 @@ public class BMSPlayerInputProcessor {
 		return starttime;
 	}
 
+	public boolean resetKeyChangedTime(int key) { long[] t = getTime(); if(t[key] == Long.MIN_VALUE) return false; t[key] = Long.MIN_VALUE; return true; }
+
 	public long[] getTime() {
 		return time;
 	}
@@ -171,6 +175,10 @@ public class BMSPlayerInputProcessor {
 		time = l;
 	}
 
+	public void resetAllKeyState() {
+		Arrays.fill(keystate, false);
+		Arrays.fill(time, Long.MIN_VALUE);
+	}
 	public boolean[] getKeystate() {
 		return keystate;
 	}
@@ -179,9 +187,39 @@ public class BMSPlayerInputProcessor {
 		keystate = b;
 	}
 
+	public void setKeyState(int id, boolean pressed, long time) {
+		keystate[id] = pressed;
+		this.time[id] = time;
+	}
+
 	public BMSPlayerInputDevice getLastKeyChangedDevice() {
 		return lastKeyDevice;
 	}
+
+	public BMSPlayerInputDevice.Type getDeviceType() {
+		return lastKeyDevice != null ? lastKeyDevice.type : null;
+	}
+
+	public void setPlayConfig(bms.player.beatoraja.PlayModeConfig playconfig) {
+		// FIXME Implement setPlayConfig
+	}
+
+	public void setEnable(boolean enable) {
+		// FIXME Implement setEnable
+	}
+
+	public boolean getControlKeyState(ControlKeys key) {
+		return kbinput.getKeyState(key.keycode);
+	}
+
+	public boolean isControlKeyPressed(ControlKeys key) {
+		return kbinput.isKeyPressed(key.keycode);
+	}
+
+	public boolean isControlKeyPressed(ControlKeys key, int heldModifiers, int... notHeldModifiers) {
+		return kbinput.isKeyPressed(key.keycode, heldModifiers, notHeldModifiers);
+	}
+
 
 	public int getNumberOfDevice() {
 		return bminput.length + 1;
@@ -191,7 +229,7 @@ public class BMSPlayerInputProcessor {
 		Arrays.fill(keystate, false);
 		Arrays.fill(time, 0);
 		for (BMSPlayerInputDevice device : devices) {
-			if (device.getType() == type) {
+			if (device.type == type) {
 				device.setEnabled(true);
 			} else {
 				device.setEnabled(false);
@@ -206,6 +244,7 @@ public class BMSPlayerInputProcessor {
 		}
 	}
 
+
 	public void disableAllDevices() {
 		Arrays.fill(keystate, false);
 		Arrays.fill(time, 0);
@@ -214,6 +253,8 @@ public class BMSPlayerInputProcessor {
 			device.clear();
 		}
 	}
+
+	public boolean getKeyState(int key) { return getNumberState()[key]; }
 
 	public boolean[] getNumberState() {
 		return numberstate;

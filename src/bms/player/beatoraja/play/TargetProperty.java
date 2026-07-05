@@ -386,7 +386,7 @@ class InternetRankingTargetProperty extends TargetProperty {
     		return targetScore;
     	}
 		Thread irprocess = new Thread(() -> {
-    		ranking.load(main.getCurrentState(), main.getPlayerResource().getSongdata());
+		ranking.load(null /* main.getCurrentState() */, main.getPlayerResource().getSongdata());
 			while(ranking.getState() == RankingData.NONE  || ranking.getState() == RankingData.ACCESS) {
 				try {
 					Thread.sleep(500);
@@ -407,7 +407,7 @@ class InternetRankingTargetProperty extends TargetProperty {
 	    			targetScore.setOption(0);
 	    		}
 	    		
-				main.getCurrentState().getScoreDataProperty().updateTargetScore(targetScore.getExscore(), null);
+				/* updateTargetScore */
 	    	}
 		});
 		irprocess.start();

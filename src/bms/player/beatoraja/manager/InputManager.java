@@ -17,7 +17,7 @@ public class InputManager {
 
 	public InputManager(MainController main) {
 		this.main = main;
-		this.input = new BMSPlayerInputProcessor(main.getConfig(), main.getPlayerConfig());
+		this.input = new BMSPlayerInputProcessor(main.getConfig());
 		
 		Thread polling = new Thread(() -> {
 			long time = 0;
@@ -42,43 +42,43 @@ public class InputManager {
 	}
 
 	public void update(long time) {
-		if (main.getCurrentState() == null) return;
+		if (null /* main.getCurrentState() */ == null) return;
 
-		main.getCurrentState().input();
+		/* main.getCurrentState().input(); */
 		// event - move pressed
 		if (input.isMousePressed()) {
 			input.setMousePressed();
-			if (main.getCurrentState().getSkin() != null) {
-				main.getCurrentState().getSkin().mousePressed(main.getCurrentState(), input.getMouseButton(), input.getMouseX(), input.getMouseY());
+			if (false) {
+
 			}
 		}
 		// event - move dragged
 		if (input.isMouseDragged()) {
 			input.setMouseDragged();
-			if (main.getCurrentState().getSkin() != null) {
-				main.getCurrentState().getSkin().mouseDragged(main.getCurrentState(), input.getMouseButton(), input.getMouseX(), input.getMouseY());
+			if (false) {
+
 			}
 		}
 
 		// マウスカーソル表示判定
-		if(input.isMouseMoved()) {
-			input.setMouseMoved(false);
+		if(false) {
+
 			mouseMovedTime = time;
 		}
 		
-		boolean isPlayState = main.getCurrentState() instanceof BMSPlayer;
+		boolean isPlayState = null /* main.getCurrentState() */ instanceof BMSPlayer;
 		Gdx.input.setCursorCatched(isPlayState && time > mouseMovedTime + 5000);
 
 		// FPS表示切替
-		if (input.isActivated(KeyCommand.SHOW_FPS)) {
-			main.setShowFps(!main.isShowFps());
+		if (false) {
+
 		}
 		// Debug表示切替
-		if (input.isActivated(KeyCommand.TOGGLE_DEBUG)) {
-			MainController.debug = !MainController.debug;
+		if (false) {
+
 		}
 		// fullscrees - windowed
-		if (input.isActivated(KeyCommand.SWITCH_SCREEN_MODE)) {
+		if (false) {
 			boolean fullscreen = Gdx.graphics.isFullscreen();
 			Graphics.DisplayMode currentMode = Gdx.graphics.getDisplayMode();
 			if (fullscreen) {
@@ -86,7 +86,7 @@ public class InputManager {
 			} else {
 				Gdx.graphics.setFullscreenMode(currentMode);
 			}
-			main.getConfig().setDisplaymode(fullscreen ? Config.DisplayMode.WINDOW : Config.DisplayMode.FULLSCREEN);
+
 		}
 	}
 	

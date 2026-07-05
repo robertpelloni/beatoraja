@@ -62,9 +62,9 @@ public class SkinTimingDistributionGraph extends SkinObject {
 		}
 		this.state = (MusicResult) state;
 		super.prepare(time, state);
-		
+
 	}
-	
+
 	public void draw(SkinObjectRenderer sprite) {
 		// Texture生成は一度だけ
 		if (tex == null) {
@@ -100,7 +100,7 @@ public class SkinTimingDistributionGraph extends SkinObject {
 					beforex2 = x2;
 				}
 			}
-			
+
 			shape.setColor(0f, 0f, 0f, 0.25f);
 			for(int x = c % 10;x < c * 2 + 1;x += 10) {
 				shape.drawLine(x, 0, x, 1);

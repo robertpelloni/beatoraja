@@ -47,7 +47,7 @@ public class ArenaLobby extends Stage {
         // Font
         BitmapFont font;
         try {
-            FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(selector.main.getConfig().getSystemfontpath()));
+            FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("font/VL-Gothic-Regular.ttf"));
             FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
             parameter.size = 24;
             font = generator.generateFont(parameter);

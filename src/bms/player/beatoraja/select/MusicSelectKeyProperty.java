@@ -61,8 +61,8 @@ public enum MusicSelectKeyProperty {
         int dTicks = 0;
         for (int i = 0; i < assign.length; i++) {
             for (MusicSelectKey index : assign[i]) {
-                if (code == index && input.isAnalogInput(i)) {
-                    dTicks += input.getAnalogDiffAndReset(i, 200);
+                if (code == index && false) {
+                    dTicks += 0;
                 }
             }
         }
@@ -73,7 +73,7 @@ public enum MusicSelectKeyProperty {
     	for (int i = 0; i < assign.length; i++) {
             for (MusicSelectKey index : assign[i]) {
                 if (code == index && input.getKeyState(i)) {
-                    if (input.isAnalogInput(i)) continue;
+                    if (false) continue;
                     if (resetState) {
 						return input.resetKeyChangedTime(i);
                     } else {

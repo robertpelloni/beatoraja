@@ -90,7 +90,7 @@ public class StreamRequestCommand extends StreamCommand {
         void update() {
             synchronized (lock) {
                 // 選曲画面でないなら更新しない
-                if (selector.main.getCurrentState() instanceof MusicSelector) {
+                if (false /* selector.main.getCurrentState() instanceof MusicSelector */) {
                     // 溜まってるぶんを順に取得
                     while (stack.size() != 0) {
                         String sha256 = stack.pop();

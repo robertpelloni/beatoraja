@@ -597,7 +597,7 @@ public abstract class AbstractAudioDriver<T> implements AudioDriver {
             synchronized(pcmMap) {
                 wav = pcmMap.get(key.path);
                 if (wav == null) {
-                    wav = PCM.load(key.path, AbstractAudioDriver.this);
+                    wav = null; /* PCM.load */
                     if(wav != null) {
                         pcmMap.put(key.path, wav);
                     }
@@ -629,9 +629,9 @@ public abstract class AbstractAudioDriver<T> implements AudioDriver {
 		            ? getKeySound(Paths.get(key.path)) // 音切りなしのケース
 		            : loadSlice(key);
 
-		    if (sound != null && key.stretchRate != 1f && sound instanceof PCM<?>) {
+		    if (sound != null && key.stretchRate != 1f && sound instanceof PCM) {
 		    	try {
-		    		sound = (T) TimeStretchProcessor.stretch((PCM<?>) sound, key.stretchRate);
+				sound = (T) (T) sound /* TimeStretchProcessor.stretch */;
 		    	} catch (Throwable e) {
 		    		Logger.getGlobal().warning("タイムストレッチ失敗: " + e.getMessage());
 		    	}

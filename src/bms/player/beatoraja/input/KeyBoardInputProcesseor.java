@@ -57,6 +57,10 @@ public class KeyBoardInputProcesseor extends BMSPlayerInputDevice implements Inp
 	 */
 	private int duration;
 
+	public void setDuration(int duration) {
+		this.duration = duration;
+	}
+
 	public KeyBoardInputProcesseor(BMSPlayerInputProcessor bmsPlayerInputProcessor, KeyboardConfig config, Resolution resolution) {
 		super(bmsPlayerInputProcessor, Type.KEYBOARD);
 		this.mouseScratchInput = new MouseScratchInput(bmsPlayerInputProcessor, this, config);
@@ -107,7 +111,7 @@ public class KeyBoardInputProcesseor extends BMSPlayerInputDevice implements Inp
 					keystate[keys[i]] = pressed;
 					keytime[keys[i]] = microtime;
 					this.bmsPlayerInputProcessor.keyChanged(this, microtime, i, pressed);
-					this.bmsPlayerInputProcessor.setAnalogState(i, false, 0);
+					// this.bmsPlayerInputProcessor.setAnalogState(i, false, 0);
 				}
 			}
 
@@ -173,7 +177,7 @@ public class KeyBoardInputProcesseor extends BMSPlayerInputDevice implements Inp
 	}
 
 	public boolean mouseMoved(int x, int y) {
-		this.bmsPlayerInputProcessor.setMouseMoved(true);
+		// this.bmsPlayerInputProcessor.setMouseMoved(true);
 		this.bmsPlayerInputProcessor.mousex = x * resolution.width / Gdx.graphics.getWidth();
 		this.bmsPlayerInputProcessor.mousey = resolution.height - y * resolution.height / Gdx.graphics.getHeight();
 		return false;
@@ -188,8 +192,8 @@ public class KeyBoardInputProcesseor extends BMSPlayerInputDevice implements Inp
 	}
 
 	public boolean scrolled(float amountX, float amountY) {
-		this.bmsPlayerInputProcessor.scrollX += amountX;
-		this.bmsPlayerInputProcessor.scrollY += amountY;
+		// this.bmsPlayerInputProcessor.scrollX += amountX;
+		// this.bmsPlayerInputProcessor.scrollY += amountY;
 		return false;
 	}
 

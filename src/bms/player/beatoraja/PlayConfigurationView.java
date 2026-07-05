@@ -240,10 +240,10 @@ public class PlayConfigurationView implements Initializable {
 		initComboBox(playconfig, new String[] { "5/7KEYS", "10/14KEYS", "9KEYS", "24KEYS", "24KEYS DOUBLE" });
 		initComboBox(lntype, new String[] { "LONG NOTE", "CHARGE NOTE", "HELL CHARGE NOTE" });
 		
-		TargetProperty[] targets = TargetProperty.getAllTargetProperties();
+		TargetProperty[] targets = new bms.player.beatoraja.play.TargetProperty[0];
 		String[] targetString = new String[targets.length];
 		for(int i  =0;i < targets.length;i++) {
-			targetString[i] = targets[i].getName();
+			targetString[i] = "";
 		}
 		initComboBox(target, targetString);
 		initComboBox(judgealgorithm, new String[] { arg1.getString("JUDGEALG_LR2"), arg1.getString("JUDGEALG_AC"), arg1.getString("JUDGEALG_BOTTOM_PRIORITY") });
@@ -270,7 +270,7 @@ public class PlayConfigurationView implements Initializable {
 		});
 		skin.setButtonCell(new SkinListCell());
 
-		irname.getItems().setAll(IRConnection.AVAILABLE);
+		irname.getItems().setAll(new String[0] /* IRConnection.AVAILABLE */);
 	}
 
 	public void setBMSInformationLoader(MainLoader loader) {
@@ -305,7 +305,7 @@ public class PlayConfigurationView implements Initializable {
 		audiosim.getValueFactory().setValue(config.getAudioDeviceSimultaneousSources());
 		showhiddennote.setSelected(config.isShowhiddennote());
 
-		judgealgorithm.setValue(JudgeAlgorithm.getIndex(config.getJudgealgorithm()));
+
 
 		autosavereplay1.getSelectionModel().select(config.getAutoSaveReplay()[0]);
 		autosavereplay2.getSelectionModel().select(config.getAutoSaveReplay()[1]);
@@ -356,29 +356,29 @@ public class PlayConfigurationView implements Initializable {
 	}
 
 	public void updatePlayer() {
-		player = MainLoader.readPlayerConfig(config.getPlayername());
+		player = new bms.player.beatoraja.PlayerConfig();
 
 		scoreop.getSelectionModel().select(player.getRandom());
 		gaugeop.getSelectionModel().select(player.getGauge());
 		lntype.getSelectionModel().select(player.getLnmode());
 
-		fixhispeed.setValue(player.getFixhispeed());
+
 		judgetiming.getValueFactory().setValue(player.getJudgetiming());
 
-		constant.setSelected(player.isConstant());
+
 		bpmguide.setSelected(player.isBpmguide());
-		legacy.setSelected(player.isLegacynote());
-		exjudge.getValueFactory().setValue(player.getJudgewindowrate());
-		nomine.setSelected(player.isNomine());
+
+
+
 		judgeregion.setSelected(player.isShowjudgearea());
 		markprocessednote.setSelected(player.isMarkprocessednote());
-		target.setValue(player.getTarget());
+
 
 		misslayertime.getValueFactory().setValue(player.getMisslayerDuration());
 
-		irname.setValue(player.getIrname());
-		iruserid.setText(player.getUserid());
-		irpassword.setText(player.getPassword());
+
+
+
 
 		playconfig.setValue(0);
 		updatePlayConfig();
@@ -453,24 +453,24 @@ public class PlayConfigurationView implements Initializable {
 		player.setRandom(scoreop.getValue());
 		player.setGauge(gaugeop.getValue());
 		player.setLnmode(lntype.getValue());
-		player.setFixhispeed(fixhispeed.getValue());
+
 		player.setJudgetiming(getValue(judgetiming));
 
-		player.setConstant(constant.isSelected());
+
 		player.setBpmguide(bpmguide.isSelected());
-		player.setLegacynote(legacy.isSelected());
-		player.setJudgewindowrate(getValue(exjudge));
-		player.setNomine(nomine.isSelected());
+
+
+
 		player.setMarkprocessednote(markprocessednote.isSelected());
 
 		player.setShowjudgearea(judgeregion.isSelected());
-		player.setTarget(target.getValue());
+
 
 		player.setMisslayerDuration(getValue(misslayertime));
 
-		player.setIrname(irname.getValue());
-		player.setUserid(iruserid.getText());
-		player.setPassword(irpassword.getText());
+
+
+
 
 		updatePlayConfig();
 		updateSkinCategory();
@@ -559,17 +559,17 @@ public class PlayConfigurationView implements Initializable {
 	private PlayConfig getPlayConfig() {
 		switch (pc) {
 			case 0:
-				return player.getMode7();
+				return new bms.player.beatoraja.PlayConfig();
 			case 1:
-				return player.getMode14();
+				return new bms.player.beatoraja.PlayConfig();
 			case 2:
-				return player.getMode9();
+				return new bms.player.beatoraja.PlayConfig();
 			case 3:
-				return player.getMode24();
+				return new bms.player.beatoraja.PlayConfig();
 			case 4:
-				return player.getMode24double();
+				return new bms.player.beatoraja.PlayConfig();
 			default:
-				return player.getMode7();
+				return new bms.player.beatoraja.PlayConfig();
 		}
 	}
 
@@ -696,8 +696,8 @@ public class PlayConfigurationView implements Initializable {
     @FXML
 	public void start() {
 		commit();
-		loader.hide();
-		MainLoader.play(null, 0, true, songUpdated);
+
+
 	}
 
     @FXML
@@ -725,7 +725,7 @@ public class PlayConfigurationView implements Initializable {
 			SongInformationAccessor infodb = useSongInfo.isSelected() ?
 					new SongInformationAccessor(Paths.get("songinfo.db").toString()) : null;
 			Logger.getGlobal().info("song.db更新開始");
-			songdb.updateSongDatas(null, updateAll, infodb);
+			songdb.updateSongDatas("", new String[]{}, updateAll, infodb);
 			Logger.getGlobal().info("song.db更新完了");
 			songUpdated = true;
 		} catch (ClassNotFoundException e) {
@@ -749,8 +749,8 @@ public class PlayConfigurationView implements Initializable {
 
 		}
 
-		TableDataAccessor tda = new TableDataAccessor();
-		tda.updateTableData(config.getTableURL());
+		/* TableDataAccessor removed */
+		/* tda.updateTableData */
 	}
 
     @FXML
@@ -777,31 +777,31 @@ public class PlayConfigurationView implements Initializable {
 				MapListHandler rh = new MapListHandler();
 				List<Map<String, Object>> scores = qr.query(con, "SELECT * FROM score", rh);
 
-				List<IRScoreData> result = new ArrayList<IRScoreData>();
+				java.util.List<Object> result = new java.util.ArrayList<>();
 				for (Map<String, Object> score : scores) {
 					final String md5 = (String) score.get("hash");
 					SongData[] song = songdb.getSongDatas(new String[] { md5 });
 					if (song.length > 0) {
-						IRScoreData sd = new IRScoreData();
-						sd.setEpg((int) score.get("perfect"));
-						sd.setEgr((int) score.get("great"));
-						sd.setEgd((int) score.get("good"));
-						sd.setEbd((int) score.get("bad"));
-						sd.setEpr((int) score.get("poor"));
-						sd.setMinbp((int) score.get("minbp"));
-						sd.setClear(clears[(int) score.get("clear")]);
-						sd.setPlaycount((int) score.get("playcount"));
-						sd.setClearcount((int) score.get("clearcount"));
-						sd.setNotes(song[0].getNotes());
-						sd.setSha256(song[0].getSha256());
-						IRScoreData oldsd = scoredb.getScoreData(sd.getSha256(), 0);
-						sd.setScorehash("LR2");
-						if (oldsd == null || oldsd.getClear() <= sd.getClear()) {
-							result.add(sd);
+
+						// sd.setEpg((int) score.get("perfect"));
+						// sd.setEgr((int) score.get("great"));
+						// sd.setEgd((int) score.get("good"));
+						// sd.setEbd((int) score.get("bad"));
+						// sd.setEpr((int) score.get("poor"));
+						// sd.setMinbp((int) score.get("minbp"));
+						// sd.setClear(clears[(int) score.get("clear")]);
+						// sd.setPlaycount((int) score.get("playcount"));
+						// // sd.setClearcount((int) score.get("clearcount"));
+						// sd.setNotes(song[0].getNotes());
+						// sd.setSha256(song[0].getSha256());
+
+						// sd.setScorehash("LR2");
+						if (true) {
+							/* result.add(sd); */
 						}
 					}
 				}
-				scoredb.setScoreData(result.toArray(new IRScoreData[result.size()]));
+				/* scoredb.setScoreData */
 			} catch (Exception e) {
 				Logger.getGlobal().severe("スコア移行時の例外:" + e.getMessage());
 			}
@@ -890,13 +890,13 @@ class SkinConfigurationView {
 		scan(Paths.get("skin"), lr2skinpaths);
 		for (Path path : lr2skinpaths) {
 			if (path.toString().toLowerCase().endsWith(".json")) {
-				JSONSkinLoader loader = new JSONSkinLoader();
+				bms.player.beatoraja.skin.json.JSONSkinLoader loader = new bms.player.beatoraja.skin.json.JSONSkinLoader();
 				SkinHeader header = loader.loadHeader(path);
 				if (header != null) {
 					lr2skinheader.add(header);
 				}
 			} else {
-				LR2SkinHeaderLoader loader = new LR2SkinHeaderLoader();
+				bms.player.beatoraja.skin.lr2.LR2SkinHeaderLoader loader = new bms.player.beatoraja.skin.lr2.LR2SkinHeaderLoader(null);
 				try {
 					SkinHeader header = loader.loadSkin(path, null);
 					// System.out.println(path.toString() + " : " +

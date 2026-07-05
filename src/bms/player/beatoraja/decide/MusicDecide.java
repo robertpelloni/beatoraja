@@ -41,7 +41,7 @@ public class MusicDecide extends MainState {
         }
 		if (timer.isTimerOn(TIMER_FADEOUT)) {
 			if (timer.getNowTime(TIMER_FADEOUT) > getSkin().getFadeout()) {
-				main.changeState(cancel ? MainStateType.MUSICSELECT : MainStateType.PLAY);
+				main.changeState(cancel ? bms.player.beatoraja.MainController.STATE_SELECTMUSIC : bms.player.beatoraja.MainController.STATE_PLAYBMS);
 			}
 		} else {
 			if (nowtime > getSkin().getScene()) {

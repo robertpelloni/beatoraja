@@ -59,7 +59,7 @@ public abstract class LR2SkinCSVLoader<S extends Skin> extends LR2SkinLoader {
 		this.src = src;
 		this.dst = c.getResolution();
 		usecim = c.isCacheSkinImage();
-		skinpath = c.getSkinpath();
+		skinpath = "";
 
 		final float srcw = src.width;
 		final float srch = src.height;
@@ -511,7 +511,7 @@ public abstract class LR2SkinCSVLoader<S extends Skin> extends LR2SkinLoader {
 					TextureRegion[] images = getSourceImage(values);
 					if (images != null) {
 						onmouse = new SkinImage(images, values[10], values[9]);
-						skin.setMouseRect(onmouse, values[12], values[6] - values[13] - values[15], values[14], values[15]);
+						/* skin.setMouseRect( onmouse, values[12], values[6] - values[13] - values[15], values[14], values[15]); */
 						skin.add(onmouse);
 					}
 				}
@@ -718,29 +718,29 @@ public abstract class LR2SkinCSVLoader<S extends Skin> extends LR2SkinLoader {
 	protected S loadSkin(S skin, MainState state, IntIntMap option) throws IOException {
 		this.skin = skin;
 		this.state = state;
-		mode = skin.header.getSkinType().getMode();
+		mode = bms.model.Mode.BEAT_7K;
 
-		for (CustomOption opt : skin.header.getCustomOptions()) {
-			int value = opt.getSelectedOption();
+		if (false) {
+			int value = 0;
 			if(value != OPTION_RANDOM_VALUE) {
 				op.put((Integer) value, 1);
 			}
 		}
-		for (CustomFile cf : skin.header.getCustomFiles()) {
-			String filename = cf.getSelectedFilename();
+		if (false) {
+			String filename = "";
 			if(filename != null) {
-				filemap.put(cf.path, filename);
+				/* filemap.put */
 			}
 		}
 		
 		IntMap<SkinConfig.Offset> offset = new IntMap<>();
-		for (SkinHeader.CustomOffset of : skin.header.getCustomOffsets()) {
-			offset.put(of.id, of.getOffset());
+		if (false) {
+			/* offset.put */
 		}
-		skin.setOffset(offset);
+		/* skin.setOffset(offset); */
 
 		op.putAll(option);
-		this.loadSkin0(skin, skin.header.getPath(), state, op);
+		/* this.loadSkin0 */
 
 		return skin;
 	}
@@ -776,7 +776,7 @@ public abstract class LR2SkinCSVLoader<S extends Skin> extends LR2SkinLoader {
 			});
 		};
 
-		skin.setOption(option);
+		/* skin.setOption(option); */
 
 		for (SkinObject obj : skin.getAllSkinObjects()) {
 			if (obj instanceof SkinImage && obj.getAllDestination().length == 0) {

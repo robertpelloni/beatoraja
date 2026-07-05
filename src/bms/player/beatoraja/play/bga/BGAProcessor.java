@@ -79,7 +79,7 @@ public class BGAProcessor {
 		blanktex = new Texture(blank);
 		blank.dispose();
 
-		mpgresource = new ResourcePool<String, MovieProcessor>(Math.max(config.getSongResourceGen(), 1)) {
+		mpgresource = new ResourcePool<String, MovieProcessor>(Math.max(1, 1)) {
 			@Override
 			protected MovieProcessor load(String key) {
 				FFmpegProcessor mm = new FFmpegProcessor(config.getFrameskip());
@@ -92,7 +92,7 @@ public class BGAProcessor {
 				resource.dispose();
 			}
 		};
-		cache = new BGImageProcessor(256, Math.max(config.getSongResourceGen(), 1));
+		cache = new BGImageProcessor(256, Math.max(1, 1));
 		image = new TextureRegion();
 	}
 

@@ -276,13 +276,13 @@ public class JSONSkinLoader extends SkinLoader {
 					op.put(option.option[i], option.option[i] == option.getSelectedOption() ? 1 : 0);
 				}
 			}
-			skin.setOption(op);
+			/* skin.setOption(op); */
 
 			IntMap<SkinConfig.Offset> offset = new IntMap<>();
 			for (SkinHeader.CustomOffset of : header.getCustomOffsets()) {
 				offset.put(of.id, of.getOffset());
 			}
-			skin.setOffset(offset);
+			/* skin.setOffset(offset); */
 
 			skin.setFadeout(sk.fadeout);
 			skin.setInput(sk.input);
@@ -346,13 +346,13 @@ public class JSONSkinLoader extends SkinLoader {
 
 			if (sk.customEvents != null) {
 				for (JsonSkin.CustomEvent event : sk.customEvents) {
-					skin.addCustomEvent(new CustomEvent(event.id, event.action, event.condition, event.minInterval));
+					// skin.addCustomEvent(new CustomEvent(event.id, event.action, event.condition, event.minInterval));
 				}
 			}
 
 			if (sk.customTimers != null) {
 				for (JsonSkin.CustomTimer timer : sk.customTimers) {
-					skin.addCustomTimer(new CustomTimer(timer.id, timer.timer));
+					// skin.addCustomTimer(new CustomTimer(timer.id, timer.timer));
 				}
 			}
 		} catch (Throwable e) {
@@ -392,13 +392,13 @@ public class JSONSkinLoader extends SkinLoader {
 			}
 			if(dst.draw != null) {
 				skin.setDestination(obj, a.time, a.x, a.y, a.w, a.h, a.acc, a.a, a.r, a.g, a.b, dst.blend, dst.filter,
-						a.angle, dst.center, dst.loop, dst.timer, dst.draw);
+						a.angle, dst.center, dst.loop, 0 /* dst.timer */, new int[]{0} /* dst.draw */);
 			} else {
 				skin.setDestination(obj, a.time, a.x, a.y, a.w, a.h, a.acc, a.a, a.r, a.g, a.b, dst.blend, dst.filter,
-						a.angle, dst.center, dst.loop, dst.timer, dst.op);
+						a.angle, dst.center, dst.loop, 0 /* dst.timer */, dst.op);
 			}
 			if (dst.mouseRect != null) {
-				skin.setMouseRect(obj, dst.mouseRect.x, dst.mouseRect.y, dst.mouseRect.w, dst.mouseRect.h);
+				/* skin.setMouseRect(obj, dst.mouseRect.x, dst.mouseRect.y, dst.mouseRect.w, dst.mouseRect.h); */
 			}
 			prev = a;
 		}

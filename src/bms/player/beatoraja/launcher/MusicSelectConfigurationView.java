@@ -53,34 +53,34 @@ public class MusicSelectConfigurationView implements Initializable {
 	public void update(Config config) {
 		this.config = config;
 		
-		scrolldurationlow.getValueFactory().setValue(config.getScrollDurationLow());
-		scrolldurationhigh.getValueFactory().setValue(config.getScrollDurationHigh());
 		
-		analogScroll.setSelected(config.isAnalogScroll());
-		analogTicksPerScroll.getValueFactory().setValue(config.getAnalogTicksPerScroll());
+
+
+
+
 
         useSongInfo.setSelected(config.isUseSongInfo());
 		folderlamp.setSelected(config.isFolderlamp());
-		shownoexistingbar.setSelected(config.isShowNoSongExistingBar());
-		songPreview.setValue(config.getSongPreview());
 		
-		maxsearchbar.getValueFactory().setValue(config.getMaxSearchBarCount());
+
+
+
 		
 	}
 	
 	public void commit() {
-		config.setScrollDutationLow(scrolldurationlow.getValue());
-		config.setScrollDutationHigh(scrolldurationhigh.getValue());
 
-		config.setAnalogScroll(analogScroll.isSelected());
-		config.setAnalogTicksPerScroll(analogTicksPerScroll.getValue());
+
+
+
+
 
         config.setUseSongInfo(useSongInfo.isSelected());
         config.setFolderlamp(folderlamp.isSelected());
-        config.setShowNoSongExistingBar(shownoexistingbar.isSelected());
-        config.setSongPreview(songPreview.getValue());
         
-        config.setMaxSearchBarCount(maxsearchbar.getValue());
+
+
+
 	}
 
 	public void updatePlayer(PlayerConfig player) {

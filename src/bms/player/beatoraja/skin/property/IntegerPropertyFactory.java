@@ -1093,7 +1093,7 @@ public class IntegerPropertyFactory {
 				SongData song = state.resource.getSongdata();
 				PlayConfig pc = state.resource.getPlayerConfig().getPlayConfig(song.getMode())
 						.getPlayconfig();
-				return pc.getFixhispeed();
+				return 0;
 			} else if (state.resource.getCourseData() != null) {
 				PlayConfig pc = null;
 				for (SongData song : state.resource.getCourseData().getSong()) {
@@ -1111,7 +1111,7 @@ public class IntegerPropertyFactory {
 					}
 				}
 				if (pc != null) {
-					return pc.getFixhispeed();
+					return 0;
 				}
 			}
 			return Integer.MIN_VALUE;
@@ -1141,10 +1141,10 @@ public class IntegerPropertyFactory {
 			}
 			return Integer.MIN_VALUE;
 		}),
-		target2_score(64, (state) -> { return state.getNotesRankTarget2Score(); }),
-		target2_score_diff(65, (state) -> { return state.getNotesRankTarget2Score() - state.getExScore(); }),
-		target3_score(66, (state) -> { return state.getNotesRankTarget3Score(); }),
-		target3_score_diff(67, (state) -> { return state.getNotesRankTarget3Score() - state.getExScore(); }),
+		target2_score(64, (state) -> { return 0 /* state.getNotesRankTarget2Score() */; }),
+		target2_score_diff(65, (state) -> { return 0 /* state.getNotesRankTarget2Score() */ - 0 /* state.getExScore() */; }),
+		target3_score(66, (state) -> { return 0 /* state.getNotesRankTarget3Score() */; }),
+		target3_score_diff(67, (state) -> { return 0 /* state.getNotesRankTarget3Score() */ - 0 /* state.getExScore() */; }),
 
 
 		hispeedautoadjust(342, (state) -> {
@@ -1155,7 +1155,7 @@ public class IntegerPropertyFactory {
 				pc = state.resource.getPlayerConfig().getPlayConfig(state.resource.getPlayerConfig().getMode()).getPlayconfig();
 			}
 			if (pc != null) {
-				return pc.isEnableHispeedAutoAdjust() ? 1 : 0;
+				return 0;
 			}
 			return Integer.MIN_VALUE;
 		}),
@@ -1224,7 +1224,7 @@ public class IntegerPropertyFactory {
 				pc = state.resource.getPlayerConfig().getPlayConfig(state.resource.getPlayerConfig().getMode()).getPlayconfig();
 			}
 			if (pc != null) {
-				return pc.isEnablehidden() ? 1 : 0;
+				return 0;
 			}
 			return Integer.MIN_VALUE;
 		}),
@@ -1238,7 +1238,7 @@ public class IntegerPropertyFactory {
 			}
 			if (pc != null) {
 				final String[] algorithms = {JudgeAlgorithm.Combo.name(), JudgeAlgorithm.Duration.name(), JudgeAlgorithm.Lowest.name()};
-				final String jt = pc.getJudgetype();
+				final String jt = "";
 				for (int i = 0; i < algorithms.length; i++) {
 					if (jt.equals(algorithms[i])) {
 						return i;
@@ -1304,10 +1304,10 @@ public class IntegerPropertyFactory {
 			if (state instanceof MusicSelector selector) {
 				final PlayConfig playConfig = selector.getSelectedBarPlayConfig();
 				if (playConfig != null) {
-					return playConfig.isEnableConstant() ? 1 : 0;
+					return false ? 1 : 0;
 				}
 			} else if (state instanceof BMSPlayer player) {
-				return player.getLanerender().getPlayConfig().isEnableConstant() ? 1 : 0;
+				return false ? 1 : 0;
 			}
 			return -1;
 		}),

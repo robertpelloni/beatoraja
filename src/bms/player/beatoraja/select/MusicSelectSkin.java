@@ -23,7 +23,7 @@ public class MusicSelectSkin extends Skin {
 	private Rectangle search;
 
 	public MusicSelectSkin(SkinHeader header) {
-		super(header);
+		super(bms.player.beatoraja.Resolution.FULLHD, bms.player.beatoraja.Resolution.FULLHD);
 	}
 
 	public int[] getClickableBar() {

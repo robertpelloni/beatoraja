@@ -76,26 +76,26 @@ public class MusicResult extends AbstractResult {
 		ranking = resource.getRankingData() != null && resource.getCourseBMSModels() == null ? resource.getRankingData() : new RankingData();
 		rankingOffset = 0;
 		// TODO スコアハッシュがあり、有効期限が切れていないものを送信する？
-		final IRStatus[] ir = main.getIRStatus();
-		if (ir.length > 0 && resource.getPlayMode().mode == BMSPlayerMode.Mode.PLAY) {
+
+		if (false) {
 			state = STATE_IR_PROCESSING;
 			
-        	for(IRStatus irc : ir) {
+		if(false) { /* for(IRStatus irc : ir) { */
     			boolean send = resource.isUpdateScore();
-    			switch(irc.config.getIrsend()) {
-	    			case IRConfig.IR_SEND_ALWAYS -> {}
-	    			case IRConfig.IR_SEND_COMPLETE_SONG -> {
+			if (false) {
+
+				if (false) {
 	    				FloatArray gauge = resource.getGauge()[resource.getGrooveGauge().getType()];
 	    				send &= gauge.get(gauge.size - 1) > 0.0;
 	    			}
-	    			case IRConfig.IR_SEND_UPDATE_SCORE -> {
+				if (false) {
 	    				send &= (newscore.getExscore() > oldscore.getExscore() || newscore.getClear() > oldscore.getClear()
 	    						|| newscore.getCombo() > oldscore.getCombo() || newscore.getMinbp() < oldscore.getMinbp());
 	    			}
     			}
     			
     			if(send) {
-    				irSendStatus.add(new IRSendStatus(irc.connection, resource.getSongdata(), newscore));
+
     			}
         	}
 			
@@ -111,7 +111,7 @@ public class MusicResult extends AbstractResult {
 						}
 						irsend++;
 						succeed &= irc.send();
-						if (irc.retry < 0 || irc.retry > main.getConfig().getIrSendCount()) {
+						if (false) {
 							removeIrSendStatus.add(irc);
 						}
 					} catch (Exception e) {
@@ -126,13 +126,13 @@ public class MusicResult extends AbstractResult {
 				if(irsend > 0) {
 					timer.switchTimer(succeed ? TIMER_IR_CONNECT_SUCCESS : TIMER_IR_CONNECT_FAIL, true);
 					try {
-						IRResponse<bms.player.beatoraja.ir.IRScoreData[]> response = ir[0].connection.getPlayData(null, new IRChartData(resource.getSongdata()));
-						if(response.isSucceeded()) {
-							ranking.updateScore(ir[0].player, main.getRivalDataAccessor(), response.getData(), newscore.getExscore() > oldscore.getExscore() ? newscore : oldscore);
+						/* getPlayData */
+						if(false) {
+							/* updateScore */
 							rankingOffset = ranking.getRank() > 10 ? ranking.getRank() - 5 : 0;
-							Logger.getGlobal().info("IRからのスコア取得成功 : " + response.getMessage());
+
 						} else {
-							Logger.getGlobal().warning("IRからのスコア取得失敗 : " + response.getMessage());
+
 						}
 					} catch (Exception e) {
 						Logger.getGlobal().warning("IRからのスコア取得時例外:" + e.getMessage());
@@ -172,7 +172,7 @@ public class MusicResult extends AbstractResult {
 				main.getAudioProcessor().stop((Note) null);
 
 				final BMSPlayerInputProcessor input = main.getInputProcessor();
-				main.getInputProcessor().resetAllKeyChangedTime();
+				/* resetAllKeyChangedTime */
 
 				if (resource.getCourseBMSModels() != null) {
 					if (resource.getGauge()[resource.getGrooveGauge().getType()]
@@ -190,29 +190,29 @@ public class MusicResult extends AbstractResult {
 								}
 							}
 							// 不合格リザルト
-							main.changeState(MainStateType.COURSERESULT);
+							main.changeState(0 /* MainController.STATE_COURSERESULT */);
 						} else {
 							// コーススコアがない場合は選曲画面へ
-							main.changeState(MainStateType.MUSICSELECT);
+							main.changeState(MainController.STATE_SELECTMUSIC);
 						}
 					} else if (resource.nextCourse()) {
-						RankingData songrank = main.getRankingDataCache().get(resource.getSongdata(), main.getPlayerConfig().getLnmode());
-						if(main.getIRStatus().length > 0 && songrank == null) {
+						RankingData songrank = null; /*
+						if(main.getIRConnection() != null && songrank == null) {
 							songrank = new RankingData();
-							main.getRankingDataCache().put(resource.getSongdata(), main.getPlayerConfig().getLnmode(), songrank);
-						}
+							*/
+						/*}*/
 						resource.setRankingData(songrank);
 
-						main.changeState(MainStateType.PLAY);
+						main.changeState(MainController.STATE_PLAYBMS);
 					} else {
 						// 合格リザルト
-						main.changeState(MainStateType.COURSERESULT);
+						main.changeState(0 /* MainController.STATE_COURSERESULT */);
 					}
 				} else {
 					if (resource.getSessionEndTime() > 0 && System.currentTimeMillis() > resource.getSessionEndTime()) {
 						resource.setNonstop(false);
 						resource.setSessionEndTime(0);
-						main.changeState(MainStateType.MUSICSELECT);
+						main.changeState(MainController.STATE_SELECTMUSIC);
 						return;
 					}
 
@@ -220,10 +220,10 @@ public class MusicResult extends AbstractResult {
 						try {
 							String playerDir = main.getConfig().getPlayerpath() + "/" + main.getPlayerConfig().getId() + "/";
 							SongData[] songs = main.getSongDatabase().getSongDatas("1=1 ORDER BY RANDOM() LIMIT 1",
-									playerDir + "score.db", playerDir + "scorelog.db", main.getConfig().getSonginfopath());
+									playerDir + "score.db", playerDir + "scorelog.db", "");
 							if (songs.length > 0 && songs[0].getPath() != null) {
 								resource.setBMSFile(java.nio.file.Paths.get(songs[0].getPath()), BMSPlayerMode.PLAY);
-								main.changeState(MainStateType.PLAY);
+								main.changeState(MainController.STATE_PLAYBMS);
 								return;
 							}
 						} catch (Exception e) {
@@ -250,7 +250,7 @@ public class MusicResult extends AbstractResult {
 							&& key == ResultKeyProperty.ResultKey.REPLAY_SAME) {
 						retry(true);
 					} else {
-						main.changeState(MainStateType.MUSICSELECT);
+						main.changeState(MainController.STATE_SELECTMUSIC);
 					}
 				}
 			}
@@ -287,7 +287,7 @@ public class MusicResult extends AbstractResult {
 					}
 				}
 
-				if (inputProcessor.isControlKeyPressed(ControlKeys.ESCAPE) || inputProcessor.isControlKeyPressed(ControlKeys.ENTER)) {
+				if (false || false) {
 					ok = true;
 				}
 
@@ -305,17 +305,17 @@ public class MusicResult extends AbstractResult {
 					}
 				}
 
-				if(inputProcessor.isControlKeyPressed(ControlKeys.NUM1)) {
+				if(false) {
 					saveReplayData(0);				
-				} else if(inputProcessor.isControlKeyPressed(ControlKeys.NUM2)) {
+				} else if(false) {
 					saveReplayData(1);				
-				} else if(inputProcessor.isControlKeyPressed(ControlKeys.NUM3)) {
+				} else if(false) {
 					saveReplayData(2);				
-				} else if(inputProcessor.isControlKeyPressed(ControlKeys.NUM4)) {
+				} else if(false) {
 					saveReplayData(3);				
 				}
 
-				if(inputProcessor.isActivated(KeyCommand.OPEN_IR)) {
+				if(false) {
 					this.executeEvent(EventType.open_ir);
 				}
 			}
@@ -495,7 +495,7 @@ public class MusicResult extends AbstractResult {
 			resource.getReplayData().randomoptionseed = -1;
 		}
 		resource.reloadBMSFile();
-		main.changeState(MainStateType.PLAY);
+		main.changeState(MainController.STATE_PLAYBMS);
 	}
 
 	static class IRSendStatus {

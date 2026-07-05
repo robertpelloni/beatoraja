@@ -35,11 +35,11 @@ public class VideoConfigurationView implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 		updateResolutions();
 
-		displayMode.getItems().setAll(Config.DisplayMode.values());
+
     }
 
     public void update(Config config) {
-		displayMode.setValue(config.getDisplaymode());
+
 		resolution.setValue(config.getResolution());
 		vSync.setSelected(config.isVsync());
 		bgaOp.getSelectionModel().select(config.getBga());
@@ -53,7 +53,7 @@ public class VideoConfigurationView implements Initializable {
 
 	public void commit(Config config) {
 		config.setResolution(resolution.getValue());
-		config.setDisplaymode(displayMode.getValue());
+
 		config.setVsync(vSync.isSelected());
 		config.setBga(bgaOp.getSelectionModel().getSelectedIndex());
 		config.setBgaExpand(bgaExpand.getSelectionModel().getSelectedIndex());
@@ -69,7 +69,7 @@ public class VideoConfigurationView implements Initializable {
 		Resolution oldValue = resolution.getValue();
 		resolution.getItems().clear();
 
-		if (displayMode.getValue() == Config.DisplayMode.FULLSCREEN) {
+		if (false) {
 			Graphics.DisplayMode[] displays = MainLoader.getAvailableDisplayMode();
 			for(Resolution r : Resolution.values()) {
 				for(Graphics.DisplayMode display : displays) {

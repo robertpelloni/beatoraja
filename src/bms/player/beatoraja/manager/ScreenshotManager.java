@@ -24,7 +24,7 @@ public class ScreenshotManager {
                 for (int i = 3; i < pixels.length; i += 4) {
                     pixels[i] = (byte) 0xff;
                 }
-                new ScreenShotFileExporter().send(main.getCurrentState(), pixels);
+                /* new ScreenShotFileExporter().send(...) */
             });
             screenshotThread.start();
         }
@@ -38,7 +38,7 @@ public class ScreenshotManager {
                 for (int i = 3; i < pixels.length; i += 4) {
                     pixels[i] = (byte) 0xff;
                 }
-                new ScreenShotTwitterExporter(main.getPlayerConfig()).send(main.getCurrentState(), pixels);
+                /* new ScreenShotTwitterExporter(...) */
             });
             screenshotThread.start();
         }

@@ -134,16 +134,34 @@ public class Config {
 	private boolean enablehidden = false;
 	private String judgetype = "0";
 	private boolean enableConstant = false;
-	
-	public boolean isEnablehidden() { return enablehidden; }
-	public void setEnablehidden(boolean enablehidden) { this.enablehidden = enablehidden; }
-	public String getJudgetype() { return judgetype; }
-	public void setJudgetype(String judgetype) { this.judgetype = judgetype; }
 	public boolean isEnableConstant() { return enableConstant; }
 	public void setEnableConstant(boolean enableConstant) { this.enableConstant = enableConstant; }
 
-	public boolean isEnableHispeedAutoAdjust() { return enableHispeedAutoAdjust; }
-	public void setHispeedAutoAdjust(boolean enable) { this.enableHispeedAutoAdjust = enable; }
+	private float lanecovermarginlow = 0f;
+	public float getLanecovermarginlow() { return lanecovermarginlow; }
+	public void setLanecovermarginlow(float lanecovermarginlow) { this.lanecovermarginlow = lanecovermarginlow; }
+
+	private float lanecovermarginhigh = 0f;
+	public float getLanecovermarginhigh() { return lanecovermarginhigh; }
+	public void setLanecovermarginhigh(float lanecovermarginhigh) { this.lanecovermarginhigh = lanecovermarginhigh; }
+
+	private int lanecoverswitchduration = 0;
+	public int getLanecoverswitchduration() { return lanecoverswitchduration; }
+	public void setLanecoverswitchduration(int lanecoverswitchduration) { this.lanecoverswitchduration = lanecoverswitchduration; }
+
+	private boolean hispeedautoadjust = false;
+	public boolean isEnableHispeedAutoAdjust() { return hispeedautoadjust; }
+	public void setHispeedAutoAdjust(boolean hispeedautoadjust) { this.hispeedautoadjust = hispeedautoadjust; }
+
+	private int constantFadeinTime = 0;
+	public int getConstantFadeinTime() { return constantFadeinTime; }
+	public void setConstantFadeinTime(int constantFadeinTime) { this.constantFadeinTime = constantFadeinTime; }
+
+	private float hidden = 0f;
+	public float getHidden() { return hidden; }
+	public void setHidden(float hidden) { this.hidden = hidden; }
+
+	public boolean isEnablehidden() { return enablehidden; }
 
 
 	private float hispeedMargin = 0.25f;

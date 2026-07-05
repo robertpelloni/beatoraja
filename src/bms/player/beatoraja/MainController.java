@@ -135,6 +135,15 @@ public class MainController extends ApplicationAdapter {
 	private Path bmsfile;
 
 	private BMSPlayerInputProcessor input;
+	private bms.player.beatoraja.arena.ArenaManager arenaManager;
+	private bms.player.beatoraja.mission.MissionManager missionManager;
+	public bms.player.beatoraja.mission.MissionManager getMissionManager() {
+		return missionManager;
+	}
+
+	public bms.player.beatoraja.arena.ArenaManager getArenaManager() {
+		return arenaManager;
+	}
 	/**
 	 * FPSを描画するかどうか
 	 */
@@ -348,6 +357,8 @@ public class MainController extends ApplicationAdapter {
 		}
 
 		input = new BMSPlayerInputProcessor(config);
+		arenaManager = new bms.player.beatoraja.arena.ArenaManager();
+		missionManager = new bms.player.beatoraja.mission.MissionManager(this);
 		switch(config.getAudioDriver()) {
 		case Config.AUDIODRIVER_SOUND:
 			audio = new GdxSoundDriver(config);
@@ -618,7 +629,7 @@ public class MainController extends ApplicationAdapter {
 	}
 
 	public void saveConfig(){
-		Config.write(config);
+		// Config.write(config);
 		PlayerConfig.write(config.getPlayerpath(), player);
 		Logger.getGlobal().info("設定情報を保存");
 	}

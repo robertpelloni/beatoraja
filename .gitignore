@@ -44,3 +44,5 @@ songdata.db
 songinfo.db
 # Explicitly ignoring banned submodule
 bobcoin/
+build/classes
+*.py

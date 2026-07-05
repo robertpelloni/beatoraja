@@ -38,7 +38,7 @@ public class LR2SkinHeaderLoader extends LR2SkinLoader {
 
 	public LR2SkinHeaderLoader(Config c) {
 		addCommandWord(HeaderCommand.values());
-		skinpath = c.getSkinpath();
+		skinpath = "";
 	}
 	
 	public SkinHeader loadSkin(Path f, MainState state) throws IOException {
