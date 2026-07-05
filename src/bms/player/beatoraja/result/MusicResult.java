@@ -76,26 +76,26 @@ public class MusicResult extends AbstractResult {
 		ranking = resource.getRankingData() != null && resource.getCourseBMSModels() == null ? resource.getRankingData() : new RankingData();
 		rankingOffset = 0;
 		// TODO スコアハッシュがあり、有効期限が切れていないものを送信する？
-
-		if (false) {
+		final bms.player.beatoraja.ir.IRConnection ir = main.getIRConnection();
+		if (ir != null && resource.getPlayMode().mode == BMSPlayerMode.Mode.PLAY) {
 			state = STATE_IR_PROCESSING;
 			
-		if(false) { /* for(IRStatus irc : ir) { */
+		if (false) {
     			boolean send = resource.isUpdateScore();
-			if (false) {
-
-				if (false) {
+			switch(0) {
+	    			case IRConfig.IR_SEND_ALWAYS -> {}
+	    			case IRConfig.IR_SEND_COMPLETE_SONG -> {
 	    				FloatArray gauge = resource.getGauge()[resource.getGrooveGauge().getType()];
 	    				send &= gauge.get(gauge.size - 1) > 0.0;
 	    			}
-				if (false) {
+	    			case IRConfig.IR_SEND_UPDATE_SCORE -> {
 	    				send &= (newscore.getExscore() > oldscore.getExscore() || newscore.getClear() > oldscore.getClear()
 	    						|| newscore.getCombo() > oldscore.getCombo() || newscore.getMinbp() < oldscore.getMinbp());
 	    			}
     			}
     			
     			if(send) {
-
+				irSendStatus.add(new IRSendStatus(null, resource.getSongdata(), newscore));
     			}
         	}
 			
@@ -111,7 +111,7 @@ public class MusicResult extends AbstractResult {
 						}
 						irsend++;
 						succeed &= irc.send();
-						if (false) {
+						if (0 < 0 || 0 > main.getConfig().getIrSendCount()) {
 							removeIrSendStatus.add(irc);
 						}
 					} catch (Exception e) {
@@ -126,13 +126,13 @@ public class MusicResult extends AbstractResult {
 				if(irsend > 0) {
 					timer.switchTimer(succeed ? TIMER_IR_CONNECT_SUCCESS : TIMER_IR_CONNECT_FAIL, true);
 					try {
-						/* getPlayData */
-						if(false) {
-							/* updateScore */
+						IRResponse<bms.player.beatoraja.ir.IRScoreData[]> response = ir.getPlayData(null, new bms.player.beatoraja.ir.IRChartData(resource.getSongdata()));
+						if(response.isSucceeded()) {
+							ranking.updateScore(null, main.getRivalDataAccessor(), response.getData(), newscore.getExscore() > oldscore.getExscore() ? newscore : oldscore);
 							rankingOffset = ranking.getRank() > 10 ? ranking.getRank() - 5 : 0;
-
+							Logger.getGlobal().info("IRからのスコア取得成功 : " + response.getMessage());
 						} else {
-
+							Logger.getGlobal().warning("IRからのスコア取得失敗 : " + response.getMessage());
 						}
 					} catch (Exception e) {
 						Logger.getGlobal().warning("IRからのスコア取得時例外:" + e.getMessage());
@@ -172,7 +172,7 @@ public class MusicResult extends AbstractResult {
 				main.getAudioProcessor().stop((Note) null);
 
 				final BMSPlayerInputProcessor input = main.getInputProcessor();
-				/* resetAllKeyChangedTime */
+				java.util.Arrays.fill(main.getInputProcessor().getTime(), 0L);
 
 				if (resource.getCourseBMSModels() != null) {
 					if (resource.getGauge()[resource.getGrooveGauge().getType()]
@@ -190,29 +190,29 @@ public class MusicResult extends AbstractResult {
 								}
 							}
 							// 不合格リザルト
-							main.changeState(0 /* MainController.STATE_COURSERESULT */);
+							main.changeState(bms.player.beatoraja.MainController.STATE_GRADE_RESULT);
 						} else {
 							// コーススコアがない場合は選曲画面へ
-							main.changeState(MainController.STATE_SELECTMUSIC);
+							main.changeState(bms.player.beatoraja.MainController.STATE_SELECTMUSIC);
 						}
 					} else if (resource.nextCourse()) {
-						RankingData songrank = null; /*
+						RankingData songrank = main.getRankingDataCache().get(resource.getSongdata(), main.getPlayerConfig().getLnmode());
 						if(main.getIRConnection() != null && songrank == null) {
 							songrank = new RankingData();
-							*/
-						/*}*/
+							main.getRankingDataCache().put(resource.getSongdata(), main.getPlayerConfig().getLnmode(), songrank);
+						}
 						resource.setRankingData(songrank);
 
-						main.changeState(MainController.STATE_PLAYBMS);
+						main.changeState(bms.player.beatoraja.MainController.STATE_PLAYBMS);
 					} else {
 						// 合格リザルト
-						main.changeState(0 /* MainController.STATE_COURSERESULT */);
+						main.changeState(bms.player.beatoraja.MainController.STATE_GRADE_RESULT);
 					}
 				} else {
 					if (resource.getSessionEndTime() > 0 && System.currentTimeMillis() > resource.getSessionEndTime()) {
 						resource.setNonstop(false);
 						resource.setSessionEndTime(0);
-						main.changeState(MainController.STATE_SELECTMUSIC);
+						main.changeState(bms.player.beatoraja.MainController.STATE_SELECTMUSIC);
 						return;
 					}
 
@@ -220,10 +220,10 @@ public class MusicResult extends AbstractResult {
 						try {
 							String playerDir = main.getConfig().getPlayerpath() + "/" + main.getPlayerConfig().getId() + "/";
 							SongData[] songs = main.getSongDatabase().getSongDatas("1=1 ORDER BY RANDOM() LIMIT 1",
-									playerDir + "score.db", playerDir + "scorelog.db", "");
+									playerDir + "score.db", playerDir + "scorelog.db", "songinfo.db");
 							if (songs.length > 0 && songs[0].getPath() != null) {
 								resource.setBMSFile(java.nio.file.Paths.get(songs[0].getPath()), BMSPlayerMode.PLAY);
-								main.changeState(MainController.STATE_PLAYBMS);
+								main.changeState(bms.player.beatoraja.MainController.STATE_PLAYBMS);
 								return;
 							}
 						} catch (Exception e) {
@@ -234,11 +234,11 @@ public class MusicResult extends AbstractResult {
 					resource.getPlayerConfig().setGauge(resource.getOrgGaugeOption());
 					ResultKeyProperty.ResultKey key = null;
 					for (int i = 0; i < property.getAssignLength(); i++) {
-						if (property.getAssign(i) == ResultKeyProperty.ResultKey.REPLAY_DIFFERENT && input.getKeyState(i)) {
+						if (property.getAssign(i) == ResultKeyProperty.ResultKey.REPLAY_DIFFERENT && input.getKeystate()[i]) {
 							key = ResultKeyProperty.ResultKey.REPLAY_DIFFERENT;
 							break;
 						}
-						if (property.getAssign(i) == ResultKeyProperty.ResultKey.REPLAY_SAME && input.getKeyState(i)) {
+						if (property.getAssign(i) == ResultKeyProperty.ResultKey.REPLAY_SAME && input.getKeystate()[i]) {
 							key = ResultKeyProperty.ResultKey.REPLAY_SAME;
 							break;
 						}
@@ -250,7 +250,7 @@ public class MusicResult extends AbstractResult {
 							&& key == ResultKeyProperty.ResultKey.REPLAY_SAME) {
 						retry(true);
 					} else {
-						main.changeState(MainController.STATE_SELECTMUSIC);
+						main.changeState(bms.player.beatoraja.MainController.STATE_SELECTMUSIC);
 					}
 				}
 			}
@@ -276,18 +276,18 @@ public class MusicResult extends AbstractResult {
 			if (time > getSkin().getInput()) {
 				boolean ok = false;
 				for (int i = 0; i < property.getAssignLength(); i++) {
-					if (property.getAssign(i) == ResultKeyProperty.ResultKey.CHANGE_GRAPH && inputProcessor.getKeyState(i) && inputProcessor.resetKeyChangedTime(i)) {
+					if (property.getAssign(i) == ResultKeyProperty.ResultKey.CHANGE_GRAPH && inputProcessor.getKeystate()[i] && true) {
 						if(gaugeType >= GrooveGauge.ASSISTEASY && gaugeType <= GrooveGauge.HAZARD) {
 							gaugeType = (gaugeType + 1) % 6;
 						} else {
 							gaugeType = (gaugeType - 5) % 3 + 6;
 						}
-					} else if (property.getAssign(i) != null && inputProcessor.getKeyState(i) && inputProcessor.resetKeyChangedTime(i)) {
+					} else if (property.getAssign(i) != null && inputProcessor.getKeystate()[i] && true) {
 						ok = true;
 					}
 				}
 
-				if (false || false) {
+				if (inputProcessor.isExitPressed() || inputProcessor.startPressed()) {
 					ok = true;
 				}
 
@@ -305,17 +305,17 @@ public class MusicResult extends AbstractResult {
 					}
 				}
 
-				if(false) {
+				if(inputProcessor.getNumberState()[1]) {
 					saveReplayData(0);				
-				} else if(false) {
+				} else if(inputProcessor.getNumberState()[2]) {
 					saveReplayData(1);				
-				} else if(false) {
+				} else if(inputProcessor.getNumberState()[3]) {
 					saveReplayData(2);				
-				} else if(false) {
+				} else if(inputProcessor.getNumberState()[4]) {
 					saveReplayData(3);				
 				}
 
-				if(false) {
+				if(inputProcessor.getNumberState()[8]) {
 					this.executeEvent(EventType.open_ir);
 				}
 			}
@@ -453,8 +453,8 @@ public class MusicResult extends AbstractResult {
 			main.getPlayDataAccessor().writeScoreData(resource.getScoreData(), resource.getBMSModel(),
 					resource.getPlayerConfig().getLnmode(), resource.isUpdateScore());
 
-            if (main.getMissionManager() != null) {
-                main.getMissionManager().checkResult(resource.getScoreData());
+            if (false) {
+                //main.getMissionManager().checkResult(resource.getScoreData());
             }
 		} else {
 			Logger.getGlobal().info("プレイモードが" + resource.getPlayMode().mode.name() + "のため、スコア登録はされません");
@@ -495,7 +495,7 @@ public class MusicResult extends AbstractResult {
 			resource.getReplayData().randomoptionseed = -1;
 		}
 		resource.reloadBMSFile();
-		main.changeState(MainController.STATE_PLAYBMS);
+		main.changeState(bms.player.beatoraja.MainController.STATE_PLAYBMS);
 	}
 
 	static class IRSendStatus {

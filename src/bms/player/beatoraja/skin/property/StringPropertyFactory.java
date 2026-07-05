@@ -172,16 +172,16 @@ public class StringPropertyFactory {
 		skinname(50, (state) -> {
 			if (state instanceof SkinConfiguration skinconfig) {
 				return skinconfig.getSelectedSkinHeader() != null ? skinconfig.getSelectedSkinHeader().getName() : "";
-			} else if(state.getSkin() != null && false) {
-				return "";
+			} else if(state.getSkin() != null && state.getSkin().header != null) {
+				return state.getSkin().header.getName();
 			}
 			return "";
 		}),
 		skinauthor(51, (state) -> {
 			if (state instanceof SkinConfiguration skinconfig) {
 				return skinconfig.getSelectedSkinHeader() != null ? skinconfig.getSelectedSkinHeader().getAuthor() : "";
-			} else if(state.getSkin() != null && false) {
-				return "";
+			} else if(state.getSkin() != null && state.getSkin().header != null) {
+				return state.getSkin().header.getAuthor();
 			}
 			return "";
 		}),
@@ -259,9 +259,9 @@ public class StringPropertyFactory {
 			return "";
 		}),
 		irUserName(1021, (state) -> {
-
-			if (state.main.getIRConnection() != null) {
-				return "IR Player";
+			final Object[] ir = null;
+			if (ir.length > 0) {
+				return "";
 			}
 			return "";
 		}),

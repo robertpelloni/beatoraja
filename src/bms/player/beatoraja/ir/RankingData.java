@@ -81,7 +81,7 @@ public class RankingData {
 		        response = ir.getCoursePlayData(null, new IRCourseData((CourseData) song, mainstate.main.getPlayerConfig().getLnmode()));
 	        }
 	        if(response.isSucceeded()) {
-			// updateScore(mainstate.main.getPlayerConfig().getIrconfig()[0].getIrname(), mainstate.main.getRivalDataAccessor(), response.getData(), mainstate.getScoreDataProperty().getScoreData());
+			updateScore(null, mainstate.main.getRivalDataAccessor(), response.getData(), mainstate.getScoreDataProperty().getScoreData());
 	            Logger.getGlobal().fine("IRからのスコア取得成功 : " + response.getMessage());
 				state = FINISH;
 	        } else {

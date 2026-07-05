@@ -81,7 +81,6 @@ public class LaneRenderer {
 
 		this.skin = (PlaySkin) main.getSkin();
 		this.config = main.resource.getPlayerConfig();
-		// this.playconfig = config.getPlayConfig(model.getMode()).getPlayconfig().clone();
 		this.playconfig = config.getPlayConfig(model.getMode()).getPlayconfig();
 
 		init(model);
@@ -91,8 +90,8 @@ public class LaneRenderer {
 				playconfig.setHispeed(1.0f);
 				playconfig.setLanecover(0);
 				playconfig.setLift(0);
-				// playconfig.setHidden(0);
-				// playconfig.setEnableConstant(false);
+				main.main.getConfig().setEnablehidden(false);
+				main.main.getConfig().setEnableConstant(false);
 			}
 		}
 	}
@@ -211,11 +210,11 @@ public class LaneRenderer {
 	}
 
 	public float getHiddenCover() {
-		return main.main.getConfig().getHidden();
+		return main.main.getConfig().isEnablehidden() ? 1.0f : 0.0f;
 	}
 
 	public void setHiddenCover(float hiddenCover) {
-		// playconfig.setHidden(hiddenCover < 0 ? 0 : (hiddenCover > 1 ? 1 : hiddenCover));
+		main.main.getConfig().setEnablehidden(hiddenCover > 0);
 	}
 
 	public boolean isEnableHidden() {
@@ -287,10 +286,10 @@ public class LaneRenderer {
 		if (main.main.getConfig().isEnablehidden()) {
 			hidden.a = 0;
 			if (playconfig.isEnablelift()) {
-				hidden.y =  (1 - playconfig.getLift()) * main.main.getConfig().getHidden()
+				hidden.y =  (1 - playconfig.getLift()) * (main.main.getConfig().isEnablehidden() ? 1.0f : 0.0f)
 						* skin.getLaneRegion()[0].height;
 			} else {
-				hidden.y = main.main.getConfig().getHidden() * skin.getLaneRegion()[0].height;
+				hidden.y = main.main.getConfig().isEnablehidden() ? 1.0f : 0.0f * skin.getLaneRegion()[0].height;
 			}
 		} else {
 			hidden.a = -255;
@@ -324,7 +323,7 @@ public class LaneRenderer {
 		final double orgy = y;
 		final boolean enableConstant = main.main.getConfig().isEnableConstant() && (main.getState() != BMSPlayer.STATE_PRACTICE);
 		final int baseduration = playconfig.getDuration();
-		final float alphaLimit =  main.main.getConfig().getConstantFadeinTime() * 1000;
+		final float alphaLimit =  0.0f * 1000;
 		for (int i = pos; i < timelines.length && y <= hu; i++) {
 			final TimeLine tl = timelines[i];
 			if (tl.getMicroTime() >= microtime) {

@@ -502,7 +502,7 @@ public class BooleanPropertyFactory {
 		lift1_on(OPTION_LIFT1_ON, new DrawProperty(DrawProperty.TYPE_NO_STATIC,
 				(state) -> ((state instanceof BMSPlayer) ? ((BMSPlayer) state).getLanerender().getPlayConfig().isEnablelift() : false))),
 		hidden1_on(OPTION_HIDDEN1_ON, new DrawProperty(DrawProperty.TYPE_NO_STATIC,
-				(state) -> ((state instanceof BMSPlayer) ? ((BMSPlayer) state).getLanerender().getPlayConfig() != null ? false : false : false))),
+				(state) -> ((state instanceof BMSPlayer) ? ((BMSPlayer) state).getLanerender().getPlayConfig().getHidden() > 0 : false))),
 		border_or_more_1p(OPTION_1P_BORDER_OR_MORE, new DrawProperty(DrawProperty.TYPE_NO_STATIC,
 				(state) -> ((state instanceof BMSPlayer) ? ((BMSPlayer) state).getGauge().getGauge().isQualified() : false))),
 
@@ -661,7 +661,7 @@ public class BooleanPropertyFactory {
 							return false;
 						}
 					} else if (state instanceof BMSPlayer player) {
-						return player.resource.getPlayerConfig().getPlayConfig(player.getMode()).getPlayconfig() != null ? false : false;
+						return false;
 					}
 					return false;
 				})

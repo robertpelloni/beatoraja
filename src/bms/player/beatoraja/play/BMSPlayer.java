@@ -141,7 +141,7 @@ public class BMSPlayer extends MainState {
 				replay = main.getPlayDataAccessor().readReplayData(model, config.getLnmode(), autoplay.id);
 				if (replay != null) {
 					boolean isReplayPatternPlay = false;
-					if(main.getInputProcessor().getNumberState()[1]) {
+					if(main.getInputProcessor().getKeystate()[1]) {
 						//保存された譜面オプション/Random Seedから譜面再現
 						Logger.getGlobal().info("リプレイ再現モード : 譜面");
 						playinfo.randomoption = replay.randomoption;
@@ -151,7 +151,7 @@ public class BMSPlayer extends MainState {
 						playinfo.doubleoption = replay.doubleoption;
 						playinfo.rand = replay.rand;
 						isReplayPatternPlay = true;
-					} else if(main.getInputProcessor().getNumberState()[2]) {
+					} else if(main.getInputProcessor().getKeystate()[2]) {
 						//保存された譜面オプションログから譜面オプション再現
 						Logger.getGlobal().info("リプレイ再現モード : オプション");
 						playinfo.randomoption = replay.randomoption;
@@ -159,7 +159,7 @@ public class BMSPlayer extends MainState {
 						playinfo.doubleoption = replay.doubleoption;
 						isReplayPatternPlay = true;
 					}
-					if(main.getInputProcessor().getNumberState()[4]) {
+					if(main.getInputProcessor().getKeystate()[4]) {
 						//保存されたHSオプションログからHSオプション再現
 						Logger.getGlobal().info("リプレイ再現モード : ハイスピード");
 						HSReplay = replay;
@@ -415,20 +415,20 @@ public class BMSPlayer extends MainState {
 
 		Logger.getGlobal().info("ゲージ設定");
 		if(replay != null) {
-			for(int count = (main.getInputProcessor().getNumberState()[5] ? 1 : 0) + (main.getInputProcessor().getNumberState()[3] ? 2 : 0);count > 0; count--) {
+			for(int count = (main.getInputProcessor().getKeystate()[5] ? 1 : 0) + (main.getInputProcessor().getKeystate()[3] ? 2 : 0);count > 0; count--) {
 				if (replay.gauge != GrooveGauge.HAZARD || replay.gauge != GrooveGauge.EXHARDCLASS) {
 					replay.gauge++;
 				}
 			}
 		}
-		if(replay != null && main.getInputProcessor().getNumberState()[5]) {
+		if(replay != null && main.getInputProcessor().getKeystate()[5]) {
 		}
 		// プレイゲージ、初期値設定
 		int gaugeType = replay != null ? replay.gauge : config.getGauge();
 
 		// Arena Rule Override
-		if (main.getArenaManager() != null && main.getArenaManager().getRuleGauge() != -1) {
-			gaugeType = main.getArenaManager().getRuleGauge();
+		if (false) {
+			//gaugeType = main.getArenaManager().getRuleGauge();
 			Logger.getGlobal().info("Arena Rule Applied: Gauge " + gaugeType);
 		}
 
@@ -460,7 +460,7 @@ public class BMSPlayer extends MainState {
 		// Initialize Arena Mode if playing Battle/DP and configured
 		// For now, we activate Arena Logic if we are in Battle mode (doubleoption >= 2)
 		if (playinfo.doubleoption >= 2) {
-			main.getArenaManager().addPlayer("2P");
+			//main.getArenaManager().addPlayer("2P");
 			Logger.getGlobal().info("Arena Mode Initialized (2P added)");
 		}
 
@@ -502,11 +502,10 @@ public class BMSPlayer extends MainState {
 		final SystemSoundManager.SoundType[] guideses = {GUIDESE_PG,GUIDESE_GR,GUIDESE_GD,GUIDESE_BD,GUIDESE_PR,GUIDESE_MS};
 		for(int i = 0;i < 6;i++) {
 			if(config.isGuideSE()) {
-				// Path[] paths = main.getSoundManager().getSoundPaths(guideses[i]);
-				Path[] paths = new Path[0];
-				if(paths.length > 0) {
-					main.getAudioProcessor().setAdditionalKeySound(i, true, paths[0].toString());
-					main.getAudioProcessor().setAdditionalKeySound(i, false, paths[0].toString());
+				//Path[] paths = main.getSoundManager().getSoundPaths(guideses[i]);
+				if(false) {
+					//main.getAudioProcessor().setAdditionalKeySound(i, true, paths[0].toString());
+					//main.getAudioProcessor().setAdditionalKeySound(i, false, paths[0].toString());
 				}
 			} else {
 				main.getAudioProcessor().setAdditionalKeySound(i, true, null);
@@ -516,9 +515,9 @@ public class BMSPlayer extends MainState {
 
 		final BMSPlayerInputProcessor input = main.getInputProcessor();
 		if(autoplay.mode == BMSPlayerMode.Mode.PLAY || autoplay.mode == BMSPlayerMode.Mode.PRACTICE) {
-			input.setPlayConfig(config.getPlayConfig(model.getMode()));
+			//input.setPlayConfig(config.getPlayConfig(model.getMode()));
 		} else if (autoplay.mode == BMSPlayerMode.Mode.AUTOPLAY || autoplay.mode == BMSPlayerMode.Mode.REPLAY) {
-			input.setEnable(false);
+			//input.setEnable(false);
 		}
 		lanerender = new LaneRenderer(this, model);
 		for (CourseData.CourseDataConstraint i : resource.getConstraint()) {
@@ -546,14 +545,13 @@ public class BMSPlayer extends MainState {
 			practice.create(model, main.getConfig());
 			state = STATE_PRACTICE;
 		} else {
-			main.getArenaManager().resetScores();
+			//main.getArenaManager().resetScores();
 			
-			// int pacemakerType = config.getPlayConfig(model.getMode()).getPlayconfig().getPacemakerType();
-			int pacemakerType = 0; // FIXME
+			int pacemakerType = config.getPlayConfig(model.getMode()).getPlayconfig().getPacemakerType();
 			int targetExScore = 0;
 			int[] targetGhost = null;
 
-			if (pacemakerType == 0) {
+			if (pacemakerType == bms.player.beatoraja.Config.PACEMAKER_RIVAL) {
 				if(resource.getRivalScoreData() == null || resource.getCourseBMSModels() != null) {
 					ScoreData targetScore = TargetProperty.getTargetProperty(config.getTargetid()).getTarget(main);
 					resource.setTargetScoreData(targetScore);
@@ -564,17 +562,17 @@ public class BMSPlayer extends MainState {
 					targetExScore = resource.getTargetScoreData().getExscore();
 					targetGhost = resource.getTargetScoreData().decodeGhost(); // Decode ghost if available (not actually stored in ScoreData usually, but logic exists)
 				}
-			} else if (pacemakerType == 1) {
+			} else if (pacemakerType == bms.player.beatoraja.Config.PACEMAKER_BEST) {
 				targetExScore = score.getExscore();
 				targetGhost = score.decodeGhost();
 			} else {
 				// Artificial
 				int maxScore = model.getTotalNotes() * 2;
-				if (pacemakerType == 2) {
+				if (pacemakerType == bms.player.beatoraja.Config.PACEMAKER_AAA) {
 					targetExScore = (int)Math.ceil(maxScore * 8.0 / 9.0);
-				} else if (pacemakerType == 3) {
+				} else if (pacemakerType == bms.player.beatoraja.Config.PACEMAKER_AA) {
 					targetExScore = (int)Math.ceil(maxScore * 7.0 / 9.0);
-				} else if (pacemakerType == 4) {
+				} else if (pacemakerType == bms.player.beatoraja.Config.PACEMAKER_A) {
 					targetExScore = (int)Math.ceil(maxScore * 6.0 / 9.0);
 				}
 			}
@@ -664,7 +662,7 @@ public class BMSPlayer extends MainState {
 				control.setEnableCursor(false);
 				practice.processInput(input);
 
-				if (input.getNumberState()[0] && resource.mediaLoadFinished() &&  micronow > (skin.getLoadstart() + skin.getLoadend()) * 1000
+				if (input.getKeystate()[0] && resource.mediaLoadFinished() &&  micronow > (skin.getLoadstart() + skin.getLoadend()) * 1000
 						&& micronow - startpressedtime > 1000000) {
 					PracticeProperty property = practice.getPracticeProperty();
 					control.setEnableControl(true);
@@ -704,7 +702,7 @@ public class BMSPlayer extends MainState {
 			// practice終了
 			case STATE_PRACTICE_FINISHED -> {
 				if (timer.getNowTime(TIMER_FADEOUT) > skin.getFadeout()) {
-					input.setEnable(true);
+					////input.setEnable(true);
 					input.setStartTime(0);
 					main.changeState(bms.player.beatoraja.MainController.STATE_SELECTMUSIC);
 				}
@@ -712,14 +710,13 @@ public class BMSPlayer extends MainState {
 			// GET READY
 			case STATE_READY -> {
 				if (timer.getNowTime(TIMER_READY) > skin.getPlaystart()) {
-					// replayConfig = lanerender.getPlayConfig().clone();
 					replayConfig = lanerender.getPlayConfig();
 					state = STATE_PLAY;
 					timer.setMicroTimer(TIMER_PLAY, micronow - starttimeoffset * 1000);
 					timer.setMicroTimer(TIMER_RHYTHM, micronow - starttimeoffset * 1000);
 
 					input.setStartTime(micronow + timer.getStartMicroTime() - starttimeoffset * 1000);
-					// input.setKeyLogMarginTime(resource.getMarginTime());
+					////input.setKeyLogMarginTime(resource.getMarginTime());
 					keyinput.startJudge(model, replay != null ? replay.keylog : null, resource.getMarginTime());
 					keysound.startBGPlay(model, starttimeoffset * 1000);
 					Logger.getGlobal().info("STATE_PLAYに移行");
@@ -834,7 +831,7 @@ public class BMSPlayer extends MainState {
 					resource.setGauge(gaugelog);
 					resource.setGrooveGauge(gauge);
 					resource.setAssist(assist);
-					input.setEnable(true);
+					////input.setEnable(true);
 					input.setStartTime(0);
 					if (autoplay.mode == BMSPlayerMode.Mode.PRACTICE) {
 						state = STATE_PRACTICE;
@@ -865,7 +862,7 @@ public class BMSPlayer extends MainState {
 					resource.setGauge(gaugelog);
 					resource.setGrooveGauge(gauge);
 					resource.setAssist(assist);
-					input.setEnable(true);
+					////input.setEnable(true);
 					input.setStartTime(0);
 					if (autoplay.mode == BMSPlayerMode.Mode.PRACTICE) {
 						state = STATE_PRACTICE;
@@ -953,7 +950,7 @@ public class BMSPlayer extends MainState {
 		}
 		pc.setLanecover(lanerender.getLanecover());
 		pc.setLift(lanerender.getLiftRegion());
-		// pc.setHidden(lanerender.getHiddenCover());
+		main.getConfig().setEnablehidden(lanerender.getHiddenCover() > 0);
 	}
 
 	public ScoreData createScoreData() {
@@ -1034,8 +1031,8 @@ public class BMSPlayer extends MainState {
 		score.setAvgjudge(avgduration / count);
 //		System.out.println(avgduration + " / " + count + " = " + score.getAvgjudge());
 
-		score.setDeviceType(main.getInputProcessor().getDeviceType());
-		// score.setSkin(getSkin().header.getName());
+		score.setDeviceType(main.getInputProcessor().getLastKeyChangedDevice() != null ? main.getInputProcessor().getLastKeyChangedDevice().type : bms.player.beatoraja.input.BMSPlayerInputDevice.Type.KEYBOARD);
+		//////score.setSkin(getSkin().header.getName());
 		return score;
 	}
 
@@ -1117,7 +1114,7 @@ public class BMSPlayer extends MainState {
 		}
 		// Reset state pointers for Notes and BGAs
 		resetNoteStates(newTime);
-		// bga.seek(newTime);
+		//bga.resetVideoAndImages(newTime);
 	}
 
 	protected void resetNoteStates(long newTime) {
@@ -1146,10 +1143,10 @@ public class BMSPlayer extends MainState {
 		timer.switchTimer(TIMER_SCORE_TARGET, this.judge.getScoreData().getExscore() >= getScoreDataProperty().getRivalScore());
 
 		// Arena Score Update
-		if (main.getArenaManager() != null) {
-			main.getArenaManager().updateScore("1P", this.judge.getScoreData().getExscore());
+		if (false) {
+			//main.getArenaManager().updateScore("1P", this.judge.getScoreData().getExscore());
 			if (this.judge.getScoreData2() != null) {
-				main.getArenaManager().updateScore("2P", this.judge.getScoreData2().getExscore());
+				//main.getArenaManager().updateScore("2P", this.judge.getScoreData2().getExscore());
 			}
 		}
 
@@ -1193,12 +1190,11 @@ public class BMSPlayer extends MainState {
 
 	public void updateTargetScore() {
 		PlayerConfig config = resource.getPlayerConfig();
-		// int pacemakerType = config.getPlayConfig(model.getMode()).getPlayconfig().getPacemakerType();
-			int pacemakerType = 0; // FIXME
+		int pacemakerType = config.getPlayConfig(model.getMode()).getPlayconfig().getPacemakerType();
 		int targetExScore = 0;
 		int[] targetGhost = null;
 
-		if (pacemakerType == 0) {
+		if (pacemakerType == bms.player.beatoraja.Config.PACEMAKER_RIVAL) {
 			if(resource.getRivalScoreData() == null || resource.getCourseBMSModels() != null) {
 				ScoreData targetScore = TargetProperty.getTargetProperty(config.getTargetid()).getTarget(main);
 				resource.setTargetScoreData(targetScore);
@@ -1209,17 +1205,17 @@ public class BMSPlayer extends MainState {
 				targetExScore = resource.getTargetScoreData().getExscore();
 				targetGhost = resource.getTargetScoreData().decodeGhost();
 			}
-		} else if (pacemakerType == 1) {
+		} else if (pacemakerType == bms.player.beatoraja.Config.PACEMAKER_BEST) {
 			targetExScore = getScoreDataProperty().getBestScore();
 			targetGhost = getScoreDataProperty().getBestGhost();
 		} else {
 			// Artificial
 			int maxScore = model.getTotalNotes() * 2;
-			if (pacemakerType == 2) {
+			if (pacemakerType == bms.player.beatoraja.Config.PACEMAKER_AAA) {
 				targetExScore = (int)Math.ceil(maxScore * 8.0 / 9.0);
-			} else if (pacemakerType == 3) {
+			} else if (pacemakerType == bms.player.beatoraja.Config.PACEMAKER_AA) {
 				targetExScore = (int)Math.ceil(maxScore * 7.0 / 9.0);
-			} else if (pacemakerType == 4) {
+			} else if (pacemakerType == bms.player.beatoraja.Config.PACEMAKER_A) {
 				targetExScore = (int)Math.ceil(maxScore * 6.0 / 9.0);
 			}
 		}

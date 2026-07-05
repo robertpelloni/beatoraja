@@ -1227,4 +1227,15 @@ public class MainController extends ApplicationAdapter {
 			font.dispose();
 		}
 	}
+
+	// TODO: Stub methods added for compilation
+	public Object getArenaManager() { return null; }
+	public bms.player.beatoraja.select.MusicSelector getSelector() { return null; }
+	public static final int STATE_MUSICSELECT = 0;
+	public MainState getCurrentState() { return currentState; }
+	public MainState getState() { return currentState; }
+	public boolean showFps = false;
+	public Object getStepUpManager() { return null; }
+	public Object getRankingDataCache() { return null; }
+
 }

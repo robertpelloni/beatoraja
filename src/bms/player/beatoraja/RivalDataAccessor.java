@@ -60,25 +60,25 @@ public final class RivalDataAccessor {
 
 	public void update(MainController main) {
 		if(main.getIRConnection() != null) {
-			if (false) {
-
+			if(main.getPlayerConfig().getIrconfig()[0].isImportscore()) {
+				main.getPlayerConfig().getIrconfig()[0].setImportscore(false);
 				try {
-					/* scores */
-					if (false) {
+					IRResponse<IRScoreData[]> scores = main.getIRConnection().getPlayData(null, null);
+					if(scores.isSucceeded()) {
 						ScoreDataImporter scoreimport = new ScoreDataImporter(new ScoreDatabaseAccessor(main.getConfig().getPlayerpath() + File.separatorChar + main.getConfig().getPlayername() + File.separatorChar + "score.db"));
-						/* scoreimport */
+						scoreimport.importScores(convert(scores.getData()), main.getPlayerConfig().getIrconfig()[0].getIrname());
 
 						Logger.getGlobal().info("IRからのスコアインポート完了");
 					} else {
-
+						Logger.getGlobal().warning("IRからのスコアインポート失敗 : " + scores.getMessage());
 					}					
 				} catch (Throwable e) {
 					e.printStackTrace();
 				}
 			}
 			
-			/* response */
-			if (false) {
+			IRResponse<IRPlayerData[]> response = main.getIRConnection().getRivals();
+			if(response.isSucceeded()) {
 				try {
 					
 					// ライバルスコアデータベース作成
@@ -91,35 +91,35 @@ public final class RivalDataAccessor {
 					Array<PlayerInformation> rivals = new Array<PlayerInformation>();
 					Array<ScoreDataCache> rivalcaches = new Array<ScoreDataCache>();
 					
-					if(false) {
-						if(false) { /* for */
+					if(main.getPlayerConfig().getIrconfig()[0].isImportrival()) {
+						for(IRPlayerData irplayer : response.getData()) {
 							final PlayerInformation rival = new PlayerInformation();
-
-
-
-
+							rival.setId(irplayer.id);
+							rival.setName(irplayer.name);
+							rival.setRank(irplayer.rank);
+							final ScoreDatabaseAccessor scoredb = new ScoreDatabaseAccessor("rival/" + main.getPlayerConfig().getIrconfig()[0].getIrname() + rival.getId() + ".db");
 							
 							rivals.add(rival);
 							rivalcaches.add(new ScoreDataCache() {
 
 								@Override
 								protected ScoreData readScoreDatasFromSource(SongData song, int lnmode) {
-									return null;
+									return scoredb.getScoreData(song.getSha256(), song.hasUndefinedLongNote() ? lnmode : 0);
 								}
 
 								protected void readScoreDatasFromSource(ScoreDataCollector collector, SongData[] songs, int lnmode) {
-
+									scoredb.getScoreDatas(collector,songs, lnmode);
 								}
 							});
 							new Thread(() -> {
-
-
-								/* getPlayData */
-								if (false) {
-
+								scoredb.createTable();
+								scoredb.setInformation(rival);
+								IRResponse<IRScoreData[]> scores = main.getIRConnection().getPlayData(irplayer, null);
+								if(scores.isSucceeded()) {
+									scoredb.setScoreData(convert(scores.getData()));
 									Logger.getGlobal().info("IRからのライバルスコア取得完了 : " + rival.getName());
 								} else {
-
+									Logger.getGlobal().warning("IRからのライバルスコア取得失敗 : " + scores.getMessage());
 								}
 							}).start();
 						}
@@ -129,7 +129,7 @@ public final class RivalDataAccessor {
 						for (Path p : paths) {
 							boolean exists = false;
 							for(PlayerInformation info : rivals) {
-								if(false) {
+								if(p.getFileName().toString().equals(main.getPlayerConfig().getIrconfig()[0].getIrname() + info.getId() + ".db")) {
 									exists = true;
 									break;
 								}
@@ -147,7 +147,7 @@ public final class RivalDataAccessor {
 
 										@Override
 										protected ScoreData readScoreDatasFromSource(SongData song, int lnmode) {
-											return null;
+											return scoredb.getScoreData(song.getSha256(), song.hasUndefinedLongNote() ? lnmode : 0);
 										}
 
 										protected void readScoreDatasFromSource(ScoreDataCollector collector, SongData[] songs, int lnmode) {
@@ -179,7 +179,7 @@ public final class RivalDataAccessor {
 					e.printStackTrace();
 				}
 			} else {
-
+				Logger.getGlobal().warning("IRからのライバル取得失敗 : " + response.getMessage());
 			}
 		}
 	}

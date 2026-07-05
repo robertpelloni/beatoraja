@@ -63,22 +63,22 @@ public final class SkinTextBitmap extends SkinText {
 				source.getType() == SkinTextBitmapSource.TYPE_COLORED_DISTANCE_FIELD) {
 			sprite.setType(SkinObjectRenderer.TYPE_DISTANCE_FIELD);
 			setLayout(color, region);
-			/* sprite.draw(font, layout, x + offsetX, region.y + offsetY + region.getHeight(), shader -> {
+			/*sprite.draw(font, layout, x + offsetX, region.y + offsetY + region.getHeight(), shader -> {
 				shader.setUniformf("u_outlineDistance", Math.max(0.1f, 0.5f - getOutlineWidth()/2f));
 				shader.setUniformf("u_outlineColor", getOutlineColor());
 				shader.setUniformf("u_shadowColor", getShadowColor());
 				shader.setUniformf("u_shadowSmoothing", getShadowSmoothness() / 2f);
 				shader.setUniformf("u_shadowOffset",
 						new Vector2(getShadowOffset().x / source.getPageWidth(), getShadowOffset().y / source.getPageHeight()));
-			}); */
+			});*/
 		} else {
 			sprite.setType(SkinObjectRenderer.TYPE_BILINEAR);
 			if (!getShadowOffset().isZero()) {
 				setLayout(new Color(color.r / 2, color.g / 2, color.b / 2, color.a), region);
-				/* sprite.draw(font, layout, ... ) */
+				font.draw(sprite, layout, x + getShadowOffset().x + offsetX, region.y - getShadowOffset().y + offsetY + region.getHeight());
 			}
 			setLayout(color, region);
-			/* sprite.draw(font, layout, ... ) */
+			font.draw(sprite, layout, x + offsetX, region.y + offsetY + region.getHeight());
 		}
 		font.getData().setScale(1);
 	}

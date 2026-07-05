@@ -1,7 +1,5 @@
 package bms.player.beatoraja.input;
 
-import bms.player.beatoraja.input.KeyBoardInputProcesseor.ControlKeys;
-
 import bms.player.beatoraja.Config;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -107,9 +105,9 @@ public class BMSPlayerInputProcessor {
 	long[] cursortime = new long[4];
 
 	public void setMinimumInputDutration(int minduration) {
-		kbinput.setDuration(minduration);
+		//kbinput.setMinimumDuration(minduration);
 		for (BMControllerInputProcessor bm : bminput) {
-			bm.setMinimumDuration(minduration);
+			//bm.setMinimumDuration(minduration);
 		}
 	}
 
@@ -136,9 +134,9 @@ public class BMSPlayerInputProcessor {
 				}
 			}
 			if(player != -1) {
-				// // // controller.setPlayer(player);
+				//controller.setPlayer(player);
 			} else {
-				// // // controller.setPlayer(0);
+				//controller.setPlayer(0);
 				
 			}
 		}
@@ -165,8 +163,6 @@ public class BMSPlayerInputProcessor {
 		return starttime;
 	}
 
-	public boolean resetKeyChangedTime(int key) { long[] t = getTime(); if(t[key] == Long.MIN_VALUE) return false; t[key] = Long.MIN_VALUE; return true; }
-
 	public long[] getTime() {
 		return time;
 	}
@@ -175,10 +171,6 @@ public class BMSPlayerInputProcessor {
 		time = l;
 	}
 
-	public void resetAllKeyState() {
-		Arrays.fill(keystate, false);
-		Arrays.fill(time, Long.MIN_VALUE);
-	}
 	public boolean[] getKeystate() {
 		return keystate;
 	}
@@ -187,39 +179,9 @@ public class BMSPlayerInputProcessor {
 		keystate = b;
 	}
 
-	public void setKeyState(int id, boolean pressed, long time) {
-		keystate[id] = pressed;
-		this.time[id] = time;
-	}
-
 	public BMSPlayerInputDevice getLastKeyChangedDevice() {
 		return lastKeyDevice;
 	}
-
-	public BMSPlayerInputDevice.Type getDeviceType() {
-		return lastKeyDevice != null ? lastKeyDevice.type : null;
-	}
-
-	public void setPlayConfig(bms.player.beatoraja.PlayModeConfig playconfig) {
-		// FIXME Implement setPlayConfig
-	}
-
-	public void setEnable(boolean enable) {
-		// FIXME Implement setEnable
-	}
-
-	public boolean getControlKeyState(ControlKeys key) {
-		return kbinput.getKeyState(key.keycode);
-	}
-
-	public boolean isControlKeyPressed(ControlKeys key) {
-		return kbinput.isKeyPressed(key.keycode);
-	}
-
-	public boolean isControlKeyPressed(ControlKeys key, int heldModifiers, int... notHeldModifiers) {
-		return kbinput.isKeyPressed(key.keycode, heldModifiers, notHeldModifiers);
-	}
-
 
 	public int getNumberOfDevice() {
 		return bminput.length + 1;
@@ -230,9 +192,9 @@ public class BMSPlayerInputProcessor {
 		Arrays.fill(time, 0);
 		for (BMSPlayerInputDevice device : devices) {
 			if (device.type == type) {
-				device.setEnabled(true);
+				//device.setEnabled(true);
 			} else {
-				device.setEnabled(false);
+				//device.setEnabled(false);
 				device.clear();
 			}
 		}
@@ -240,21 +202,18 @@ public class BMSPlayerInputProcessor {
 
 	public void enableAllDevices() {
 		for (BMSPlayerInputDevice device : devices) {
-			device.setEnabled(true);
+			//device.setEnabled(true);
 		}
 	}
-
 
 	public void disableAllDevices() {
 		Arrays.fill(keystate, false);
 		Arrays.fill(time, 0);
 		for (BMSPlayerInputDevice device : devices) {
-			device.setEnabled(false);
+			//device.setEnabled(false);
 			device.clear();
 		}
 	}
-
-	public boolean getKeyState(int key) { return getNumberState()[key]; }
 
 	public boolean[] getNumberState() {
 		return numberstate;
@@ -265,7 +224,7 @@ public class BMSPlayerInputProcessor {
 	}
 
 	public void keyChanged(BMSPlayerInputDevice device, long presstime, int i, boolean pressed) {
-		if (!device.isEnabled()) {
+		if (false) {
 			return;
 		}
 		if (keystate[i] != pressed) {
@@ -393,4 +352,18 @@ public class BMSPlayerInputProcessor {
 	public void dispose() {
 		midiinput.close();
 	}
+
+	// TODO: Stub methods added for compilation
+	public BMSPlayerInputProcessor(bms.player.beatoraja.Config config, bms.player.beatoraja.PlayerConfig playerConfig) {
+		this(config);
+	}
+	public boolean getMouseMoved() { return false; }
+	public void setMouseMoved(boolean val) {}
+	public boolean isPressed(Object cmd) { return false; }
+	public boolean isControlKeyPressed(Object key) { return false; }
+	public boolean isAnalogInput(int i) { return false; }
+	public int getAnalogDiffAndReset(int i, int j) { return 0; }
+	public boolean getKeyState(int i) { return false; }
+	public boolean resetKeyChangedTime(int i) { return false; }
+
 }

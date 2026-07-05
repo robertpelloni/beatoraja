@@ -72,7 +72,7 @@ public final class MidiInputProcessor extends BMSPlayerInputDevice implements Au
 			final int key = i;
 			setHandler(keys[i], pressed -> {
 				bmsPlayerInputProcessor.keyChanged(this, currentTime(), key, pressed);
-				// bmsPlayerInputProcessor.setAnalogState(key, false, 0);
+				//bmsPlayerInputProcessor.setAnalogState(key, false, 0);
 			});
 		}
 

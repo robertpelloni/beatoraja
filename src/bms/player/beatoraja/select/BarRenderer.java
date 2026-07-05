@@ -68,9 +68,9 @@ public final class BarRenderer {
 		this.select = select;
 		this.manager = manager;
 		
-		durationlow = 0;
-		durationhigh = 0;
-		analogTicksPerScroll = 0;
+		durationlow = select.main.getConfig().getScrollDurationLow();
+		durationhigh = select.main.getConfig().getScrollDurationHigh();
+		analogTicksPerScroll = select.main.getConfig().getAnalogTicksPerScroll();
 
 		manager.init();
 		
@@ -443,7 +443,7 @@ public final class BarRenderer {
 		}
 
 		// song bar scroll
-		if (property.isNonAnalogPressed(input, MusicSelectKey.UP, false) || input.getControlKeyState(ControlKeys.DOWN)) {
+		if (property.isNonAnalogPressed(input, MusicSelectKey.UP, false) || input.getNumberState()[2]) {
 			long l = System.currentTimeMillis();
 			if (duration == 0) {
 				keyinput = true;
@@ -456,7 +456,7 @@ public final class BarRenderer {
 				mov = 1;
 				angle = durationhigh;
 			}
-		} else if (property.isNonAnalogPressed(input, MusicSelectKey.DOWN, false) || input.getControlKeyState(ControlKeys.UP)) {
+		} else if (property.isNonAnalogPressed(input, MusicSelectKey.DOWN, false) || input.getNumberState()[8]) {
 			long l = System.currentTimeMillis();
 			if (duration == 0) {
 				keyinput = true;

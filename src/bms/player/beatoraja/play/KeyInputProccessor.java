@@ -62,7 +62,7 @@ class KeyInputProccessor {
 			boolean scratch = false;
 			if(!keyBeamStop) {
 				for (int key : laneProperty.getLaneKeyAssign()[lane]) {
-					if (input.getNumberState()[key] || auto_presstime[key] != Long.MIN_VALUE) {
+					if (input.getKeystate()[key] || auto_presstime[key] != Long.MIN_VALUE) {
 						pressed = true;
 						if(laneProperty.getLaneScratchAssign()[lane] != -1
 								&& scratchKey[laneProperty.getLaneScratchAssign()[lane]] != key) {
@@ -95,9 +95,9 @@ class KeyInputProccessor {
 				scratch[s] += s % 2 == 0 ? 2160 - deltatime : deltatime;
 				final int key0 = laneProperty.getScratchKeyAssign()[s][1];
 				final int key1 = laneProperty.getScratchKeyAssign()[s][0];
-				if (input.getNumberState()[key0] || auto_presstime[key0] != Long.MIN_VALUE) {
+				if (input.getKeystate()[key0] || auto_presstime[key0] != Long.MIN_VALUE) {
 					scratch[s] += deltatime * 2;
-				} else if (input.getNumberState()[key1] || auto_presstime[key1] != Long.MIN_VALUE) {
+				} else if (input.getKeystate()[key1] || auto_presstime[key1] != Long.MIN_VALUE) {
 					scratch[s] += 2160 - deltatime * 2;
 				}
 				scratch[s] %= 2160;
@@ -179,7 +179,8 @@ class KeyInputProccessor {
 							// key.keycode + " pressed - " + key.pressed +
 							// " time - " + key.time);
 							// }
-							input.setKeyState(key.getKeycode(), key.isPressed(), key.getTime() + microMarginTime);
+							input.getKeystate()[key.getKeycode()] = key.isPressed();
+							input.getTime()[key.getKeycode()] = key.getTime() + microMarginTime;
 							index++;
 						}
 					}
@@ -205,7 +206,7 @@ class KeyInputProccessor {
 			}
 
 			if (keylog != null) {
-				input.resetAllKeyState();
+				java.util.Arrays.fill(input.getKeystate(), false);
 			}
 
 			Logger.getGlobal().info("入力パフォーマンス(max ms) : " + frametime);

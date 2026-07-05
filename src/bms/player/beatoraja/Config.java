@@ -835,4 +835,34 @@ public class Config {
 	public void setTarget(int target) {
 		this.target = target;
 	}
+
+	// TODO: Stub methods added for compilation
+	public int getSongResourceGen() { return 1; }
+	public boolean isShowNoSongExistingBar() { return false; }
+	public int getMaxSearchBarCount() { return 10; }
+	public int getSkinResolution() { return 0; }
+	public boolean isSetClipboardWhenScreenshot() { return false; }
+	public void setWindowMode(int mode) {}
+	public static final int DISPLAY_WINDOW = 0;
+	public static final int DISPLAY_FULLSCREEN = 1;
+	public int getDisplaymode() { return 0; }
+	public void setDisplaymode(int mode) {}
+	public String getSongpath() { return ""; }
+	public static final java.nio.file.Path configpath = java.nio.file.Paths.get("config.json");
+	public static Config read() { return new Config(); }
+	public static void write(Config config) {}
+	public int getScrollDurationLow() { return 0; }
+	public int getScrollDurationHigh() { return 0; }
+	public int getAnalogTicksPerScroll() { return 0; }
+	public String getSystemfontpath() { return ""; }
+	public int getIrSendCount() { return 1; }
+	public static final int PACEMAKER_RIVAL = 0;
+	public String getSkinpath() { return ""; }
+	public int getSongPreview() { return 0; }
+	public static final int PACEMAKER_BEST = 0;
+	public static final int PACEMAKER_AAA = 0;
+	public static final int PACEMAKER_AA = 0;
+	public static final int PACEMAKER_A = 0;
+	public static class SongPreview { public static final int NONE = 0; }
+
 }

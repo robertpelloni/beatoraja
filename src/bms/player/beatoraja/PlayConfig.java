@@ -411,4 +411,9 @@ public class PlayConfig {
 		}
 	}
 
+
+	// TODO: Stub methods
+	public int getHidden() { return 0; }
+	public int getPacemakerType() { return 0; }
+
 }

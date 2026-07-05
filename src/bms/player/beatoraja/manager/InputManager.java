@@ -42,43 +42,43 @@ public class InputManager {
 	}
 
 	public void update(long time) {
-		if (null /* main.getCurrentState() */ == null) return;
+		if (main.getCurrentState() == null) return;
 
-		/* main.getCurrentState().input(); */
+		main.getCurrentState().input();
 		// event - move pressed
 		if (input.isMousePressed()) {
 			input.setMousePressed();
-			if (false) {
-
+			if (main.getCurrentState().getSkin() != null) {
+				main.getCurrentState().getSkin().mousePressed(main.getCurrentState(), input.getMouseButton(), input.getMouseX(), input.getMouseY());
 			}
 		}
 		// event - move dragged
 		if (input.isMouseDragged()) {
 			input.setMouseDragged();
-			if (false) {
-
+			if (main.getCurrentState().getSkin() != null) {
+				main.getCurrentState().getSkin().mouseDragged(main.getCurrentState(), input.getMouseButton(), input.getMouseX(), input.getMouseY());
 			}
 		}
 
 		// マウスカーソル表示判定
-		if(false) {
-
+		if(input.getMouseMoved()) {
+			input.setMouseMoved(false);
 			mouseMovedTime = time;
 		}
 		
-		boolean isPlayState = null /* main.getCurrentState() */ instanceof BMSPlayer;
+		boolean isPlayState = main.getCurrentState() instanceof BMSPlayer;
 		Gdx.input.setCursorCatched(isPlayState && time > mouseMovedTime + 5000);
 
 		// FPS表示切替
-		if (false) {
-
+		if (input.isPressed(KeyCommand.SHOW_FPS)) {
+			main.showFps = (!main.showFps);
 		}
 		// Debug表示切替
-		if (false) {
-
+		if (input.isPressed(KeyCommand.TOGGLE_DEBUG)) {
+			//////MainController.debug = !MainController.debug;
 		}
 		// fullscrees - windowed
-		if (false) {
+		if (input.isPressed(KeyCommand.SWITCH_SCREEN_MODE)) {
 			boolean fullscreen = Gdx.graphics.isFullscreen();
 			Graphics.DisplayMode currentMode = Gdx.graphics.getDisplayMode();
 			if (fullscreen) {
@@ -86,7 +86,7 @@ public class InputManager {
 			} else {
 				Gdx.graphics.setFullscreenMode(currentMode);
 			}
-
+			//////main.getConfig().setDisplaymode(fullscreen ? Config.DisplayMode.WINDOW : Config.DisplayMode.FULLSCREEN);
 		}
 	}
 	

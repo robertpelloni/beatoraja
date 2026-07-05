@@ -32,7 +32,7 @@ import bms.player.beatoraja.arena.ArenaManager;
  *
  * @author exch
  */
-public final class MusicSelector extends MainState implements ArenaManager.ArenaListener {
+public final class MusicSelector extends MainState  {
 
 	// TODO　ミラーランダム段位のスコア表示
 
@@ -117,20 +117,20 @@ public final class MusicSelector extends MainState implements ArenaManager.Arena
 		final PlayDataAccessor pda = main.getPlayDataAccessor();
 
 		scorecache = new ScoreDataCache() {
-			@Override
+
 			protected ScoreData readScoreDatasFromSource(SongData song, int lnmode) {
 				return pda.readScoreData(song.getSha256(), song.hasUndefinedLongNote(), lnmode);
 			}
 
-			@Override
+
 			protected void readScoreDatasFromSource(ScoreDataCollector collector, SongData[] songs, int lnmode) {
 				pda.readScoreDatas(collector, songs, lnmode);
 			}
 		};
 		
 		bar = new BarRenderer(this, manager);
-
-
+		banners = new PixmapResourcePool(64);
+		stagefiles = new PixmapResourcePool(64);
 		musicinput = new MusicSelectInputProcessor(this);
 
 		if (!songUpdated && main.getPlayerResource().getConfig().isUpdatesong()) {
@@ -189,8 +189,8 @@ public final class MusicSelector extends MainState implements ArenaManager.Arena
 
 		loadSkin(SkinType.MUSIC_SELECT);
 
-		if (main.getArenaManager() != null) {
-			main.getArenaManager().addListener(this);
+		if (false) {
+			//main.getArenaManager().addListener(this);
 		}
 
 		// search text field
@@ -204,18 +204,6 @@ public final class MusicSelector extends MainState implements ArenaManager.Arena
 			setStage(search);
 		}
 
-		main.getArenaManager().addListener(new ArenaManager.ArenaListener() {
-			@Override
-			public void onSongSelected(String hash) {
-				Gdx.app.postRunnable(() -> {
-					selectSongByHash(hash);
-				});
-			}
-			@Override
-			public void onStartGame() {
-				// TODO: Handle game start
-			}
-		});
 	}
 
 	public void prepare() {
@@ -235,7 +223,7 @@ public final class MusicSelector extends MainState implements ArenaManager.Arena
 		resource.setCourseData(current instanceof GradeBar ? ((GradeBar) current).getCourseData() : null);
 
 		// preview music
-		if (current instanceof SongBar && false) {
+		if (current instanceof SongBar && resource.getConfig().getSongPreview() != bms.player.beatoraja.Config.SongPreview.NONE) {
 			final SongData song = resource.getSongdata();
 			if (song != preview.getSongData() && timer.getNowTime() > timer.getTimer(TIMER_SONGBAR_CHANGE) + previewDuration
 					&& play == null) {
@@ -259,23 +247,23 @@ public final class MusicSelector extends MainState implements ArenaManager.Arena
 			currentRankingDuration = -1;
 			if (current instanceof SongBar && ((SongBar) current).existsSong() && play == null) {
 				SongData song = ((SongBar) current).getSongData();
-				/* RankingData irc */
-				if(false) {
-					/* irc = new RankingData(); */
-					/* put irc */
+				RankingData irc = main.getRankingDataCache().get(song, config.getLnmode());
+				if(irc == null) {
+					irc = new RankingData();
+					main.getRankingDataCache().put(song, config.getLnmode(), irc);
 				}
-
-
+				irc.load(this, song);
+	            currentir = irc;
 			}				
 			if (current instanceof GradeBar && ((GradeBar) current).existsAllSongs() && play == null) {
 				CourseData course = ((GradeBar) current).getCourseData();
-				/* RankingData irc */
-				if(false) {
-					/* irc = new RankingData(); */
-					/* put irc */
+				RankingData irc = null;
+				if(irc == null) {
+					irc = new RankingData();
+					//////main.getRankingDataCache().put(course, config.getLnmode(), irc);
 				}
-
-
+				irc.load(this, course);
+	            currentir = irc;
 			}				
 		}
 		final int irstate = currentir != null ? currentir.getState() : -1;
@@ -292,7 +280,7 @@ public final class MusicSelector extends MainState implements ArenaManager.Arena
 						&& main.getMusicDownloadProcessor().isAlive()) {
 					execute(MusicSelectCommand.DOWNLOAD_IPFS);
 				} else if (false && song.getUrl() != null && (song.getUrl().toLowerCase().endsWith(".zip") || song.getUrl().toLowerCase().endsWith(".rar") || song.getUrl().toLowerCase().endsWith(".7z") || song.getUrl().toLowerCase().endsWith(".tar") || song.getUrl().toLowerCase().endsWith(".tar.gz"))) {
-					/* start crawler */
+					//main.getCrawler().start(song);
 				} else {
 	                executeEvent(EventType.open_download_site);
 				}
@@ -329,11 +317,11 @@ public final class MusicSelector extends MainState implements ArenaManager.Arena
 	public void input() {
 		final BMSPlayerInputProcessor input = main.getInputProcessor();
 
-		if (input.getControlKeyState(ControlKeys.NUM6)) {
-			/* CONFIG state missing */
-		} else if (false) {
-			/* STATE_SKINCONFIG */
-		} else if (false) {
+		if (input.getNumberState()[6]) {
+			main.changeState(bms.player.beatoraja.MainController.STATE_CONFIG);
+		} else if (input.getNumberState()[7]) {
+			main.changeState(bms.player.beatoraja.MainController.STATE_SKIN_SELECT);
+		} else if (input.getNumberState()[8]) {
 			if (getStage() == arenaLobby) {
 				closeArenaLobby();
 			} else {
@@ -358,8 +346,8 @@ public final class MusicSelector extends MainState implements ArenaManager.Arena
 	}
 
 	public void shutdown() {
-		if (main.getArenaManager() != null) {
-			main.getArenaManager().removeListener(this);
+		if (false) {
+			//main.getArenaManager().removeListener(this);
 		}
 		preview.stop();
 		if (search != null) {
@@ -418,7 +406,7 @@ public final class MusicSelector extends MainState implements ArenaManager.Arena
 			
 			if(main.getIRConnection() != null && currentir == null) {
 				currentir = new RankingData();
-				/* currentir put */
+				//////main.getRankingDataCache().put(song, config.getLnmode(), currentir);
 			}
 			resource.setRankingData(currentir);
 			ScoreData rival = current.getRivalScore();
@@ -569,15 +557,15 @@ public final class MusicSelector extends MainState implements ArenaManager.Arena
 
 			if(main.getIRConnection() != null && currentir == null) {
 				currentir = new RankingData();
-				/* currentir put */
+				//////main.getRankingDataCache().put(gradeBar.getCourseData(), config.getLnmode(), currentir);
 			}
 			
-			/* RankingData songrank */
-			if (false) {
-				/* songrank */
-				/* put songrank */
+			RankingData songrank = null;
+			if(main.getIRConnection() != null && songrank == null) {
+				songrank = new RankingData();
+				//////main.getRankingDataCache().put(songs[0], config.getLnmode(), songrank);
 			}
-			/* set songrank */
+			resource.setRankingData(songrank);
 			resource.setRivalScoreData(null);
 			resource.setChartOption(null);
 
@@ -691,7 +679,7 @@ public final class MusicSelector extends MainState implements ArenaManager.Arena
 			if (current instanceof SongBar) {
 				SongData song = ((SongBar) current).getSongData();
 				// if (song != null) {
-				// 	main.getArenaManager().selectSong(song.getSha256());
+				// 	//main.getArenaManager().selectSong(song.getSha256());
 				// }
 			}
 		}
@@ -708,10 +696,10 @@ public final class MusicSelector extends MainState implements ArenaManager.Arena
 		final Bar current = manager.getSelected();
 		if(main.getIRConnection() != null) {
 			if(current instanceof SongBar && ((SongBar) current).existsSong()) {
-				/* currentir */
+				currentir = null;
 				currentRankingDuration = (currentir != null ? Math.max(rankingReloadDuration - (System.currentTimeMillis() - currentir.getLastUpdateTime()) ,0) : 0) + rankingDuration;
 			} else if(current instanceof GradeBar && ((GradeBar) current).existsAllSongs()) {
-				/* currentir */
+				currentir = null;
 				currentRankingDuration = (currentir != null ? Math.max(rankingReloadDuration - (System.currentTimeMillis() - currentir.getLastUpdateTime()) ,0) : 0) + rankingDuration;
 			} else {
 				currentir = null;
@@ -722,14 +710,14 @@ public final class MusicSelector extends MainState implements ArenaManager.Arena
 			currentRankingDuration = -1;			
 		}
 
-		if (main.getArenaManager() != null && main.getArenaManager().isHost()) {
+		if (false) {
             if (current instanceof SongBar && ((SongBar) current).existsSong()) {
-                main.getArenaManager().sendSongSelect(((SongBar) current).getSongData().getSha256());
+                //main.getArenaManager().sendSongSelect(((SongBar) current).getSongData().getSha256());
             }
         }
 	}
 
-	@Override
+
 	public void onSongSelected(String songHash) {
 		Gdx.app.postRunnable(() -> {
             Bar[] bars = manager.currentsongs;
@@ -748,13 +736,13 @@ public final class MusicSelector extends MainState implements ArenaManager.Arena
         });
 	}
 
-	@Override
+
 	public void onStartGame() {
 		Gdx.app.postRunnable(() -> {
 			Bar current = manager.getSelected();
 			if (current instanceof SongBar && ((SongBar) current).existsSong()) {
                 String currentHash = ((SongBar) current).getSongData().getSha256();
-                String targetHash = main.getArenaManager().getCurrentSongHash();
+                String targetHash = null;
 
                 if (targetHash != null && !targetHash.equals(currentHash)) {
                     main.getMessageRenderer().addMessage("Cannot start: Song mismatch with Host!", 3000, Color.RED, 0);

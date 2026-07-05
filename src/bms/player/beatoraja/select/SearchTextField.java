@@ -52,7 +52,7 @@ public class SearchTextField extends Stage {
 		final Rectangle r = ((MusicSelectSkin) selector.getSkin()).getSearchTextRegion();
 
 		try {
-			generator = new FreeTypeFontGenerator(Gdx.files.internal(""));
+			generator = new FreeTypeFontGenerator(Gdx.files.internal("font/VL-Gothic-Regular.ttf"));
 			FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 			parameter.size = (int) r.height;
 			parameter.incremental = true;
@@ -97,7 +97,7 @@ public class SearchTextField extends Stage {
 								textField.setText("");
 								textField.setMessageText("no song found");
 								textFieldStyle.messageFontColor = Color.DARK_GRAY;
-								boolean DUMMY = false;
+								selector.main.getInputProcessor().startPressed();
 							}
 						}
 						

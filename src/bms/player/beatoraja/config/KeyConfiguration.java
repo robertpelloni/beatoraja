@@ -135,10 +135,10 @@ public class KeyConfiguration extends MainState {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		if (input.isControlKeyPressed(ControlKeys.LEFT)) {
+		if (false) {
 			setMode((mode + KEYS.length - 1) % KEYS.length);
 		}
-		if (input.isControlKeyPressed(ControlKeys.RIGHT)) {
+		if (false) {
 			setMode((mode + 1) % KEYS.length);
 		}
 
@@ -168,21 +168,21 @@ public class KeyConfiguration extends MainState {
 				setMidiKeyAssign(keysa[cursorpos]);
 				keyinput = false;
 			}
-			if (input.isControlKeyPressed(ControlKeys.DEL)) {
+			if (false) {
 				deletepressed = true;
 			}
 		} else {
-			if (input.isControlKeyPressed(ControlKeys.UP)) {
+			if (false) {
 				cursorpos = (cursorpos + keys.length - 1) % keys.length;
 			}
-			if (input.isControlKeyPressed(ControlKeys.DOWN)) {
+			if (false) {
 				cursorpos = (cursorpos + 1) % keys.length;
 			}
-			if (input.isControlKeyPressed(ControlKeys.NUM1)) {
+			if (false) {
 				config.setMusicselectinput((config.getMusicselectinput() + 1) % 3);
 			}
 			// change contronnler device 1
-			if (input.isControlKeyPressed(ControlKeys.NUM2)) {
+			if (false) {
 				if (controllers.length > 0) {
 					int index = 0;
 					for (; index < controllers.length; index++) {
@@ -196,7 +196,7 @@ public class KeyConfiguration extends MainState {
 				}
 			}
 			// change contronnler device 2
-			if (input.isControlKeyPressed(ControlKeys.NUM3)) {
+			if (false) {
 				if (controllers.length > 0 && pc.getController().length > 1) {
 					int index = 0;
 					for (; index < controllers.length; index++) {
@@ -210,7 +210,7 @@ public class KeyConfiguration extends MainState {
 				}
 			}
 
-			if (input.isControlKeyPressed(ControlKeys.NUM7)) {
+			if (false) {
 				keyboardConfig.setKeyAssign(MODE_HINT[mode], true);
 				keyboardConfig.getMouseScratchConfig().setKeyAssign(MODE_HINT[mode]);
 				for (int i = 0; i < controllerConfigs.length; i++) {
@@ -218,7 +218,7 @@ public class KeyConfiguration extends MainState {
 				}
 				midiconfig.setKeyAssign(MODE_HINT[mode], false);
 			}
-			if (input.isControlKeyPressed(ControlKeys.NUM8)) {
+			if (false) {
 				keyboardConfig.setKeyAssign(MODE_HINT[mode], false);
 				keyboardConfig.getMouseScratchConfig().setKeyAssign(MODE_HINT[mode]);
 				for (int i = 0; i < controllerConfigs.length; i++) {
@@ -226,7 +226,7 @@ public class KeyConfiguration extends MainState {
 				}
 				midiconfig.setKeyAssign(MODE_HINT[mode], false);
 			}
-			if (input.isControlKeyPressed(ControlKeys.NUM9)) {
+			if (false) {
 				keyboardConfig.setKeyAssign(MODE_HINT[mode], false);
 				keyboardConfig.getMouseScratchConfig().setKeyAssign(MODE_HINT[mode]);
 				for (int i = 0; i < controllerConfigs.length; i++) {
@@ -235,16 +235,16 @@ public class KeyConfiguration extends MainState {
 				midiconfig.setKeyAssign(MODE_HINT[mode], true);
 			}
 
-			if (input.isControlKeyPressed(ControlKeys.ENTER)) {
+			if (false) {
 				setKeyAssignMode(cursorpos);
 			}
 
-			if (input.isControlKeyPressed(ControlKeys.ESCAPE)) {
+			if (false) {
 				main.saveConfig();
 				main.changeState(MainController.STATE_SELECTMUSIC);
 			}
 
-			if (input.isControlKeyPressed(ControlKeys.DEL)) {
+			if (false) {
 				if(!deletepressed) deleteKeyAssign(keysa[cursorpos]);
 				deletepressed = true;
 			} else deletepressed = false;

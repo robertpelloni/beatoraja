@@ -125,31 +125,31 @@ public final class PracticeConfiguration {
 	}
 	
 	public void processInput(BMSPlayerInputProcessor input) {
-		if (input.isControlKeyPressed(ControlKeys.UP)) {
+		if (input.getCursorState()[0]) {
 			do {
 				cursorpos = (cursorpos + elements.length - 1) % elements.length;
 			} while(!elements[cursorpos].predicate.test(this));
 		}
-		if (input.isControlKeyPressed(ControlKeys.DOWN)) {
+		if (input.getCursorState()[1]) {
 			do {
 				cursorpos = (cursorpos + 1) % elements.length;
 			} while(!elements[cursorpos].predicate.test(this));
 		}
-		if (input.getControlKeyState(ControlKeys.LEFT) && (presscount == 0 || presscount + 10 < System.currentTimeMillis())) {
+		if (input.getCursorState()[2] && (presscount == 0 || presscount + 10 < System.currentTimeMillis())) {
 			if (presscount == 0) {
 				presscount = System.currentTimeMillis() + 500;
 			} else {
 				presscount = System.currentTimeMillis();
 			}
 			elements[cursorpos].action.accept(this, false);
-		} else if (input.getControlKeyState(ControlKeys.RIGHT) && (presscount == 0 || presscount + 10 < System.currentTimeMillis())) {
+		} else if (input.getCursorState()[3] && (presscount == 0 || presscount + 10 < System.currentTimeMillis())) {
 			if (presscount == 0) {
 				presscount = System.currentTimeMillis() + 500;
 			} else {
 				presscount = System.currentTimeMillis();
 			}
 			elements[cursorpos].action.accept(this, true);
-		} else if (!(input.getControlKeyState(ControlKeys.LEFT) || input.getControlKeyState(ControlKeys.RIGHT))) {
+		} else if (!(input.getCursorState()[2] || input.getCursorState()[3])) {
 			presscount = 0;
 		}
 	}
@@ -161,7 +161,7 @@ public final class PracticeConfiguration {
 			for(int i = 0;i < elements.length;i++) {
 				if(elements[i].predicate.test(this)) {
 					titlefont.setColor(cursorpos == i ? Color.YELLOW : Color.CYAN);
-					titlefont.draw(sprite, elements[i].text.apply(property), x, y - 22 * i);
+				titlefont.draw(sprite, elements[i].text.apply(property), x, y - 22 * i);
 				}
 			}
 
