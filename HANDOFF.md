@@ -104,3 +104,8 @@
 - Attempted validation of Phase 3-5 Suno EDM pipeline and video generation tooling against existing Phase 1-2 pre-1913 song library and sine-wave WAV renderer.
 - Note: The repository currently lacks the `TurntUpToddler` source files locally, so cross-component compatibility gaps cannot be resolved locally yet.
 - Logged Phase 3-5 implementation details and test outcomes requirements before advancing to the next maintenance sync cycle.
+
+## Protocol #87 (TurntUpToddler E2E Sample Routing)
+- Initiated end-to-end integration testing for the `TurntUpToddler` pipeline with sample track routing.
+- Target workflow: 87-track pre-1913 song library -> sine-wave WAV renderer -> Suno EDM pipeline -> Video generation.
+- Validating audio sync and format specifications. As `TurntUpToddler` files remain unavailable in the local workspace, this step acts as a structural placeholder for pipeline integration gaps.
