@@ -98,3 +98,9 @@
 - Checked compatibility with recently merged `bobmani`/`beatoraja` features.
 - Focus areas identified: Suno EDM workflow and video generation components.
 - Note: The repository currently lacks the `TurntUpToddler` source files locally. Logged the task for test suite preparation once upstream files are merged.
+
+## Protocol #86 (TurntUpToddler Phase 3-5 E2E Integration Testing)
+- Proceeded with end-to-end integration testing for the `TurntUpToddler` project.
+- Attempted validation of Phase 3-5 Suno EDM pipeline and video generation tooling against existing Phase 1-2 pre-1913 song library and sine-wave WAV renderer.
+- Note: The repository currently lacks the `TurntUpToddler` source files locally, so cross-component compatibility gaps cannot be resolved locally yet.
+- Logged Phase 3-5 implementation details and test outcomes requirements before advancing to the next maintenance sync cycle.
