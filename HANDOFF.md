@@ -120,3 +120,9 @@
 - Bumped version to `v5.106.0` following the completion of the `bobmani`/`beatoraja` second feature branch merge.
 - Pivot to validation: Validating the Phase 3-5 Suno pipeline output against the Phase 1-2 sine-wave renderer to ensure audio format compatibility across the full TurntUpToddler stack.
 - Submodule pointers for TurntUpToddler (synced at `01f224d`) updated and aligned.
+
+## Protocol #90 (Suno EDM Pipeline Staging & Submodule Validation)
+- Acknowledged supervisor directive: Suno EDM pipeline (Phase 3-5) is staged.
+- Validated submodule pointers for `f-zerox` and `ArrowVortex`. Result: Submodules are not currently registered or present in the local workspace.
+- Triggered automated regression suite to confirm cross-platform compatibility. Note: build/tests are currently blocked by pre-existing API drift compilation errors.
+- Prepared workspace for advancement to the next supervisor-designated protocol (referenced as Protocol #87).
