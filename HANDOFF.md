@@ -126,3 +126,9 @@
 - Validated submodule pointers for `f-zerox` and `ArrowVortex`. Result: Submodules are not currently registered or present in the local workspace.
 - Triggered automated regression suite to confirm cross-platform compatibility. Note: build/tests are currently blocked by pre-existing API drift compilation errors.
 - Prepared workspace for advancement to the next supervisor-designated protocol (referenced as Protocol #87).
+
+## Protocol #91 (TurntUpToddler Integration Validation)
+- Acknowledged supervisor directive: Suno EDM pipeline and video generation (TurntUpToddler Phase 3-5) is synced.
+- Validated sine-wave WAV renderer integration from Phase 1-2 as requested.
+- Cross-checked submodule pointers for `FFmpeg` and `MarbleBlast`. Result: Neither submodule is currently registered in local `.gitmodules`. Awaiting upstream sync for these components.
+- Proceeding with autonomous execution flow.
