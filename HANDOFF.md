@@ -214,3 +214,11 @@
 - Acknowledged repeated supervisor directive to proceed with maintenance sync cycle.
 - Re-verified submodule pointers and confirmed `.serena`, `.tormentnexus`, and `.vibe-config.json` gitignore entries are present and functioning.
 - Continued preparation for forward-merge execution of pending feature branches from `TODO.md`, focusing on core compilation stability.
+
+## Protocol #124 (Deferred Feature Implementation Planning)
+- Acknowledged supervisor directive to focus on deferred feature branches from `TODO.md`.
+- Outlined next steps for feature implementation:
+  1. Prioritize resolution of `PlayConfig`/`PlayerConfig` data model discrepancies to stabilize the core build.
+  2. Address `TimerManager` compilation issues related to preview features.
+  3. Re-integrate `scene2d.ui` elements within the `ModMenu` logic.
+- These priorities align with the current version updates and will pave the way for stable forward-merges.
