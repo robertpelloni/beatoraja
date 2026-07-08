@@ -222,3 +222,7 @@
   2. Address `TimerManager` compilation issues related to preview features.
   3. Re-integrate `scene2d.ui` elements within the `ModMenu` logic.
 - These priorities align with the current version updates and will pave the way for stable forward-merges.
+
+## Protocol #125 (Feature Implementation Initialization)
+- Acknowledged repeated supervisor directive to focus on deferred feature branches.
+- Transitioned from planning (Protocol #124) to active initialization of feature implementation, starting with core build stabilization to unblock `TODO.md` items.
