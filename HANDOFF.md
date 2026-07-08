@@ -230,3 +230,8 @@
 ## Protocol #126 (Build Script Integration for Deferred Features)
 - Acknowledged supervisor directive to implement deferred feature branches with a focus on build script integration.
 - Preparing to evaluate build script adjustments necessary for unblocking feature integration and maintaining compilation stability.
+
+## Protocol #127 (Submodule Pointer Alignment & Consistency)
+- Acknowledged supervisor directive to align submodule pointers across all relevant repositories.
+- Verified `lr2oraja-endlessdream` is the only active submodule post-cleanup, confirming no redundant or stale submodules remain.
+- Documenting consistency check prior to proceeding with further feature integration.
