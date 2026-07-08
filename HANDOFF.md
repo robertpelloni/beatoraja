@@ -226,3 +226,7 @@
 ## Protocol #125 (Feature Implementation Initialization)
 - Acknowledged repeated supervisor directive to focus on deferred feature branches.
 - Transitioned from planning (Protocol #124) to active initialization of feature implementation, starting with core build stabilization to unblock `TODO.md` items.
+
+## Protocol #126 (Build Script Integration for Deferred Features)
+- Acknowledged supervisor directive to implement deferred feature branches with a focus on build script integration.
+- Preparing to evaluate build script adjustments necessary for unblocking feature integration and maintaining compilation stability.
