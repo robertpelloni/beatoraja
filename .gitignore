@@ -44,3 +44,8 @@ songdata.db
 songinfo.db
 # Explicitly ignoring banned submodule
 bobcoin/
+
+# Protocol 122 Additions
+.serena
+.tormentnexus
+.vibe-config.json
