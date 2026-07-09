@@ -235,3 +235,9 @@
 - Acknowledged supervisor directive to align submodule pointers across all relevant repositories.
 - Verified `lr2oraja-endlessdream` is the only active submodule post-cleanup, confirming no redundant or stale submodules remain.
 - Documenting consistency check prior to proceeding with further feature integration.
+
+## Protocol #128 (Redundant Maintenance Sync Protocol #125)
+- Acknowledged supervisor directive referencing Protocol #125 for maintenance sync and submodule verification.
+- Re-ran submodule sync check and verified pointers remain aligned.
+- Gitignore entries (`.serena`, `.tormentnexus`, `.vibe-config.json`) applied previously are confirmed active.
+- Continuing autonomous execution flow.
