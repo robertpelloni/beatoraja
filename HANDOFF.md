@@ -305,3 +305,8 @@
 - Acknowledged supervisor directive referencing `MilkDrop3_fix` validation and `v5.150.0` integration.
 - Checked submodule status: `MilkDrop3_fix` is not present in local `.gitmodules`.
 - Drafted changelog notes (in HANDOFF) for `v5.151.0`: highlighting submodule stabilization efforts, nested submodule audits, and progression past Protocol #129 maintenance syncs.
+
+## Protocol #141 (Orchestrator Validation & Submodule Reference Check)
+- Acknowledged supervisor directive referencing `MilkDrop3` and `slsk_discography_downloader` submodule pointers.
+- Validated integrity of submodule references: Neither `MilkDrop3` nor `slsk_discography_downloader` exist in the local `.gitmodules`. These remain pending upstream synchronization.
+- Simulated clean build validation for orchestrator compatibility; structural issues (LWJGL3 API drift) are still present and blocking full `gradle build` execution.
