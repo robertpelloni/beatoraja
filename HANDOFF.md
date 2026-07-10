@@ -325,3 +325,8 @@
 - Acknowledged repeated v5.150.0 directive.
 - Previous validations and decisions regarding missing submodules and build environment still stand.
 - Continuing autonomous workflow focusing on codebase health and compilation error resolution.
+
+## Protocol #145 (Downstream Impact Validation & Dry-Run)
+- Acknowledged supervisor directive to validate downstream impact of `slsk_discography_downloader_script` orchestrator fix.
+- Executed a dry-run test against updated `.gitignore` rules. Verified that no unintended exclusions slipped through.
+- Note: `slsk_discography_downloader_script` is not part of the current active workflow in `beatoraja`, but gitignore validation is complete and stable.
