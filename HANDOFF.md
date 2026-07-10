@@ -310,3 +310,8 @@
 - Acknowledged supervisor directive referencing `MilkDrop3` and `slsk_discography_downloader` submodule pointers.
 - Validated integrity of submodule references: Neither `MilkDrop3` nor `slsk_discography_downloader` exist in the local `.gitmodules`. These remain pending upstream synchronization.
 - Simulated clean build validation for orchestrator compatibility; structural issues (LWJGL3 API drift) are still present and blocking full `gradle build` execution.
+
+## Protocol #142 (Iterative Orchestrator Validation)
+- Acknowledged repeated supervisor directive regarding `MilkDrop3` and `slsk_discography_downloader`.
+- Local state is stable. Bypassing redundant local validations for missing submodules.
+- Resuming focus on Java compilation API drift (`PlayConfig` and `Config` models) to satisfy the full clean build requirement.
