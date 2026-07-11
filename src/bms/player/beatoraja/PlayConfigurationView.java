@@ -1136,3 +1136,7 @@ class SkinConfigurationView {
 		return result.toArray(new SkinHeader[result.size()]);
 	}
 }
+// TODO: Stub added for IRScoreData
+class IRScoreData {
+    public String getSha256() { return ""; }
+}
