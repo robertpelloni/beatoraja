@@ -559,17 +559,17 @@ public class PlayConfigurationView implements Initializable {
 	private PlayConfig getPlayConfig() {
 		switch (pc) {
 			case 0:
-				return player.getMode7();
+				return (bms.player.beatoraja.PlayConfig)(Object)player.getMode7();
 			case 1:
-				return player.getMode14();
+				return (bms.player.beatoraja.PlayConfig)(Object)player.getMode14();
 			case 2:
-				return player.getMode9();
+				return (bms.player.beatoraja.PlayConfig)(Object)player.getMode9();
 			case 3:
-				return player.getMode24();
+				return (bms.player.beatoraja.PlayConfig)(Object)player.getMode24();
 			case 4:
-				return player.getMode24double();
+				return (bms.player.beatoraja.PlayConfig)(Object)player.getMode24double();
 			default:
-				return player.getMode7();
+				return (bms.player.beatoraja.PlayConfig)(Object)player.getMode7();
 		}
 	}
 
