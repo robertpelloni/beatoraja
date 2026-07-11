@@ -896,7 +896,7 @@ class SkinConfigurationView {
 					lr2skinheader.add(header);
 				}
 			} else {
-				LR2SkinHeaderLoader loader = new LR2SkinHeaderLoader();
+				LR2SkinHeaderLoader loader = new LR2SkinHeaderLoader(null);
 				try {
 					SkinHeader header = loader.loadSkin(path, null);
 					// System.out.println(path.toString() + " : " +
