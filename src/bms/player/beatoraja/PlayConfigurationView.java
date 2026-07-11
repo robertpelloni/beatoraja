@@ -696,8 +696,8 @@ public class PlayConfigurationView implements Initializable {
     @FXML
 	public void start() {
 		commit();
-		loader.hide();
-		MainLoader.play(null, 0, true, songUpdated);
+		/*loader.hide();*/
+		MainLoader.play(null, null, true, null, null, songUpdated);
 	}
 
     @FXML
