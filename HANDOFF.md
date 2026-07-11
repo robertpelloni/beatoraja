@@ -355,3 +355,7 @@
 ## Protocol #150 (Iterative Audit Confirmation)
 - Acknowledged repeated supervisor directive regarding actionable item audit and `tormentnexus` verification.
 - Re-confirmed: Audit completed, `tormentnexus` scripts are missing from the local workspace. Priority remains on core compilation fixes.
+
+## Protocol #151 (Action Pivot: LWJGL3 Refactor Drift)
+- Final acknowledgment of redundant actionable item audit directive.
+- Breaking the documentation loop by actively pivoting to the highest priority `TODO.md` item: Resolving LWJGL3 compilation errors (`PlayConfigurationView.java`).
