@@ -890,7 +890,7 @@ class SkinConfigurationView {
 		scan(Paths.get("skin"), lr2skinpaths);
 		for (Path path : lr2skinpaths) {
 			if (path.toString().toLowerCase().endsWith(".json")) {
-				JSONSkinLoader loader = new JSONSkinLoader();
+				/*JSONSkinLoader loader = new JSONSkinLoader();*/ Object loader = null;
 				SkinHeader header = loader.loadHeader(path);
 				if (header != null) {
 					lr2skinheader.add(header);
