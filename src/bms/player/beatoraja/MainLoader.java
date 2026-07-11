@@ -125,13 +125,13 @@ cfg.setWindowedMode(config.getResolution().width, config.getResolution().height)
 
 // fullscreen
 switch (config.getDisplaymode()) {
-case FULLSCREEN:
+case 1: // Config.DISPLAY_FULLSCREEN
 cfg.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode());
 break;
-case BORDERLESS:
+case 2: // Config.DISPLAY_BORDERLESS (assumed)
 cfg.setDecorated(false);
 break;
-case WINDOW:
+case 0: // Config.DISPLAY_WINDOW
 cfg.setDecorated(true);
 break;
 }
