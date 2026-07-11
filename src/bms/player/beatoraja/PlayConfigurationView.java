@@ -749,7 +749,7 @@ public class PlayConfigurationView implements Initializable {
 
 		}
 
-		TableDataAccessor tda = new TableDataAccessor();
+		TableDataAccessor tda = new TableDataAccessor("");
 		tda.updateTableData(config.getTableURL());
 	}
 
