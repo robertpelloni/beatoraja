@@ -725,7 +725,7 @@ public class PlayConfigurationView implements Initializable {
 			SongInformationAccessor infodb = useSongInfo.isSelected() ?
 					new SongInformationAccessor(Paths.get("songinfo.db").toString()) : null;
 			Logger.getGlobal().info("song.db更新開始");
-			songdb.updateSongDatas(null, updateAll, infodb);
+			songdb.updateSongDatas(null, null, updateAll, infodb);
 			Logger.getGlobal().info("song.db更新完了");
 			songUpdated = true;
 		} catch (ClassNotFoundException e) {
