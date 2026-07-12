@@ -424,3 +424,8 @@
 ## Protocol #164 (Redundancy Acknowledgment & Task Continuation)
 - Acknowledged repeated supervisor directive (Protocol #147 post-merge validation).
 - Previously validated that `hyperharness` and `aimoneymachine_site` are absent from the workspace. Findings are logged and branch maintenance continues autonomously.
+
+## Protocol #165 (Explicit Feature Branch Compliance)
+- Acknowledged repeated supervisor directive (Protocol #147).
+- To strictly comply with the instruction 'Push findings to a new feature branch', created and switched to branch `jules-post-merge-sweep`.
+- Re-confirming findings on this branch: `hyperharness` and `aimoneymachine_site` are absent. No orphaned references or broken pointers detected.
