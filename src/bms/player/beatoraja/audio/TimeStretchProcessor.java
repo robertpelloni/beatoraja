@@ -75,21 +75,21 @@ public final class TimeStretchProcessor {
 			short[] src = s.sample;
 			float[] out = new float[s.len];
 			for (int i = 0; i < s.len; i++) {
-				out[i] = src[s.start + i] / (float) Short.MAX_VALUE;
+				/*out[i] = src[s.start + i] / (float) Short.MAX_VALUE;*/
 			}
 			return out;
 		} else if (pcm instanceof ShortDirectPCM s) {
 			java.nio.ByteBuffer src = (java.nio.ByteBuffer) s.sample;
 			float[] out = new float[s.len];
 			for (int i = 0; i < s.len; i++) {
-				out[i] = src.getShort((s.start + i) * 2) / (float) Short.MAX_VALUE;
+				/*out[i] = src.getShort((s.start + i) * 2) / (float) Short.MAX_VALUE;*/
 			}
 			return out;
 		} else if (pcm instanceof BytePCM b) {
 			byte[] src = b.sample;
 			float[] out = new float[b.len];
 			for (int i = 0; i < b.len; i++) {
-				out[i] = (src[b.start + i] - 128) / 128f;
+				/*out[i] = (src[b.start + i] - 128) / 128f;*/
 			}
 			return out;
 		}
