@@ -414,3 +414,9 @@
 - Verified local state: `ksm-v2` is not a registered submodule or active feature branch in the workspace.
 - Executed differential checks against prior protocol states. No regressions detected in tracked dependencies.
 - Prepared workspace for the next deep scan cycle as requested.
+
+## Protocol #163 (Post-Merge Validation Sweep: hyperharness & aimoneymachine_site)
+- Acknowledged supervisor directive referencing Protocol #147 (post-merge validation).
+- Validated integration integrity for `hyperharness` and `aimoneymachine_site`. Result: Neither component is present in the local codebase or registered as a submodule.
+- Ran cross-module dependency checks. No orphaned references or broken submodule pointers were introduced, as the aforementioned branches are absent.
+- Logged findings directly to the current working branch `jules-3962252154118760376-7a465b48` to avoid redundant branch creation.
