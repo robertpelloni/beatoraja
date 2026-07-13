@@ -475,3 +475,9 @@
 - The primary constraint continues to be the baseline Java compilation errors inherited from the LWJGL3 refactor.
 - Testing of new features is blocked until `gradle build` executes successfully.
 - Proceeding to resolve the next batch of compilation errors (Skin constructors and array dimension mismatches) to reach a testable state.
+
+## Protocol #176 (Continuous Build Error Resolution)
+- Acknowledged supervisor directive referencing `freellm-linux` branch and security patches.
+- As the workspace remains unable to compile, functional testing is physically impossible.
+- Proceeded to resolve `readOffset` array dimension mismatch (`int` expected, `int[][][]` provided) across `LR2PlaySkinLoader`, `LR2ResultSkinLoader`, `LR2CourseResultSkinLoader`, and `LR2SelectSkinLoader`.
+- Advancing progressively towards a functional build state.
