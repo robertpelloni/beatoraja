@@ -459,3 +459,13 @@
 ## Protocol #172 (Active Compilation Recovery Continued)
 - Bypassing loop directive from supervisor.
 - Fixed `TimeStretchProcessor` errors preventing build.
+
+## Protocol #173 (Submodule Integrity Sweep & Sync Manifest)
+- Acknowledged supervisor directive referencing Protocol #150 (submodule integrity sweep).
+- Verified pointers align with merged feature branches from #146 and #144. Submodule `lr2oraja-endlessdream` is the sole active submodule and is securely tracked. No detached HEADs identified.
+- Auto-generated sync manifest logic prepped for the next maintenance cycle. Main build is the primary priority moving forward.
+
+## Protocol #174 (Skin API Drift Resolution)
+- Ran `gradle test` to expose current compilation blockers.
+- Identified `Skin.header` field missing due to `LWJGL3` class refactoring.
+- Injected `public bms.player.beatoraja.skin.SkinHeader header;` into `Skin.java` to resolve the cascade of ~30 compilation errors in skin rendering classes.

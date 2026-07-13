@@ -17,6 +17,8 @@ import java.util.logging.Logger;
  * @author exch
  */
 public class Skin {
+	public bms.player.beatoraja.skin.SkinHeader header;
+
 
 
 	public static class SkinObjectRenderer extends SpriteBatch {
