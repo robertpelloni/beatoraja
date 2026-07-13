@@ -54,7 +54,7 @@ enum ResultCommand implements LR2SkinLoader.Command<LR2ResultSkinLoader> {
 		loader.gauge.y = loader.src.height - values[4];
 		loader.skin.setDestination(loader.gaugeobj, values[2], loader.gauge.x, loader.gauge.y, loader.gauge.width, loader.gauge.height, values[7],
 				values[8], values[9], values[10], values[11], values[12], values[13], values[14],
-				values[15], values[16], values[17], values[18], values[19], values[20], loader.readOffset(str, 21)[0][0][0]);
+				values[15], values[16], values[17], values[18], values[19], values[20], loader.readOffset(str, 21));
 	}),
 	SRC_NOTECHART_1P ((loader, str) -> {
 		//#SRC_NOTECHART_1P,(index),(gr),(x),(y),(w),(h),(div_x),(div_y),(cycle),(timer),field_w,field_h,(start),(end),delay,backTexOff,orderReverse,noGap
@@ -69,7 +69,7 @@ enum ResultCommand implements LR2SkinLoader.Command<LR2ResultSkinLoader> {
 		loader.gauge.y = loader.src.height - values[4];
 		loader.skin.setDestination(loader.noteobj, values[2], loader.gauge.x, loader.gauge.y, loader.gauge.width, loader.gauge.height, values[7],
 				values[8], values[9], values[10], values[11], values[12], values[13], values[14],
-				values[15], values[16], values[17], values[18], values[19], values[20], loader.readOffset(str, 21)[0][0][0]);
+				values[15], values[16], values[17], values[18], values[19], values[20], loader.readOffset(str, 21));
 	}),
 	SRC_BPMCHART ((loader, str) -> {
 		//#SRC_BPMCHART, field_w, field_h, delay, lineWidth, mainBPMColor, minBPMColor, maxBPMColor, otherBPMColor, stopLineColor, transitionLineColor
@@ -84,7 +84,7 @@ enum ResultCommand implements LR2SkinLoader.Command<LR2ResultSkinLoader> {
 		loader.gauge.y = loader.src.height - values[4];
 		loader.skin.setDestination(loader.bpmgraphobj, values[2], loader.gauge.x, loader.gauge.y, loader.gauge.width, loader.gauge.height, values[7],
 				values[8], values[9], values[10], values[11], values[12], values[13], values[14],
-				values[15], values[16], values[17], values[18], values[19], values[20], loader.readOffset(str, 21)[0][0][0]);
+				values[15], values[16], values[17], values[18], values[19], values[20], loader.readOffset(str, 21));
 	}),
 	SRC_TIMINGCHART_1P ((loader, str) -> {
 		//#SRC_TIMINGCHART_1P,(index),(gr),(x),width,height,lineWidth,graphColor,averageColor,devColor,PGColor,GRColor,GDColor,BDColor,PRColor,drawAverage,drawDev
@@ -99,7 +99,7 @@ enum ResultCommand implements LR2SkinLoader.Command<LR2ResultSkinLoader> {
 		loader.gauge.y = loader.src.height - values[4];
 		loader.skin.setDestination(loader.timinggraphobj, values[2], loader.gauge.x, loader.gauge.y, loader.gauge.width, loader.gauge.height, values[7],
 				values[8], values[9], values[10], values[11], values[12], values[13], values[14],
-				values[15], values[16], values[17], values[18], values[19], values[20], loader.readOffset(str, 21)[0][0][0]);
+				values[15], values[16], values[17], values[18], values[19], values[20], loader.readOffset(str, 21));
 	});
 
 	public final BiConsumer<LR2ResultSkinLoader, String[]> function;
