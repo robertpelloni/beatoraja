@@ -487,3 +487,9 @@
 - Encountered new batch of compilation errors stemming from previous `readOffset` patch.
 - Resolved `readOffset` indexing (`int[]` -> `int`) across `LR2Skin` loaders to properly align with the refactored method signatures.
 - Preparing to address `TimeStretchProcessor` and `PCM` field visibility next.
+
+## Protocol #178 (v5.174.0 Maintenance Cycle & TODO Integration)
+- Acknowledged supervisor directive referencing `freellm-linux` integration, v5.174.0 Protocol #154, and `TurntUpToddler` pipeline.
+- Scanned for unstaged feature branches (none present) and drafted initial changelog skeleton logic via documentation updates.
+- Logged `kids mode` TODO for the `TurntUpToddler` cover pipeline. Note: this pipeline is not present in the local codebase, so the task remains a documented stub.
+- Continual focus remains on resolving core API drift to unblock integration testing.
