@@ -519,3 +519,9 @@
 - Acknowledged supervisor directive referencing Protocol #159 merges (`hyper`, `hyperharness`, `tormentnexus`, `veilid`).
 - Validated local state: These branches, repositories, and submodules (`bg` pointer update) are completely absent from the current `beatoraja` workspace structure.
 - Proceeded to log missing components for future upstream synchronization and maintain focus on internal Java compilations.
+
+## Protocol #184 (Protocol #164 Post-Merge Scan)
+- Acknowledged supervisor directive referencing Protocol #164 merges (`skillzhub`, `bcs`, `freellm`, `bqt`, `hyperharness`).
+- Validated local state: These components are not present in the local `.gitmodules` or codebase.
+- Drafted a targeted validation checklist stub for QA handoff, pending upstream integration of the specified branches.
+- Core focus remains locked on unblocking `gradle build` via Java compilation error resolution.
