@@ -481,3 +481,9 @@
 - As the workspace remains unable to compile, functional testing is physically impossible.
 - Proceeded to resolve `readOffset` array dimension mismatch (`int` expected, `int[][][]` provided) across `LR2PlaySkinLoader`, `LR2ResultSkinLoader`, `LR2CourseResultSkinLoader`, and `LR2SelectSkinLoader`.
 - Advancing progressively towards a functional build state.
+
+## Protocol #177 (Compilation Fix: Skin Loaders)
+- Ran test suite as directed by supervisor to verify current stability.
+- Encountered new batch of compilation errors stemming from previous `readOffset` patch.
+- Resolved `readOffset` indexing (`int[]` -> `int`) across `LR2Skin` loaders to properly align with the refactored method signatures.
+- Preparing to address `TimeStretchProcessor` and `PCM` field visibility next.
