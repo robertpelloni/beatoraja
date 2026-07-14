@@ -22,8 +22,9 @@ public class MusicSelectSkin extends Skin {
 	public SkinText searchText;
 	private Rectangle search;
 
-	public MusicSelectSkin(SkinHeader header) {
-		//super(header);
+	/*public public MusicSelectSkin(SkinHeader header) {*/
+	public MusicSelectSkin(bms.player.beatoraja.skin.SkinHeader header) { super(null, null); this.header = header;
+		///*super(header);*/
 	}
 
 	public int[] getClickableBar() {

@@ -9,8 +9,9 @@ public class MusicResultSkin extends Skin {
 
 	private int ranktime;
 
-	public MusicResultSkin(SkinHeader header) {
-		super(header);
+	/*public public MusicResultSkin(SkinHeader header) {*/
+	public MusicResultSkin(bms.player.beatoraja.skin.SkinHeader header) { super(null, null); this.header = header;
+		/*super(header);*/
 	}
 
 	public int getRankTime() {

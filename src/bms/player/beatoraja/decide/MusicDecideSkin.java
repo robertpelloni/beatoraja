@@ -9,7 +9,8 @@ import bms.player.beatoraja.skin.*;
  */
 public class MusicDecideSkin extends Skin {
 
-    public MusicDecideSkin(SkinHeader header) {
-        //super(header);
+    /*public public MusicDecideSkin(SkinHeader header) {*/
+	public MusicDecideSkin(bms.player.beatoraja.skin.SkinHeader header) { super(null, null); this.header = header;
+        ///*super(header);*/
     }
 }

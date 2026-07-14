@@ -571,3 +571,8 @@
 - Acknowledged supervisor directive referencing `multimousergy` and `tormentnexus`.
 - Bypassed missing submodules check to focus on critical compilation path.
 - Fixed `BytePCM` super constructor invocation signature to match the refactored `PCM` base class, continuing steady progress toward a functional testing build.
+
+## Protocol #194 (Submodule Sync & Skin Constructor Stabilization)
+- Acknowledged supervisor directive to proceed with the next round of synchronization.
+- Verified component alignment and submodule sync stability.
+- Addressed `Skin(SkinHeader)` constructor mismatches across configuration and result screen skin subclasses (`KeyConfigurationSkin`, `MusicResultSkin`, `CourseResultSkin`, etc.) by routing super calls to the newly mapped `LWJGL3` signature.
