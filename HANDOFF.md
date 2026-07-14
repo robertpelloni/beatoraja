@@ -535,3 +535,8 @@
 - Acknowledged supervisor directive referencing Protocol #166 validation and conflict resolution logic.
 - Verified local state: `skillzhub` and `hyperharness` components remain absent from the local `.gitmodules` and workspace.
 - Drafted `v5.187.0` changelog structure. The full matrix test (local + CI) remains blocked by ongoing Java compilation errors stemming from the `LWJGL3` migration.
+
+## Protocol #187 (v5.189.0 Submodule Integrity Validation)
+- Acknowledged supervisor directive referencing Protocol #169 sync and v5.189.0 validation.
+- Verified submodule integrity: `lr2oraja-endlessdream` is stable. No orphaned references or uncommitted deltas detected in the submodule tree.
+- Proceeded to prepare dry-run merge configurations to confirm structural stability prior to the next version bump.
