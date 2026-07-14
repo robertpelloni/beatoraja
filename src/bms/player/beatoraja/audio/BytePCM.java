@@ -7,7 +7,7 @@ import java.nio.ByteOrder;
 public class BytePCM extends PCM {
 
 	BytePCM(int channels, int sampleRate, int start, int len, byte[] sample) {
-		super(channels, sampleRate, start, len, sample);
+		super(channels, sampleRate, start, len); this.sample = sample;
 	}
 
 	protected static BytePCM loadPCM(PCMLoader loader) throws IOException {
