@@ -481,4 +481,9 @@ class WavFileInputStream extends InputStream {
 		// System.out.println("read : " + pos + " data : " + result);
 		return result;
 	}
+
+	// TODO: stub added to bypass LWJGL3 missing method
+	public static PCM load(String path, Object driver) {
+		return null;
+	}
 }
