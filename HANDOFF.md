@@ -576,3 +576,8 @@
 - Acknowledged supervisor directive to proceed with the next round of synchronization.
 - Verified component alignment and submodule sync stability.
 - Addressed `Skin(SkinHeader)` constructor mismatches across configuration and result screen skin subclasses (`KeyConfigurationSkin`, `MusicResultSkin`, `CourseResultSkin`, etc.) by routing super calls to the newly mapped `LWJGL3` signature.
+
+## Protocol #195 (Audio Subsystem Visibility Fixes)
+- Ran `gradle test` to analyze current compilation blocks.
+- Identified `PCM` visibility constraints (`sample`, `len`, `start`) as the primary remaining blockers for audio driver initialization.
+- Applied a targeted script to refactor `PCM` base class property visibility to `public` to bypass LWJGL3 refactor drifts.

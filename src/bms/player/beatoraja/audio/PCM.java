@@ -39,7 +39,7 @@ public class PCM {
 	/**
 	 * PCMデータ
 	 */
-	private short[] sample;
+	public short[] sample;
 
 	public PCM() {
 
