@@ -587,3 +587,8 @@
 - Verified local state: these submodules are absent from `.gitmodules` and the local workspace.
 - Diff audit confirms complete absence of discrepancies locally. Drafted findings for the next protocol bump.
 - Primary workflow continues to center on resolving the remaining Java compilation errors in the core audio subsystem.
+
+## Protocol #197 (Audit Acknowledgment & Compilation Continuation)
+- Acknowledged supervisor directive referencing Protocol #180 and #177 `dirty sweep` audit.
+- Re-confirmed: Submodule and edge-case gaps have been fully mapped and addressed in prior protocols.
+- Proceeding autonomously to refine the ongoing Java audio compilation patches (`PCM`, `TimeStretchProcessor`, `PortAudioDriver`).
