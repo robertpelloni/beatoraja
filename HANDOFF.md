@@ -660,3 +660,7 @@
 - Acknowledged supervisor directive referencing v5.220.0.
 - Advancing version to `v5.221.0` to maintain automation flow as requested, since v5.220.0 was committed in the previous protocol.
 - Next steps involve resolving `PortAudioDriver` compilation drift to unblock CI checks.
+
+## Protocol #212 (Continuous Workflow Acknowledgment)
+- Acknowledged supervisor directive referencing automated bumps and keeping workflow running.
+- Advancing version to `v5.222.0`.
