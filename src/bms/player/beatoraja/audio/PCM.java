@@ -39,7 +39,7 @@ public class PCM {
 	/**
 	 * PCMデータ
 	 */
-	public short[] sample;
+	public Object sample;
 
 	public PCM() {
 
@@ -485,5 +485,12 @@ class WavFileInputStream extends InputStream {
 	// TODO: stub added to bypass LWJGL3 missing method
 	public static PCM load(String path, Object driver) {
 		return null;
+	}
+
+	public PCM(int channels, int sampleRate, int start, int len) {
+		this.channels = channels;
+		this.sampleRate = sampleRate;
+		this.start = start;
+		this.len = len;
 	}
 }

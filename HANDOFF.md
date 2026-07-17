@@ -723,3 +723,8 @@
 - Acknowledged repeated supervisor directive regarding changelog diff.
 - Bypassing redundant documentation loop to apply critical build fixes to `PortAudioDriver` property casts (`short[]`, `byte[]`, `float[]`).
 - Focused strictly on restoring full compilation.
+
+## Protocol #225 (PCM Base Class Signature Refactor)
+- Acknowledged supervisor directive referencing v5.233.0 to v5.232.0 changelog.
+- Ran `gradle test` which surfaced deep structure errors in `BytePCM` and `PCM` constructors.
+- Restored `PCM.sample` property to generic `Object` (from `short[]`) to prevent bad casts across audio drivers, and injected the missing `PCM(int, int, int, int)` constructor.
