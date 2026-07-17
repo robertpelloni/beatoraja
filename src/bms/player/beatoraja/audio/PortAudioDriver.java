@@ -8,13 +8,13 @@ import bms.player.beatoraja.Config;
 
 /**
  * PortAudioドライバ
- * 
+ *
  * @author exch
  */
 public class PortAudioDriver extends AbstractAudioDriver<PCM> implements Runnable {
 
 	private static DeviceInfo[] devices;
-	
+
 	private BlockingStream stream;
 
 	/**
@@ -23,17 +23,17 @@ public class PortAudioDriver extends AbstractAudioDriver<PCM> implements Runnabl
 	private final MixerInput[] inputs;
 
 	private long idcount;
-	
+
 	private boolean stop = false;
-	
+
 	private final float[] buffer;
-	
+
 	private final Thread mixer;
 
 	public static DeviceInfo[] getDevices() {
 		if(devices == null) {
 			PortAudio.initialize();
-			
+
 			devices = new DeviceInfo[PortAudio.getDeviceCount()];
 			for(int i = 0;i < devices.length;i++) {
 				devices[i] = PortAudio.getDeviceInfo(i);
@@ -54,7 +54,7 @@ public class PortAudioDriver extends AbstractAudioDriver<PCM> implements Runnabl
 			}
 		}
 		DeviceInfo deviceInfo = devices[ deviceId ];
-		
+
 		setSampleRate(config.getAudioConfig().getSampleRate() <= 0 ? (int)deviceInfo.defaultSampleRate : config.getAudioConfig().getSampleRate());
 		channels = 2;
 //		System.out.println( "  deviceId    = " + deviceId );
@@ -69,7 +69,7 @@ public class PortAudioDriver extends AbstractAudioDriver<PCM> implements Runnabl
 //		System.out.println( "  suggestedLatency = " + streamParameters.suggestedLatency );
 
 		int flags = 0;
-		
+
 		// Open a stream for output.
 		stream = PortAudio.openStream( null, streamParameters, getSampleRate(), framesPerBuffer, flags );
 
@@ -143,7 +143,7 @@ public class PortAudioDriver extends AbstractAudioDriver<PCM> implements Runnabl
 				if (input.pcm == id) {
 					return input.pos != -1;
 				}
-			}				
+			}
 		}
 		return false;
 	}
@@ -156,7 +156,7 @@ public class PortAudioDriver extends AbstractAudioDriver<PCM> implements Runnabl
 				if (input.pcm == id) {
 					input.pos = -1;
 				}
-			}				
+			}
 		}
 	}
 
@@ -192,21 +192,21 @@ public class PortAudioDriver extends AbstractAudioDriver<PCM> implements Runnabl
 					for (MixerInput input : inputs) {
 						if (input.pos != -1) {
 							if(input.pcm instanceof FloatPCM floatPCM) {
-								final float[] sample = floatPCM.sample;
+								final float[] sample = (float[]) floatPCM.sample;
 								wav_l += sample[input.pos + floatPCM.start] * input.volume;
-								wav_r += sample[input.pos+1 + floatPCM.start] * input.volume;																
+								wav_r += sample[input.pos+1 + floatPCM.start] * input.volume;
 							} else if(input.pcm instanceof ShortDirectPCM shortPCM) {
-								final ByteBuffer sample = shortPCM.sample;
+								final ByteBuffer sample = (ByteBuffer) shortPCM.sample;
 								wav_l += ((float) sample.getShort((input.pos + shortPCM.start) * 2)) * input.volume / Short.MAX_VALUE;
-								wav_r += ((float) sample.getShort((input.pos+1 + shortPCM.start) * 2)) * input.volume / Short.MAX_VALUE;																
+								wav_r += ((float) sample.getShort((input.pos+1 + shortPCM.start) * 2)) * input.volume / Short.MAX_VALUE;
 							} else if(input.pcm instanceof ShortPCM shortPCM) {
-								final short[] sample = shortPCM.sample;
+								final short[] sample = (short[]) shortPCM.sample;
 								wav_l += ((float) sample[input.pos + shortPCM.start]) * input.volume / Short.MAX_VALUE;
-								wav_r += ((float) sample[input.pos+1 + shortPCM.start]) * input.volume / Short.MAX_VALUE;																
+								wav_r += ((float) sample[input.pos+1 + shortPCM.start]) * input.volume / Short.MAX_VALUE;
 							} else if(input.pcm instanceof BytePCM bytePCM) {
-								final byte[] sample = bytePCM.sample;
+								final byte[] sample = (byte[]) bytePCM.sample;
 								wav_l += ((float) (sample[input.pos + bytePCM.start] - 128)) * input.volume / Byte.MAX_VALUE;
-								wav_r += ((float) (sample[input.pos+1 + bytePCM.start] - 128)) * input.volume / Byte.MAX_VALUE;																
+								wav_r += ((float) (sample[input.pos+1 + bytePCM.start] - 128)) * input.volume / Byte.MAX_VALUE;
 							}
 							input.posf += gpitch * input.pitch;
 							int inc = (int)input.posf;
@@ -221,17 +221,17 @@ public class PortAudioDriver extends AbstractAudioDriver<PCM> implements Runnabl
 					}
 					buffer[i] = wav_l;
 					buffer[i+1] = wav_r;
-				}						
+				}
 			}
-			
+
 			try {
 				stream.write( buffer, buffer.length / 2);
 			} catch(Throwable e) {
 				e.printStackTrace();
 			}
-			
+
 		}
-	}		
+	}
 
 	public void dispose() {
 		super.dispose();
@@ -241,11 +241,11 @@ public class PortAudioDriver extends AbstractAudioDriver<PCM> implements Runnabl
 			while(mixer.isAlive() && System.currentTimeMillis() - l < 1000);
 			stream.stop();
 			stream.close();
-			
+
 			stream = null;
 
 			PortAudio.terminate();
-//			System.out.println( "JPortAudio test complete." );			
+//			System.out.println( "JPortAudio test complete." );
 		}
 	}
 
