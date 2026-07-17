@@ -83,11 +83,11 @@ public class BytePCM extends PCM {
 			long mod = (i * sampleRate) % sample;
 			for (int j = 0; j < channels; j++) {
 				if (mod  != 0 && (int) ((position + 1) * channels + j) < this.sample.length) {
-					short sample1 = this.sample[(int) (position * channels + j)];
-					short sample2 = this.sample[(int) ((position + 1) * channels + j)];
+					short sample1 = ((byte[])this.sample)[(int) (position * channels + j)];
+					short sample2 = ((byte[])this.sample)[(int) ((position + 1) * channels + j)];
 					samples[(int) (i * channels + j)] = (byte) (((long)sample1 * (sample - mod) + (long)sample2 * mod) / sample);
 				} else {
-					samples[(int) (i * channels + j)] = this.sample[(int) (position * channels + j)];
+					samples[(int) (i * channels + j)] = ((byte[])this.sample)[(int) (position * channels + j)];
 				}
 			}
 		}
@@ -107,7 +107,7 @@ public class BytePCM extends PCM {
 
 		for (long i = 0; i < samples.length / channels; i++) {
 			for (int j = 0; j < channels; j++) {
-				samples[(int) (i * channels + j)] = this.sample[(int) (i * this.channels)];
+				samples[(int) (i * channels + j)] = ((byte[])this.sample)[(int) (i * this.channels)];
 			}
 		}
 		return new BytePCM(channels, sampleRate, this.start * channels / this.channels , this.len  * channels / this.channels, samples);
@@ -133,7 +133,7 @@ public class BytePCM extends PCM {
 		while(length > channels) {
 			boolean zero = true;
 			for(int i = 0;i < channels;i++){
-				zero &= (this.sample[this.start + start + length - i - 1] == 0);
+				zero &= (((byte[])this.sample)[this.start + start + length - i - 1] == 0);
 			}
 			if(zero) {
 				length -= channels;
