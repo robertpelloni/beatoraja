@@ -56,8 +56,8 @@ public class BytePCM extends PCM {
 	 */
 	public BytePCM changeSampleRate(int sample) {
 		byte[] samples = getSample(sample);
-		int start = (Math.min((int)((long)this.start * sample / this.sampleRate), samples.length - 1) / channels) * channels;
-		int len = (Math.min((int)((long)this.len * sample / this.sampleRate), samples.length - start) / channels) * channels;
+		int start = (Math.min((int)((long)((PCM)this).start * sample / this.sampleRate), samples.length - 1) / channels) * channels;
+		int len = (Math.min((int)((long)((PCM)this).len * sample / this.sampleRate), samples.length - start) / channels) * channels;
 		return new BytePCM(channels, sample, start, len, samples);
 	}
 
@@ -70,19 +70,19 @@ public class BytePCM extends PCM {
 	 */
 	public BytePCM changeFrequency(float rate) {
 		byte[] samples = getSample((int) (sampleRate / rate));
-		int start = (Math.min((int)((long)this.start / rate / this.sampleRate), samples.length - 1) / channels) * channels;
-		int len = (Math.min((int)((long)this.len / rate / this.sampleRate), samples.length - start) / channels) * channels;
+		int start = (Math.min((int)((long)((PCM)this).start / rate / this.sampleRate), samples.length - 1) / channels) * channels;
+		int len = (Math.min((int)((long)((PCM)this).len / rate / this.sampleRate), samples.length - start) / channels) * channels;
 		return new BytePCM(channels, sampleRate, start, len, samples);
 	}
 	
 	private byte[] getSample(int sample) {
-		byte[] samples = new byte[(int) (((long) this.sample.length / channels) * sample / sampleRate) * channels];
+		byte[] samples = new byte[(int) (((long) ((byte[])this.sample).length / channels) * sample / sampleRate) * channels];
 
 		for (long i = 0; i < samples.length / channels; i++) {
 			long position = i * sampleRate / sample;
 			long mod = (i * sampleRate) % sample;
 			for (int j = 0; j < channels; j++) {
-				if (mod  != 0 && (int) ((position + 1) * channels + j) < this.sample.length) {
+				if (mod  != 0 && (int) ((position + 1) * channels + j) < ((byte[])this.sample).length) {
 					short sample1 = ((byte[])this.sample)[(int) (position * channels + j)];
 					short sample2 = ((byte[])this.sample)[(int) ((position + 1) * channels + j)];
 					samples[(int) (i * channels + j)] = (byte) (((long)sample1 * (sample - mod) + (long)sample2 * mod) / sample);
@@ -103,14 +103,14 @@ public class BytePCM extends PCM {
 	 * @return チャンネル数を変更したPCM
 	 */
 	public BytePCM changeChannels(int channels) {
-		byte[] samples = new byte[this.sample.length * channels / this.channels];
+		byte[] samples = new byte[((byte[])this.sample).length * channels / this.channels];
 
 		for (long i = 0; i < samples.length / channels; i++) {
 			for (int j = 0; j < channels; j++) {
 				samples[(int) (i * channels + j)] = ((byte[])this.sample)[(int) (i * this.channels)];
 			}
 		}
-		return new BytePCM(channels, sampleRate, this.start * channels / this.channels , this.len  * channels / this.channels, samples);
+		return new BytePCM(channels, sampleRate, ((PCM)this).start * channels / this.channels , ((PCM)this).len  * channels / this.channels, samples);
 	}
 
 	/**
@@ -123,8 +123,8 @@ public class BytePCM extends PCM {
 	 * @return トリミングしたPCM
 	 */
 	public BytePCM slice(long starttime, long duration) {
-		if (duration == 0 || starttime + duration > ((long) this.len) * 1000000 / (sampleRate * channels)) {
-			duration = Math.max(((long) this.len) * 1000000 / (sampleRate * channels) - starttime, 0);
+		if (duration == 0 || starttime + duration > ((long) ((PCM)this).len) * 1000000 / (sampleRate * channels)) {
+			duration = Math.max(((long) ((PCM)this).len) * 1000000 / (sampleRate * channels) - starttime, 0);
 		}
 
 		final int start = (int) ((starttime * sampleRate / 1000000) * channels);
@@ -133,7 +133,7 @@ public class BytePCM extends PCM {
 		while(length > channels) {
 			boolean zero = true;
 			for(int i = 0;i < channels;i++){
-				zero &= (((byte[])this.sample)[this.start + start + length - i - 1] == 0);
+				zero &= (((byte[])this.sample)[((PCM)this).start + start + length - i - 1] == 0);
 			}
 			if(zero) {
 				length -= channels;
@@ -144,7 +144,7 @@ public class BytePCM extends PCM {
 //		if(length != orglength) {
 //			Logger.getGlobal().info("終端の無音データ除外 - " + (orglength - length) + " samples");
 //		}
-		return length > 0 ? new BytePCM(channels, sampleRate, this.start + start, length, this.sample) : null;
+		return length > 0 ? new BytePCM(channels, sampleRate, ((PCM)this).start + start, length, this.sample) : null;
 	}
 	
 	public boolean validate() {

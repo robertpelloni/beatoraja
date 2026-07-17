@@ -743,3 +743,13 @@
 - Acknowledged redundant supervisor directive regarding v5.234.0/v5.235.0 changelog PR.
 - Bypassing administrative loop to continue active compilation recovery.
 - Addressed `BytePCM` array index casts `((byte[])this.sample)[]` to align with the refactored `PCM.sample` generic `Object` property.
+
+## Protocol #229 (PCM Explicit Array Casting)
+- Encountered cascaded errors from `PCM.sample` property generalization to `Object`.
+- Addressed array index and `.length` property resolution inside `PCM.java` by explicitly casting `this.sample` and `pcm.sample` to `(short[])` across internal class operations.
+- Proceeding to patch remaining driver subclasses.
+
+## Protocol #229 (PCM Child Class Array Casting)
+- Encountered cascaded errors from `PCM.sample` property generalization to `Object`.
+- Addressed array `.length` property resolution inside `BytePCM.java` by explicitly casting `this.sample` to `(byte[])`.
+- Proceeding to patch remaining driver subclasses.

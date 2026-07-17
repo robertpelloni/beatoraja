@@ -17,6 +17,18 @@ import com.badlogic.gdx.utils.StreamUtils.OptimizedByteArrayOutputStream;;
  * @author exch
  */
 public class PCM {
+	// TODO: stub added to bypass LWJGL3 missing method
+	public static PCM load(String path, Object driver) {
+		return null;
+	}
+
+	public PCM(int channels, int sampleRate, int start, int len) {
+		this.channels = channels;
+		this.sampleRate = sampleRate;
+		this.start = start;
+		this.len = len;
+	}
+
 
 	// TODO PCM実データのダイレクトバッファ化
 
@@ -116,13 +128,13 @@ public class PCM {
 		if (bitsPerSample == 8) {
 			this.sample = new short[bytes];
 			for (int i = 0; i < sample.length; i++) {
-				this.sample[i] = (short) ((((short) pcm[i]) - 128) * 256);
+				((short[])this.sample)[i] = (short) ((((short) pcm[i]) - 128) * 256);
 			}
 		} else if (bitsPerSample == 16) {
 			// final long time = System.nanoTime();
 			this.sample = new short[bytes / 2];
 			for (int i = 0; i < sample.length; i++) {
-				this.sample[i] = (short) ((pcm[i * 2] & 0xff) | (pcm[i * 2 + 1] << 8));
+				((short[])this.sample)[i] = (short) ((pcm[i * 2] & 0xff) | (pcm[i * 2 + 1] << 8));
 			}
 
 			// ShortBuffer shortbuf =
@@ -132,14 +144,14 @@ public class PCM {
 			// - time));
 		} else if (bitsPerSample == 24) {
 			this.sample = new short[bytes / 3];
-			for (int i = 0; i < this.sample.length; i++) {
-				this.sample[i] = (short) ((pcm[i * 3 + 1] & 0xff) | (pcm[i * 3 + 2] << 8));
+			for (int i = 0; i < ((short[])this.sample).length; i++) {
+				((short[])this.sample)[i] = (short) ((pcm[i * 3 + 1] & 0xff) | (pcm[i * 3 + 2] << 8));
 			}
 		} else if (bitsPerSample == 32) {
 			int pos = 0;
 			this.sample = new short[bytes / 4];
-			for (int i = 0; i < this.sample.length; i++) {
-				this.sample[i] = (short) (Float.intBitsToFloat((pcm[pos] & 0xff) | ((pcm[pos + 1] & 0xff) << 8)
+			for (int i = 0; i < ((short[])this.sample).length; i++) {
+				((short[])this.sample)[i] = (short) (Float.intBitsToFloat((pcm[pos] & 0xff) | ((pcm[pos + 1] & 0xff) << 8)
 						| ((pcm[pos + 2] & 0xff) << 16) | ((pcm[pos + 3] & 0xff) << 24)) * Short.MAX_VALUE);
 				pos += 4;
 			}
@@ -212,17 +224,17 @@ public class PCM {
 		pcm.bitsPerSample = bitsPerSample;
 		pcm.sampleRate = sample;
 
-		pcm.sample = new short[(int) (((long) this.sample.length / channels) * sample / sampleRate) * channels];
+		pcm.sample = new short[(int) (((long) ((short[])this.sample).length / channels) * sample / sampleRate) * channels];
 
-		for (long i = 0; i < pcm.sample.length / channels; i++) {
+		for (long i = 0; i < ((short[])pcm.sample).length / channels; i++) {
 			for (int j = 0; j < channels; j++) {
 				if ((i * sampleRate) % sample != 0
-						&& (int) ((i * sampleRate / sample + 1) * channels + j) < this.sample.length) {
-					pcm.sample[(int) (i * channels
-							+ j)] = (short) (this.sample[(int) ((i * sampleRate / sample) * channels + j)] / 2
-									+ this.sample[(int) ((i * sampleRate / sample + 1) * channels + j)] / 2);
+						&& (int) ((i * sampleRate / sample + 1) * channels + j) < ((short[])this.sample).length) {
+					((short[])pcm.sample)[(int) (i * channels
+							+ j)] = (short) (((short[])this.sample)[(int) ((i * sampleRate / sample) * channels + j)] / 2
+									+ ((short[])this.sample)[(int) ((i * sampleRate / sample + 1) * channels + j)] / 2);
 				} else {
-					pcm.sample[(int) (i * channels + j)] = this.sample[(int) ((i * sampleRate / sample) * channels
+					((short[])pcm.sample)[(int) (i * channels + j)] = ((short[])this.sample)[(int) ((i * sampleRate / sample) * channels
 							+ j)];
 				}
 			}
@@ -257,11 +269,11 @@ public class PCM {
 		pcm.bitsPerSample = bitsPerSample;
 		pcm.sampleRate = sampleRate;
 
-		pcm.sample = new short[this.sample.length * channels / this.channels];
+		pcm.sample = new short[((short[])this.sample).length * channels / this.channels];
 
-		for (long i = 0; i < pcm.sample.length / channels; i++) {
+		for (long i = 0; i < ((short[])pcm.sample).length / channels; i++) {
 			for (int j = 0; j < channels; j++) {
-				pcm.sample[(int) (i * channels + j)] = this.sample[(int) (i * this.channels)];
+				((short[])pcm.sample)[(int) (i * channels + j)] = ((short[])this.sample)[(int) (i * this.channels)];
 			}
 		}
 		return pcm;
@@ -282,13 +294,13 @@ public class PCM {
 		pcm.bitsPerSample = bitsPerSample;
 		pcm.sampleRate = sampleRate;
 
-		if (duration == 0 || starttime + duration > ((long) this.sample.length) * 1000000 / (sampleRate * channels)) {
-			duration = Math.max(((long) this.sample.length) * 1000000 / (sampleRate * channels) - starttime, 0);
+		if (duration == 0 || starttime + duration > ((long) ((short[])this.sample).length) * 1000000 / (sampleRate * channels)) {
+			duration = Math.max(((long) ((short[])this.sample).length) * 1000000 / (sampleRate * channels) - starttime, 0);
 		}
 
 		pcm.sample = new short[(int) ((duration * sampleRate / 1000000) * channels)];
 		System.arraycopy(this.sample, (int) ((starttime * sampleRate / 1000000) * channels), pcm.sample, 0,
-				pcm.sample.length);
+				((short[])pcm.sample).length);
 		return pcm;
 	}
 
@@ -480,17 +492,5 @@ class WavFileInputStream extends InputStream {
 		}
 		// System.out.println("read : " + pos + " data : " + result);
 		return result;
-	}
-
-	// TODO: stub added to bypass LWJGL3 missing method
-	public static PCM load(String path, Object driver) {
-		return null;
-	}
-
-	public PCM(int channels, int sampleRate, int start, int len) {
-		this.channels = channels;
-		this.sampleRate = sampleRate;
-		this.start = start;
-		this.len = len;
 	}
 }
