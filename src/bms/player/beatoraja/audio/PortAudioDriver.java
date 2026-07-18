@@ -197,16 +197,16 @@ public class PortAudioDriver extends AbstractAudioDriver<PCM> implements Runnabl
 								wav_r += sample[input.pos+1 + floatPCM.start] * input.volume;
 							} else if(input.pcm instanceof ShortDirectPCM shortPCM) {
 								final ByteBuffer sample = (ByteBuffer) shortPCM.sample;
-								wav_l += ((float) sample.getShort((input.pos + shortPCM.start) * 2)) * input.volume / Short.MAX_VALUE;
-								wav_r += ((float) sample.getShort((input.pos+1 + shortPCM.start) * 2)) * input.volume / Short.MAX_VALUE;
+								wav_l += ((float) sample.getShort((input.pos + ((PCM)shortPCM).start) * 2)) * input.volume / Short.MAX_VALUE;
+								wav_r += ((float) sample.getShort((input.pos+1 + ((PCM)shortPCM).start) * 2)) * input.volume / Short.MAX_VALUE;
 							} else if(input.pcm instanceof ShortPCM shortPCM) {
 								final short[] sample = (short[]) shortPCM.sample;
-								wav_l += ((float) sample[input.pos + shortPCM.start]) * input.volume / Short.MAX_VALUE;
-								wav_r += ((float) sample[input.pos+1 + shortPCM.start]) * input.volume / Short.MAX_VALUE;
+								wav_l += ((float) sample[input.pos + ((PCM)shortPCM).start]) * input.volume / Short.MAX_VALUE;
+								wav_r += ((float) sample[input.pos+1 + ((PCM)shortPCM).start]) * input.volume / Short.MAX_VALUE;
 							} else if(input.pcm instanceof BytePCM bytePCM) {
 								final byte[] sample = (byte[]) bytePCM.sample;
-								wav_l += ((float) (sample[input.pos + bytePCM.start] - 128)) * input.volume / Byte.MAX_VALUE;
-								wav_r += ((float) (sample[input.pos+1 + bytePCM.start] - 128)) * input.volume / Byte.MAX_VALUE;
+								wav_l += ((float) (sample[input.pos + ((PCM)bytePCM).start] - 128)) * input.volume / Byte.MAX_VALUE;
+								wav_r += ((float) (sample[input.pos+1 + ((PCM)bytePCM).start] - 128)) * input.volume / Byte.MAX_VALUE;
 							}
 							input.posf += gpitch * input.pitch;
 							int inc = (int)input.posf;
@@ -214,7 +214,7 @@ public class PortAudioDriver extends AbstractAudioDriver<PCM> implements Runnabl
 								input.pos += 2 * inc;
 								input.posf -= (float)inc;
 							}
-							if (input.pos >= input.pcm.len) {
+							if (input.pos >= ((PCM)input.pcm).len) {
 								input.pos = input.loop ? 0 : -1;
 							}
 						}
