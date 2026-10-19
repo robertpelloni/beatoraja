@@ -43,7 +43,7 @@ public class PortAudioDriver extends AbstractAudioDriver<PCM> implements Runnabl
 	}
 
 	public PortAudioDriver(Config config) {
-		super(1 /* config.getSongResourceGen() */);
+		super(config.getSongResourceGen());
 		DeviceInfo[] devices = getDevices();
 		// Get the default device and setup the stream parameters.
 		int deviceId = 0;
@@ -86,7 +86,7 @@ public class PortAudioDriver extends AbstractAudioDriver<PCM> implements Runnabl
 
 	@Override
 	protected PCM getKeySound(Path p) {
-		return null; /* PCM.load */
+		return PCM.load(p.toString(), this);
 	}
 
 	@Override
@@ -192,21 +192,21 @@ public class PortAudioDriver extends AbstractAudioDriver<PCM> implements Runnabl
 					for (MixerInput input : inputs) {
 						if (input.pos != -1) {
 							if(input.pcm instanceof FloatPCM floatPCM) {
-								final float[] sample = new float[0];
-								wav_l += sample[input.pos + 0] * input.volume;
-								wav_r += sample[input.pos+1 + 0] * input.volume;
+								final float[] sample = (float[]) floatPCM.sample;
+								wav_l += sample[input.pos + floatPCM.start] * input.volume;
+								wav_r += sample[input.pos+1 + floatPCM.start] * input.volume;
 							} else if(input.pcm instanceof ShortDirectPCM shortPCM) {
-								final ByteBuffer sample = java.nio.ByteBuffer.allocate(0);
-								wav_l += ((float) sample.getShort((input.pos + 0) * 2)) * input.volume / Short.MAX_VALUE;
-								wav_r += ((float) sample.getShort((input.pos+1 + 0) * 2)) * input.volume / Short.MAX_VALUE;
+								final ByteBuffer sample = (ByteBuffer) shortPCM.sample;
+								wav_l += ((float) sample.getShort((input.pos + ((PCM)shortPCM).start) * 2)) * input.volume / Short.MAX_VALUE;
+								wav_r += ((float) sample.getShort((input.pos+1 + ((PCM)shortPCM).start) * 2)) * input.volume / Short.MAX_VALUE;
 							} else if(input.pcm instanceof ShortPCM shortPCM) {
-								final java.nio.ByteBuffer sample = java.nio.ByteBuffer.allocate(0);
-								wav_l += 0;
-								wav_r += 0;
+								final short[] sample = (short[]) shortPCM.sample;
+								wav_l += ((float) sample[input.pos + ((PCM)shortPCM).start]) * input.volume / Short.MAX_VALUE;
+								wav_r += ((float) sample[input.pos+1 + ((PCM)shortPCM).start]) * input.volume / Short.MAX_VALUE;
 							} else if(input.pcm instanceof BytePCM bytePCM) {
-								final byte[] sample = new byte[0];
-								wav_l += ((float) (sample[input.pos + 0] - 128)) * input.volume / Byte.MAX_VALUE;
-								wav_r += ((float) (sample[input.pos+1 + 0] - 128)) * input.volume / Byte.MAX_VALUE;
+								final byte[] sample = (byte[]) bytePCM.sample;
+								wav_l += ((float) (sample[input.pos + ((PCM)bytePCM).start] - 128)) * input.volume / Byte.MAX_VALUE;
+								wav_r += ((float) (sample[input.pos+1 + ((PCM)bytePCM).start] - 128)) * input.volume / Byte.MAX_VALUE;
 							}
 							input.posf += gpitch * input.pitch;
 							int inc = (int)input.posf;
@@ -214,7 +214,7 @@ public class PortAudioDriver extends AbstractAudioDriver<PCM> implements Runnabl
 								input.pos += 2 * inc;
 								input.posf -= (float)inc;
 							}
-							if (input.pos >= 0) {
+							if (input.pos >= ((PCM)input.pcm).len) {
 								input.pos = input.loop ? 0 : -1;
 							}
 						}

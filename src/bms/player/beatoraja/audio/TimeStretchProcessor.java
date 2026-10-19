@@ -24,7 +24,7 @@ public final class TimeStretchProcessor {
 			return pcm;
 		}
 		final float[] samples = toFloatArray(pcm);
-		if (samples.length == 0) {
+		if (sample((PCM)s).length == 0) {
 			return pcm;
 		}
 
@@ -39,7 +39,7 @@ public final class TimeStretchProcessor {
 		}
 		dispatcher.addAudioProcessor(wsola);
 
-		List<Float> out = new ArrayList<>((int) (samples.length / rate) + 1024);
+		List<Float> out = new ArrayList<>((int) (sample((PCM)s).length / rate) + 1024);
 		AudioProcessor collector = new AudioProcessor() {
 			@Override
 			public boolean process(AudioEvent audioEvent) {
@@ -67,29 +67,29 @@ public final class TimeStretchProcessor {
 
 	private static float[] toFloatArray(PCM pcm) {
 		if (pcm instanceof FloatPCM f) {
-			float[] src = f.sample;
+			float[] src = (float[]) f.sample;
 			float[] out = new float[f.len];
 			System.arraycopy(src, f.start, out, 0, f.len);
 			return out;
 		} else if (pcm instanceof ShortPCM s) {
-			short[] src = s.sample;
-			float[] out = new float[s.len];
-			for (int i = 0; i < s.len; i++) {
-				/*out[i] = src[s.start + i] / (float) Short.MAX_VALUE;*/
+			short[] src = (short[]) s.sample;
+			float[] out = new float[((PCM)s).len];
+			for (int i = 0; i < ((PCM)s).len; i++) {
+				/*out[i] = src[((PCM)s).start + i] / (float) Short.MAX_VALUE;*/
 			}
 			return out;
 		} else if (pcm instanceof ShortDirectPCM s) {
 			java.nio.ByteBuffer src = (java.nio.ByteBuffer) s.sample;
-			float[] out = new float[s.len];
-			for (int i = 0; i < s.len; i++) {
-				/*out[i] = src.getShort((s.start + i) * 2) / (float) Short.MAX_VALUE;*/
+			float[] out = new float[((PCM)s).len];
+			for (int i = 0; i < ((PCM)s).len; i++) {
+				/*out[i] = src.getShort((((PCM)s).start + i) * 2) / (float) Short.MAX_VALUE;*/
 			}
 			return out;
 		} else if (pcm instanceof BytePCM b) {
-			byte[] src = b.sample;
-			float[] out = new float[b.len];
-			for (int i = 0; i < b.len; i++) {
-				/*out[i] = (src[b.start + i] - 128) / 128f;*/
+			byte[] src = (byte[]) b.sample;
+			float[] out = new float[((PCM)b).len];
+			for (int i = 0; i < ((PCM)b).len; i++) {
+				/*out[i] = (src[((PCM)b).start + i] - 128) / 128f;*/
 			}
 			return out;
 		}

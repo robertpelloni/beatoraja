@@ -6,8 +6,9 @@ public class CourseResultSkin extends Skin {
 
 	private int ranktime;
 
-	public CourseResultSkin(SkinHeader header) {
-		super(bms.player.beatoraja.Resolution.FULLHD, bms.player.beatoraja.Resolution.FULLHD);
+	/*public public CourseResultSkin(SkinHeader header) {*/
+	public CourseResultSkin(bms.player.beatoraja.skin.SkinHeader header) { super(null, null); this.header = header;
+		/*super(header);*/
 	}
 
 	public int getRankTime() {

@@ -5,8 +5,9 @@ import bms.player.beatoraja.skin.SkinHeader;
 
 public class KeyConfigurationSkin extends Skin {
 
-    public KeyConfigurationSkin(SkinHeader header) {
-        super(bms.player.beatoraja.Resolution.FULLHD, bms.player.beatoraja.Resolution.FULLHD);
+    /*public public KeyConfigurationSkin(SkinHeader header) {*/
+	public KeyConfigurationSkin(bms.player.beatoraja.skin.SkinHeader header) { super(null, null); this.header = header;
+        /*super(header);*/
     }
 
 }
